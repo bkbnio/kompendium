@@ -8,6 +8,9 @@ import org.leafygreens.kompendium.models.OpenApiSpecInfo
 import org.leafygreens.kompendium.models.OpenApiSpecInfoContact
 import org.leafygreens.kompendium.models.OpenApiSpecInfoLicense
 import org.leafygreens.kompendium.models.OpenApiSpecMediaType
+import org.leafygreens.kompendium.models.OpenApiSpecParameter
+import org.leafygreens.kompendium.models.OpenApiSpecParameterSchemaArray
+import org.leafygreens.kompendium.models.OpenApiSpecParameterSchemaString
 import org.leafygreens.kompendium.models.OpenApiSpecPathItem
 import org.leafygreens.kompendium.models.OpenApiSpecPathItemOperation
 import org.leafygreens.kompendium.models.OpenApiSpecReferenceObject
@@ -138,6 +141,30 @@ object TestData {
             )
           ),
           `x-codegen-request-body-name` = "body"
+        )
+      ),
+      "/pet/findByStatus" to OpenApiSpecPathItem(
+        get = OpenApiSpecPathItemOperation(
+          tags = setOf("pet"),
+          summary = "Find Pets by status",
+          description = "Multiple status values can be provided with comma separated strings",
+          operationId = "findPetsByStatus",
+          parameters = listOf(
+            OpenApiSpecParameter(
+              name = "status",
+              `in` = "query",
+              description = "Status values that need to be considered for filter",
+              required = true,
+              style = "form",
+              explode = true,
+              schema = OpenApiSpecParameterSchemaArray(
+                items = OpenApiSpecParameterSchemaString(
+                  default = "available",
+                  `enum` = setOf("available", "pending", "sold")
+                )
+              )
+            )
+          )
         )
       )
     )
