@@ -4,7 +4,7 @@
 package kompendium
 
 class Library {
-    fun someLibraryMethod(): Boolean {
-        return true
+    fun someLibraryMethod(): String {
+        return "Heya"
     }
 }

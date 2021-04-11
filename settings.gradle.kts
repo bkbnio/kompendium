@@ -1,5 +1,5 @@
-rootProject.name = "kompendium"
-include("lib")
+rootProject.name = "root"
+include("kompendium")
 include("playground")
 
 // Feature Previews
