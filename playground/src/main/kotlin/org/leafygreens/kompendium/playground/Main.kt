@@ -8,7 +8,6 @@ import io.ktor.routing.route
 import io.ktor.routing.routing
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
-import kompendium.Library
 
 fun main() {
   embeddedServer(
@@ -22,7 +21,7 @@ fun Application.mainModule() {
   routing {
     route("/") {
       get {
-        call.respondText(Library().someLibraryMethod())
+        call.respondText("hi")
       }
     }
   }

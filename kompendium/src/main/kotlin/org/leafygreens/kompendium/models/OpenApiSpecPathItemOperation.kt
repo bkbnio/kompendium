@@ -8,10 +8,12 @@ data class OpenApiSpecPathItemOperation(
   val operationId: String? = null,
   val parameters: List<OpenApiSpecReferencable>? = null,
   val requestBody: OpenApiSpecReferencable? = null,
-  val responses: Map<String, OpenApiSpecReferencable>? = null, // TODO How to enforce `default` requirement
+  // TODO How to enforce `default` requirement 🧐
+  val responses: Map<String, OpenApiSpecReferencable>? = null,
   val callbacks: Map<String, OpenApiSpecReferencable>? = null,
   val deprecated: Boolean = false,
-  val security: List<Map<String, List<String>>>? = null, // todo big yikes... also needs to reference objects in the security scheme 🤔
+  // todo big yikes... also needs to reference objects in the security scheme 🤔
+  val security: List<Map<String, List<String>>>? = null,
   val servers: List<OpenApiSpecServer>? = null,
   val `x-codegen-request-body-name`: String? = null
 )
