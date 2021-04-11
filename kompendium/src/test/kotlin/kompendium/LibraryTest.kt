@@ -5,7 +5,6 @@ package kompendium
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertTrue
 
 class LibraryTest {
     @Test fun testSomeLibraryMethod() {

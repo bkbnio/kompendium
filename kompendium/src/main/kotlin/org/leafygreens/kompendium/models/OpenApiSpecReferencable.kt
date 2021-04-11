@@ -9,10 +9,10 @@ data class OpenApiSpecCallback(
 ) : OpenApiSpecReferencable()
 
 data class OpenApiSpecResponse(
-  val description: String,
-  val headers: Map<String, OpenApiSpecReferencable>,
-  val content: Map<String, OpenApiSpecMediaType>,
-  val links: Map<String, OpenApiSpecReferencable>
+  val description: String? = null,
+  val headers: Map<String, OpenApiSpecReferencable>? = null,
+  val content: Map<String, OpenApiSpecMediaType>? = null,
+  val links: Map<String, OpenApiSpecReferencable>? = null
 ) : OpenApiSpecReferencable()
 
 data class OpenApiSpecHeader(
@@ -28,4 +28,10 @@ data class OpenApiSpecParameter(
   val required: Boolean = true,
   val deprecated: Boolean = false,
   val allowEmptyValue: Boolean = false
+) : OpenApiSpecReferencable()
+
+data class OpenApiSpecRequest(
+  val description: String?,
+  val content: Map<String, OpenApiSpecMediaType>,
+  val required: Boolean = false
 ) : OpenApiSpecReferencable()

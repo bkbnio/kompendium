@@ -1,17 +1,17 @@
 package org.leafygreens.kompendium.models
 
 data class OpenApiSpecPathItem(
-  val `$ref`: String?, // TODO Maybe drop this?
-  val summary: String?,
-  val description: String?,
-  val get: OpenApiSpecPathItemOperation?,
-  val put: OpenApiSpecPathItemOperation?,
-  val post: OpenApiSpecPathItemOperation?,
-  val delete: OpenApiSpecPathItemOperation?,
-  val options: OpenApiSpecPathItemOperation?,
-  val head: OpenApiSpecPathItemOperation?,
-  val patch: OpenApiSpecPathItemOperation?,
-  val trace: OpenApiSpecPathItemOperation?,
-  val servers: List<OpenApiSpecServer> = emptyList(),
-  val parameters: List<OpenApiSpecReferencable> = emptyList()
+  // val `$ref`: String?, // TODO need example of this... or just make whole thing referencable?
+  val summary: String? = null,
+  val description: String? = null,
+  val get: OpenApiSpecPathItemOperation? = null,
+  val put: OpenApiSpecPathItemOperation? = null,
+  val post: OpenApiSpecPathItemOperation? = null,
+  val delete: OpenApiSpecPathItemOperation? = null,
+  val options: OpenApiSpecPathItemOperation? = null,
+  val head: OpenApiSpecPathItemOperation? = null,
+  val patch: OpenApiSpecPathItemOperation? = null,
+  val trace: OpenApiSpecPathItemOperation? = null,
+  val servers: List<OpenApiSpecServer>? = null,
+  val parameters: List<OpenApiSpecReferencable>? = null
 )

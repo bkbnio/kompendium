@@ -6,7 +6,7 @@ data class OpenApiSpecInfo(
   val title: String,
   val version: String,
   val description: String?,
-  val termsOfService: URI?,
-  val contact: OpenApiSpecInfoContact?,
-  val license: OpenApiSpecInfoLicense?
+  val termsOfService: URI? = null,
+  val contact: OpenApiSpecInfoContact? = null,
+  val license: OpenApiSpecInfoLicense? = null
 )
