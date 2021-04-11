@@ -9,13 +9,14 @@ import org.leafygreens.kompendium.models.OpenApiSpecInfoContact
 import org.leafygreens.kompendium.models.OpenApiSpecInfoLicense
 import org.leafygreens.kompendium.models.OpenApiSpecMediaType
 import org.leafygreens.kompendium.models.OpenApiSpecParameter
-import org.leafygreens.kompendium.models.OpenApiSpecParameterSchemaArray
-import org.leafygreens.kompendium.models.OpenApiSpecParameterSchemaString
+import org.leafygreens.kompendium.models.OpenApiSpecSchemaArray
+import org.leafygreens.kompendium.models.OpenApiSpecSchemaString
 import org.leafygreens.kompendium.models.OpenApiSpecPathItem
 import org.leafygreens.kompendium.models.OpenApiSpecPathItemOperation
 import org.leafygreens.kompendium.models.OpenApiSpecReferenceObject
 import org.leafygreens.kompendium.models.OpenApiSpecRequest
 import org.leafygreens.kompendium.models.OpenApiSpecResponse
+import org.leafygreens.kompendium.models.OpenApiSpecSchemaRef
 import org.leafygreens.kompendium.models.OpenApiSpecServer
 import org.leafygreens.kompendium.models.OpenApiSpecTag
 
@@ -85,10 +86,10 @@ object TestData {
             description = "Pet object that needs to be added to the store",
             content = mapOf(
               "application/json" to OpenApiSpecMediaType(
-                schema = OpenApiSpecReferenceObject(`$ref` = "#/components/schemas/Pet")
+                schema = OpenApiSpecSchemaRef(`$ref` = "#/components/schemas/Pet")
               ),
               "application/xml" to OpenApiSpecMediaType(
-                schema = OpenApiSpecReferenceObject(`$ref` = "#/components/schemas/Pet")
+                schema = OpenApiSpecSchemaRef(`$ref` = "#/components/schemas/Pet")
               )
             ),
             required = true
@@ -122,10 +123,10 @@ object TestData {
             description = "Pet object that needs to be added to the store",
             content = mapOf(
               "application/json" to OpenApiSpecMediaType(
-                schema = OpenApiSpecReferenceObject(`$ref` = "#/components/schemas/Pet")
+                schema = OpenApiSpecSchemaRef(`$ref` = "#/components/schemas/Pet")
               ),
               "application/xml" to OpenApiSpecMediaType(
-                schema = OpenApiSpecReferenceObject(`$ref` = "#/components/schemas/Pet")
+                schema = OpenApiSpecSchemaRef(`$ref` = "#/components/schemas/Pet")
               )
             )
           ),
@@ -157,14 +158,38 @@ object TestData {
               required = true,
               style = "form",
               explode = true,
-              schema = OpenApiSpecParameterSchemaArray(
-                items = OpenApiSpecParameterSchemaString(
+              schema = OpenApiSpecSchemaArray(
+                items = OpenApiSpecSchemaString(
                   default = "available",
                   `enum` = setOf("available", "pending", "sold")
                 )
               )
             )
-          )
+          ),
+          responses = mapOf(
+            "200" to OpenApiSpecResponse(
+              description = "successful operation",
+              content = mapOf(
+                "application/xml" to OpenApiSpecMediaType(
+                  schema = OpenApiSpecSchemaArray(
+                    items = OpenApiSpecSchemaRef("#/components/schemas/Pet")
+                  )
+                ),
+                "application/json" to OpenApiSpecMediaType(
+                  schema = OpenApiSpecSchemaArray(
+                    items = OpenApiSpecSchemaRef("#/components/schemas/Pet")
+                  )
+                )
+              )
+            ),
+            "400" to OpenApiSpecResponse(
+              description = "Invalid status value",
+              content = mapOf()
+            )
+          ),
+          security = listOf(mapOf(
+            "petstore_auth" to listOf("write:pets", "read:pets")
+          ))
         )
       )
     )

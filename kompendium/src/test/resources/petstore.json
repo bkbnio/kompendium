@@ -118,7 +118,37 @@
             "type" : "array"
           }
         } ],
-        "deprecated" : false
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "content" : {
+              "application/xml" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/Pet"
+                  },
+                  "type" : "array"
+                }
+              },
+              "application/json" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/Pet"
+                  },
+                  "type" : "array"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Invalid status value",
+            "content" : { }
+          }
+        },
+        "deprecated" : false,
+        "security" : [ {
+          "petstore_auth" : [ "write:pets", "read:pets" ]
+        } ]
       }
     }
   },
