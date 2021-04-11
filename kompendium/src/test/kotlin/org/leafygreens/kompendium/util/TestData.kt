@@ -3,16 +3,23 @@ package org.leafygreens.kompendium.util
 import java.io.File
 import java.net.URI
 import org.leafygreens.kompendium.models.OpenApiSpec
+import org.leafygreens.kompendium.models.OpenApiSpecComponents
 import org.leafygreens.kompendium.models.OpenApiSpecExternalDocumentation
 import org.leafygreens.kompendium.models.OpenApiSpecInfo
 import org.leafygreens.kompendium.models.OpenApiSpecInfoContact
 import org.leafygreens.kompendium.models.OpenApiSpecInfoLicense
 import org.leafygreens.kompendium.models.OpenApiSpecMediaType
+import org.leafygreens.kompendium.models.OpenApiSpecOAuthFlow
+import org.leafygreens.kompendium.models.OpenApiSpecOAuthFlows
+import org.leafygreens.kompendium.models.OpenApiSpecParameter
 import org.leafygreens.kompendium.models.OpenApiSpecPathItem
 import org.leafygreens.kompendium.models.OpenApiSpecPathItemOperation
-import org.leafygreens.kompendium.models.OpenApiSpecReferenceObject
 import org.leafygreens.kompendium.models.OpenApiSpecRequest
 import org.leafygreens.kompendium.models.OpenApiSpecResponse
+import org.leafygreens.kompendium.models.OpenApiSpecSchemaArray
+import org.leafygreens.kompendium.models.OpenApiSpecSchemaRef
+import org.leafygreens.kompendium.models.OpenApiSpecSchemaSecurity
+import org.leafygreens.kompendium.models.OpenApiSpecSchemaString
 import org.leafygreens.kompendium.models.OpenApiSpecServer
 import org.leafygreens.kompendium.models.OpenApiSpecTag
 
@@ -26,7 +33,11 @@ object TestData {
   val testSpec = OpenApiSpec(
     info = OpenApiSpecInfo(
       title = "Swagger Petstore",
-      description = "This is a sample server Petstore server.  You can find out more about     Swagger at [http://swagger.io](http://swagger.io) or on [irc.freenode.net, #swagger](http://swagger.io/irc/).      For this sample, you can use the api key `special-key` to test the authorization     filters.",
+      description = """
+        This is a sample server Petstore server.  You can find out more about Swagger at
+        [http://swagger.io](http://swagger.io) or on [irc.freenode.net, #swagger](http://swagger.io/irc/).
+        For this sample, you can use the api key `special-key` to test the authorization filters.
+      """.trimIndent(),
       termsOfService = URI("http://swagger.io/terms/"),
       contact = OpenApiSpecInfoContact(
         name = "Team Swag",
@@ -82,10 +93,10 @@ object TestData {
             description = "Pet object that needs to be added to the store",
             content = mapOf(
               "application/json" to OpenApiSpecMediaType(
-                schema = OpenApiSpecReferenceObject(`$ref` = "#/components/schemas/Pet")
+                schema = OpenApiSpecSchemaRef(`$ref` = "#/components/schemas/Pet")
               ),
               "application/xml" to OpenApiSpecMediaType(
-                schema = OpenApiSpecReferenceObject(`$ref` = "#/components/schemas/Pet")
+                schema = OpenApiSpecSchemaRef(`$ref` = "#/components/schemas/Pet")
               )
             ),
             required = true
@@ -119,10 +130,10 @@ object TestData {
             description = "Pet object that needs to be added to the store",
             content = mapOf(
               "application/json" to OpenApiSpecMediaType(
-                schema = OpenApiSpecReferenceObject(`$ref` = "#/components/schemas/Pet")
+                schema = OpenApiSpecSchemaRef(`$ref` = "#/components/schemas/Pet")
               ),
               "application/xml" to OpenApiSpecMediaType(
-                schema = OpenApiSpecReferenceObject(`$ref` = "#/components/schemas/Pet")
+                schema = OpenApiSpecSchemaRef(`$ref` = "#/components/schemas/Pet")
               )
             )
           ),
@@ -138,6 +149,75 @@ object TestData {
             )
           ),
           `x-codegen-request-body-name` = "body"
+        )
+      ),
+      "/pet/findByStatus" to OpenApiSpecPathItem(
+        get = OpenApiSpecPathItemOperation(
+          tags = setOf("pet"),
+          summary = "Find Pets by status",
+          description = "Multiple status values can be provided with comma separated strings",
+          operationId = "findPetsByStatus",
+          parameters = listOf(
+            OpenApiSpecParameter(
+              name = "status",
+              `in` = "query",
+              description = "Status values that need to be considered for filter",
+              required = true,
+              style = "form",
+              explode = true,
+              schema = OpenApiSpecSchemaArray(
+                items = OpenApiSpecSchemaString(
+                  default = "available",
+                  `enum` = setOf("available", "pending", "sold")
+                )
+              )
+            )
+          ),
+          responses = mapOf(
+            "200" to OpenApiSpecResponse(
+              description = "successful operation",
+              content = mapOf(
+                "application/xml" to OpenApiSpecMediaType(
+                  schema = OpenApiSpecSchemaArray(
+                    items = OpenApiSpecSchemaRef("#/components/schemas/Pet")
+                  )
+                ),
+                "application/json" to OpenApiSpecMediaType(
+                  schema = OpenApiSpecSchemaArray(
+                    items = OpenApiSpecSchemaRef("#/components/schemas/Pet")
+                  )
+                )
+              )
+            ),
+            "400" to OpenApiSpecResponse(
+              description = "Invalid status value",
+              content = mapOf()
+            )
+          ),
+          security = listOf(mapOf(
+            "petstore_auth" to listOf("write:pets", "read:pets")
+          ))
+        )
+      )
+    ),
+    components = OpenApiSpecComponents(
+      securitySchemes = mapOf(
+        "petstore_auth" to OpenApiSpecSchemaSecurity(
+          type = "oauth2",
+          flows = OpenApiSpecOAuthFlows(
+            implicit = OpenApiSpecOAuthFlow(
+              authorizationUrl = URI("http://petstore.swagger.io/oauth/dialog"),
+              scopes = mapOf(
+                "write:pets" to "modify pets in your account",
+                "read:pets" to "read your pets"
+              )
+            )
+          )
+        ),
+        "api_key" to OpenApiSpecSchemaSecurity(
+          type = "apiKey",
+          name = "api_key",
+          `in` = "header"
         )
       )
     )

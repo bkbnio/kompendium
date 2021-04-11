@@ -27,7 +27,10 @@ data class OpenApiSpecParameter(
   val description: String?,
   val required: Boolean = true,
   val deprecated: Boolean = false,
-  val allowEmptyValue: Boolean = false
+  val allowEmptyValue: Boolean = false,
+  val style: String? = null,
+  val explode: Boolean? = false,
+  val schema: OpenApiSpecSchema? = null
 ) : OpenApiSpecReferencable()
 
 data class OpenApiSpecRequest(

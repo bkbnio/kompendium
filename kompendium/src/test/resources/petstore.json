@@ -3,7 +3,7 @@
   "info" : {
     "title" : "Swagger Petstore",
     "version" : "1.0.0",
-    "description" : "This is a sample server Petstore server.  You can find out more about     Swagger at [http://swagger.io](http://swagger.io) or on [irc.freenode.net, #swagger](http://swagger.io/irc/).      For this sample, you can use the api key `special-key` to test the authorization     filters.",
+    "description" : "This is a sample server Petstore server.  You can find out more about Swagger at\n[http://swagger.io](http://swagger.io) or on [irc.freenode.net, #swagger](http://swagger.io/irc/).\nFor this sample, you can use the api key `special-key` to test the authorization filters.",
     "termsOfService" : "http://swagger.io/terms/",
     "contact" : {
       "name" : "Team Swag",
@@ -93,9 +93,86 @@
         } ],
         "x-codegen-request-body-name" : "body"
       }
+    },
+    "/pet/findByStatus" : {
+      "get" : {
+        "tags" : [ "pet" ],
+        "summary" : "Find Pets by status",
+        "description" : "Multiple status values can be provided with comma separated strings",
+        "operationId" : "findPetsByStatus",
+        "parameters" : [ {
+          "name" : "status",
+          "in" : "query",
+          "description" : "Status values that need to be considered for filter",
+          "required" : true,
+          "deprecated" : false,
+          "allowEmptyValue" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "items" : {
+              "default" : "available",
+              "enum" : [ "available", "pending", "sold" ],
+              "type" : "string"
+            },
+            "type" : "array"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "content" : {
+              "application/xml" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/Pet"
+                  },
+                  "type" : "array"
+                }
+              },
+              "application/json" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/Pet"
+                  },
+                  "type" : "array"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Invalid status value",
+            "content" : { }
+          }
+        },
+        "deprecated" : false,
+        "security" : [ {
+          "petstore_auth" : [ "write:pets", "read:pets" ]
+        } ]
+      }
     }
   },
-  "security" : { },
+  "components" : {
+    "securitySchemes" : {
+      "petstore_auth" : {
+        "type" : "oauth2",
+        "flows" : {
+          "implicit" : {
+            "authorizationUrl" : "http://petstore.swagger.io/oauth/dialog",
+            "scopes" : {
+              "write:pets" : "modify pets in your account",
+              "read:pets" : "read your pets"
+            }
+          }
+        }
+      },
+      "api_key" : {
+        "type" : "apiKey",
+        "name" : "api_key",
+        "in" : "header"
+      }
+    }
+  },
   "tags" : [ {
     "name" : "pet",
     "description" : "Everything about your Pets",
