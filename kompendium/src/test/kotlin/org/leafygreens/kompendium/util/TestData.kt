@@ -3,20 +3,23 @@ package org.leafygreens.kompendium.util
 import java.io.File
 import java.net.URI
 import org.leafygreens.kompendium.models.OpenApiSpec
+import org.leafygreens.kompendium.models.OpenApiSpecComponents
 import org.leafygreens.kompendium.models.OpenApiSpecExternalDocumentation
 import org.leafygreens.kompendium.models.OpenApiSpecInfo
 import org.leafygreens.kompendium.models.OpenApiSpecInfoContact
 import org.leafygreens.kompendium.models.OpenApiSpecInfoLicense
 import org.leafygreens.kompendium.models.OpenApiSpecMediaType
+import org.leafygreens.kompendium.models.OpenApiSpecOAuthFlow
+import org.leafygreens.kompendium.models.OpenApiSpecOAuthFlows
 import org.leafygreens.kompendium.models.OpenApiSpecParameter
-import org.leafygreens.kompendium.models.OpenApiSpecSchemaArray
-import org.leafygreens.kompendium.models.OpenApiSpecSchemaString
 import org.leafygreens.kompendium.models.OpenApiSpecPathItem
 import org.leafygreens.kompendium.models.OpenApiSpecPathItemOperation
-import org.leafygreens.kompendium.models.OpenApiSpecReferenceObject
 import org.leafygreens.kompendium.models.OpenApiSpecRequest
 import org.leafygreens.kompendium.models.OpenApiSpecResponse
+import org.leafygreens.kompendium.models.OpenApiSpecSchemaArray
 import org.leafygreens.kompendium.models.OpenApiSpecSchemaRef
+import org.leafygreens.kompendium.models.OpenApiSpecSchemaSecurity
+import org.leafygreens.kompendium.models.OpenApiSpecSchemaString
 import org.leafygreens.kompendium.models.OpenApiSpecServer
 import org.leafygreens.kompendium.models.OpenApiSpecTag
 
@@ -190,6 +193,27 @@ object TestData {
           security = listOf(mapOf(
             "petstore_auth" to listOf("write:pets", "read:pets")
           ))
+        )
+      )
+    ),
+    components = OpenApiSpecComponents(
+      securitySchemes = mapOf(
+        "petstore_auth" to OpenApiSpecSchemaSecurity(
+          type = "oauth2",
+          flows = OpenApiSpecOAuthFlows(
+            implicit = OpenApiSpecOAuthFlow(
+              authorizationUrl = URI("http://petstore.swagger.io/oauth/dialog"),
+              scopes = mapOf(
+                "write:pets" to "modify pets in your account",
+                "read:pets" to "read your pets"
+              )
+            )
+          )
+        ),
+        "api_key" to OpenApiSpecSchemaSecurity(
+          type = "apiKey",
+          name = "api_key",
+          `in` = "header"
         )
       )
     )
