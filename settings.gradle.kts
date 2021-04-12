@@ -1,6 +1,7 @@
-rootProject.name = "root"
-include("kompendium")
-include("playground")
+rootProject.name = "kompendium"
+include("kompendium-core")
+include("kompendium-processor")
+include("kompendium-playground")
 
 // Feature Previews
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
