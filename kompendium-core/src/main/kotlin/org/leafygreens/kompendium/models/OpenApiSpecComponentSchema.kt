@@ -11,4 +11,4 @@ data class SimpleSchema(override val type: String) : OpenApiSpecComponentSchema(
 
 data class FormatSchema(val format: String, override val type: String) : OpenApiSpecComponentSchema(type)
 
-data class ArraySchema(val arrayType: String) : OpenApiSpecComponentSchema("array")
+data class ArraySchema(val items: OpenApiSpecComponentSchema) : OpenApiSpecComponentSchema("array")

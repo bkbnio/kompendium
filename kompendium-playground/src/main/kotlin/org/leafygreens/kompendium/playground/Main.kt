@@ -29,12 +29,12 @@ import org.leafygreens.kompendium.playground.KompendiumTOC.testSingleRouteInfo
 fun main() {
   embeddedServer(
     Netty,
-    port = 8080,
+    port = 8081,
     module = Application::mainModule
   ).start(wait = true)
 }
 
-data class A(val a: String, val aa: Int)
+data class A(val a: String, val aa: Int, val aaa: List<Long>)
 data class B(
   @KompendiumField(name = "AYY", description = "a field")
   val a: A,
