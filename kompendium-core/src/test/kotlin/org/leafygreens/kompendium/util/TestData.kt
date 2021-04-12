@@ -61,7 +61,7 @@ object TestData {
         url = URI("http://petstore.swagger.io/v2")
       )
     ),
-    tags = listOf(
+    tags = mutableListOf(
       OpenApiSpecTag(
         name = "pet",
         description = "Everything about your Pets",
