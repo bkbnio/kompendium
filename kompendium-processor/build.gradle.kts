@@ -13,21 +13,21 @@ dependencies {
   testImplementation("org.jetbrains.kotlin:kotlin-test")
   testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
 }
-
-publishing {
-  repositories {
-    maven {
-      name = "GithubPackages"
-      url = uri("https://maven.pkg.github.com/lg-backbone/kompendium")
-      credentials {
-        username = System.getenv("GITHUB_ACTOR")
-        password = System.getenv("GITHUB_TOKEN")
-      }
-    }
-  }
-  publications {
-    create<MavenPublication>("kompendium") {
-      from(components["kotlin"])
-    }
-  }
-}
+//
+//publishing {
+//  repositories {
+//    maven {
+//      name = "GithubPackages"
+//      url = uri("https://maven.pkg.github.com/lg-backbone/kompendium")
+//      credentials {
+//        username = System.getenv("GITHUB_ACTOR")
+//        password = System.getenv("GITHUB_TOKEN")
+//      }
+//    }
+//  }
+//  publications {
+//    create<MavenPublication>("kompendium") {
+//      from(components["kotlin"])
+//    }
+//  }
+//}
