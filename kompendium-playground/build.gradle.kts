@@ -1,5 +1,4 @@
 plugins {
-  kotlin("kapt")
   application
 }
 
@@ -8,7 +7,6 @@ dependencies {
   implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
   implementation(projects.kompendiumCore)
-  kapt(projects.kompendiumProcessor)
 
   implementation(libs.bundles.ktor)
   implementation(libs.bundles.logging)
