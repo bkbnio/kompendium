@@ -2,6 +2,10 @@
 
 ### Added
 
+- Notarized Deletes
+- Request and Response reflection abstractions
+- Basic unit test coverage for each notarized operation
+
 ## [0.0.2] - April 12th, 2021
 
 ### Added
