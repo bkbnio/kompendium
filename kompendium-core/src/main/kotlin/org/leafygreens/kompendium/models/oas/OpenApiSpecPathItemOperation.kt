@@ -9,7 +9,7 @@ data class OpenApiSpecPathItemOperation(
   var parameters: List<OpenApiSpecReferencable>? = null,
   var requestBody: OpenApiSpecReferencable? = null,
   // TODO How to enforce `default` requirement 🧐
-  var responses: Map<String, OpenApiSpecReferencable>? = null,
+  var responses: Map<Int, OpenApiSpecReferencable>? = null,
   var callbacks: Map<String, OpenApiSpecReferencable>? = null,
   var deprecated: Boolean = false,
   // todo big yikes... also needs to reference objects in the security scheme 🤔

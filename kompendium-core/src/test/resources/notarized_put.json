@@ -1,0 +1,101 @@
+{
+  "openapi" : "3.0.3",
+  "info" : {
+    "title" : "Test API",
+    "version" : "1.33.7",
+    "description" : "An amazing, fully-ish \uD83D\uDE09 generated API spec",
+    "termsOfService" : "https://example.com",
+    "contact" : {
+      "name" : "Homer Simpson",
+      "url" : "https://gph.is/1NPUDiM",
+      "email" : "chunkylover53@aol.com"
+    },
+    "license" : {
+      "name" : "MIT",
+      "url" : "https://github.com/lg-backbone/kompendium/blob/main/LICENSE"
+    }
+  },
+  "servers" : [ {
+    "url" : "https://myawesomeapi.com",
+    "description" : "Production instance of my API"
+  }, {
+    "url" : "https://staging.myawesomeapi.com",
+    "description" : "Where the fun stuff happens"
+  } ],
+  "paths" : {
+    "/test" : {
+      "put" : {
+        "tags" : [ ],
+        "summary" : "Test put endpoint",
+        "description" : "Put your tests here!",
+        "requestBody" : {
+          "description" : "Example Request",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/TestRequest"
+              }
+            }
+          },
+          "required" : false
+        },
+        "responses" : {
+          "201" : {
+            "description" : "Created Successfully",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/TestCreatedResponse"
+                }
+              }
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "TestCreatedResponse" : {
+        "properties" : {
+          "c" : {
+            "type" : "string"
+          },
+          "id" : {
+            "format" : "int32",
+            "type" : "integer"
+          }
+        },
+        "type" : "object"
+      },
+      "TestRequest" : {
+        "properties" : {
+          "aaa" : {
+            "items" : {
+              "format" : "int64",
+              "type" : "integer"
+            },
+            "type" : "array"
+          },
+          "b" : {
+            "format" : "double",
+            "type" : "number"
+          },
+          "field_name" : {
+            "properties" : {
+              "nesty" : {
+                "type" : "string"
+              }
+            },
+            "type" : "object"
+          }
+        },
+        "type" : "object"
+      }
+    },
+    "securitySchemes" : { }
+  },
+  "security" : [ ],
+  "tags" : [ ]
+}
