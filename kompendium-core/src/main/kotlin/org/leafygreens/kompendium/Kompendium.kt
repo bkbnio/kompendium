@@ -35,7 +35,7 @@ object Kompendium {
 
   const val COMPONENT_SLUG = "#/components/schemas"
 
-  val openApiSpec = OpenApiSpec(
+  var openApiSpec = OpenApiSpec(
     info = OpenApiSpecInfo(),
     servers = mutableListOf(),
     paths = mutableMapOf()
@@ -159,4 +159,11 @@ object Kompendium {
     else -> objectSchema(field)
   }
 
+  internal fun resetSchema() {
+    openApiSpec = OpenApiSpec(
+      info = OpenApiSpecInfo(),
+      servers = mutableListOf(),
+      paths = mutableMapOf()
+    )
+  }
 }
