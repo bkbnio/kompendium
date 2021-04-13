@@ -14,6 +14,7 @@ import org.leafygreens.kompendium.models.oas.OpenApiSpecOAuthFlows
 import org.leafygreens.kompendium.models.oas.OpenApiSpecParameter
 import org.leafygreens.kompendium.models.oas.OpenApiSpecPathItem
 import org.leafygreens.kompendium.models.oas.OpenApiSpecPathItemOperation
+import org.leafygreens.kompendium.models.oas.OpenApiSpecReferenceObject
 import org.leafygreens.kompendium.models.oas.OpenApiSpecRequest
 import org.leafygreens.kompendium.models.oas.OpenApiSpecResponse
 import org.leafygreens.kompendium.models.oas.OpenApiSpecSchemaArray
@@ -92,25 +93,25 @@ object TestData {
           requestBody = OpenApiSpecRequest(
             description = "Pet object that needs to be added to the store",
             content = mapOf(
-              "application/json" to OpenApiSpecMediaType(
+              "application/json" to OpenApiSpecMediaType.Explicit(
                 schema = OpenApiSpecSchemaRef(`$ref` = "#/components/schemas/Pet")
               ),
-              "application/xml" to OpenApiSpecMediaType(
+              "application/xml" to OpenApiSpecMediaType.Explicit(
                 schema = OpenApiSpecSchemaRef(`$ref` = "#/components/schemas/Pet")
               )
             ),
             required = true
           ),
           responses = mapOf(
-            "400" to OpenApiSpecResponse(
+            400 to OpenApiSpecResponse(
               description = "Invalid ID supplied",
               content = emptyMap()
             ),
-            "404" to OpenApiSpecResponse(
+            404 to OpenApiSpecResponse(
               description = "Pet not found",
               content = emptyMap()
             ),
-            "405" to OpenApiSpecResponse(
+            405 to OpenApiSpecResponse(
               description = "Validation exception",
               content = emptyMap()
             )
@@ -129,16 +130,16 @@ object TestData {
           requestBody = OpenApiSpecRequest(
             description = "Pet object that needs to be added to the store",
             content = mapOf(
-              "application/json" to OpenApiSpecMediaType(
-                schema = OpenApiSpecSchemaRef(`$ref` = "#/components/schemas/Pet")
+              "application/json" to OpenApiSpecMediaType.Referenced(
+                schema = OpenApiSpecReferenceObject(`$ref` = "#/components/schemas/Pet")
               ),
-              "application/xml" to OpenApiSpecMediaType(
-                schema = OpenApiSpecSchemaRef(`$ref` = "#/components/schemas/Pet")
+              "application/xml" to OpenApiSpecMediaType.Referenced(
+                schema = OpenApiSpecReferenceObject(`$ref` = "#/components/schemas/Pet")
               )
             )
           ),
           responses = mapOf(
-            "405" to OpenApiSpecResponse(
+            405 to OpenApiSpecResponse(
               description = "Invalid Input",
               content = emptyMap()
             )
@@ -174,22 +175,22 @@ object TestData {
             )
           ),
           responses = mapOf(
-            "200" to OpenApiSpecResponse(
+            200 to OpenApiSpecResponse(
               description = "successful operation",
               content = mapOf(
-                "application/xml" to OpenApiSpecMediaType(
+                "application/xml" to OpenApiSpecMediaType.Explicit(
                   schema = OpenApiSpecSchemaArray(
                     items = OpenApiSpecSchemaRef("#/components/schemas/Pet")
                   )
                 ),
-                "application/json" to OpenApiSpecMediaType(
+                "application/json" to OpenApiSpecMediaType.Explicit(
                   schema = OpenApiSpecSchemaArray(
                     items = OpenApiSpecSchemaRef("#/components/schemas/Pet")
                   )
                 )
               )
             ),
-            "400" to OpenApiSpecResponse(
+            400 to OpenApiSpecResponse(
               description = "Invalid status value",
               content = mapOf()
             )
