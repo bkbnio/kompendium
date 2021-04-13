@@ -1,4 +1,4 @@
-package org.leafygreens.kompendium.models
+package org.leafygreens.kompendium.models.oas
 
 // TODO Enum for type?
 sealed class OpenApiSpecComponentSchema(open val type: String)

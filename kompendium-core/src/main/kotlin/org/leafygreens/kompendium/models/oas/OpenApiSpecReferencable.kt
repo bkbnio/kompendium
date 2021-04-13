@@ -1,4 +1,4 @@
-package org.leafygreens.kompendium.models
+package org.leafygreens.kompendium.models.oas
 
 sealed class OpenApiSpecReferencable
 
@@ -9,10 +9,10 @@ data class OpenApiSpecCallback(
 ) : OpenApiSpecReferencable()
 
 data class OpenApiSpecResponse(
-  val description: String? = null,
-  val headers: Map<String, OpenApiSpecReferencable>? = null,
-  val content: Map<String, OpenApiSpecMediaType>? = null,
-  val links: Map<String, OpenApiSpecReferencable>? = null
+    val description: String? = null,
+    val headers: Map<String, OpenApiSpecReferencable>? = null,
+    val content: Map<String, OpenApiSpecMediaType>? = null,
+    val links: Map<String, OpenApiSpecReferencable>? = null
 ) : OpenApiSpecReferencable()
 
 data class OpenApiSpecHeader(
@@ -34,7 +34,7 @@ data class OpenApiSpecParameter(
 ) : OpenApiSpecReferencable()
 
 data class OpenApiSpecRequest(
-  val description: String?,
-  val content: Map<String, OpenApiSpecMediaType>,
-  val required: Boolean = false
+    val description: String?,
+    val content: Map<String, OpenApiSpecMediaType>,
+    val required: Boolean = false
 ) : OpenApiSpecReferencable()

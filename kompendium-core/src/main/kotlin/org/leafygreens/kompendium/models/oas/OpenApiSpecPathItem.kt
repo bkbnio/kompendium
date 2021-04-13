@@ -1,8 +1,6 @@
-package org.leafygreens.kompendium.models
+package org.leafygreens.kompendium.models.oas
 
 data class OpenApiSpecPathItem(
-  var summary: String? = null,
-  var description: String? = null,
   var get: OpenApiSpecPathItemOperation? = null,
   var put: OpenApiSpecPathItemOperation? = null,
   var post: OpenApiSpecPathItemOperation? = null,

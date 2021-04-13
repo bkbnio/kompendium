@@ -1,4 +1,4 @@
-package org.leafygreens.kompendium.models
+package org.leafygreens.kompendium.models.oas
 
 // TODO Oof -> https://swagger.io/specification/#media-type-object
 data class OpenApiSpecMediaType(
