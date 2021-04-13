@@ -10,7 +10,7 @@ Ktor native functions when implementing their API,
 and will supplement with Kompendium code in order 
 to generate the appropriate spec. 
 
-## Modules
+## In depth
 
 TODO
 
@@ -25,19 +25,22 @@ fun Application.mainModule() {
   routing {
     route("/test") {
       route("/{id}") {
-        notarizedGet(testIdGetInfo) {
+        notarizedGet<ExampleParams, ExampleResponse>(testIdGetInfo) {
           call.respondText("get by id")
         }
       }
       route("/single") {
-        notarizedGet(testSingleGetInfo) {
+        notarizedGet<ExampleRequest, ExampleResponse>(testSingleGetInfo) {
           call.respondText("get single")
         }
-        notarizedPost<A, B, C>(testSinglePostInfo) {
+        notarizedPost<ExampleParams, ExampleRequest, ExampleCreatedResponse>(testSinglePostInfo) {
           call.respondText("test post")
         }
-        notarizedPut<A, B, D>(testSinglePutInfo) {
+        notarizedPut<ExampleParams, ExampleRequest, ExampleCreatedResponse>(testSinglePutInfo) {
           call.respondText { "hey" }
+        }
+        notarizedDelete<Unit, DeleteResponse>(testSingleDeleteInfo) {
+          call.respondText { "heya" }
         }
       }
     }
@@ -53,5 +56,35 @@ fun Application.mainModule() {
       }
     }
   }
+}
+
+// Ancillary Data 
+data class ExampleParams(val a: String, val aa: Int)
+
+data class ExampleNested(val nesty: String)
+
+@KompendiumResponse(status = 204, "Entity was deleted successfully")
+object DeleteResponse
+
+@KompendiumRequest("Example Request")
+data class ExampleRequest(
+  @KompendiumField(name = "field_name")
+  val fieldName: ExampleNested,
+  val b: Double,
+  val aaa: List<Long>
+)
+
+@KompendiumResponse(200, "A Successful Endeavor")
+data class ExampleResponse(val c: String)
+
+@KompendiumResponse(201, "Created Successfully")
+data class ExampleCreatedResponse(val id: Int, val c: String)
+
+object KompendiumTOC {
+  val testIdGetInfo = MethodInfo("Get Test", "Test for getting", tags = setOf("test", "example", "get"))
+  val testSingleGetInfo = MethodInfo("Another get test", "testing more")
+  val testSinglePostInfo = MethodInfo("Test post endpoint", "Post your tests here!")
+  val testSinglePutInfo = MethodInfo("Test put endpoint", "Put your tests here!")
+  val testSingleDeleteInfo = MethodInfo("Test delete endpoint", "testing my deletes")
 }
 ```
