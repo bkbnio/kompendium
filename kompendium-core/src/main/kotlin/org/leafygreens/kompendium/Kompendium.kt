@@ -47,12 +47,7 @@ object Kompendium {
   ): Route = generateComponentSchemas<TParam, Unit, TResp>() {
     val path = calculatePath()
     openApiSpec.paths.getOrPut(path) { OpenApiSpecPathItem() }
-    openApiSpec.paths[path]?.get = OpenApiSpecPathItemOperation(
-      summary = info.summary,
-      description = info.description,
-      tags = info.tags,
-      responses = mapOf(parseResponseAnnotation<TResp>())
-    )
+    openApiSpec.paths[path]?.get = info.parseMethodInfo<Unit, TResp>()
     return method(HttpMethod.Get) { handle(body) }
   }
 
@@ -62,13 +57,7 @@ object Kompendium {
   ): Route = generateComponentSchemas<TParam, TReq, TResp>() {
     val path = calculatePath()
     openApiSpec.paths.getOrPut(path) { OpenApiSpecPathItem() }
-    openApiSpec.paths[path]?.post = OpenApiSpecPathItemOperation(
-      summary = info.summary,
-      description = info.description,
-      tags = info.tags,
-      responses = mapOf(parseResponseAnnotation<TResp>()),
-      requestBody = parseRequestAnnotation<TReq>()
-    )
+    openApiSpec.paths[path]?.post = info.parseMethodInfo<TReq, TResp>()
     return method(HttpMethod.Post) { handle(body) }
   }
 
@@ -78,15 +67,18 @@ object Kompendium {
   ): Route = generateComponentSchemas<TParam, TReq, TResp>() {
     val path = calculatePath()
     openApiSpec.paths.getOrPut(path) { OpenApiSpecPathItem() }
-    openApiSpec.paths[path]?.put = OpenApiSpecPathItemOperation(
-      summary = info.summary,
-      description = info.description,
-      tags = info.tags,
-      responses = mapOf(parseResponseAnnotation<TResp>()),
-      requestBody = parseRequestAnnotation<TReq>()
-    )
+    openApiSpec.paths[path]?.put = info.parseMethodInfo<TReq, TResp>()
     return method(HttpMethod.Put) { handle(body) }
   }
+
+  inline fun <reified TReq, reified TResp> MethodInfo.parseMethodInfo() = OpenApiSpecPathItemOperation(
+    summary = this.summary,
+    description = this.description,
+    tags = this.tags,
+    deprecated = this.deprecated,
+    responses = parseResponseAnnotation<TResp>()?.let { mapOf(it) },
+    requestBody = parseRequestAnnotation<TReq>()
+  )
 
   inline fun <reified TParam : Any, reified TReq : Any, reified TResp : Any> generateComponentSchemas(
     block: () -> Route
@@ -97,29 +89,35 @@ object Kompendium {
     return block.invoke()
   }
 
-  inline fun <reified TReq> parseRequestAnnotation(): OpenApiSpecRequest {
-    val anny = TReq::class.findAnnotation<KompendiumRequest>() ?: error("My way or the highway bub")
-    return OpenApiSpecRequest(
-      description = anny.description,
-      content = anny.mediaTypes.associate {
-        val ref = OpenApiSpecReferenceObject("$COMPONENT_SLUG/${TReq::class.simpleName}")
-        val mediaType = OpenApiSpecMediaType.Referenced(ref)
-        Pair(it, mediaType)
-      }
-    )
+  inline fun <reified TReq> parseRequestAnnotation(): OpenApiSpecRequest? = when (TReq::class) {
+    Unit::class -> null
+    else -> {
+      val anny = TReq::class.findAnnotation<KompendiumRequest>() ?: error("My way or the highway bub")
+      OpenApiSpecRequest(
+        description = anny.description,
+        content = anny.mediaTypes.associate {
+          val ref = OpenApiSpecReferenceObject("$COMPONENT_SLUG/${TReq::class.simpleName}")
+          val mediaType = OpenApiSpecMediaType.Referenced(ref)
+          Pair(it, mediaType)
+        }
+      )
+    }
   }
 
-  inline fun <reified TResp> parseResponseAnnotation(): Pair<Int, OpenApiSpecResponse> {
-    val anny = TResp::class.findAnnotation<KompendiumResponse>() ?: error("My way or the highway bub")
-    val specResponse = OpenApiSpecResponse(
-      description = anny.description,
-      content = anny.mediaTypes.associate {
-        val ref = OpenApiSpecReferenceObject("$COMPONENT_SLUG/${TResp::class.simpleName}")
-        val mediaType = OpenApiSpecMediaType.Referenced(ref)
-        Pair(it, mediaType)
-      }
-    )
-    return Pair(anny.status, specResponse)
+  inline fun <reified TResp> parseResponseAnnotation(): Pair<Int, OpenApiSpecResponse>? = when (TResp::class) {
+    Unit::class -> null
+    else -> {
+      val anny = TResp::class.findAnnotation<KompendiumResponse>() ?: error("My way or the highway bub")
+      val specResponse = OpenApiSpecResponse(
+        description = anny.description,
+        content = anny.mediaTypes.associate {
+          val ref = OpenApiSpecReferenceObject("$COMPONENT_SLUG/${TResp::class.simpleName}")
+          val mediaType = OpenApiSpecMediaType.Referenced(ref)
+          Pair(it, mediaType)
+        }
+      )
+      Pair(anny.status, specResponse)
+    }
   }
 
   // TODO Investigate a caching mechanism to reduce overhead... then just reference once created
