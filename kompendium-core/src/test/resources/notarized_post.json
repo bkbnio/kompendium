@@ -40,12 +40,12 @@
           "required" : false
         },
         "responses" : {
-          "200" : {
-            "description" : "A Successful Endeavor",
+          "201" : {
+            "description" : "Created Successfully",
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/TestResponse"
+                  "$ref" : "#/components/schemas/TestCreatedResponse"
                 }
               }
             }
@@ -57,10 +57,14 @@
   },
   "components" : {
     "schemas" : {
-      "TestResponse" : {
+      "TestCreatedResponse" : {
         "properties" : {
           "c" : {
             "type" : "string"
+          },
+          "id" : {
+            "format" : "int32",
+            "type" : "integer"
           }
         },
         "type" : "object"

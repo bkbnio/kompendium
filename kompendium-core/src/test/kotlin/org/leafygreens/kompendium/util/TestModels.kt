@@ -21,3 +21,6 @@ data class TestResponse(val c: String)
 
 @KompendiumResponse(201, "Created Successfully")
 data class TestCreatedResponse(val id: Int, val c: String)
+
+@KompendiumResponse(status = 204, "Entity was deleted successfully")
+object TestDeleteResponse

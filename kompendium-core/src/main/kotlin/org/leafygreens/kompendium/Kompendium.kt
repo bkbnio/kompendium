@@ -71,6 +71,16 @@ object Kompendium {
     return method(HttpMethod.Put) { handle(body) }
   }
 
+  inline fun <reified TParam : Any, reified TResp : Any> Route.notarizedDelete(
+    info: MethodInfo,
+    noinline body: PipelineInterceptor<Unit, ApplicationCall>
+  ): Route = generateComponentSchemas<TParam, Unit, TResp> {
+    val path = calculatePath()
+    openApiSpec.paths.getOrPut(path) { OpenApiSpecPathItem() }
+    openApiSpec.paths[path]?.delete = info.parseMethodInfo<Unit, TResp>()
+    return method(HttpMethod.Delete) { handle(body) }
+  }
+
   inline fun <reified TReq, reified TResp> MethodInfo.parseMethodInfo() = OpenApiSpecPathItemOperation(
     summary = this.summary,
     description = this.description,

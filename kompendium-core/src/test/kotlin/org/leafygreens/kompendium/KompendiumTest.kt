@@ -7,6 +7,7 @@ import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.features.ContentNegotiation
 import io.ktor.http.HttpMethod
+import io.ktor.http.HttpStatusCode
 import io.ktor.jackson.jackson
 import io.ktor.response.respond
 import io.ktor.response.respondText
@@ -19,6 +20,7 @@ import java.net.URI
 import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import org.leafygreens.kompendium.Kompendium.notarizedDelete
 import org.leafygreens.kompendium.Kompendium.notarizedGet
 import org.leafygreens.kompendium.Kompendium.notarizedPost
 import org.leafygreens.kompendium.Kompendium.notarizedPut
@@ -27,7 +29,9 @@ import org.leafygreens.kompendium.models.oas.OpenApiSpecInfo
 import org.leafygreens.kompendium.models.oas.OpenApiSpecInfoContact
 import org.leafygreens.kompendium.models.oas.OpenApiSpecInfoLicense
 import org.leafygreens.kompendium.models.oas.OpenApiSpecServer
+import org.leafygreens.kompendium.util.TestCreatedResponse
 import org.leafygreens.kompendium.util.TestData
+import org.leafygreens.kompendium.util.TestDeleteResponse
 import org.leafygreens.kompendium.util.TestParams
 import org.leafygreens.kompendium.util.TestRequest
 import org.leafygreens.kompendium.util.TestResponse
@@ -143,6 +147,38 @@ internal class KompendiumTest {
   }
 
   @Test
+  fun `Notarized delete records all expected information`() {
+    withTestApplication({
+      configModule()
+      openApiModule()
+      notarizedDeleteModule()
+    }) {
+      // do
+      val json = handleRequest(HttpMethod.Get, "/openapi.json").response.content
+
+      // expect
+      val expected = TestData.getFileSnapshot("notarized_delete.json").trim()
+      assertEquals(expected, json, "The received json spec should match the expected content")
+    }
+  }
+
+
+  @Test
+  fun `Notarized delete does not interrupt the pipeline`() {
+    withTestApplication({
+      configModule()
+      openApiModule()
+      notarizedDeleteModule()
+    }) {
+      // do
+      val status = handleRequest(HttpMethod.Delete, "/test").response.status()
+
+      // expect
+      assertEquals(HttpStatusCode.NoContent, status, "No content status should be received")
+    }
+  }
+
+  @Test
   fun `Path parser stores the expected path`() {
     withTestApplication({
       configModule()
@@ -162,6 +198,7 @@ internal class KompendiumTest {
     val testGetInfo = MethodInfo("Another get test", "testing more")
     val testPostInfo = MethodInfo("Test post endpoint", "Post your tests here!")
     val testPutInfo = MethodInfo("Test put endpoint", "Put your tests here!")
+    val testDeleteInfo = MethodInfo("Test delete endpoint", "testing my deletes")
   }
 
   private fun Application.configModule() {
@@ -186,8 +223,18 @@ internal class KompendiumTest {
   private fun Application.notarizedPostModule() {
     routing {
       route("/test") {
-        notarizedPost<TestParams, TestRequest, TestResponse>(testPostInfo) {
+        notarizedPost<TestParams, TestRequest, TestCreatedResponse>(testPostInfo) {
           call.respondText { "hey dude ✌️ congratz on the post request" }
+        }
+      }
+    }
+  }
+
+  private fun Application.notarizedDeleteModule() {
+    routing {
+      route("/test") {
+        notarizedDelete<TestParams, TestDeleteResponse>(testDeleteInfo) {
+          call.respond(HttpStatusCode.NoContent)
         }
       }
     }
@@ -196,7 +243,7 @@ internal class KompendiumTest {
   private fun Application.notarizedPutModule() {
     routing {
       route("/test") {
-        notarizedPut<TestParams, TestRequest, TestResponse>(testPutInfo) {
+        notarizedPut<TestParams, TestRequest, TestCreatedResponse>(testPutInfo) {
           call.respondText { "hey pal 🌝 whatcha doin' here?" }
         }
       }

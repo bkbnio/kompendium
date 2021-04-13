@@ -13,6 +13,7 @@ import io.ktor.routing.routing
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import java.net.URI
+import org.leafygreens.kompendium.Kompendium.notarizedDelete
 import org.leafygreens.kompendium.Kompendium.notarizedGet
 import org.leafygreens.kompendium.Kompendium.notarizedPost
 import org.leafygreens.kompendium.Kompendium.notarizedPut
@@ -26,6 +27,7 @@ import org.leafygreens.kompendium.models.oas.OpenApiSpecInfoContact
 import org.leafygreens.kompendium.models.oas.OpenApiSpecInfoLicense
 import org.leafygreens.kompendium.models.oas.OpenApiSpecServer
 import org.leafygreens.kompendium.playground.KompendiumTOC.testIdGetInfo
+import org.leafygreens.kompendium.playground.KompendiumTOC.testSingleDeleteInfo
 import org.leafygreens.kompendium.playground.KompendiumTOC.testSingleGetInfo
 import org.leafygreens.kompendium.playground.KompendiumTOC.testSinglePostInfo
 import org.leafygreens.kompendium.playground.KompendiumTOC.testSinglePutInfo
@@ -41,6 +43,9 @@ fun main() {
 data class ExampleParams(val a: String, val aa: Int)
 
 data class ExampleNested(val nesty: String)
+
+@KompendiumResponse(status = 204, "Entity was deleted successfully")
+object DeleteResponse
 
 @KompendiumRequest("Example Request")
 data class ExampleRequest(
@@ -61,6 +66,7 @@ object KompendiumTOC {
   val testSingleGetInfo = MethodInfo("Another get test", "testing more")
   val testSinglePostInfo = MethodInfo("Test post endpoint", "Post your tests here!")
   val testSinglePutInfo = MethodInfo("Test put endpoint", "Put your tests here!")
+  val testSingleDeleteInfo = MethodInfo("Test delete endpoint", "testing my deletes")
 }
 
 fun Application.mainModule() {
@@ -83,6 +89,9 @@ fun Application.mainModule() {
         }
         notarizedPut<ExampleParams, ExampleRequest, ExampleCreatedResponse>(testSinglePutInfo) {
           call.respondText { "hey" }
+        }
+        notarizedDelete<Unit, DeleteResponse>(testSingleDeleteInfo) {
+          call.respondText { "heya" }
         }
       }
     }
