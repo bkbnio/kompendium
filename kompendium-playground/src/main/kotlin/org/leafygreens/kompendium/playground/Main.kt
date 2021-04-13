@@ -18,6 +18,7 @@ import org.leafygreens.kompendium.Kompendium.notarizedPost
 import org.leafygreens.kompendium.Kompendium.notarizedPut
 import org.leafygreens.kompendium.Kompendium.openApiSpec
 import org.leafygreens.kompendium.annotations.KompendiumField
+import org.leafygreens.kompendium.annotations.KompendiumRequest
 import org.leafygreens.kompendium.annotations.KompendiumResponse
 import org.leafygreens.kompendium.models.meta.MethodInfo
 import org.leafygreens.kompendium.models.oas.OpenApiSpecInfo
@@ -41,6 +42,7 @@ data class ExampleParams(val a: String, val aa: Int)
 
 data class ExampleNested(val nesty: String)
 
+@KompendiumRequest("Example Request")
 data class ExampleRequest(
   @KompendiumField(name = "field_name")
   val fieldName: ExampleNested,

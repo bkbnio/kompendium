@@ -12,6 +12,7 @@ import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.jvm.javaField
 import org.leafygreens.kompendium.annotations.KompendiumField
+import org.leafygreens.kompendium.annotations.KompendiumRequest
 import org.leafygreens.kompendium.annotations.KompendiumResponse
 import org.leafygreens.kompendium.models.meta.MethodInfo
 import org.leafygreens.kompendium.models.oas.ArraySchema
@@ -24,12 +25,16 @@ import org.leafygreens.kompendium.models.oas.OpenApiSpecMediaType
 import org.leafygreens.kompendium.models.oas.OpenApiSpecPathItem
 import org.leafygreens.kompendium.models.oas.OpenApiSpecPathItemOperation
 import org.leafygreens.kompendium.models.oas.OpenApiSpecReferenceObject
+import org.leafygreens.kompendium.models.oas.OpenApiSpecRequest
 import org.leafygreens.kompendium.models.oas.OpenApiSpecResponse
 import org.leafygreens.kompendium.models.oas.SimpleSchema
 import org.leafygreens.kompendium.util.Helpers.calculatePath
 import org.leafygreens.kompendium.util.Helpers.putPairIfAbsent
 
 object Kompendium {
+
+  const val COMPONENT_SLUG = "#/components/schemas"
+
   val openApiSpec = OpenApiSpec(
     info = OpenApiSpecInfo(),
     servers = mutableListOf(),
@@ -61,7 +66,8 @@ object Kompendium {
       summary = info.summary,
       description = info.description,
       tags = info.tags,
-      responses = mapOf(parseResponseAnnotation<TResp>())
+      responses = mapOf(parseResponseAnnotation<TResp>()),
+      requestBody = parseRequestAnnotation<TReq>()
     )
     return method(HttpMethod.Post) { handle(body) }
   }
@@ -76,7 +82,8 @@ object Kompendium {
       summary = info.summary,
       description = info.description,
       tags = info.tags,
-      responses = mapOf(parseResponseAnnotation<TResp>())
+      responses = mapOf(parseResponseAnnotation<TResp>()),
+      requestBody = parseRequestAnnotation<TReq>()
     )
     return method(HttpMethod.Put) { handle(body) }
   }
@@ -90,12 +97,24 @@ object Kompendium {
     return block.invoke()
   }
 
+  inline fun <reified TReq> parseRequestAnnotation(): OpenApiSpecRequest {
+    val anny = TReq::class.findAnnotation<KompendiumRequest>() ?: error("My way or the highway bub")
+    return OpenApiSpecRequest(
+      description = anny.description,
+      content = anny.mediaTypes.associate {
+        val ref = OpenApiSpecReferenceObject("$COMPONENT_SLUG/${TReq::class.simpleName}")
+        val mediaType = OpenApiSpecMediaType.Referenced(ref)
+        Pair(it, mediaType)
+      }
+    )
+  }
+
   inline fun <reified TResp> parseResponseAnnotation(): Pair<Int, OpenApiSpecResponse> {
     val anny = TResp::class.findAnnotation<KompendiumResponse>() ?: error("My way or the highway bub")
     val specResponse = OpenApiSpecResponse(
       description = anny.description,
       content = anny.mediaTypes.associate {
-        val ref = OpenApiSpecReferenceObject("#/components/schemas/${TResp::class.java.simpleName}")
+        val ref = OpenApiSpecReferenceObject("$COMPONENT_SLUG/${TResp::class.simpleName}")
         val mediaType = OpenApiSpecMediaType.Referenced(ref)
         Pair(it, mediaType)
       }
