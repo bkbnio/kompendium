@@ -21,8 +21,10 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import org.leafygreens.kompendium.Kompendium.notarizedGet
 import org.leafygreens.kompendium.Kompendium.notarizedPost
+import org.leafygreens.kompendium.Kompendium.notarizedPut
 import org.leafygreens.kompendium.KompendiumTest.Companion.KompendiumToC.testGetInfo
 import org.leafygreens.kompendium.KompendiumTest.Companion.KompendiumToC.testPostInfo
+import org.leafygreens.kompendium.KompendiumTest.Companion.KompendiumToC.testPutInfo
 import org.leafygreens.kompendium.models.meta.MethodInfo
 import org.leafygreens.kompendium.models.oas.OpenApiSpecInfo
 import org.leafygreens.kompendium.models.oas.OpenApiSpecInfoContact
@@ -94,7 +96,6 @@ internal class KompendiumTest {
   }
 
 
-
   @Test
   fun `Notarized post does not interrupt the pipeline`() {
     withTestApplication({
@@ -107,6 +108,39 @@ internal class KompendiumTest {
 
       // expect
       val expected = "hey dude ✌️ congratz on the post request"
+      assertEquals(expected, json, "The received json spec should match the expected content")
+    }
+  }
+
+  @Test
+  fun `Notarized Put records all expected information`() {
+    withTestApplication({
+      configModule()
+      openApiModule()
+      notarizedPutModule()
+    }) {
+      // do
+      val json = handleRequest(HttpMethod.Get, "/openapi.json").response.content
+
+      // expect
+      val expected = TestData.getFileSnapshot("notarized_put.json").trim()
+      assertEquals(expected, json, "The received json spec should match the expected content")
+    }
+  }
+
+
+  @Test
+  fun `Notarized put does not interrupt the pipeline`() {
+    withTestApplication({
+      configModule()
+      openApiModule()
+      notarizedPutModule()
+    }) {
+      // do
+      val json = handleRequest(HttpMethod.Put, "/test").response.content
+
+      // expect
+      val expected = "hey pal 🌝 whatcha doin' here?"
       assertEquals(expected, json, "The received json spec should match the expected content")
     }
   }
@@ -143,6 +177,16 @@ internal class KompendiumTest {
       route("/test") {
         notarizedPost<TestParams, TestRequest, TestResponse>(testPostInfo) {
           call.respondText { "hey dude ✌️ congratz on the post request" }
+        }
+      }
+    }
+  }
+
+  private fun Application.notarizedPutModule() {
+    routing {
+      route("/test") {
+        notarizedPut<TestParams, TestRequest, TestResponse>(testPutInfo) {
+          call.respondText { "hey pal 🌝 whatcha doin' here?" }
         }
       }
     }
