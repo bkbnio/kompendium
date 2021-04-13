@@ -22,9 +22,6 @@ import kotlin.test.assertEquals
 import org.leafygreens.kompendium.Kompendium.notarizedGet
 import org.leafygreens.kompendium.Kompendium.notarizedPost
 import org.leafygreens.kompendium.Kompendium.notarizedPut
-import org.leafygreens.kompendium.KompendiumTest.Companion.KompendiumToC.testGetInfo
-import org.leafygreens.kompendium.KompendiumTest.Companion.KompendiumToC.testPostInfo
-import org.leafygreens.kompendium.KompendiumTest.Companion.KompendiumToC.testPutInfo
 import org.leafygreens.kompendium.models.meta.MethodInfo
 import org.leafygreens.kompendium.models.oas.OpenApiSpecInfo
 import org.leafygreens.kompendium.models.oas.OpenApiSpecInfoContact
@@ -145,12 +142,26 @@ internal class KompendiumTest {
     }
   }
 
-  private companion object {
-    object KompendiumToC {
-      val testGetInfo = MethodInfo("Another get test", "testing more")
-      val testPostInfo = MethodInfo("Test post endpoint", "Post your tests here!")
-      val testPutInfo = MethodInfo("Test put endpoint", "Put your tests here!")
+  @Test
+  fun `Path parser stores the expected path`() {
+    withTestApplication({
+      configModule()
+      openApiModule()
+      pathParsingTestModule()
+    }) {
+      // do
+      val json = handleRequest(HttpMethod.Get, "/openapi.json").response.content
+
+      // expect
+      val expected = TestData.getFileSnapshot("path_parser.json").trim()
+      assertEquals(expected, json, "The received json spec should match the expected content")
     }
+  }
+
+  private companion object {
+    val testGetInfo = MethodInfo("Another get test", "testing more")
+    val testPostInfo = MethodInfo("Test post endpoint", "Post your tests here!")
+    val testPutInfo = MethodInfo("Test put endpoint", "Put your tests here!")
   }
 
   private fun Application.configModule() {
@@ -187,6 +198,26 @@ internal class KompendiumTest {
       route("/test") {
         notarizedPut<TestParams, TestRequest, TestResponse>(testPutInfo) {
           call.respondText { "hey pal 🌝 whatcha doin' here?" }
+        }
+      }
+    }
+  }
+
+  private fun Application.pathParsingTestModule() {
+    routing {
+      route("/this") {
+        route("/is") {
+          route("/a") {
+            route("/complex") {
+              route("path") {
+                route("with/an/{id}") {
+                  notarizedGet<TestParams, TestResponse>(testGetInfo) {
+                    call.respondText { "Aww you followed this whole route 🥺" }
+                  }
+                }
+              }
+            }
+          }
         }
       }
     }
