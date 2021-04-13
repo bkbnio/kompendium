@@ -1,3 +1,10 @@
+## [0.0.2] - April 12th, 2021
+
+### Added
+
+- Beginning of an implementation.  Currently, able to generate a rough outline of the API at runtime, along with generating 
+full data classes represented by JSON Schema.  
+
 ## [0.0.1] - April 11th, 2021
 
 ### Added

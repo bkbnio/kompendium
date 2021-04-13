@@ -153,6 +153,7 @@
     }
   },
   "components" : {
+    "schemas" : { },
     "securitySchemes" : {
       "petstore_auth" : {
         "type" : "oauth2",
@@ -173,6 +174,7 @@
       }
     }
   },
+  "security" : [ ],
   "tags" : [ {
     "name" : "pet",
     "description" : "Everything about your Pets",

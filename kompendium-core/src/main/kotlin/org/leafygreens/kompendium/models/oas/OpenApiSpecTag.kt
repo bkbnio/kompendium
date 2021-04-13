@@ -1,4 +1,4 @@
-package org.leafygreens.kompendium.models
+package org.leafygreens.kompendium.models.oas
 
 data class OpenApiSpecTag(
   val name: String,

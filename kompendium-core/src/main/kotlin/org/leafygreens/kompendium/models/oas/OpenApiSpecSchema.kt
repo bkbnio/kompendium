@@ -1,4 +1,4 @@
-package org.leafygreens.kompendium.models
+package org.leafygreens.kompendium.models.oas
 
 sealed class OpenApiSpecSchema
 
@@ -21,11 +21,11 @@ data class OpenApiSpecSchemaRef(
 ) : OpenApiSpecSchema()
 
 data class OpenApiSpecSchemaSecurity(
-  val type: String? = null, // TODO Enum? "apiKey", "http", "oauth2", "openIdConnect"
-  val name: String? = null,
-  val `in`: String? = null,
-  val scheme: String? = null,
-  val flows: OpenApiSpecOAuthFlows? = null,
-  val bearerFormat: String? = null,
-  val description: String? = null,
+    val type: String? = null, // TODO Enum? "apiKey", "http", "oauth2", "openIdConnect"
+    val name: String? = null,
+    val `in`: String? = null,
+    val scheme: String? = null,
+    val flows: OpenApiSpecOAuthFlows? = null,
+    val bearerFormat: String? = null,
+    val description: String? = null,
 ) : OpenApiSpecSchema()

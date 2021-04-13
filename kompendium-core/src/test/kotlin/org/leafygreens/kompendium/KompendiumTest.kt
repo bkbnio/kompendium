@@ -7,8 +7,7 @@ internal class KompendiumTest {
 
   @Test
   fun `Kompendium can be instantiated with no details`() {
-    val kompendium = Kompendium()
-    assertEquals(kompendium.spec.openapi, "3.0.3", "Kompendium has a default spec version of 3.0.3")
+    assertEquals(Kompendium.openApiSpec.openapi, "3.0.3", "Kompendium has a default spec version of 3.0.3")
   }
 
 }

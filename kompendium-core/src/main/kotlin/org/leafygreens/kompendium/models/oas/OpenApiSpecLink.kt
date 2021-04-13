@@ -1,4 +1,4 @@
-package org.leafygreens.kompendium.models
+package org.leafygreens.kompendium.models.oas
 
 data class OpenApiSpecLink(
   val operationRef: String?, // todo mutually exclusive with operationId
