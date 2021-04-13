@@ -4,6 +4,7 @@ import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.features.ContentNegotiation
+import io.ktor.http.HttpStatusCode
 import io.ktor.jackson.jackson
 import io.ktor.response.respond
 import io.ktor.response.respondText
@@ -55,10 +56,13 @@ data class ExampleRequest(
   val aaa: List<Long>
 )
 
-@KompendiumResponse(200, "A Successful Endeavor")
+private const val HTTP_OK = 200
+private const val HTTP_CREATED = 201
+
+@KompendiumResponse(HTTP_OK, "A Successful Endeavor")
 data class ExampleResponse(val c: String)
 
-@KompendiumResponse(201, "Created Successfully")
+@KompendiumResponse(HTTP_CREATED, "Created Successfully")
 data class ExampleCreatedResponse(val id: Int, val c: String)
 
 object KompendiumTOC {
