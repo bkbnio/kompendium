@@ -20,13 +20,16 @@ import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import org.leafygreens.kompendium.Kompendium.notarizedGet
-import org.leafygreens.kompendium.KompendiumTest.Companion.KompendiumToC.testSingleGetInfo
+import org.leafygreens.kompendium.Kompendium.notarizedPost
+import org.leafygreens.kompendium.KompendiumTest.Companion.KompendiumToC.testGetInfo
+import org.leafygreens.kompendium.KompendiumTest.Companion.KompendiumToC.testPostInfo
 import org.leafygreens.kompendium.models.meta.MethodInfo
 import org.leafygreens.kompendium.models.oas.OpenApiSpecInfo
 import org.leafygreens.kompendium.models.oas.OpenApiSpecInfoContact
 import org.leafygreens.kompendium.models.oas.OpenApiSpecInfoLicense
 import org.leafygreens.kompendium.models.oas.OpenApiSpecServer
 import org.leafygreens.kompendium.util.TestData
+import org.leafygreens.kompendium.util.TestParams
 import org.leafygreens.kompendium.util.TestRequest
 import org.leafygreens.kompendium.util.TestResponse
 
@@ -58,12 +61,61 @@ internal class KompendiumTest {
     }
   }
 
+  @Test
+  fun `Notarized Get does not interrupt the pipeline`() {
+    withTestApplication({
+      configModule()
+      openApiModule()
+      notarizedGetModule()
+    }) {
+      // do
+      val json = handleRequest(HttpMethod.Get, "/test").response.content
+
+      // expect
+      val expected = "hey dude ‼️ congratz on the get request"
+      assertEquals(expected, json, "The received json spec should match the expected content")
+    }
+  }
+
+  @Test
+  fun `Notarized Post records all expected information`() {
+    withTestApplication({
+      configModule()
+      openApiModule()
+      notarizedPostModule()
+    }) {
+      // do
+      val json = handleRequest(HttpMethod.Get, "/openapi.json").response.content
+
+      // expect
+      val expected = TestData.getFileSnapshot("notarized_post.json").trim()
+      assertEquals(expected, json, "The received json spec should match the expected content")
+    }
+  }
+
+
+
+  @Test
+  fun `Notarized post does not interrupt the pipeline`() {
+    withTestApplication({
+      configModule()
+      openApiModule()
+      notarizedPostModule()
+    }) {
+      // do
+      val json = handleRequest(HttpMethod.Post, "/test").response.content
+
+      // expect
+      val expected = "hey dude ✌️ congratz on the post request"
+      assertEquals(expected, json, "The received json spec should match the expected content")
+    }
+  }
+
   private companion object {
     object KompendiumToC {
-      val testIdGetInfo = MethodInfo("Get Test", "Test for getting", tags = setOf("test", "example", "get"))
-      val testSingleGetInfo = MethodInfo("Another get test", "testing more")
-      val testSinglePostInfo = MethodInfo("Test post endpoint", "Post your tests here!")
-      val testSinglePutInfo = MethodInfo("Test put endpoint", "Put your tests here!")
+      val testGetInfo = MethodInfo("Another get test", "testing more")
+      val testPostInfo = MethodInfo("Test post endpoint", "Post your tests here!")
+      val testPutInfo = MethodInfo("Test put endpoint", "Put your tests here!")
     }
   }
 
@@ -79,8 +131,18 @@ internal class KompendiumTest {
   private fun Application.notarizedGetModule() {
     routing {
       route("/test") {
-        notarizedGet<TestRequest, TestResponse>(testSingleGetInfo) {
-          call.respondText("get single")
+        notarizedGet<TestParams, TestResponse>(testGetInfo) {
+          call.respondText { "hey dude ‼️ congratz on the get request" }
+        }
+      }
+    }
+  }
+
+  private fun Application.notarizedPostModule() {
+    routing {
+      route("/test") {
+        notarizedPost<TestParams, TestRequest, TestResponse>(testPostInfo) {
+          call.respondText { "hey dude ✌️ congratz on the post request" }
         }
       }
     }
