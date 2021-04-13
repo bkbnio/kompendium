@@ -3,7 +3,6 @@ package org.leafygreens.kompendium
 import io.ktor.application.ApplicationCall
 import io.ktor.http.HttpMethod
 import io.ktor.routing.Route
-import io.ktor.routing.createRouteFromPath
 import io.ktor.routing.method
 import io.ktor.util.pipeline.PipelineInterceptor
 import java.lang.reflect.ParameterizedType
@@ -13,17 +12,20 @@ import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.jvm.javaField
 import org.leafygreens.kompendium.annotations.KompendiumField
-import org.leafygreens.kompendium.annotations.KompendiumInternal
+import org.leafygreens.kompendium.annotations.KompendiumResponse
+import org.leafygreens.kompendium.models.meta.MethodInfo
 import org.leafygreens.kompendium.models.oas.ArraySchema
 import org.leafygreens.kompendium.models.oas.FormatSchema
 import org.leafygreens.kompendium.models.oas.ObjectSchema
 import org.leafygreens.kompendium.models.oas.OpenApiSpec
 import org.leafygreens.kompendium.models.oas.OpenApiSpecComponentSchema
 import org.leafygreens.kompendium.models.oas.OpenApiSpecInfo
+import org.leafygreens.kompendium.models.oas.OpenApiSpecMediaType
 import org.leafygreens.kompendium.models.oas.OpenApiSpecPathItem
 import org.leafygreens.kompendium.models.oas.OpenApiSpecPathItemOperation
+import org.leafygreens.kompendium.models.oas.OpenApiSpecReferenceObject
+import org.leafygreens.kompendium.models.oas.OpenApiSpecResponse
 import org.leafygreens.kompendium.models.oas.SimpleSchema
-import org.leafygreens.kompendium.models.meta.MethodInfo
 import org.leafygreens.kompendium.util.Helpers.calculatePath
 import org.leafygreens.kompendium.util.Helpers.putPairIfAbsent
 
@@ -34,62 +36,77 @@ object Kompendium {
     paths = mutableMapOf()
   )
 
-  fun Route.notarizedGet(info: MethodInfo, body: PipelineInterceptor<Unit, ApplicationCall>): Route {
+  inline fun <reified TParam : Any, reified TResp : Any> Route.notarizedGet(
+    info: MethodInfo,
+    noinline body: PipelineInterceptor<Unit, ApplicationCall>
+  ): Route = generateComponentSchemas<TParam, Unit, TResp>() {
     val path = calculatePath()
     openApiSpec.paths.getOrPut(path) { OpenApiSpecPathItem() }
     openApiSpec.paths[path]?.get = OpenApiSpecPathItemOperation(
       summary = info.summary,
       description = info.description,
-      tags = info.tags
+      tags = info.tags,
+      responses = mapOf(parseResponseAnnotation<TResp>())
     )
     return method(HttpMethod.Get) { handle(body) }
   }
 
-  inline fun <reified TQ : Any, reified TP : Any, reified TR : Any> Route.notarizedPost(
+  inline fun <reified TParam : Any, reified TReq : Any, reified TResp : Any> Route.notarizedPost(
     info: MethodInfo,
     noinline body: PipelineInterceptor<Unit, ApplicationCall>
-  ): Route = generateComponentSchemas<TQ, TP, TR>(info, body) { i, b ->
+  ): Route = generateComponentSchemas<TParam, TReq, TResp>() {
     val path = calculatePath()
     openApiSpec.paths.getOrPut(path) { OpenApiSpecPathItem() }
     openApiSpec.paths[path]?.post = OpenApiSpecPathItemOperation(
-      summary = i.summary,
-      description = i.description,
-      tags = i.tags
+      summary = info.summary,
+      description = info.description,
+      tags = info.tags,
+      responses = mapOf(parseResponseAnnotation<TResp>())
     )
-    return method(HttpMethod.Post) { handle(b) }
+    return method(HttpMethod.Post) { handle(body) }
   }
 
-  inline fun <reified TQ : Any, reified TP : Any, reified TR : Any> Route.notarizedPut(
+  inline fun <reified TParam : Any, reified TReq : Any, reified TResp : Any> Route.notarizedPut(
     info: MethodInfo,
     noinline body: PipelineInterceptor<Unit, ApplicationCall>,
-  ): Route = generateComponentSchemas<TQ, TP, TR>(info, body) { i, b ->
+  ): Route = generateComponentSchemas<TParam, TReq, TResp>() {
     val path = calculatePath()
     openApiSpec.paths.getOrPut(path) { OpenApiSpecPathItem() }
     openApiSpec.paths[path]?.put = OpenApiSpecPathItemOperation(
-      summary = i.summary,
-      description = i.description,
-      tags = i.tags
+      summary = info.summary,
+      description = info.description,
+      tags = info.tags,
+      responses = mapOf(parseResponseAnnotation<TResp>())
     )
-    return method(HttpMethod.Put) { handle(b) }
+    return method(HttpMethod.Put) { handle(body) }
   }
 
-  @OptIn(KompendiumInternal::class)
-  inline fun <reified TQ : Any, reified TP : Any, reified TR : Any> generateComponentSchemas(
-    info: MethodInfo,
-    noinline body: PipelineInterceptor<Unit, ApplicationCall>,
-    block: (MethodInfo, PipelineInterceptor<Unit, ApplicationCall>) -> Route
+  inline fun <reified TParam : Any, reified TReq : Any, reified TResp : Any> generateComponentSchemas(
+    block: () -> Route
   ): Route {
-    openApiSpec.components.schemas.putPairIfAbsent(objectSchemaPair(TQ::class))
-    openApiSpec.components.schemas.putPairIfAbsent(objectSchemaPair(TR::class))
-    openApiSpec.components.schemas.putPairIfAbsent(objectSchemaPair(TP::class))
-    return block.invoke(info, body)
+    if (TResp::class != Unit::class) openApiSpec.components.schemas.putPairIfAbsent(objectSchemaPair(TResp::class))
+    if (TReq::class != Unit::class) openApiSpec.components.schemas.putPairIfAbsent(objectSchemaPair(TReq::class))
+//    openApiSpec.components.schemas.putPairIfAbsent(objectSchemaPair(TParam::class))
+    return block.invoke()
   }
 
-  @KompendiumInternal
+  inline fun <reified TResp> parseResponseAnnotation(): Pair<Int, OpenApiSpecResponse> {
+    val anny = TResp::class.findAnnotation<KompendiumResponse>() ?: error("My way or the highway bub")
+    val specResponse = OpenApiSpecResponse(
+      description = anny.description,
+      content = anny.mediaTypes.associate {
+        val ref = OpenApiSpecReferenceObject("#/components/schemas/${TResp::class.java.simpleName}")
+        val mediaType = OpenApiSpecMediaType.Referenced(ref)
+        Pair(it, mediaType)
+      }
+    )
+    return Pair(anny.status, specResponse)
+  }
+
   // TODO Investigate a caching mechanism to reduce overhead... then just reference once created
   fun objectSchemaPair(clazz: KClass<*>): Pair<String, ObjectSchema> {
     val o = objectSchema(clazz)
-    return Pair(clazz.qualifiedName!!, o)
+    return Pair(clazz.simpleName!!, o)
   }
 
   private fun objectSchema(clazz: KClass<*>): ObjectSchema =
@@ -115,7 +132,6 @@ object Kompendium {
     return ArraySchema(fieldToSchema(listType))
   }
 
-  @OptIn(KompendiumInternal::class)
   private fun fieldToSchema(field: KClass<*>): OpenApiSpecComponentSchema = when (field) {
     Int::class -> FormatSchema("int32", "integer")
     Long::class -> FormatSchema("int64", "integer")
@@ -125,4 +141,5 @@ object Kompendium {
     Boolean::class -> SimpleSchema("boolean")
     else -> objectSchema(field)
   }
+
 }
