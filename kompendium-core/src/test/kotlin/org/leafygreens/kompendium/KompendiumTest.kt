@@ -194,6 +194,70 @@ internal class KompendiumTest {
     }
   }
 
+  @Test
+  fun `Can notarize the root route`() {
+    withTestApplication({
+      configModule()
+      openApiModule()
+      rootModule()
+    }) {
+      // do
+      val json = handleRequest(HttpMethod.Get, "/openapi.json").response.content
+
+      // expect
+      val expected = TestData.getFileSnapshot("root_route.json").trim()
+      assertEquals(expected, json, "The received json spec should match the expected content")
+    }
+  }
+
+  @Test
+  fun `Can call the root route`() {
+    withTestApplication({
+      configModule()
+      openApiModule()
+      rootModule()
+    }) {
+      // do
+      val result = handleRequest(HttpMethod.Get, "/").response.content
+
+      // expect
+      val expected = "☎️🏠🌲"
+      assertEquals(expected, result, "Should be the same")
+    }
+  }
+
+  @Test
+  fun `Can notarize a trailing slash route`() {
+    withTestApplication({
+      configModule()
+      openApiModule()
+      trailingSlash()
+    }) {
+      // do
+      val json = handleRequest(HttpMethod.Get, "/openapi.json").response.content
+
+      // expect
+      val expected = TestData.getFileSnapshot("trailing_slash.json").trim()
+      assertEquals(expected, json, "The received json spec should match the expected content")
+    }
+  }
+
+  @Test
+  fun `Can call a trailing slash route`() {
+    withTestApplication({
+      configModule()
+      openApiModule()
+      trailingSlash()
+    }) {
+      // do
+      val result = handleRequest(HttpMethod.Get, "/test/").response.content
+
+      // expect
+      val expected = "🙀👾"
+      assertEquals(expected, result, "Should be the same")
+    }
+  }
+
   private companion object {
     val testGetInfo = MethodInfo("Another get test", "testing more")
     val testPostInfo = MethodInfo("Test post endpoint", "Post your tests here!")
@@ -264,6 +328,28 @@ internal class KompendiumTest {
                 }
               }
             }
+          }
+        }
+      }
+    }
+  }
+
+  private fun Application.rootModule() {
+    routing {
+      route("/") {
+        notarizedGet<TestParams, TestResponse>(testGetInfo) {
+          call.respondText { "☎️🏠🌲" }
+        }
+      }
+    }
+  }
+
+  private fun Application.trailingSlash() {
+    routing {
+      route("/test") {
+        route("/") {
+          notarizedGet<TestParams, TestResponse>(testGetInfo) {
+            call.respondText { "🙀👾" }
           }
         }
       }

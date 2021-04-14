@@ -13,7 +13,11 @@ object Helpers {
     is RootRouteSelector -> tail
     is PathSegmentParameterRouteSelector -> parent?.calculatePath("/$selector$tail") ?: "/{$selector}$tail"
     is PathSegmentConstantRouteSelector -> parent?.calculatePath("/$selector$tail") ?: "/$selector$tail"
-    else -> error("unknown selector type $selector")
+    else -> when (selector.javaClass.simpleName) {
+      // dumb ass workaround to this object being internal to ktor
+      "TrailingSlashRouteSelector" -> parent?.calculatePath("$tail/") ?: "$tail/"
+      else -> error("unknown selector type $selector")
+    }
   }
 
   fun <K, V> MutableMap<K, V>.putPairIfAbsent(pair: Pair<K, V>) = putIfAbsent(pair.first, pair.second)
