@@ -85,7 +85,6 @@ object Kompendium {
   ): Route {
     if (TResp::class != Unit::class) openApiSpec.components.schemas.putPairIfAbsent(objectSchemaPair(TResp::class))
     if (TReq::class != Unit::class) openApiSpec.components.schemas.putPairIfAbsent(objectSchemaPair(TReq::class))
-//    openApiSpec.components.schemas.putPairIfAbsent(objectSchemaPair(TParam::class))
     return block.invoke()
   }
 
