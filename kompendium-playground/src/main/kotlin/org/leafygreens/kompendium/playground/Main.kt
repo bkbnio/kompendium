@@ -32,6 +32,7 @@ import org.leafygreens.kompendium.playground.KompendiumTOC.testSingleDeleteInfo
 import org.leafygreens.kompendium.playground.KompendiumTOC.testSingleGetInfo
 import org.leafygreens.kompendium.playground.KompendiumTOC.testSinglePostInfo
 import org.leafygreens.kompendium.playground.KompendiumTOC.testSinglePutInfo
+import org.leafygreens.kompendium.util.KompendiumHttpCodes
 
 fun main() {
   embeddedServer(
@@ -45,7 +46,7 @@ data class ExampleParams(val a: String, val aa: Int)
 
 data class ExampleNested(val nesty: String)
 
-@KompendiumResponse(status = 204, "Entity was deleted successfully")
+@KompendiumResponse(KompendiumHttpCodes.NO_CONTENT, "Entity was deleted successfully")
 object DeleteResponse
 
 @KompendiumRequest("Example Request")

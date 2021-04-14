@@ -63,7 +63,7 @@ data class ExampleParams(val a: String, val aa: Int)
 
 data class ExampleNested(val nesty: String)
 
-@KompendiumResponse(status = 204, "Entity was deleted successfully")
+@KompendiumResponse(status = KompendiumHttpCodes.NO_CONTENT, "Entity was deleted successfully")
 object DeleteResponse
 
 @KompendiumRequest("Example Request")
@@ -74,10 +74,10 @@ data class ExampleRequest(
   val aaa: List<Long>
 )
 
-@KompendiumResponse(200, "A Successful Endeavor")
+@KompendiumResponse(KompendiumHttpCodes.OK, "A Successful Endeavor")
 data class ExampleResponse(val c: String)
 
-@KompendiumResponse(201, "Created Successfully")
+@KompendiumResponse(KompendiumHttpCodes.CREATED, "Created Successfully")
 data class ExampleCreatedResponse(val id: Int, val c: String)
 
 object KompendiumTOC {
