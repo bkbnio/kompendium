@@ -1,3 +1,9 @@
+## [0.0.4] - April 14th, 2021
+
+### Changed
+
+- Added fix to route selector matching that accounts for trailing slash selection
+
 ## [0.0.3] - April 13th, 2021
 
 ### Added
