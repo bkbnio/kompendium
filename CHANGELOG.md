@@ -1,3 +1,9 @@
+## [0.0.5] - April 15th, 2021
+
+### Added
+
+- Full list of compile-time-constant status codes
+
 ## [0.0.4] - April 14th, 2021
 
 ### Changed

@@ -16,11 +16,11 @@ data class TestRequest(
   val aaa: List<Long>
 )
 
-@KompendiumResponse(200, "A Successful Endeavor")
+@KompendiumResponse(KompendiumHttpCodes.OK, "A Successful Endeavor")
 data class TestResponse(val c: String)
 
-@KompendiumResponse(201, "Created Successfully")
+@KompendiumResponse(KompendiumHttpCodes.CREATED, "Created Successfully")
 data class TestCreatedResponse(val id: Int, val c: String)
 
-@KompendiumResponse(status = 204, "Entity was deleted successfully")
+@KompendiumResponse(KompendiumHttpCodes.NO_CONTENT, "Entity was deleted successfully")
 object TestDeleteResponse
