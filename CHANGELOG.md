@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.0.7] - April 16th, 2021
+
+### Added
+
+- Include sources in publish 📚
+
 ## [0.0.6] - April 15th, 2021
 
 ### Added

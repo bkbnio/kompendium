@@ -13,6 +13,10 @@ dependencies {
   testImplementation("io.ktor:ktor-server-test-host:1.5.3")
 }
 
+java {
+  withSourcesJar()
+}
+
 publishing {
   repositories {
     maven {
@@ -27,6 +31,7 @@ publishing {
   publications {
     create<MavenPublication>("kompendium") {
       from(components["kotlin"])
+      artifact(tasks.sourcesJar)
     }
   }
 }

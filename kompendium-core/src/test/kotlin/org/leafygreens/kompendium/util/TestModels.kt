@@ -50,3 +50,9 @@ enum class SimpleEnum {
   ONE,
   TWO
 }
+
+sealed class TestSealedClass(open val a: String)
+
+data class SimpleTSC(val b: Int) : TestSealedClass("hey")
+open class MediumTSC(override val a: String, val b: Int) : TestSealedClass(a)
+data class WildTSC(val c: Boolean, val d: String, val e: Int) : MediumTSC(d, e)
