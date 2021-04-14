@@ -24,3 +24,29 @@ data class TestCreatedResponse(val id: Int, val c: String)
 
 @KompendiumResponse(KompendiumHttpCodes.NO_CONTENT, "Entity was deleted successfully")
 object TestDeleteResponse
+
+@KompendiumRequest("Request object to create a backbone project")
+data class ComplexRequest(
+  val org: String,
+  @KompendiumField("amazing_field")
+  val amazingField: String,
+  val tables: List<NestedComplexItem>
+) {
+  fun testThing() {
+    println("hey mom 👋")
+  }
+}
+
+data class NestedComplexItem(
+  val name: String,
+  val alias: CustomAlias
+)
+
+typealias CustomAlias = Map<String, CrazyItem>
+
+data class CrazyItem(val enumeration: SimpleEnum)
+
+enum class SimpleEnum {
+  ONE,
+  TWO
+}

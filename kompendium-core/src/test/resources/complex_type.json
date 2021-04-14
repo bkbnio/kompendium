@@ -1,0 +1,107 @@
+{
+  "openapi" : "3.0.3",
+  "info" : {
+    "title" : "Test API",
+    "version" : "1.33.7",
+    "description" : "An amazing, fully-ish \uD83D\uDE09 generated API spec",
+    "termsOfService" : "https://example.com",
+    "contact" : {
+      "name" : "Homer Simpson",
+      "url" : "https://gph.is/1NPUDiM",
+      "email" : "chunkylover53@aol.com"
+    },
+    "license" : {
+      "name" : "MIT",
+      "url" : "https://github.com/lg-backbone/kompendium/blob/main/LICENSE"
+    }
+  },
+  "servers" : [ {
+    "url" : "https://myawesomeapi.com",
+    "description" : "Production instance of my API"
+  }, {
+    "url" : "https://staging.myawesomeapi.com",
+    "description" : "Where the fun stuff happens"
+  } ],
+  "paths" : {
+    "/test" : {
+      "put" : {
+        "tags" : [ ],
+        "summary" : "Test put endpoint",
+        "description" : "Put your tests here!",
+        "requestBody" : {
+          "description" : "Request object to create a backbone project",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/ComplexRequest"
+              }
+            }
+          },
+          "required" : false
+        },
+        "responses" : {
+          "200" : {
+            "description" : "A Successful Endeavor",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/TestResponse"
+                }
+              }
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "TestResponse" : {
+        "properties" : {
+          "c" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "ComplexRequest" : {
+        "properties" : {
+          "amazing_field" : {
+            "type" : "string"
+          },
+          "org" : {
+            "type" : "string"
+          },
+          "tables" : {
+            "items" : {
+              "properties" : {
+                "alias" : {
+                  "additionalProperties" : {
+                    "properties" : {
+                      "enumeration" : {
+                        "enum" : [ "ONE", "TWO" ],
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  },
+                  "type" : "object"
+                },
+                "name" : {
+                  "type" : "string"
+                }
+              },
+              "type" : "object"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      }
+    },
+    "securitySchemes" : { }
+  },
+  "security" : [ ],
+  "tags" : [ ]
+}
