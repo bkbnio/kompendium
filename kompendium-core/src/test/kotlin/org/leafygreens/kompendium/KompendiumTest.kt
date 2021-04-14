@@ -29,6 +29,7 @@ import org.leafygreens.kompendium.models.oas.OpenApiSpecInfo
 import org.leafygreens.kompendium.models.oas.OpenApiSpecInfoContact
 import org.leafygreens.kompendium.models.oas.OpenApiSpecInfoLicense
 import org.leafygreens.kompendium.models.oas.OpenApiSpecServer
+import org.leafygreens.kompendium.util.ComplexRequest
 import org.leafygreens.kompendium.util.TestCreatedResponse
 import org.leafygreens.kompendium.util.TestData
 import org.leafygreens.kompendium.util.TestDeleteResponse
@@ -96,7 +97,6 @@ internal class KompendiumTest {
     }
   }
 
-
   @Test
   fun `Notarized post does not interrupt the pipeline`() {
     withTestApplication({
@@ -161,7 +161,6 @@ internal class KompendiumTest {
       assertEquals(expected, json, "The received json spec should match the expected content")
     }
   }
-
 
   @Test
   fun `Notarized delete does not interrupt the pipeline`() {
@@ -258,6 +257,22 @@ internal class KompendiumTest {
     }
   }
 
+  @Test
+  fun `Can notarize a complex type`() {
+    withTestApplication({
+      configModule()
+      openApiModule()
+      complexType()
+    }) {
+      // do
+      val json = handleRequest(HttpMethod.Get, "/openapi.json").response.content
+
+      // expect
+      val expected = TestData.getFileSnapshot("complex_type.json").trim()
+      assertEquals(expected, json, "The received json spec should match the expected content")
+    }
+  }
+
   private companion object {
     val testGetInfo = MethodInfo("Another get test", "testing more")
     val testPostInfo = MethodInfo("Test post endpoint", "Post your tests here!")
@@ -351,6 +366,16 @@ internal class KompendiumTest {
           notarizedGet<TestParams, TestResponse>(testGetInfo) {
             call.respondText { "🙀👾" }
           }
+        }
+      }
+    }
+  }
+
+  private fun Application.complexType() {
+    routing {
+      route("/test") {
+        notarizedPut<Unit, ComplexRequest, TestResponse>(testPutInfo) {
+          call.respondText { "heya" }
         }
       }
     }

@@ -1,3 +1,12 @@
+# Changelog
+
+## [0.0.6] - April 15th, 2021
+
+### Added
+
+- Logging to get a more intuitive sense for operations performed
+- Serialization for Maps, Collections and Enums
+
 ## [0.0.5] - April 15th, 2021
 
 ### Added
