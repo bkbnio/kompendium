@@ -9,11 +9,12 @@ logback = "1.2.3"
 ktor-server-core = { group = "io.ktor", name = "ktor-server-core", version.ref = "ktor" }
 ktor-server-netty = { group = "io.ktor", name = "ktor-server-netty", version.ref = "ktor" }
 ktor-jackson = { group = "io.ktor", name = "ktor-jackson", version.ref = "ktor" }
+ktor-html-builder = { group = "io.ktor", name = "ktor-html-builder", version.ref = "ktor" }
 # Logging
 slf4j = { group = "org.slf4j", name = "slf4j-api", version.ref = "slf4j" }
 logback-classic = { group = "ch.qos.logback", name = "logback-classic", version.ref = "logback" }
 logback-core = { group = "ch.qos.logback", name = "logback-core", version.ref = "logback" }
 
 [bundles]
-ktor = [ "ktor-server-core", "ktor-server-netty", "ktor-jackson" ]
+ktor = [ "ktor-server-core", "ktor-server-netty", "ktor-jackson", "ktor-html-builder" ]
 logging = [ "slf4j", "logback-classic", "logback-core" ]

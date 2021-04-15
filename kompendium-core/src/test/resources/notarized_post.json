@@ -57,14 +57,42 @@
   },
   "components" : {
     "schemas" : {
+      "String" : {
+        "type" : "string"
+      },
+      "Int" : {
+        "format" : "int32",
+        "type" : "integer"
+      },
       "TestCreatedResponse" : {
         "properties" : {
           "c" : {
-            "type" : "string"
+            "$ref" : "#/components/schemas/String"
           },
           "id" : {
-            "format" : "int32",
-            "type" : "integer"
+            "$ref" : "#/components/schemas/Int"
+          }
+        },
+        "type" : "object"
+      },
+      "Long" : {
+        "format" : "int64",
+        "type" : "integer"
+      },
+      "List-Long" : {
+        "items" : {
+          "$ref" : "#/components/schemas/Long"
+        },
+        "type" : "array"
+      },
+      "Double" : {
+        "format" : "double",
+        "type" : "number"
+      },
+      "TestNested" : {
+        "properties" : {
+          "nesty" : {
+            "$ref" : "#/components/schemas/String"
           }
         },
         "type" : "object"
@@ -72,23 +100,13 @@
       "TestRequest" : {
         "properties" : {
           "aaa" : {
-            "items" : {
-              "format" : "int64",
-              "type" : "integer"
-            },
-            "type" : "array"
+            "$ref" : "#/components/schemas/List-Long"
           },
           "b" : {
-            "format" : "double",
-            "type" : "number"
+            "$ref" : "#/components/schemas/Double"
           },
-          "field_name" : {
-            "properties" : {
-              "nesty" : {
-                "type" : "string"
-              }
-            },
-            "type" : "object"
+          "fieldName" : {
+            "$ref" : "#/components/schemas/TestNested"
           }
         },
         "type" : "object"

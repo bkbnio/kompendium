@@ -24,38 +24,22 @@
   } ],
   "paths" : {
     "/test" : {
-      "get" : {
+      "put" : {
         "tags" : [ ],
-        "summary" : "Another get test",
-        "description" : "testing more",
-        "responses" : {
-          "200" : {
-            "description" : "A Successful Endeavor",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/TestResponse"
-                }
-              }
-            }
-          }
-        },
+        "summary" : "Test put endpoint",
+        "description" : "Put your tests here!",
         "deprecated" : false
       }
     }
   },
   "components" : {
     "schemas" : {
-      "String" : {
-        "type" : "string"
+      "Boolean" : {
+        "type" : "boolean"
       },
-      "TestResponse" : {
-        "properties" : {
-          "c" : {
-            "$ref" : "#/components/schemas/String"
-          }
-        },
-        "type" : "object"
+      "Int" : {
+        "format" : "int32",
+        "type" : "integer"
       }
     },
     "securitySchemes" : { }
