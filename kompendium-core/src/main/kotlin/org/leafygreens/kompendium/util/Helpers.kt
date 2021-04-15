@@ -26,6 +26,8 @@ object Helpers {
 
   private val logger = LoggerFactory.getLogger(javaClass)
 
+  const val COMPONENT_SLUG = "#/components/schemas"
+
   @OptIn(InternalAPI::class)
   fun Route.calculatePath(tail: String = ""): String {
     logger.info("Building path for ${selector::class}")
@@ -81,7 +83,6 @@ object Helpers {
       val anny = prop.findAnnotation<KompendiumField>()
 
       if (anny != null) logger.info("Found field annotation: $anny")
-
 
       val schema = when {
         field?.isSubclassOf(Enum::class) == true -> {

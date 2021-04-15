@@ -4,6 +4,12 @@ import org.leafygreens.kompendium.annotations.KompendiumField
 import org.leafygreens.kompendium.annotations.KompendiumRequest
 import org.leafygreens.kompendium.annotations.KompendiumResponse
 
+data class TestSimpleModel(val a: String, val b: Int)
+
+data class TestNestedModel(val inner: TestSimpleModel)
+
+data class TestSimpleWithEnums(val a: String, val b: SimpleEnum)
+
 data class TestParams(val a: String, val aa: Int)
 
 data class TestNested(val nesty: String)

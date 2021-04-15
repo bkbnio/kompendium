@@ -273,6 +273,22 @@ internal class KompendiumTest {
     }
   }
 
+  @Test
+  fun `Can notarize primitives`() {
+    withTestApplication({
+      configModule()
+      openApiModule()
+      primitives()
+    }) {
+      // do
+      val json = handleRequest(HttpMethod.Get, "/openapi.json").response.content
+
+      // expect
+      val expected = TestData.getFileSnapshot("complex_type.json").trim()
+      assertEquals(expected, json, "The received json spec should match the expected content")
+    }
+  }
+
   private companion object {
     val testGetInfo = MethodInfo("Another get test", "testing more")
     val testPostInfo = MethodInfo("Test post endpoint", "Post your tests here!")
@@ -375,6 +391,16 @@ internal class KompendiumTest {
     routing {
       route("/test") {
         notarizedPut<Unit, ComplexRequest, TestResponse>(testPutInfo) {
+          call.respondText { "heya" }
+        }
+      }
+    }
+  }
+
+  private fun Application.primitives() {
+    routing {
+      route("/test") {
+        notarizedPut<Unit, Int, Boolean>(testPutInfo) {
           call.respondText { "heya" }
         }
       }

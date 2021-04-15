@@ -17,13 +17,12 @@ import org.leafygreens.kompendium.models.oas.OpenApiSpecPathItemOperation
 import org.leafygreens.kompendium.models.oas.OpenApiSpecReferenceObject
 import org.leafygreens.kompendium.models.oas.OpenApiSpecRequest
 import org.leafygreens.kompendium.models.oas.OpenApiSpecResponse
+import org.leafygreens.kompendium.util.Helpers.COMPONENT_SLUG
 import org.leafygreens.kompendium.util.Helpers.calculatePath
 import org.leafygreens.kompendium.util.Helpers.objectSchemaPair
 import org.leafygreens.kompendium.util.Helpers.putPairIfAbsent
 
 object Kompendium {
-
-  const val COMPONENT_SLUG = "#/components/schemas"
 
   var openApiSpec = OpenApiSpec(
     info = OpenApiSpecInfo(),
