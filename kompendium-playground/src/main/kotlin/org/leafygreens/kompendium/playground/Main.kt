@@ -1,19 +1,31 @@
 package org.leafygreens.kompendium.playground
 
+import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.databind.SerializationFeature
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.features.ContentNegotiation
+import io.ktor.html.respondHtml
 import io.ktor.http.HttpStatusCode
 import io.ktor.jackson.jackson
 import io.ktor.response.respond
 import io.ktor.response.respondText
+import io.ktor.routing.Routing
 import io.ktor.routing.get
 import io.ktor.routing.route
 import io.ktor.routing.routing
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import java.net.URI
+import kotlinx.html.body
+import kotlinx.html.head
+import kotlinx.html.link
+import kotlinx.html.meta
+import kotlinx.html.script
+import kotlinx.html.style
+import kotlinx.html.title
+import kotlinx.html.unsafe
 import org.leafygreens.kompendium.Kompendium.notarizedDelete
 import org.leafygreens.kompendium.Kompendium.notarizedGet
 import org.leafygreens.kompendium.Kompendium.notarizedPost
@@ -76,9 +88,14 @@ object KompendiumTOC {
 
 fun Application.mainModule() {
   install(ContentNegotiation) {
-    jackson()
+    jackson {
+      enable(SerializationFeature.INDENT_OUTPUT)
+      setSerializationInclusion(JsonInclude.Include.NON_NULL)
+    }
   }
   routing {
+    openApi()
+    redoc()
     route("/test") {
       route("/{id}") {
         notarizedGet<ExampleParams, ExampleResponse>(testIdGetInfo) {
@@ -100,37 +117,78 @@ fun Application.mainModule() {
         }
       }
     }
-    route("/openapi.json") {
-      get {
-        call.respond(
-          openApiSpec.copy(
-            info = OpenApiSpecInfo(
-              title = "Test API",
-              version = "1.33.7",
-              description = "An amazing, fully-ish 😉 generated API spec",
-              termsOfService = URI("https://example.com"),
-              contact = OpenApiSpecInfoContact(
-                name = "Homer Simpson",
-                email = "chunkylover53@aol.com",
-                url = URI("https://gph.is/1NPUDiM")
-              ),
-              license = OpenApiSpecInfoLicense(
-                name = "MIT",
-                url = URI("https://github.com/lg-backbone/kompendium/blob/main/LICENSE")
-              )
+  }
+}
+
+fun Routing.openApi() {
+  route("/openapi.json") {
+    get {
+      call.respond(
+        openApiSpec.copy(
+          info = OpenApiSpecInfo(
+            title = "Test API",
+            version = "1.33.7",
+            description = "An amazing, fully-ish 😉 generated API spec",
+            termsOfService = URI("https://example.com"),
+            contact = OpenApiSpecInfoContact(
+              name = "Homer Simpson",
+              email = "chunkylover53@aol.com",
+              url = URI("https://gph.is/1NPUDiM")
             ),
-            servers = mutableListOf(
-              OpenApiSpecServer(
-                url = URI("https://myawesomeapi.com"),
-                description = "Production instance of my API"
-              ),
-              OpenApiSpecServer(
-                url = URI("https://staging.myawesomeapi.com"),
-                description = "Where the fun stuff happens"
-              )
+            license = OpenApiSpecInfoLicense(
+              name = "MIT",
+              url = URI("https://github.com/lg-backbone/kompendium/blob/main/LICENSE")
+            )
+          ),
+          servers = mutableListOf(
+            OpenApiSpecServer(
+              url = URI("https://myawesomeapi.com"),
+              description = "Production instance of my API"
+            ),
+            OpenApiSpecServer(
+              url = URI("https://staging.myawesomeapi.com"),
+              description = "Where the fun stuff happens"
             )
           )
         )
+      )
+    }
+  }
+}
+
+fun Routing.redoc() {
+  route("/docs") {
+    get {
+      call.respondHtml {
+        head {
+          title {
+            // TODO Make this load project title
+            +"Docs"
+          }
+          meta {
+            charset = "utf-8"
+          }
+          meta {
+            name = "viewport"
+            content = "width=device-width, initial-scale=1"
+          }
+          link {
+            href = "https://fonts.googleapis.com/css?family=Montserrat:300,400,700|Roboto:300,400,700"
+            rel = "stylesheet"
+          }
+          style {
+            unsafe {
+              raw("body { margin: 0; padding: 0; }")
+            }
+          }
+        }
+        body {
+          // TODO Make this its own DSL class
+          unsafe { +"<redoc spec-url='/openapi.json'></redoc>" }
+          script {
+            src = "https://cdn.jsdelivr.net/npm/redoc@next/bundles/redoc.standalone.js"
+          }
+        }
       }
     }
   }

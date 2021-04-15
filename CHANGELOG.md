@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.1.0] - April 16th, 2021
+
+### Changed
+
+- Completely redid the reflection system to improve flow, decrease errors ✨
+
+### Added
+
+- Added ReDoc to the Playground to make manual testing more convenient
+
 ## [0.0.7] - April 16th, 2021
 
 ### Added
