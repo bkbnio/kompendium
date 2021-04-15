@@ -36,6 +36,7 @@ internal object Kontent {
       clazz == Float::class -> cache.plus(clazz.simpleName!! to FormatSchema("float", "number"))
       clazz == String::class -> cache.plus(clazz.simpleName!! to SimpleSchema("string"))
       clazz == Boolean::class -> cache.plus(clazz.simpleName!! to SimpleSchema("boolean"))
+      clazz.isSubclassOf(Enum::class) -> error("Top level enums are currently not supported by Kompendium")
       clazz.typeParameters.isNotEmpty() -> error("Top level generics are not supported by Kompendium")
       else -> handleComplexType(clazz, cache)
     }
@@ -79,21 +80,21 @@ internal object Kontent {
     cache: SchemaMap
   ): SchemaMap = logged(object {}.javaClass.enclosingMethod.name, mapOf("cache" to cache)) {
     when {
-      field.isSubclassOf(Enum::class) -> enumHandler(prop, field, cache)
-      field.isSubclassOf(Map::class) -> mapHandler(prop, field, cache)
-      field.isSubclassOf(Collection::class) -> collectionHandler(prop, field, cache)
+      field.isSubclassOf(Enum::class) -> enumFieldHandler(prop, field, cache)
+      field.isSubclassOf(Map::class) -> mapFieldHandler(prop, field, cache)
+      field.isSubclassOf(Collection::class) -> collectionFieldHandler(prop, field, cache)
       else -> generateKontent(field, cache)
     }
   }
 
-  private fun enumHandler(prop: KProperty<*>, field: KClass<*>, cache: SchemaMap): SchemaMap {
+  private fun enumFieldHandler(prop: KProperty<*>, field: KClass<*>, cache: SchemaMap): SchemaMap {
     logger.info("Enum detected for $prop, gathering values")
     val options = prop.javaField?.type?.enumConstants?.map { it.toString() }?.toSet()
       ?: error("unable to parse enum $prop")
     return cache.plus(field.simpleName!! to EnumSchema(options))
   }
 
-  private fun mapHandler(prop: KProperty<*>, field: KClass<*>, cache: SchemaMap): SchemaMap {
+  private fun mapFieldHandler(prop: KProperty<*>, field: KClass<*>, cache: SchemaMap): SchemaMap {
     logger.info("Map detected for $prop, generating schema and appending to cache")
     val (keyClass, valClass) = (prop.javaField?.genericType as ParameterizedType)
       .actualTypeArguments.slice(IntRange(0, 1))
@@ -108,7 +109,7 @@ internal object Kontent {
     return updatedCache.plus(referenceName to schema)
   }
 
-  private fun collectionHandler(prop: KProperty<*>, field: KClass<*>, cache: SchemaMap): SchemaMap {
+  private fun collectionFieldHandler(prop: KProperty<*>, field: KClass<*>, cache: SchemaMap): SchemaMap {
     logger.info("Collection detected for $prop, generating schema and appending to cache")
     val collectionClass = ((prop.javaField?.genericType as ParameterizedType)
       .actualTypeArguments.first() as Class<*>).kotlin

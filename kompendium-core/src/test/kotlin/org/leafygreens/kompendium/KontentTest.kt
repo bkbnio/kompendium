@@ -12,6 +12,7 @@ import org.leafygreens.kompendium.models.oas.ReferencedSchema
 import org.leafygreens.kompendium.util.TestInvalidMap
 import org.leafygreens.kompendium.util.TestNestedModel
 import org.leafygreens.kompendium.util.TestSimpleModel
+import org.leafygreens.kompendium.util.TestSimpleWithEnumList
 import org.leafygreens.kompendium.util.TestSimpleWithEnums
 import org.leafygreens.kompendium.util.TestSimpleWithList
 import org.leafygreens.kompendium.util.TestSimpleWithMap
@@ -154,6 +155,15 @@ internal class KontentTest {
     assertEquals(6, result.count())
     assertTrue { result.containsKey("List-TestSimpleModel") }
     assertTrue { result.containsKey(clazz.simpleName) }
+  }
+
+  @Test
+  fun `generics as enums throws an exception`() {
+    // when
+    val clazz = TestSimpleWithEnumList::class
+
+    // expect
+    assertFailsWith<java.lang.IllegalStateException> { generateKontent(clazz) }
   }
 
 }
