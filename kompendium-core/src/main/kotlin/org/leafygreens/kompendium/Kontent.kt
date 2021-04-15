@@ -71,16 +71,18 @@ internal object Kontent {
     cache: SchemaMap
   ): SchemaMap = logged(object {}.javaClass.enclosingMethod.name, mapOf("cache" to cache)) {
     when {
-      field.isSubclassOf(Enum::class) -> {
-        logger.info("Enum detected for $prop, gathering values")
-        val options = prop.javaField?.type?.enumConstants?.map { it.toString() }?.toSet()
-          ?: error("unable to parse enum $prop")
-        cache.plus(field.simpleName!! to EnumSchema(options))
-      }
+      field.isSubclassOf(Enum::class) -> enumHandler(prop, field, cache)
       field.isSubclassOf(Map::class) -> TODO("maps")
       field.isSubclassOf(Collection::class) -> TODO("collection")
       else -> generateKontent(field, cache)
     }
+  }
+
+  private fun enumHandler(prop: KProperty<*>, field: KClass<*>, cache: SchemaMap): SchemaMap {
+    logger.info("Enum detected for $prop, gathering values")
+    val options = prop.javaField?.type?.enumConstants?.map { it.toString() }?.toSet()
+      ?: error("unable to parse enum $prop")
+    return cache.plus(field.simpleName!! to EnumSchema(options))
   }
 
   // TODO Move to utils
