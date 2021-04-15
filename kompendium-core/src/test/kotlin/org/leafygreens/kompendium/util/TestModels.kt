@@ -12,6 +12,10 @@ data class TestSimpleWithEnums(val a: String, val b: SimpleEnum)
 
 data class TestSimpleWithMap(val a: String, val b: Map<String, TestSimpleModel>)
 
+data class TestSimpleWithList(val a: Boolean, val b: List<TestSimpleModel>)
+
+data class TestSimpleWithEnumList(val a: Double, val b: List<SimpleEnum>)
+
 data class TestInvalidMap(val a: Map<Int, TestSimpleModel>)
 
 data class TestParams(val a: String, val aa: Int)

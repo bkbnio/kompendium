@@ -6,6 +6,7 @@ import kotlin.reflect.KProperty
 import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.jvm.javaField
+import org.leafygreens.kompendium.models.oas.ArraySchema
 import org.leafygreens.kompendium.models.oas.DictionarySchema
 import org.leafygreens.kompendium.models.oas.EnumSchema
 import org.leafygreens.kompendium.models.oas.FormatSchema
@@ -36,7 +37,6 @@ internal object Kontent {
       clazz == String::class -> cache.plus(clazz.simpleName!! to SimpleSchema("string"))
       clazz == Boolean::class -> cache.plus(clazz.simpleName!! to SimpleSchema("boolean"))
       clazz.typeParameters.isNotEmpty() -> error("Top level generics are not supported by Kompendium")
-      clazz.isSubclassOf(Enum::class) -> TODO("now")
       else -> handleComplexType(clazz, cache)
     }
   }
@@ -69,7 +69,7 @@ internal object Kontent {
     }
 
   private fun KClass<*>.getReferenceSlug(prop: KProperty<*>): String = when {
-    isSubclassOf(Map::class) -> "$COMPONENT_SLUG/${simpleMapName(prop, this as KClass<Map<*, *>>)}"
+    this.typeParameters.isNotEmpty() -> "$COMPONENT_SLUG/${genericNameAdapter(this, prop)}"
     else -> "$COMPONENT_SLUG/${simpleName}"
   }
 
@@ -81,7 +81,7 @@ internal object Kontent {
     when {
       field.isSubclassOf(Enum::class) -> enumHandler(prop, field, cache)
       field.isSubclassOf(Map::class) -> mapHandler(prop, field, cache)
-      field.isSubclassOf(Collection::class) -> TODO("collection")
+      field.isSubclassOf(Collection::class) -> collectionHandler(prop, field, cache)
       else -> generateKontent(field, cache)
     }
   }
@@ -101,21 +101,30 @@ internal object Kontent {
       .map { it.kotlin }
       .toPair()
     if (keyClass != String::class) error("Invalid Map $prop: OpenAPI dictionaries must have keys of type String")
-    val referenceName = simpleMapName(prop, field as KClass<Map<*, *>>)
+    val referenceName = genericNameAdapter(field, prop)
     val valueReference = ReferencedSchema("$COMPONENT_SLUG/${valClass.simpleName}")
     val schema = DictionarySchema(additionalProperties = valueReference)
     val updatedCache = generateKontent(valClass, cache)
     return updatedCache.plus(referenceName to schema)
   }
 
+  private fun collectionHandler(prop: KProperty<*>, field: KClass<*>, cache: SchemaMap): SchemaMap {
+    logger.info("Collection detected for $prop, generating schema and appending to cache")
+    val collectionClass = ((prop.javaField?.genericType as ParameterizedType)
+      .actualTypeArguments.first() as Class<*>).kotlin
+    logger.info("Obtained collection class: $collectionClass")
+    val referenceName = genericNameAdapter(field, prop)
+    val valueReference = ReferencedSchema("$COMPONENT_SLUG/${collectionClass.simpleName}")
+    val schema = ArraySchema(items = valueReference)
+    val updatedCache = generateKontent(collectionClass, cache)
+    return updatedCache.plus(referenceName to schema)
+  }
+
   // TODO Move to utils
-  private fun simpleMapName(prop: KProperty<*>, field: KClass<Map<*, *>>): String {
-    val (keyClass, valClass) = (prop.javaField?.genericType as ParameterizedType)
-      .actualTypeArguments.slice(IntRange(0, 1))
-      .map { it as Class<*> }
-      .map { it.kotlin }
-      .toPair()
-    return "${field.simpleName}-${keyClass.simpleName}-${valClass.simpleName}"
+  private fun genericNameAdapter(field: KClass<*>, prop: KProperty<*>): String {
+    val typeArgs = (prop.javaField?.genericType as ParameterizedType).actualTypeArguments
+    val classNames = typeArgs.map { it as Class<*> }.map { it.kotlin }.map { it.simpleName }
+    return classNames.joinToString(separator = "-", prefix = "${field.simpleName}-")
   }
 
   // TODO Move to utils
