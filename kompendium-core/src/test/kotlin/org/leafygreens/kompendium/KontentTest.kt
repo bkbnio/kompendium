@@ -7,9 +7,13 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 import org.leafygreens.kompendium.Kontent.generateKontent
 import org.leafygreens.kompendium.models.oas.FormatSchema
+import org.leafygreens.kompendium.models.oas.ObjectSchema
+import org.leafygreens.kompendium.models.oas.ReferencedSchema
+import org.leafygreens.kompendium.util.TestInvalidMap
 import org.leafygreens.kompendium.util.TestNestedModel
 import org.leafygreens.kompendium.util.TestSimpleModel
 import org.leafygreens.kompendium.util.TestSimpleWithEnums
+import org.leafygreens.kompendium.util.TestSimpleWithMap
 
 internal class KontentTest {
 
@@ -63,7 +67,7 @@ internal class KontentTest {
   }
 
   @Test
-  fun `generation works for nested object types` () {
+  fun `generation works for nested object types`() {
     // when
     val clazz = TestNestedModel::class
 
@@ -106,6 +110,34 @@ internal class KontentTest {
     assertNotNull(result)
     assertEquals(3, result.count())
     assertTrue { result.containsKey(clazz.simpleName) }
+  }
+
+  @Test
+  fun `generation allows for map fields`() {
+    // when
+    val clazz = TestSimpleWithMap::class
+
+    // do
+    val result = generateKontent(clazz)
+
+    // expect
+    assertNotNull(result)
+    assertEquals(5, result.count())
+    assertTrue { result.containsKey("Map-String-TestSimpleModel") }
+    assertTrue { result.containsKey(clazz.simpleName) }
+
+    val os = result[clazz.simpleName] as ObjectSchema
+    val expectedRef = ReferencedSchema("#/components/schemas/Map-String-TestSimpleModel")
+    assertEquals(expectedRef, os.properties["b"])
+  }
+
+  @Test
+  fun `map fields that are not string result in error`() {
+    // when
+    val clazz = TestInvalidMap::class
+
+    // expect
+    assertFailsWith<IllegalStateException> { generateKontent(clazz) }
   }
 
 }

@@ -141,7 +141,7 @@ object Helpers {
     else -> objectSchema(field)
   }
 
-  private fun <T> List<T>.toPair(): Pair<T, T> {
+  fun <T> List<T>.toPair(): Pair<T, T> {
     if (this.size != 2) {
       throw IllegalArgumentException("List is not of length 2!")
     }

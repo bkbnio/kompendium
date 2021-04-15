@@ -10,6 +10,10 @@ data class TestNestedModel(val inner: TestSimpleModel)
 
 data class TestSimpleWithEnums(val a: String, val b: SimpleEnum)
 
+data class TestSimpleWithMap(val a: String, val b: Map<String, TestSimpleModel>)
+
+data class TestInvalidMap(val a: Map<Int, TestSimpleModel>)
+
 data class TestParams(val a: String, val aa: Int)
 
 data class TestNested(val nesty: String)
