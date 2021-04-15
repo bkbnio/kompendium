@@ -15,6 +15,8 @@ import org.leafygreens.kompendium.models.oas.OpenApiSpecComponentSchema
 import org.leafygreens.kompendium.models.oas.ReferencedSchema
 import org.leafygreens.kompendium.models.oas.SimpleSchema
 import org.leafygreens.kompendium.util.Helpers.COMPONENT_SLUG
+import org.leafygreens.kompendium.util.Helpers.genericNameAdapter
+import org.leafygreens.kompendium.util.Helpers.logged
 import org.leafygreens.kompendium.util.Helpers.toPair
 import org.slf4j.LoggerFactory
 
@@ -119,25 +121,6 @@ internal object Kontent {
     val schema = ArraySchema(items = valueReference)
     val updatedCache = generateKontent(collectionClass, cache)
     return updatedCache.plus(referenceName to schema)
-  }
-
-  // TODO Move to utils
-  private fun genericNameAdapter(field: KClass<*>, prop: KProperty<*>): String {
-    val typeArgs = (prop.javaField?.genericType as ParameterizedType).actualTypeArguments
-    val classNames = typeArgs.map { it as Class<*> }.map { it.kotlin }.map { it.simpleName }
-    return classNames.joinToString(separator = "-", prefix = "${field.simpleName}-")
-  }
-
-  // TODO Move to utils
-  /**
-   * Higher order function that takes a map of names to objects and will log their state ahead of function invocation
-   * along with the result of the function invocation
-   */
-  private fun <T> logged(functionName: String, entities: Map<String, Any>, block: () -> T): T {
-    entities.forEach { (name, entity) -> logger.info("Ahead of $functionName invocation, $name: $entity") }
-    val result = block.invoke()
-    logger.info("Result of $functionName invocation: $result")
-    return result
   }
 
 }
