@@ -5,6 +5,7 @@ import kotlin.reflect.KProperty
 import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.jvm.javaField
+import org.leafygreens.kompendium.models.oas.EnumSchema
 import org.leafygreens.kompendium.models.oas.FormatSchema
 import org.leafygreens.kompendium.models.oas.ObjectSchema
 import org.leafygreens.kompendium.models.oas.OpenApiSpecComponentSchema
@@ -52,7 +53,7 @@ internal object Kontent {
           logger.info("Detected field $field")
           if (!newCache.containsKey(field.simpleName)) {
             logger.info("Cache was missing ${field.simpleName}, adding now")
-            newCache = generateKontent(field as KClass<*>, newCache)
+            newCache = generateFieldKontent(prop, field, newCache)
           }
           val propSchema = ReferencedSchema("$COMPONENT_SLUG/${field.simpleName}")
           Pair(prop.name, propSchema)
@@ -64,16 +65,21 @@ internal object Kontent {
       }
     }
 
-  private fun generatePropertyKontent(
+  private fun generateFieldKontent(
     prop: KProperty<*>,
     field: KClass<*>,
     cache: SchemaMap
   ): SchemaMap = logged(object {}.javaClass.enclosingMethod.name, mapOf("cache" to cache)) {
     when {
-      field.isSubclassOf(Enum::class) -> TODO("enums")
+      field.isSubclassOf(Enum::class) -> {
+        logger.info("Enum detected for $prop, gathering values")
+        val options = prop.javaField?.type?.enumConstants?.map { it.toString() }?.toSet()
+          ?: error("unable to parse enum $prop")
+        cache.plus(field.simpleName!! to EnumSchema(options))
+      }
       field.isSubclassOf(Map::class) -> TODO("maps")
       field.isSubclassOf(Collection::class) -> TODO("collection")
-      else -> handleComplexType(field, cache)
+      else -> generateKontent(field, cache)
     }
   }
 

@@ -104,6 +104,8 @@ internal class KontentTest {
 
     // expect
     assertNotNull(result)
+    assertEquals(3, result.count())
+    assertTrue { result.containsKey(clazz.simpleName) }
   }
 
 }
