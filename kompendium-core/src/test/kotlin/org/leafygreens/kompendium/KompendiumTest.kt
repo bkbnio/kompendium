@@ -284,7 +284,7 @@ internal class KompendiumTest {
       val json = handleRequest(HttpMethod.Get, "/openapi.json").response.content
 
       // expect
-      val expected = TestData.getFileSnapshot("complex_type.json").trim()
+      val expected = TestData.getFileSnapshot("notarized_primitives.json").trim()
       assertEquals(expected, json, "The received json spec should match the expected content")
     }
   }

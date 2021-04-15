@@ -46,10 +46,13 @@
   },
   "components" : {
     "schemas" : {
+      "String" : {
+        "type" : "string"
+      },
       "TestResponse" : {
         "properties" : {
           "c" : {
-            "type" : "string"
+            "$ref" : "#/components/schemas/String"
           }
         },
         "type" : "object"

@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory
 
 typealias SchemaMap = Map<String, OpenApiSpecComponentSchema>
 
-internal object Kontent {
+object Kontent {
 
   private val logger = LoggerFactory.getLogger(javaClass)
 
