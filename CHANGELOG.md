@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.1.1] - April 16th, 2021
+
+### Added
+
+- Explicit UUID support to prevent incorrect interpretation as complex object
+
 ## [0.1.0] - April 16th, 2021
 
 ### Changed

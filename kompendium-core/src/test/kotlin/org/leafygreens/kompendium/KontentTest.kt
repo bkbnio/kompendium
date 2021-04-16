@@ -1,5 +1,6 @@
 package org.leafygreens.kompendium
 
+import java.util.UUID
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -16,6 +17,7 @@ import org.leafygreens.kompendium.util.TestSimpleWithEnumList
 import org.leafygreens.kompendium.util.TestSimpleWithEnums
 import org.leafygreens.kompendium.util.TestSimpleWithList
 import org.leafygreens.kompendium.util.TestSimpleWithMap
+import org.leafygreens.kompendium.util.TestWithUUID
 
 internal class KontentTest {
 
@@ -164,6 +166,23 @@ internal class KontentTest {
 
     // expect
     assertFailsWith<java.lang.IllegalStateException> { generateKontent(clazz) }
+  }
+
+  @Test
+  fun `UUID schema support`() {
+    // when
+    val clazz = TestWithUUID::class
+
+    // do
+    val result = generateKontent(clazz)
+
+    // expect
+    assertNotNull(result)
+    assertEquals(2, result.count())
+    assertTrue { result.containsKey(UUID::class.simpleName) }
+    assertTrue { result.containsKey(clazz.simpleName) }
+    val expectedSchema = result[UUID::class.simpleName] as FormatSchema
+    assertEquals(FormatSchema("uuid", "string"), expectedSchema)
   }
 
 }
