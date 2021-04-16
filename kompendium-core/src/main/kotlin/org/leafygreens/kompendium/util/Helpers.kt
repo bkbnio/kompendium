@@ -8,19 +8,8 @@ import io.ktor.util.InternalAPI
 import java.lang.reflect.ParameterizedType
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
-import kotlin.reflect.full.findAnnotation
-import kotlin.reflect.full.isSubclassOf
-import kotlin.reflect.full.memberProperties
+import kotlin.reflect.KType
 import kotlin.reflect.jvm.javaField
-import org.leafygreens.kompendium.Kontent
-import org.leafygreens.kompendium.annotations.KompendiumField
-import org.leafygreens.kompendium.models.oas.ArraySchema
-import org.leafygreens.kompendium.models.oas.DictionarySchema
-import org.leafygreens.kompendium.models.oas.EnumSchema
-import org.leafygreens.kompendium.models.oas.FormatSchema
-import org.leafygreens.kompendium.models.oas.ObjectSchema
-import org.leafygreens.kompendium.models.oas.OpenApiSpecComponentSchema
-import org.leafygreens.kompendium.models.oas.SimpleSchema
 import org.slf4j.LoggerFactory
 
 object Helpers {
@@ -29,6 +18,9 @@ object Helpers {
 
   const val COMPONENT_SLUG = "#/components/schemas"
 
+  /**
+   * TODO Explain this
+   */
   @OptIn(InternalAPI::class)
   fun Route.calculatePath(tail: String = ""): String {
     logger.info("Building path for ${selector::class}")
@@ -68,19 +60,25 @@ object Helpers {
     }
   }
 
+  /**
+   * Simple extension function that will take a [Pair] and place it (if absent) into a [MutableMap].
+   *
+   * @receiver [MutableMap]
+   * @param pair to add to map
+   */
   fun <K, V> MutableMap<K, V>.putPairIfAbsent(pair: Pair<K, V>) = putIfAbsent(pair.first, pair.second)
 
+  /**
+   * Simple extension function that will convert a list with two items into a [Pair]
+   * @receiver [List]
+   * @return [Pair]
+   * @throws [IllegalArgumentException] when the list size is not exactly two
+   */
   fun <T> List<T>.toPair(): Pair<T, T> {
     if (this.size != 2) {
       throw IllegalArgumentException("List is not of length 2!")
     }
     return Pair(this[0], this[1])
-  }
-
-  fun genericNameAdapter(field: KClass<*>, prop: KProperty<*>): String {
-    val typeArgs = (prop.javaField?.genericType as ParameterizedType).actualTypeArguments
-    val classNames = typeArgs.map { it as Class<*> }.map { it.kotlin }.map { it.simpleName }
-    return classNames.joinToString(separator = "-", prefix = "${field.simpleName}-")
   }
 
   /**
@@ -92,5 +90,33 @@ object Helpers {
     val result = block.invoke()
     logger.info("Result of $functionName invocation: $result")
     return result
+  }
+
+  /**
+   * Will build a reference slug that is useful for schema caching and references, particularly
+   * in the case of a class with type parameters
+   */
+  fun KClass<*>.getReferenceSlug(prop: KProperty<*>): String = when {
+    this.typeParameters.isNotEmpty() -> "$COMPONENT_SLUG/${genericNameAdapter(this, prop)}"
+    else -> "$COMPONENT_SLUG/${simpleName}"
+  }
+
+  /**
+   * Adapts a class with type parameters into a reference friendly string
+   */
+  fun genericNameAdapter(field: KClass<*>, prop: KProperty<*>): String {
+    val typeArgs = (prop.javaField?.genericType as ParameterizedType).actualTypeArguments
+    val classNames = typeArgs.map { it as Class<*> }.map { it.kotlin }.map { it.simpleName }
+    return classNames.joinToString(separator = "-", prefix = "${field.simpleName}-")
+  }
+
+  /**
+   * Adapts a class with type parameters into a reference friendly string
+   */
+  fun genericNameAdapter(type: KType, clazz: KClass<*>): String {
+    val classNames = type.arguments
+      .map { it.type?.classifier as KClass<*> }
+      .map { it.simpleName }
+    return classNames.joinToString(separator = "-", prefix = "${clazz.simpleName}-")
   }
 }

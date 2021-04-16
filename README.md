@@ -40,11 +40,11 @@ dependencies {
 ### Warning 🚨
 Kompendium is still under active development ⚠️ There are a number of yet-to-be-implemented features, including 
 
-- Query and Path Parameters
-- Tags
-- Multiple Responses 
-- Security Schemas
-- Top level enum classes (enums as fields in a response are a go ✅)
+- Query and Path Parameters 🔍
+- Tags 🏷
+- Multiple Responses 📜
+- Security Schemas 🔏
+- Sealed Class / Polymorphic Support 😬  
 - Validation / Enforcement (❓👀❓)
 
 If you have a feature that is not listed here, please open an issue!

@@ -81,8 +81,8 @@ object Kompendium {
   inline fun <reified TReq : Any, reified TResp : Any> generateComponentSchemas(
     block: () -> Route
   ): Route {
-    val responseKontent = generateKontent(TResp::class)
-    val requestKontent = generateKontent(TReq::class)
+    val responseKontent = generateKontent<TResp>()
+    val requestKontent = generateKontent<TReq>()
     openApiSpec.components.schemas.putAll(responseKontent)
     openApiSpec.components.schemas.putAll(requestKontent)
     return block.invoke()
