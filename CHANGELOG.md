@@ -5,6 +5,7 @@
 ### Changed
 
 - Another re-haul to the reflection analysis
+- Top level generics, enums, collections, and maps now supported 🙌
 
 ## [0.1.1] - April 16th, 2021
 
