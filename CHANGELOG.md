@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.2.0] - April 16th, 2021
+
+### Changed
+
+- Another re-haul to the reflection analysis
+
 ## [0.1.1] - April 16th, 2021
 
 ### Added
