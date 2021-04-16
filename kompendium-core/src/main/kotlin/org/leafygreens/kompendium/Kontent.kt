@@ -26,7 +26,7 @@ object Kontent {
   private val logger = LoggerFactory.getLogger(javaClass)
 
   @OptIn(ExperimentalStdlibApi::class)
-  inline fun <reified T> generateKontentBetter(
+  inline fun <reified T> generateKontent(
     cache: SchemaMap = emptyMap()
   ): SchemaMap {
     val kontentType = typeOf<T>()

@@ -6,7 +6,7 @@ import io.ktor.routing.Route
 import io.ktor.routing.method
 import io.ktor.util.pipeline.PipelineInterceptor
 import kotlin.reflect.full.findAnnotation
-import org.leafygreens.kompendium.Kontent.generateKontentBetter
+import org.leafygreens.kompendium.Kontent.generateKontent
 import org.leafygreens.kompendium.annotations.KompendiumRequest
 import org.leafygreens.kompendium.annotations.KompendiumResponse
 import org.leafygreens.kompendium.models.meta.MethodInfo
@@ -81,8 +81,8 @@ object Kompendium {
   inline fun <reified TReq : Any, reified TResp : Any> generateComponentSchemas(
     block: () -> Route
   ): Route {
-    val responseKontent = generateKontentBetter<TResp>()
-    val requestKontent = generateKontentBetter<TReq>()
+    val responseKontent = generateKontent<TResp>()
+    val requestKontent = generateKontent<TReq>()
     openApiSpec.components.schemas.putAll(responseKontent)
     openApiSpec.components.schemas.putAll(requestKontent)
     return block.invoke()

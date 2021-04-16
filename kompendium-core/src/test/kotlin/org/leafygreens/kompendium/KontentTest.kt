@@ -6,7 +6,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
-import org.leafygreens.kompendium.Kontent.generateKontentBetter
+import org.leafygreens.kompendium.Kontent.generateKontent
 import org.leafygreens.kompendium.models.oas.DictionarySchema
 import org.leafygreens.kompendium.models.oas.FormatSchema
 import org.leafygreens.kompendium.models.oas.ObjectSchema
@@ -27,7 +27,7 @@ internal class KontentTest {
   @Test
   fun `Unit returns empty map on generate`() {
     // do
-    val result = generateKontentBetter<Unit>()
+    val result = generateKontent<Unit>()
 
     // expect
     assertTrue { result.isEmpty() }
@@ -36,7 +36,7 @@ internal class KontentTest {
   @Test
   fun `Primitive types return a single map result`() {
     // do
-    val result = generateKontentBetter<Long>()
+    val result = generateKontent<Long>()
 
     // expect
     assertEquals(1, result.count(), "Should have a single result")
@@ -46,7 +46,7 @@ internal class KontentTest {
   @Test
   fun `Objects reference their base types in the cache`() {
     // do
-    val result = generateKontentBetter<TestSimpleModel>()
+    val result = generateKontent<TestSimpleModel>()
 
     // expect
     assertNotNull(result)
@@ -57,7 +57,7 @@ internal class KontentTest {
   @Test
   fun `generation works for nested object types`() {
     // do
-    val result = generateKontentBetter<TestNestedModel>()
+    val result = generateKontent<TestNestedModel>()
 
     // expect
     assertNotNull(result)
@@ -70,10 +70,10 @@ internal class KontentTest {
   fun `generation does not repeat for cached items`() {
     // when
     val clazz = TestNestedModel::class
-    val initialCache = generateKontentBetter<TestNestedModel>()
+    val initialCache = generateKontent<TestNestedModel>()
 
     // do
-    val result = generateKontentBetter<TestSimpleModel>(initialCache)
+    val result = generateKontent<TestSimpleModel>(initialCache)
 
     // expect TODO Spy to check invocation count?
     assertNotNull(result)
@@ -85,7 +85,7 @@ internal class KontentTest {
   @Test
   fun `generation allows for enum fields`() {
     // do
-    val result = generateKontentBetter<TestSimpleWithEnums>()
+    val result = generateKontent<TestSimpleWithEnums>()
 
     // expect
     assertNotNull(result)
@@ -96,7 +96,7 @@ internal class KontentTest {
   @Test
   fun `generation allows for map fields`() {
     // do
-    val result = generateKontentBetter<TestSimpleWithMap>()
+    val result = generateKontent<TestSimpleWithMap>()
 
     // expect
     assertNotNull(result)
@@ -112,13 +112,13 @@ internal class KontentTest {
   @Test
   fun `map fields that are not string result in error`() {
     // expect
-    assertFailsWith<IllegalStateException> { generateKontentBetter<TestInvalidMap>() }
+    assertFailsWith<IllegalStateException> { generateKontent<TestInvalidMap>() }
   }
 
   @Test
   fun `generation allows for collection fields`() {
     // do
-    val result = generateKontentBetter<TestSimpleWithList>()
+    val result = generateKontent<TestSimpleWithList>()
 
     // expect
     assertNotNull(result)
@@ -130,7 +130,7 @@ internal class KontentTest {
   @Test
   fun `Can parse enum list as a field`() {
     // do
-    val result = generateKontentBetter<TestSimpleWithEnumList>()
+    val result = generateKontent<TestSimpleWithEnumList>()
 
     // expect
     assertNotNull(result)
@@ -139,7 +139,7 @@ internal class KontentTest {
   @Test
   fun `UUID schema support`() {
     // do
-    val result = generateKontentBetter<TestWithUUID>()
+    val result = generateKontent<TestWithUUID>()
 
     // expect
     assertNotNull(result)
@@ -153,7 +153,7 @@ internal class KontentTest {
   @Test
   fun `Generate top level list response`() {
     // do
-    val result = generateKontentBetter<List<TestSimpleModel>>()
+    val result = generateKontent<List<TestSimpleModel>>()
 
     // expect
     assertNotNull(result)
@@ -162,7 +162,7 @@ internal class KontentTest {
   @Test
   fun `Can handle a complex type`() {
     // do
-    val result = generateKontentBetter<ComplexRequest>()
+    val result = generateKontent<ComplexRequest>()
 
     // expect
     assertNotNull(result)
