@@ -1,5 +1,6 @@
 package org.leafygreens.kompendium.util
 
+import java.util.UUID
 import org.leafygreens.kompendium.annotations.KompendiumField
 import org.leafygreens.kompendium.annotations.KompendiumRequest
 import org.leafygreens.kompendium.annotations.KompendiumResponse
@@ -21,6 +22,8 @@ data class TestInvalidMap(val a: Map<Int, TestSimpleModel>)
 data class TestParams(val a: String, val aa: Int)
 
 data class TestNested(val nesty: String)
+
+data class TestWithUUID(val id: UUID)
 
 @KompendiumRequest("Example Request")
 data class TestRequest(

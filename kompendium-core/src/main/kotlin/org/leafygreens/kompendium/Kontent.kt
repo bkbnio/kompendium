@@ -1,11 +1,13 @@
 package org.leafygreens.kompendium
 
 import java.lang.reflect.ParameterizedType
+import java.util.UUID
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.jvm.javaField
+import org.leafygreens.kompendium.models.meta.SchemaMap
 import org.leafygreens.kompendium.models.oas.ArraySchema
 import org.leafygreens.kompendium.models.oas.DictionarySchema
 import org.leafygreens.kompendium.models.oas.EnumSchema
@@ -19,8 +21,6 @@ import org.leafygreens.kompendium.util.Helpers.genericNameAdapter
 import org.leafygreens.kompendium.util.Helpers.logged
 import org.leafygreens.kompendium.util.Helpers.toPair
 import org.slf4j.LoggerFactory
-
-typealias SchemaMap = Map<String, OpenApiSpecComponentSchema>
 
 object Kontent {
 
@@ -38,6 +38,7 @@ object Kontent {
       clazz == Float::class -> cache.plus(clazz.simpleName!! to FormatSchema("float", "number"))
       clazz == String::class -> cache.plus(clazz.simpleName!! to SimpleSchema("string"))
       clazz == Boolean::class -> cache.plus(clazz.simpleName!! to SimpleSchema("boolean"))
+      clazz == UUID::class -> cache.plus(clazz.simpleName!! to FormatSchema("uuid", "string"))
       clazz.isSubclassOf(Enum::class) -> error("Top level enums are currently not supported by Kompendium")
       clazz.typeParameters.isNotEmpty() -> error("Top level generics are not supported by Kompendium")
       else -> handleComplexType(clazz, cache)
