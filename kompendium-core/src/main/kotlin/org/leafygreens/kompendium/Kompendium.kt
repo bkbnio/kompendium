@@ -5,7 +5,9 @@ import io.ktor.http.HttpMethod
 import io.ktor.routing.Route
 import io.ktor.routing.method
 import io.ktor.util.pipeline.PipelineInterceptor
+import kotlin.reflect.KType
 import kotlin.reflect.full.findAnnotation
+import kotlin.reflect.typeOf
 import org.leafygreens.kompendium.Kontent.generateKontent
 import org.leafygreens.kompendium.annotations.KompendiumRequest
 import org.leafygreens.kompendium.annotations.KompendiumResponse
@@ -18,8 +20,9 @@ import org.leafygreens.kompendium.models.oas.OpenApiSpecPathItemOperation
 import org.leafygreens.kompendium.models.oas.OpenApiSpecReferenceObject
 import org.leafygreens.kompendium.models.oas.OpenApiSpecRequest
 import org.leafygreens.kompendium.models.oas.OpenApiSpecResponse
-import org.leafygreens.kompendium.util.Helpers.COMPONENT_SLUG
 import org.leafygreens.kompendium.util.Helpers.calculatePath
+import org.leafygreens.kompendium.util.Helpers.getReferenceSlug
+import org.leafygreens.kompendium.util.KompendiumHttpCodes
 
 object Kompendium {
 
@@ -29,90 +32,116 @@ object Kompendium {
     paths = mutableMapOf()
   )
 
+  @OptIn(ExperimentalStdlibApi::class)
   inline fun <reified TParam : Any, reified TResp : Any> Route.notarizedGet(
     info: MethodInfo,
     noinline body: PipelineInterceptor<Unit, ApplicationCall>
-  ): Route = generateComponentSchemas<Unit, TResp>() {
+  ): Route = notarizationPreFlight<Unit, TResp>() { requestType, responseType ->
     val path = calculatePath()
     openApiSpec.paths.getOrPut(path) { OpenApiSpecPathItem() }
-    openApiSpec.paths[path]?.get = info.parseMethodInfo<Unit, TResp>()
+    openApiSpec.paths[path]?.get = info.parseMethodInfo(HttpMethod.Get, requestType, responseType)
     return method(HttpMethod.Get) { handle(body) }
   }
 
   inline fun <reified TParam : Any, reified TReq : Any, reified TResp : Any> Route.notarizedPost(
     info: MethodInfo,
     noinline body: PipelineInterceptor<Unit, ApplicationCall>
-  ): Route = generateComponentSchemas<TReq, TResp>() {
+  ): Route = notarizationPreFlight<TReq, TResp>() { requestType, responseType ->
     val path = calculatePath()
     openApiSpec.paths.getOrPut(path) { OpenApiSpecPathItem() }
-    openApiSpec.paths[path]?.post = info.parseMethodInfo<TReq, TResp>()
+    openApiSpec.paths[path]?.post = info.parseMethodInfo(HttpMethod.Post, requestType, responseType)
     return method(HttpMethod.Post) { handle(body) }
   }
 
   inline fun <reified TParam : Any, reified TReq : Any, reified TResp : Any> Route.notarizedPut(
     info: MethodInfo,
     noinline body: PipelineInterceptor<Unit, ApplicationCall>,
-  ): Route = generateComponentSchemas<TReq, TResp>() {
+  ): Route = notarizationPreFlight<TReq, TResp>() { requestType, responseType ->
     val path = calculatePath()
     openApiSpec.paths.getOrPut(path) { OpenApiSpecPathItem() }
-    openApiSpec.paths[path]?.put = info.parseMethodInfo<TReq, TResp>()
+    openApiSpec.paths[path]?.put = info.parseMethodInfo(HttpMethod.Put, requestType, responseType)
     return method(HttpMethod.Put) { handle(body) }
   }
 
   inline fun <reified TParam : Any, reified TResp : Any> Route.notarizedDelete(
     info: MethodInfo,
     noinline body: PipelineInterceptor<Unit, ApplicationCall>
-  ): Route = generateComponentSchemas<Unit, TResp> {
+  ): Route = notarizationPreFlight<Unit, TResp> { requestType, responseType ->
     val path = calculatePath()
     openApiSpec.paths.getOrPut(path) { OpenApiSpecPathItem() }
-    openApiSpec.paths[path]?.delete = info.parseMethodInfo<Unit, TResp>()
+    openApiSpec.paths[path]?.delete = info.parseMethodInfo(HttpMethod.Delete, requestType, responseType)
     return method(HttpMethod.Delete) { handle(body) }
   }
 
-  inline fun <reified TReq, reified TResp> MethodInfo.parseMethodInfo() = OpenApiSpecPathItemOperation(
+  fun MethodInfo.parseMethodInfo(
+    method: HttpMethod,
+    requestType: KType,
+    responseType: KType
+  ) = OpenApiSpecPathItemOperation(
     summary = this.summary,
     description = this.description,
     tags = this.tags,
     deprecated = this.deprecated,
-    responses = parseResponseAnnotation<TResp>()?.let { mapOf(it) },
-    requestBody = parseRequestAnnotation<TReq>()
+    responses = parseResponseAnnotation(responseType)?.let { mapOf(it) },
+    requestBody = if (method != HttpMethod.Get) parseRequestAnnotation(requestType) else null
   )
 
-  inline fun <reified TReq : Any, reified TResp : Any> generateComponentSchemas(
-    block: () -> Route
+  @OptIn(ExperimentalStdlibApi::class)
+  inline fun <reified TReq : Any, reified TResp : Any> notarizationPreFlight(
+    block: (KType, KType) -> Route
   ): Route {
     val responseKontent = generateKontent<TResp>()
     val requestKontent = generateKontent<TReq>()
     openApiSpec.components.schemas.putAll(responseKontent)
     openApiSpec.components.schemas.putAll(requestKontent)
-    return block.invoke()
+    val requestType = typeOf<TReq>()
+    val responseType = typeOf<TResp>()
+    return block.invoke(requestType, responseType)
   }
 
-  inline fun <reified TReq> parseRequestAnnotation(): OpenApiSpecRequest? = when (TReq::class) {
+  private fun parseRequestAnnotation(requestType: KType): OpenApiSpecRequest? = when (requestType) {
     Unit::class -> null
-    else -> when (val anny = TReq::class.findAnnotation<KompendiumRequest>()) {
-      null -> null
+    else -> when (val anny = requestType.findAnnotation<KompendiumRequest>()) {
+      // TODO Need to be smarter here... reuse kontent generator... or maybe have kontent return top level ref?
+      null -> OpenApiSpecRequest(
+        description = "placeholder",
+        content = setOf("application/json").associateWith {
+          val ref = requestType.getReferenceSlug()
+          val mediaType = OpenApiSpecMediaType.Referenced(OpenApiSpecReferenceObject(ref))
+          mediaType
+        }
+      )
       else -> OpenApiSpecRequest(
         description = anny.description,
         content = anny.mediaTypes.associate {
-          val ref = OpenApiSpecReferenceObject("$COMPONENT_SLUG/${TReq::class.simpleName}")
-          val mediaType = OpenApiSpecMediaType.Referenced(ref)
+          val ref = requestType.getReferenceSlug()
+          val mediaType = OpenApiSpecMediaType.Referenced(OpenApiSpecReferenceObject(ref))
           Pair(it, mediaType)
         }
       )
     }
   }
 
-  inline fun <reified TResp> parseResponseAnnotation(): Pair<Int, OpenApiSpecResponse>? = when (TResp::class) {
+  private fun parseResponseAnnotation(responseType: KType): Pair<Int, OpenApiSpecResponse>? = when (responseType) {
     Unit::class -> null
-    else -> when (val anny = TResp::class.findAnnotation<KompendiumResponse>()) {
-      null -> null
+    else -> when (val anny = responseType.findAnnotation<KompendiumResponse>()) {
+      null -> {
+        val specResponse = OpenApiSpecResponse(
+          description = "placeholder",
+          content = setOf("application/json").associateWith {
+            val ref = responseType.getReferenceSlug()
+            val mediaType = OpenApiSpecMediaType.Referenced(OpenApiSpecReferenceObject(ref))
+            mediaType
+          }
+        )
+        Pair(KompendiumHttpCodes.OK, specResponse)
+      }
       else -> {
         val specResponse = OpenApiSpecResponse(
           description = anny.description,
           content = anny.mediaTypes.associate {
-            val ref = OpenApiSpecReferenceObject("$COMPONENT_SLUG/${TResp::class.simpleName}")
-            val mediaType = OpenApiSpecMediaType.Referenced(ref)
+            val ref = responseType.getReferenceSlug()
+            val mediaType = OpenApiSpecMediaType.Referenced(OpenApiSpecReferenceObject(ref))
             Pair(it, mediaType)
           }
         )

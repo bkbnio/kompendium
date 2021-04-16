@@ -289,6 +289,22 @@ internal class KompendiumTest {
     }
   }
 
+  @Test
+  fun `Can notarize a top level list response`() {
+    withTestApplication({
+      configModule()
+      openApiModule()
+      returnsList()
+    }) {
+      // do
+      val json = handleRequest(HttpMethod.Get, "/openapi.json").response.content
+
+      // expect
+      val expected = TestData.getFileSnapshot("response_list.json").trim()
+      assertEquals(expected, json, "The received json spec should match the expected content")
+    }
+  }
+
   private companion object {
     val testGetInfo = MethodInfo("Another get test", "testing more")
     val testPostInfo = MethodInfo("Test post endpoint", "Post your tests here!")
@@ -382,6 +398,16 @@ internal class KompendiumTest {
           notarizedGet<TestParams, TestResponse>(testGetInfo) {
             call.respondText { "🙀👾" }
           }
+        }
+      }
+    }
+  }
+
+  private fun Application.returnsList() {
+    routing {
+      route("/test") {
+        notarizedGet<TestParams, List<TestResponse>>(testGetInfo) {
+          call.respondText { "hey dude ur doing amazing work!" }
         }
       }
     }
