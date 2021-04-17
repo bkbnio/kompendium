@@ -78,13 +78,96 @@ The intended purpose is to offer field level overrides such as naming convention
 
 ## Examples
 
+The following source code can be found in the `kompendium-playground` module
+
 ```kotlin
 // Minimal API Example
+fun main() {
+  embeddedServer(
+    Netty,
+    port = 8081,
+    module = Application::mainModule
+  ).start(wait = true)
+}
+
+data class ExampleParams(val a: String, val aa: Int)
+
+data class ExampleNested(val nesty: String)
+
+object DeleteResponse
+
+data class ExampleRequest(
+  @KompendiumField(name = "field_name")
+  val fieldName: ExampleNested,
+  val b: Double,
+  val aaa: List<Long>
+)
+
+data class ExampleResponse(val c: String)
+
+data class ExampleCreatedResponse(val id: Int, val c: String)
+
+object KompendiumTOC {
+  val testIdGetInfo = MethodInfo(
+    summary = "Get Test",
+    description = "Test for the getting",
+    tags = setOf("test", "sample", "get"),
+    responseInfo = ResponseInfo(
+      status = KompendiumHttpCodes.OK,
+      description = "Returns sample info"
+    )
+  )
+  val testSingleGetInfo = MethodInfo(
+    summary = "Another get test",
+    description = "testing more",
+    tags = setOf("anotherTest", "sample"),
+    responseInfo = ResponseInfo(
+      status = KompendiumHttpCodes.OK,
+      description = "Returns a different sample"
+    )
+  )
+  val testSinglePostInfo = MethodInfo(
+    summary = "Test post endpoint",
+    description = "Post your tests here!",
+    requestInfo = RequestInfo(
+      description = "Simple request body"
+    ),
+    responseInfo = ResponseInfo(
+      status = KompendiumHttpCodes.CREATED,
+      description = "Worlds most complex response"
+    )
+  )
+  val testSinglePutInfo = MethodInfo(
+    summary = "Test put endpoint",
+    description = "Put your tests here!",
+    requestInfo = RequestInfo(
+      description = "Info needed to perform this put request"
+    ),
+    responseInfo = ResponseInfo(
+      status = KompendiumHttpCodes.CREATED,
+      description = "What we give you when u do the puts"
+    )
+  )
+  val testSingleDeleteInfo = MethodInfo(
+    summary = "Test delete endpoint",
+    description = "testing my deletes",
+    responseInfo = ResponseInfo(
+      status = KompendiumHttpCodes.NO_CONTENT,
+      description = "Signifies that your item was deleted succesfully"
+    )
+  )
+}
+
 fun Application.mainModule() {
   install(ContentNegotiation) {
-    jackson()
+    jackson {
+      enable(SerializationFeature.INDENT_OUTPUT)
+      setSerializationInclusion(JsonInclude.Include.NON_NULL)
+    }
   }
   routing {
+    openApi()
+    redoc()
     route("/test") {
       route("/{id}") {
         notarizedGet<ExampleParams, ExampleResponse>(testIdGetInfo) {
@@ -106,48 +189,80 @@ fun Application.mainModule() {
         }
       }
     }
-    route("/openapi.json") {
-      get {
-        call.respond(openApiSpec.copy(
+  }
+}
+
+fun Routing.openApi() {
+  route("/openapi.json") {
+    get {
+      call.respond(
+        openApiSpec.copy(
           info = OpenApiSpecInfo(
             title = "Test API",
-            version = "1.3.3.7",
-            description = "An amazing, fully-ish 😉 generated API spec"
+            version = "1.33.7",
+            description = "An amazing, fully-ish 😉 generated API spec",
+            termsOfService = URI("https://example.com"),
+            contact = OpenApiSpecInfoContact(
+              name = "Homer Simpson",
+              email = "chunkylover53@aol.com",
+              url = URI("https://gph.is/1NPUDiM")
+            ),
+            license = OpenApiSpecInfoLicense(
+              name = "MIT",
+              url = URI("https://github.com/lg-backbone/kompendium/blob/main/LICENSE")
+            )
+          ),
+          servers = mutableListOf(
+            OpenApiSpecServer(
+              url = URI("https://myawesomeapi.com"),
+              description = "Production instance of my API"
+            ),
+            OpenApiSpecServer(
+              url = URI("https://staging.myawesomeapi.com"),
+              description = "Where the fun stuff happens"
+            )
           )
-        ))
-      }
+        )
+      )
     }
   }
 }
 
-// Ancillary Data 
-data class ExampleParams(val a: String, val aa: Int)
-
-data class ExampleNested(val nesty: String)
-
-@KompendiumResponse(status = KompendiumHttpCodes.NO_CONTENT, "Entity was deleted successfully")
-object DeleteResponse
-
-@KompendiumRequest("Example Request")
-data class ExampleRequest(
-  @KompendiumField(name = "field_name")
-  val fieldName: ExampleNested,
-  val b: Double,
-  val aaa: List<Long>
-)
-
-@KompendiumResponse(KompendiumHttpCodes.OK, "A Successful Endeavor")
-data class ExampleResponse(val c: String)
-
-@KompendiumResponse(KompendiumHttpCodes.CREATED, "Created Successfully")
-data class ExampleCreatedResponse(val id: Int, val c: String)
-
-object KompendiumTOC {
-  val testIdGetInfo = MethodInfo("Get Test", "Test for getting", tags = setOf("test", "example", "get"))
-  val testSingleGetInfo = MethodInfo("Another get test", "testing more")
-  val testSinglePostInfo = MethodInfo("Test post endpoint", "Post your tests here!")
-  val testSinglePutInfo = MethodInfo("Test put endpoint", "Put your tests here!")
-  val testSingleDeleteInfo = MethodInfo("Test delete endpoint", "testing my deletes")
+fun Routing.redoc() {
+  route("/docs") {
+    get {
+      call.respondHtml {
+        head {
+          title {
+            +"${openApiSpec.info.title}"
+          }
+          meta {
+            charset = "utf-8"
+          }
+          meta {
+            name = "viewport"
+            content = "width=device-width, initial-scale=1"
+          }
+          link {
+            href = "https://fonts.googleapis.com/css?family=Montserrat:300,400,700|Roboto:300,400,700"
+            rel = "stylesheet"
+          }
+          style {
+            unsafe {
+              raw("body { margin: 0; padding: 0; }")
+            }
+          }
+        }
+        body {
+          // TODO needs to mirror openApi route
+          unsafe { +"<redoc spec-url='/openapi.json'></redoc>" }
+          script {
+            src = "https://cdn.jsdelivr.net/npm/redoc@next/bundles/redoc.standalone.js"
+          }
+        }
+      }
+    }
+  }
 }
 ```
 
