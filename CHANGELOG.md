@@ -5,11 +5,6 @@
 ### Changed
 
 - Removed response and request annotations in favor of MethodInfo extension.
-
-## [0.2.1] - April 16th, 2021
-
-### Changed
-
 - Modified notarization to add the correct reference slug regardless of type
 
 ## [0.2.0] - April 16th, 2021
