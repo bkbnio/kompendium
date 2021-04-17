@@ -12,6 +12,7 @@ import org.leafygreens.kompendium.Kontent.generateParameterKontent
 import org.leafygreens.kompendium.models.meta.MethodInfo
 import org.leafygreens.kompendium.models.meta.RequestInfo
 import org.leafygreens.kompendium.models.meta.ResponseInfo
+import org.leafygreens.kompendium.models.meta.SchemaMap
 import org.leafygreens.kompendium.models.oas.OpenApiSpec
 import org.leafygreens.kompendium.models.oas.OpenApiSpecInfo
 import org.leafygreens.kompendium.models.oas.OpenApiSpecMediaType
@@ -24,6 +25,8 @@ import org.leafygreens.kompendium.util.Helpers.calculatePath
 import org.leafygreens.kompendium.util.Helpers.getReferenceSlug
 
 object Kompendium {
+
+  var cache: SchemaMap = emptyMap()
 
   var openApiSpec = OpenApiSpec(
     info = OpenApiSpecInfo(),
@@ -90,12 +93,10 @@ object Kompendium {
   inline fun <reified TParam : Any, reified TReq : Any, reified TResp : Any> notarizationPreFlight(
     block: (KType, KType) -> Route
   ): Route {
-    val responseKontent = generateKontent<TResp>()
-    val requestKontent = generateKontent<TReq>()
-    val paramKontent = generateParameterKontent<TParam>()
-    openApiSpec.components.schemas.putAll(responseKontent)
-    openApiSpec.components.schemas.putAll(requestKontent)
-    openApiSpec.components.schemas.putAll(paramKontent)
+    cache = generateKontent<TResp>(cache)
+    cache = generateKontent<TReq>(cache)
+    cache = generateParameterKontent<TParam>(cache)
+    openApiSpec.components.schemas.putAll(cache)
     val requestType = typeOf<TReq>()
     val responseType = typeOf<TResp>()
     return block.invoke(requestType, responseType)
@@ -140,5 +141,6 @@ object Kompendium {
       servers = mutableListOf(),
       paths = mutableMapOf()
     )
+    cache = emptyMap()
   }
 }
