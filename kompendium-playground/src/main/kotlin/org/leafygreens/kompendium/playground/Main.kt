@@ -31,6 +31,8 @@ import org.leafygreens.kompendium.Kompendium.notarizedPost
 import org.leafygreens.kompendium.Kompendium.notarizedPut
 import org.leafygreens.kompendium.Kompendium.openApiSpec
 import org.leafygreens.kompendium.annotations.KompendiumField
+import org.leafygreens.kompendium.annotations.PathParam
+import org.leafygreens.kompendium.annotations.QueryParam
 import org.leafygreens.kompendium.models.meta.MethodInfo
 import org.leafygreens.kompendium.models.meta.RequestInfo
 import org.leafygreens.kompendium.models.meta.ResponseInfo
@@ -70,10 +72,10 @@ fun Application.mainModule() {
         }
       }
       route("/single") {
-        notarizedGet<ExampleRequest, ExampleResponse>(testSingleGetInfo) {
+        notarizedGet<ExampleParams, ExampleResponse>(testSingleGetInfo) {
           call.respondText("get single")
         }
-        notarizedPost<ExampleParams, ExampleRequest, ExampleCreatedResponse>(testSinglePostInfo) {
+        notarizedPost<Unit, ExampleRequest, ExampleCreatedResponse>(testSinglePostInfo) {
           call.respondText("test post")
         }
         notarizedPut<ExampleParams, ExampleRequest, ExampleCreatedResponse>(testSinglePutInfo) {
@@ -87,7 +89,10 @@ fun Application.mainModule() {
   }
 }
 
-data class ExampleParams(val a: String, val aa: Int)
+data class ExampleParams(
+  @QueryParam val a: String,
+  @PathParam val aa: Int
+)
 
 data class ExampleNested(val nesty: String)
 
