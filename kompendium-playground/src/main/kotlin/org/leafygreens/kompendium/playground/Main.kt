@@ -53,6 +53,40 @@ fun main() {
   ).start(wait = true)
 }
 
+fun Application.mainModule() {
+  install(ContentNegotiation) {
+    jackson {
+      enable(SerializationFeature.INDENT_OUTPUT)
+      setSerializationInclusion(JsonInclude.Include.NON_NULL)
+    }
+  }
+  routing {
+    openApi()
+    redoc()
+    route("/test") {
+      route("/{id}") {
+        notarizedGet<ExampleParams, ExampleResponse>(testIdGetInfo) {
+          call.respondText("get by id")
+        }
+      }
+      route("/single") {
+        notarizedGet<ExampleRequest, ExampleResponse>(testSingleGetInfo) {
+          call.respondText("get single")
+        }
+        notarizedPost<ExampleParams, ExampleRequest, ExampleCreatedResponse>(testSinglePostInfo) {
+          call.respondText("test post")
+        }
+        notarizedPut<ExampleParams, ExampleRequest, ExampleCreatedResponse>(testSinglePutInfo) {
+          call.respondText { "hey" }
+        }
+        notarizedDelete<Unit, DeleteResponse>(testSingleDeleteInfo) {
+          call.respondText { "heya" }
+        }
+      }
+    }
+  }
+}
+
 data class ExampleParams(val a: String, val aa: Int)
 
 data class ExampleNested(val nesty: String)
@@ -119,40 +153,6 @@ object KompendiumTOC {
       description = "Signifies that your item was deleted succesfully"
     )
   )
-}
-
-fun Application.mainModule() {
-  install(ContentNegotiation) {
-    jackson {
-      enable(SerializationFeature.INDENT_OUTPUT)
-      setSerializationInclusion(JsonInclude.Include.NON_NULL)
-    }
-  }
-  routing {
-    openApi()
-    redoc()
-    route("/test") {
-      route("/{id}") {
-        notarizedGet<ExampleParams, ExampleResponse>(testIdGetInfo) {
-          call.respondText("get by id")
-        }
-      }
-      route("/single") {
-        notarizedGet<ExampleRequest, ExampleResponse>(testSingleGetInfo) {
-          call.respondText("get single")
-        }
-        notarizedPost<ExampleParams, ExampleRequest, ExampleCreatedResponse>(testSinglePostInfo) {
-          call.respondText("test post")
-        }
-        notarizedPut<ExampleParams, ExampleRequest, ExampleCreatedResponse>(testSinglePutInfo) {
-          call.respondText { "hey" }
-        }
-        notarizedDelete<Unit, DeleteResponse>(testSingleDeleteInfo) {
-          call.respondText { "heya" }
-        }
-      }
-    }
-  }
 }
 
 fun Routing.openApi() {
