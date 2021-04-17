@@ -79,7 +79,7 @@ fun Application.mainModule() {
         notarizedPut<ExampleParams, ExampleRequest, ExampleCreatedResponse>(testSinglePutInfo) {
           call.respondText { "hey" }
         }
-        notarizedDelete<Unit, DeleteResponse>(testSingleDeleteInfo) {
+        notarizedDelete<Unit, Unit>(testSingleDeleteInfo) {
           call.respondText { "heya" }
         }
       }
@@ -90,8 +90,6 @@ fun Application.mainModule() {
 data class ExampleParams(val a: String, val aa: Int)
 
 data class ExampleNested(val nesty: String)
-
-object DeleteResponse
 
 data class ExampleRequest(
   @KompendiumField(name = "field_name")
@@ -150,7 +148,8 @@ object KompendiumTOC {
     description = "testing my deletes",
     responseInfo = ResponseInfo(
       status = KompendiumHttpCodes.NO_CONTENT,
-      description = "Signifies that your item was deleted succesfully"
+      description = "Signifies that your item was deleted successfully",
+      mediaTypes = emptyList()
     )
   )
 }

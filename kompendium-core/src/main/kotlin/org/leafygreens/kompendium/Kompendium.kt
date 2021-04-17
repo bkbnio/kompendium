@@ -118,12 +118,13 @@ object Kompendium {
     else -> when (responseInfo) {
       null -> null // TODO again probably revisit this
       else -> {
+        val content = responseInfo.mediaTypes.associateWith {
+          val ref = getReferenceSlug()
+          OpenApiSpecMediaType.Referenced(OpenApiSpecReferenceObject(ref))
+        }
         val specResponse = OpenApiSpecResponse(
           description = responseInfo.description,
-          content = responseInfo.mediaTypes.associateWith {
-            val ref = getReferenceSlug()
-            OpenApiSpecMediaType.Referenced(OpenApiSpecReferenceObject(ref))
-          }
+          content = content.ifEmpty { null }
         )
         Pair(responseInfo.status, specResponse)
       }

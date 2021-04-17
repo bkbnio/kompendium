@@ -30,14 +30,7 @@
         "description" : "testing my deletes",
         "responses" : {
           "204" : {
-            "description" : "A Successful Endeavor",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/TestDeleteResponse"
-                }
-              }
-            }
+            "description" : "A Successful Endeavor"
           }
         },
         "deprecated" : false
@@ -45,12 +38,7 @@
     }
   },
   "components" : {
-    "schemas" : {
-      "TestDeleteResponse" : {
-        "properties" : { },
-        "type" : "object"
-      }
-    },
+    "schemas" : { },
     "securitySchemes" : { }
   },
   "security" : [ ],

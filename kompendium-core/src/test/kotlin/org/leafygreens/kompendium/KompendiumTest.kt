@@ -311,7 +311,7 @@ internal class KompendiumTest {
   private companion object {
     val testGetResponse = ResponseInfo(KompendiumHttpCodes.OK, "A Successful Endeavor")
     val testPostResponse = ResponseInfo(KompendiumHttpCodes.CREATED, "A Successful Endeavor")
-    val testDeleteResponse = ResponseInfo(KompendiumHttpCodes.NO_CONTENT, "A Successful Endeavor")
+    val testDeleteResponse = ResponseInfo(KompendiumHttpCodes.NO_CONTENT, "A Successful Endeavor", mediaTypes = emptyList())
     val testRequest = RequestInfo("A Test request")
     val testGetInfo = MethodInfo("Another get test", "testing more", testGetResponse)
     val testPostInfo = MethodInfo("Test post endpoint", "Post your tests here!", testPostResponse, testRequest)
@@ -351,7 +351,7 @@ internal class KompendiumTest {
   private fun Application.notarizedDeleteModule() {
     routing {
       route("/test") {
-        notarizedDelete<TestParams, TestDeleteResponse>(testDeleteInfo) {
+        notarizedDelete<TestParams, Unit>(testDeleteInfo) {
           call.respond(HttpStatusCode.NoContent)
         }
       }
