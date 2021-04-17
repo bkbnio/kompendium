@@ -40,7 +40,6 @@ dependencies {
 ### Warning 🚨
 Kompendium is still under active development ⚠️ There are a number of yet-to-be-implemented features, including 
 
-- Query and Path Parameters 🔍
 - Tags 🏷
 - Multiple Responses 📜
 - Security Schemas 🔏
