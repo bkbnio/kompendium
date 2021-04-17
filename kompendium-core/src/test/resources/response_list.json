@@ -24,17 +24,17 @@
   } ],
   "paths" : {
     "/test" : {
-      "delete" : {
+      "get" : {
         "tags" : [ ],
-        "summary" : "Test delete endpoint",
-        "description" : "testing my deletes",
+        "summary" : "Another get test",
+        "description" : "testing more",
         "responses" : {
-          "204" : {
+          "200" : {
             "description" : "A Successful Endeavor",
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/TestDeleteResponse"
+                  "$ref" : "#/components/schemas/List-TestResponse"
                 }
               }
             }
@@ -46,9 +46,22 @@
   },
   "components" : {
     "schemas" : {
-      "TestDeleteResponse" : {
-        "properties" : { },
+      "String" : {
+        "type" : "string"
+      },
+      "TestResponse" : {
+        "properties" : {
+          "c" : {
+            "$ref" : "#/components/schemas/String"
+          }
+        },
         "type" : "object"
+      },
+      "List-TestResponse" : {
+        "items" : {
+          "$ref" : "#/components/schemas/TestResponse"
+        },
+        "type" : "array"
       }
     },
     "securitySchemes" : { }

@@ -92,6 +92,11 @@ object Helpers {
     return result
   }
 
+  fun KType.getReferenceSlug(): String = when {
+    arguments.isNotEmpty() -> "$COMPONENT_SLUG/${genericNameAdapter(this, classifier as KClass<*>)}"
+    else -> "$COMPONENT_SLUG/${(classifier as KClass<*>).simpleName}"
+  }
+
   /**
    * Will build a reference slug that is useful for schema caching and references, particularly
    * in the case of a class with type parameters

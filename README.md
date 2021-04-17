@@ -68,26 +68,39 @@ meaning that swapping in a default Ktor route and a Kompendium `notarized` route
 ### Supplemental Annotations
 
 In general, Kompendium tries to limit the number of annotations that developers need to use in order to get an app 
-integrated.  However, there are a couple areas that it made sense, at least for an MVP.  
+integrated.   
 
-Currently, there are three Kompendium annotations
+Currently, there is only a single Kompendium annotation
 
-- `KompendiumRequest`
-- `KompendiumResponse`
 - `KompendiumField`
 
-These are aimed at offering modifications at the request, response, and field level respectively, and offer things such
-as response status codes, field name overrides, and OpenApi metadata such as `description`.
+The intended purpose is to offer field level overrides such as naming conventions (ie snake instead of camel).
 
 ## Examples
 
+The full source code can be found in the `kompendium-playground` module.  Here we show just the adjustments 
+needed to a standard Ktor server to get up and running in Kompendium.  
+
 ```kotlin
 // Minimal API Example
+fun main() {
+  embeddedServer(
+    Netty,
+    port = 8081,
+    module = Application::mainModule
+  ).start(wait = true)
+}
+
 fun Application.mainModule() {
   install(ContentNegotiation) {
-    jackson()
+    jackson {
+      enable(SerializationFeature.INDENT_OUTPUT)
+      setSerializationInclusion(JsonInclude.Include.NON_NULL)
+    }
   }
   routing {
+    openApi()
+    redoc()
     route("/test") {
       route("/{id}") {
         notarizedGet<ExampleParams, ExampleResponse>(testIdGetInfo) {
@@ -109,52 +122,13 @@ fun Application.mainModule() {
         }
       }
     }
-    route("/openapi.json") {
-      get {
-        call.respond(openApiSpec.copy(
-          info = OpenApiSpecInfo(
-            title = "Test API",
-            version = "1.3.3.7",
-            description = "An amazing, fully-ish 😉 generated API spec"
-          )
-        ))
-      }
-    }
   }
-}
-
-// Ancillary Data 
-data class ExampleParams(val a: String, val aa: Int)
-
-data class ExampleNested(val nesty: String)
-
-@KompendiumResponse(status = KompendiumHttpCodes.NO_CONTENT, "Entity was deleted successfully")
-object DeleteResponse
-
-@KompendiumRequest("Example Request")
-data class ExampleRequest(
-  @KompendiumField(name = "field_name")
-  val fieldName: ExampleNested,
-  val b: Double,
-  val aaa: List<Long>
-)
-
-@KompendiumResponse(KompendiumHttpCodes.OK, "A Successful Endeavor")
-data class ExampleResponse(val c: String)
-
-@KompendiumResponse(KompendiumHttpCodes.CREATED, "Created Successfully")
-data class ExampleCreatedResponse(val id: Int, val c: String)
-
-object KompendiumTOC {
-  val testIdGetInfo = MethodInfo("Get Test", "Test for getting", tags = setOf("test", "example", "get"))
-  val testSingleGetInfo = MethodInfo("Another get test", "testing more")
-  val testSinglePostInfo = MethodInfo("Test post endpoint", "Post your tests here!")
-  val testSinglePutInfo = MethodInfo("Test put endpoint", "Put your tests here!")
-  val testSingleDeleteInfo = MethodInfo("Test delete endpoint", "testing my deletes")
 }
 ```
 
-This example would output the following json spec https://gist.github.com/rgbrizzlehizzle/b9544922f2e99a2815177f8bdbf80668
+When run in the playground, this would output the following at `/openapi.json` 
+
+https://gist.github.com/rgbrizzlehizzle/b9544922f2e99a2815177f8bdbf80668
 
 ## Limitations
 

@@ -29,7 +29,7 @@
         "summary" : "Test put endpoint",
         "description" : "Put your tests here!",
         "requestBody" : {
-          "description" : "Example Request",
+          "description" : "A Test request",
           "content" : {
             "application/json" : {
               "schema" : {
@@ -41,7 +41,7 @@
         },
         "responses" : {
           "201" : {
-            "description" : "Created Successfully",
+            "description" : "A Successful Endeavor",
             "content" : {
               "application/json" : {
                 "schema" : {
