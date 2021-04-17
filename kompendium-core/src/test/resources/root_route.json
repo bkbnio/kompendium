@@ -56,6 +56,10 @@
           }
         },
         "type" : "object"
+      },
+      "Int" : {
+        "format" : "int32",
+        "type" : "integer"
       }
     },
     "securitySchemes" : { }

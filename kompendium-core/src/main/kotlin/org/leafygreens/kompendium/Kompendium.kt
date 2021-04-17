@@ -8,10 +8,10 @@ import io.ktor.util.pipeline.PipelineInterceptor
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 import org.leafygreens.kompendium.Kontent.generateKontent
+import org.leafygreens.kompendium.Kontent.generateParameterKontent
 import org.leafygreens.kompendium.models.meta.MethodInfo
 import org.leafygreens.kompendium.models.meta.RequestInfo
 import org.leafygreens.kompendium.models.meta.ResponseInfo
-import org.leafygreens.kompendium.models.meta.SchemaMap
 import org.leafygreens.kompendium.models.oas.OpenApiSpec
 import org.leafygreens.kompendium.models.oas.OpenApiSpecInfo
 import org.leafygreens.kompendium.models.oas.OpenApiSpecMediaType
@@ -87,13 +87,15 @@ object Kompendium {
   )
 
   @OptIn(ExperimentalStdlibApi::class)
-  inline fun <reified TParams : Any, reified TReq : Any, reified TResp : Any> notarizationPreFlight(
+  inline fun <reified TParam : Any, reified TReq : Any, reified TResp : Any> notarizationPreFlight(
     block: (KType, KType) -> Route
   ): Route {
     val responseKontent = generateKontent<TResp>()
     val requestKontent = generateKontent<TReq>()
+    val paramKontent = generateParameterKontent<TParam>()
     openApiSpec.components.schemas.putAll(responseKontent)
     openApiSpec.components.schemas.putAll(requestKontent)
+    openApiSpec.components.schemas.putAll(paramKontent)
     val requestType = typeOf<TReq>()
     val responseType = typeOf<TResp>()
     return block.invoke(requestType, responseType)
