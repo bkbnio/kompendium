@@ -99,7 +99,7 @@ object Kontent {
     val referenceName = genericNameAdapter(type, clazz)
     val valueReference = ReferencedSchema("$COMPONENT_SLUG/$valClassName")
     val schema = DictionarySchema(additionalProperties = valueReference)
-    val updatedCache = generateKTypeKontent(valType!!, cache)
+    val updatedCache = generateKTypeKontent(valType, cache)
     return updatedCache.plus(referenceName to schema)
   }
 

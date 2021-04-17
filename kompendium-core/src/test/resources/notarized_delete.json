@@ -30,7 +30,7 @@
         "description" : "testing my deletes",
         "responses" : {
           "204" : {
-            "description" : "Entity was deleted successfully",
+            "description" : "A Successful Endeavor",
             "content" : {
               "application/json" : {
                 "schema" : {

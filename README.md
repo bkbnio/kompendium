@@ -68,16 +68,13 @@ meaning that swapping in a default Ktor route and a Kompendium `notarized` route
 ### Supplemental Annotations
 
 In general, Kompendium tries to limit the number of annotations that developers need to use in order to get an app 
-integrated.  However, there are a couple areas that it made sense, at least for an MVP.  
+integrated.   
 
-Currently, there are three Kompendium annotations
+Currently, there is only a single Kompendium annotation
 
-- `KompendiumRequest`
-- `KompendiumResponse`
 - `KompendiumField`
 
-These are aimed at offering modifications at the request, response, and field level respectively, and offer things such
-as response status codes, field name overrides, and OpenApi metadata such as `description`.
+The intended purpose is to offer field level overrides such as naming conventions (ie snake instead of camel).
 
 ## Examples
 

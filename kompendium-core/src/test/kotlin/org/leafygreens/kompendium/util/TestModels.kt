@@ -2,8 +2,6 @@ package org.leafygreens.kompendium.util
 
 import java.util.UUID
 import org.leafygreens.kompendium.annotations.KompendiumField
-import org.leafygreens.kompendium.annotations.KompendiumRequest
-import org.leafygreens.kompendium.annotations.KompendiumResponse
 
 data class TestSimpleModel(val a: String, val b: Int)
 
@@ -25,7 +23,6 @@ data class TestNested(val nesty: String)
 
 data class TestWithUUID(val id: UUID)
 
-@KompendiumRequest("Example Request")
 data class TestRequest(
   @KompendiumField(name = "field_name")
   val fieldName: TestNested,
@@ -33,16 +30,12 @@ data class TestRequest(
   val aaa: List<Long>
 )
 
-@KompendiumResponse(KompendiumHttpCodes.OK, "A Successful Endeavor")
 data class TestResponse(val c: String)
 
-@KompendiumResponse(KompendiumHttpCodes.CREATED, "Created Successfully")
 data class TestCreatedResponse(val id: Int, val c: String)
 
-@KompendiumResponse(KompendiumHttpCodes.NO_CONTENT, "Entity was deleted successfully")
 object TestDeleteResponse
 
-@KompendiumRequest("Request object to create a backbone project")
 data class ComplexRequest(
   val org: String,
   @KompendiumField("amazing_field")

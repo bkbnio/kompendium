@@ -25,11 +25,14 @@ import org.leafygreens.kompendium.Kompendium.notarizedGet
 import org.leafygreens.kompendium.Kompendium.notarizedPost
 import org.leafygreens.kompendium.Kompendium.notarizedPut
 import org.leafygreens.kompendium.models.meta.MethodInfo
+import org.leafygreens.kompendium.models.meta.RequestInfo
+import org.leafygreens.kompendium.models.meta.ResponseInfo
 import org.leafygreens.kompendium.models.oas.OpenApiSpecInfo
 import org.leafygreens.kompendium.models.oas.OpenApiSpecInfoContact
 import org.leafygreens.kompendium.models.oas.OpenApiSpecInfoLicense
 import org.leafygreens.kompendium.models.oas.OpenApiSpecServer
 import org.leafygreens.kompendium.util.ComplexRequest
+import org.leafygreens.kompendium.util.KompendiumHttpCodes
 import org.leafygreens.kompendium.util.TestCreatedResponse
 import org.leafygreens.kompendium.util.TestData
 import org.leafygreens.kompendium.util.TestDeleteResponse
@@ -306,10 +309,14 @@ internal class KompendiumTest {
   }
 
   private companion object {
-    val testGetInfo = MethodInfo("Another get test", "testing more")
-    val testPostInfo = MethodInfo("Test post endpoint", "Post your tests here!")
-    val testPutInfo = MethodInfo("Test put endpoint", "Put your tests here!")
-    val testDeleteInfo = MethodInfo("Test delete endpoint", "testing my deletes")
+    val testGetResponse = ResponseInfo(KompendiumHttpCodes.OK, "A Successful Endeavor")
+    val testPostResponse = ResponseInfo(KompendiumHttpCodes.CREATED, "A Successful Endeavor")
+    val testDeleteResponse = ResponseInfo(KompendiumHttpCodes.NO_CONTENT, "A Successful Endeavor")
+    val testRequest = RequestInfo("A Test request")
+    val testGetInfo = MethodInfo("Another get test", "testing more", testGetResponse)
+    val testPostInfo = MethodInfo("Test post endpoint", "Post your tests here!", testPostResponse, testRequest)
+    val testPutInfo = MethodInfo("Test put endpoint", "Put your tests here!", testPostResponse, testRequest)
+    val testDeleteInfo = MethodInfo("Test delete endpoint", "testing my deletes", testDeleteResponse)
   }
 
   private fun Application.configModule() {

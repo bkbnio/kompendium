@@ -6,12 +6,11 @@ import io.ktor.routing.Route
 import io.ktor.routing.method
 import io.ktor.util.pipeline.PipelineInterceptor
 import kotlin.reflect.KType
-import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.typeOf
 import org.leafygreens.kompendium.Kontent.generateKontent
-import org.leafygreens.kompendium.annotations.KompendiumRequest
-import org.leafygreens.kompendium.annotations.KompendiumResponse
 import org.leafygreens.kompendium.models.meta.MethodInfo
+import org.leafygreens.kompendium.models.meta.RequestInfo
+import org.leafygreens.kompendium.models.meta.ResponseInfo
 import org.leafygreens.kompendium.models.oas.OpenApiSpec
 import org.leafygreens.kompendium.models.oas.OpenApiSpecInfo
 import org.leafygreens.kompendium.models.oas.OpenApiSpecMediaType
@@ -22,7 +21,6 @@ import org.leafygreens.kompendium.models.oas.OpenApiSpecRequest
 import org.leafygreens.kompendium.models.oas.OpenApiSpecResponse
 import org.leafygreens.kompendium.util.Helpers.calculatePath
 import org.leafygreens.kompendium.util.Helpers.getReferenceSlug
-import org.leafygreens.kompendium.util.KompendiumHttpCodes
 
 object Kompendium {
 
@@ -73,6 +71,7 @@ object Kompendium {
     return method(HttpMethod.Delete) { handle(body) }
   }
 
+  // TODO here down is a mess, needs refactor once core functionality is in place
   fun MethodInfo.parseMethodInfo(
     method: HttpMethod,
     requestType: KType,
@@ -82,8 +81,8 @@ object Kompendium {
     description = this.description,
     tags = this.tags,
     deprecated = this.deprecated,
-    responses = parseResponseAnnotation(responseType)?.let { mapOf(it) },
-    requestBody = if (method != HttpMethod.Get) parseRequestAnnotation(requestType) else null
+    responses = responseType.toSpec(responseInfo)?.let { mapOf(it) },
+    requestBody = if (method != HttpMethod.Get) requestType.toSpec(requestInfo) else null
   )
 
   @OptIn(ExperimentalStdlibApi::class)
@@ -99,53 +98,34 @@ object Kompendium {
     return block.invoke(requestType, responseType)
   }
 
-  private fun parseRequestAnnotation(requestType: KType): OpenApiSpecRequest? = when (requestType) {
+  // TODO These two lookin' real similar 👀 Combine?
+  private fun KType.toSpec(requestInfo: RequestInfo?): OpenApiSpecRequest? = when (this) {
     Unit::class -> null
-    else -> when (val anny = requestType.findAnnotation<KompendiumRequest>()) {
-      // TODO Need to be smarter here... reuse kontent generator... or maybe have kontent return top level ref?
-      null -> OpenApiSpecRequest(
-        description = "placeholder",
-        content = setOf("application/json").associateWith {
-          val ref = requestType.getReferenceSlug()
-          val mediaType = OpenApiSpecMediaType.Referenced(OpenApiSpecReferenceObject(ref))
-          mediaType
-        }
-      )
+    else -> when (requestInfo) {
+      null -> null
       else -> OpenApiSpecRequest(
-        description = anny.description,
-        content = anny.mediaTypes.associate {
-          val ref = requestType.getReferenceSlug()
-          val mediaType = OpenApiSpecMediaType.Referenced(OpenApiSpecReferenceObject(ref))
-          Pair(it, mediaType)
+        description = requestInfo.description,
+        content = requestInfo.mediaTypes.associateWith {
+          val ref = getReferenceSlug()
+          OpenApiSpecMediaType.Referenced(OpenApiSpecReferenceObject(ref))
         }
       )
     }
   }
 
-  private fun parseResponseAnnotation(responseType: KType): Pair<Int, OpenApiSpecResponse>? = when (responseType) {
-    Unit::class -> null
-    else -> when (val anny = responseType.findAnnotation<KompendiumResponse>()) {
-      null -> {
-        val specResponse = OpenApiSpecResponse(
-          description = "placeholder",
-          content = setOf("application/json").associateWith {
-            val ref = responseType.getReferenceSlug()
-            val mediaType = OpenApiSpecMediaType.Referenced(OpenApiSpecReferenceObject(ref))
-            mediaType
-          }
-        )
-        Pair(KompendiumHttpCodes.OK, specResponse)
-      }
+  private fun KType.toSpec(responseInfo: ResponseInfo?): Pair<Int, OpenApiSpecResponse>? = when (this) {
+    Unit::class -> null // TODO Maybe not though? could be unit but 200 🤔
+    else -> when (responseInfo) {
+      null -> null // TODO again probably revisit this
       else -> {
         val specResponse = OpenApiSpecResponse(
-          description = anny.description,
-          content = anny.mediaTypes.associate {
-            val ref = responseType.getReferenceSlug()
-            val mediaType = OpenApiSpecMediaType.Referenced(OpenApiSpecReferenceObject(ref))
-            Pair(it, mediaType)
+          description = responseInfo.description,
+          content = responseInfo.mediaTypes.associateWith {
+            val ref = getReferenceSlug()
+            OpenApiSpecMediaType.Referenced(OpenApiSpecReferenceObject(ref))
           }
         )
-        Pair(anny.status, specResponse)
+        Pair(responseInfo.status, specResponse)
       }
     }
   }

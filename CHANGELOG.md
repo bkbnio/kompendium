@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.3.0] - April 17th, 2021
+
+### Changed
+
+- Removed response and request annotations in favor of MethodInfo extension.
+
 ## [0.2.1] - April 16th, 2021
 
 ### Changed
