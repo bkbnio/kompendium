@@ -4,7 +4,7 @@
 
 ### Added
 
-- Query and Path Parameter Support 🍻
+- Basic Query and Path Parameter Support 🍻
 
 ### Changed
 

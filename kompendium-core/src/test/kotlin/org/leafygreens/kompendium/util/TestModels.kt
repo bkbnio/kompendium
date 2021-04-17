@@ -2,6 +2,8 @@ package org.leafygreens.kompendium.util
 
 import java.util.UUID
 import org.leafygreens.kompendium.annotations.KompendiumField
+import org.leafygreens.kompendium.annotations.PathParam
+import org.leafygreens.kompendium.annotations.QueryParam
 
 data class TestSimpleModel(val a: String, val b: Int)
 
@@ -17,7 +19,10 @@ data class TestSimpleWithEnumList(val a: Double, val b: List<SimpleEnum>)
 
 data class TestInvalidMap(val a: Map<Int, TestSimpleModel>)
 
-data class TestParams(val a: String, val aa: Int)
+data class TestParams(
+  @PathParam val a: String,
+  @QueryParam val aa: Int
+)
 
 data class TestNested(val nesty: String)
 

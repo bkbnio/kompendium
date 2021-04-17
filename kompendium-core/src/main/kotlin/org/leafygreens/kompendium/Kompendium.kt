@@ -5,10 +5,18 @@ import io.ktor.http.HttpMethod
 import io.ktor.routing.Route
 import io.ktor.routing.method
 import io.ktor.util.pipeline.PipelineInterceptor
+import kotlin.reflect.KClass
 import kotlin.reflect.KType
+import kotlin.reflect.full.findAnnotation
+import kotlin.reflect.full.memberProperties
+import kotlin.reflect.jvm.javaField
 import kotlin.reflect.typeOf
 import org.leafygreens.kompendium.Kontent.generateKontent
 import org.leafygreens.kompendium.Kontent.generateParameterKontent
+import org.leafygreens.kompendium.annotations.CookieParam
+import org.leafygreens.kompendium.annotations.HeaderParam
+import org.leafygreens.kompendium.annotations.PathParam
+import org.leafygreens.kompendium.annotations.QueryParam
 import org.leafygreens.kompendium.models.meta.MethodInfo
 import org.leafygreens.kompendium.models.meta.RequestInfo
 import org.leafygreens.kompendium.models.meta.ResponseInfo
@@ -16,11 +24,13 @@ import org.leafygreens.kompendium.models.meta.SchemaMap
 import org.leafygreens.kompendium.models.oas.OpenApiSpec
 import org.leafygreens.kompendium.models.oas.OpenApiSpecInfo
 import org.leafygreens.kompendium.models.oas.OpenApiSpecMediaType
+import org.leafygreens.kompendium.models.oas.OpenApiSpecParameter
 import org.leafygreens.kompendium.models.oas.OpenApiSpecPathItem
 import org.leafygreens.kompendium.models.oas.OpenApiSpecPathItemOperation
 import org.leafygreens.kompendium.models.oas.OpenApiSpecReferenceObject
 import org.leafygreens.kompendium.models.oas.OpenApiSpecRequest
 import org.leafygreens.kompendium.models.oas.OpenApiSpecResponse
+import org.leafygreens.kompendium.models.oas.OpenApiSpecSchemaRef
 import org.leafygreens.kompendium.util.Helpers.calculatePath
 import org.leafygreens.kompendium.util.Helpers.getReferenceSlug
 
@@ -38,46 +48,47 @@ object Kompendium {
   inline fun <reified TParam : Any, reified TResp : Any> Route.notarizedGet(
     info: MethodInfo,
     noinline body: PipelineInterceptor<Unit, ApplicationCall>
-  ): Route = notarizationPreFlight<TParam, Unit, TResp>() { requestType, responseType ->
+  ): Route = notarizationPreFlight<TParam, Unit, TResp>() { paramType, requestType, responseType ->
     val path = calculatePath()
     openApiSpec.paths.getOrPut(path) { OpenApiSpecPathItem() }
-    openApiSpec.paths[path]?.get = info.parseMethodInfo(HttpMethod.Get, requestType, responseType)
+    openApiSpec.paths[path]?.get = info.parseMethodInfo(HttpMethod.Get, paramType, requestType, responseType)
     return method(HttpMethod.Get) { handle(body) }
   }
 
   inline fun <reified TParam : Any, reified TReq : Any, reified TResp : Any> Route.notarizedPost(
     info: MethodInfo,
     noinline body: PipelineInterceptor<Unit, ApplicationCall>
-  ): Route = notarizationPreFlight<TParam, TReq, TResp>() { requestType, responseType ->
+  ): Route = notarizationPreFlight<TParam, TReq, TResp>() { paramType, requestType, responseType ->
     val path = calculatePath()
     openApiSpec.paths.getOrPut(path) { OpenApiSpecPathItem() }
-    openApiSpec.paths[path]?.post = info.parseMethodInfo(HttpMethod.Post, requestType, responseType)
+    openApiSpec.paths[path]?.post = info.parseMethodInfo(HttpMethod.Post, paramType, requestType, responseType)
     return method(HttpMethod.Post) { handle(body) }
   }
 
   inline fun <reified TParam : Any, reified TReq : Any, reified TResp : Any> Route.notarizedPut(
     info: MethodInfo,
     noinline body: PipelineInterceptor<Unit, ApplicationCall>,
-  ): Route = notarizationPreFlight<TParam, TReq, TResp>() { requestType, responseType ->
+  ): Route = notarizationPreFlight<TParam, TReq, TResp>() { paramType, requestType, responseType ->
     val path = calculatePath()
     openApiSpec.paths.getOrPut(path) { OpenApiSpecPathItem() }
-    openApiSpec.paths[path]?.put = info.parseMethodInfo(HttpMethod.Put, requestType, responseType)
+    openApiSpec.paths[path]?.put = info.parseMethodInfo(HttpMethod.Put, paramType, requestType, responseType)
     return method(HttpMethod.Put) { handle(body) }
   }
 
   inline fun <reified TParam : Any, reified TResp : Any> Route.notarizedDelete(
     info: MethodInfo,
     noinline body: PipelineInterceptor<Unit, ApplicationCall>
-  ): Route = notarizationPreFlight<TParam, Unit, TResp> { requestType, responseType ->
+  ): Route = notarizationPreFlight<TParam, Unit, TResp> { paramType, requestType, responseType ->
     val path = calculatePath()
     openApiSpec.paths.getOrPut(path) { OpenApiSpecPathItem() }
-    openApiSpec.paths[path]?.delete = info.parseMethodInfo(HttpMethod.Delete, requestType, responseType)
+    openApiSpec.paths[path]?.delete = info.parseMethodInfo(HttpMethod.Delete, paramType, requestType, responseType)
     return method(HttpMethod.Delete) { handle(body) }
   }
 
   // TODO here down is a mess, needs refactor once core functionality is in place
   fun MethodInfo.parseMethodInfo(
     method: HttpMethod,
+    paramType: KType,
     requestType: KType,
     responseType: KType
   ) = OpenApiSpecPathItemOperation(
@@ -85,13 +96,14 @@ object Kompendium {
     description = this.description,
     tags = this.tags,
     deprecated = this.deprecated,
-    responses = responseType.toSpec(responseInfo)?.let { mapOf(it) },
-    requestBody = if (method != HttpMethod.Get) requestType.toSpec(requestInfo) else null
+    parameters = paramType.toParameterSpec(),
+    responses = responseType.toResponseSpec(responseInfo)?.let { mapOf(it) },
+    requestBody = if (method != HttpMethod.Get) requestType.toRequestSpec(requestInfo) else null
   )
 
   @OptIn(ExperimentalStdlibApi::class)
   inline fun <reified TParam : Any, reified TReq : Any, reified TResp : Any> notarizationPreFlight(
-    block: (KType, KType) -> Route
+    block: (KType, KType, KType) -> Route
   ): Route {
     cache = generateKontent<TResp>(cache)
     cache = generateKontent<TReq>(cache)
@@ -99,11 +111,12 @@ object Kompendium {
     openApiSpec.components.schemas.putAll(cache)
     val requestType = typeOf<TReq>()
     val responseType = typeOf<TResp>()
-    return block.invoke(requestType, responseType)
+    val paramType = typeOf<TParam>()
+    return block.invoke(paramType, requestType, responseType)
   }
 
   // TODO These two lookin' real similar 👀 Combine?
-  private fun KType.toSpec(requestInfo: RequestInfo?): OpenApiSpecRequest? = when (this) {
+  private fun KType.toRequestSpec(requestInfo: RequestInfo?): OpenApiSpecRequest? = when (this) {
     Unit::class -> null
     else -> when (requestInfo) {
       null -> null
@@ -117,7 +130,7 @@ object Kompendium {
     }
   }
 
-  private fun KType.toSpec(responseInfo: ResponseInfo?): Pair<Int, OpenApiSpecResponse>? = when (this) {
+  private fun KType.toResponseSpec(responseInfo: ResponseInfo?): Pair<Int, OpenApiSpecResponse>? = when (this) {
     Unit::class -> null // TODO Maybe not though? could be unit but 200 🤔
     else -> when (responseInfo) {
       null -> null // TODO again probably revisit this
@@ -132,6 +145,38 @@ object Kompendium {
         )
         Pair(responseInfo.status, specResponse)
       }
+    }
+  }
+
+  // TODO God these annotations make this hideous... any way to improve?
+  private fun KType.toParameterSpec(): List<OpenApiSpecParameter> {
+    val clazz = classifier as KClass<*>
+    return clazz.memberProperties.map { prop ->
+      val field = prop.javaField?.type?.kotlin
+        ?: error("Unable to parse field type from $prop")
+      val anny = prop.findAnnotation<PathParam>()
+        ?: prop.findAnnotation<QueryParam>()
+        ?: prop.findAnnotation<HeaderParam>()
+        ?: prop.findAnnotation<CookieParam>()
+        ?: error("Unable to find any relevant parameter specifier annotations on field ${prop.name}")
+      OpenApiSpecParameter(
+        name = prop.name,
+        `in` = when (anny) {
+          is PathParam -> "path"
+          is QueryParam -> "query"
+          is HeaderParam -> "header"
+          is CookieParam -> "cookie"
+          else -> error("should not be reachable")
+        },
+        schema = OpenApiSpecSchemaRef(field.getReferenceSlug(prop)),
+        description = when (anny) {
+          is PathParam -> anny.description.ifBlank { null }
+          is QueryParam -> anny.description.ifBlank { null }
+          is HeaderParam -> anny.description.ifBlank { null }
+          is CookieParam -> anny.description.ifBlank { null }
+          else -> error("should not be reachable")
+        }
+      )
     }
   }
 

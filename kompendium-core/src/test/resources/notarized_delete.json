@@ -28,6 +28,23 @@
         "tags" : [ ],
         "summary" : "Test delete endpoint",
         "description" : "testing my deletes",
+        "parameters" : [ {
+          "name" : "a",
+          "in" : "path",
+          "schema" : {
+            "$ref" : "#/components/schemas/String"
+          },
+          "required" : true,
+          "deprecated" : false
+        }, {
+          "name" : "aa",
+          "in" : "query",
+          "schema" : {
+            "$ref" : "#/components/schemas/Int"
+          },
+          "required" : true,
+          "deprecated" : false
+        } ],
         "responses" : {
           "204" : {
             "description" : "A Successful Endeavor"

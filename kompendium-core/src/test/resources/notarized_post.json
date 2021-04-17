@@ -28,6 +28,23 @@
         "tags" : [ ],
         "summary" : "Test post endpoint",
         "description" : "Post your tests here!",
+        "parameters" : [ {
+          "name" : "a",
+          "in" : "path",
+          "schema" : {
+            "$ref" : "#/components/schemas/String"
+          },
+          "required" : true,
+          "deprecated" : false
+        }, {
+          "name" : "aa",
+          "in" : "query",
+          "schema" : {
+            "$ref" : "#/components/schemas/Int"
+          },
+          "required" : true,
+          "deprecated" : false
+        } ],
         "requestBody" : {
           "description" : "A Test request",
           "content" : {

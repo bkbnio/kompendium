@@ -72,13 +72,13 @@ fun Application.mainModule() {
         }
       }
       route("/single") {
-        notarizedGet<ExampleParams, ExampleResponse>(testSingleGetInfo) {
+        notarizedGet<Unit, ExampleResponse>(testSingleGetInfo) {
           call.respondText("get single")
         }
         notarizedPost<Unit, ExampleRequest, ExampleCreatedResponse>(testSinglePostInfo) {
           call.respondText("test post")
         }
-        notarizedPut<ExampleParams, ExampleRequest, ExampleCreatedResponse>(testSinglePutInfo) {
+        notarizedPut<JustQuery, ExampleRequest, ExampleCreatedResponse>(testSinglePutInfo) {
           call.respondText { "hey" }
         }
         notarizedDelete<Unit, Unit>(testSingleDeleteInfo) {
@@ -90,8 +90,13 @@ fun Application.mainModule() {
 }
 
 data class ExampleParams(
-  @QueryParam val a: String,
-  @PathParam val aa: Int
+  @PathParam val id: Int,
+  @QueryParam val name: String
+)
+
+data class JustQuery(
+  @QueryParam val potato: Boolean,
+  @QueryParam val tomato: String
 )
 
 data class ExampleNested(val nesty: String)
