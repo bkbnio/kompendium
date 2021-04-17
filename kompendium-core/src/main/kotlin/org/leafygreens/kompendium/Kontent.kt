@@ -33,6 +33,15 @@ object Kontent {
     return generateKTypeKontent(kontentType, cache)
   }
 
+  @OptIn(ExperimentalStdlibApi::class)
+  inline fun <reified T> generateParameterKontent(
+    cache: SchemaMap = emptyMap()
+  ): SchemaMap {
+    val kontentType = typeOf<T>()
+    return generateKTypeKontent(kontentType, cache)
+      .filterNot { (slug, _) -> slug == (kontentType.classifier as KClass<*>).simpleName }
+  }
+
   fun generateKTypeKontent(
     type: KType,
     cache: SchemaMap = emptyMap()

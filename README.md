@@ -40,7 +40,6 @@ dependencies {
 ### Warning 🚨
 Kompendium is still under active development ⚠️ There are a number of yet-to-be-implemented features, including 
 
-- Query and Path Parameters 🔍
 - Tags 🏷
 - Multiple Responses 📜
 - Security Schemas 🔏
@@ -70,11 +69,18 @@ meaning that swapping in a default Ktor route and a Kompendium `notarized` route
 In general, Kompendium tries to limit the number of annotations that developers need to use in order to get an app 
 integrated.   
 
-Currently, there is only a single Kompendium annotation
+Currently, the annotations used by Kompendium are as follows 
 
 - `KompendiumField`
+- `PathParam`
+- `QueryParam`
+- `HeaderParam`
+- `CookieParam`
 
-The intended purpose is to offer field level overrides such as naming conventions (ie snake instead of camel).
+The intended purpose of `KompendiumField` is to offer field level overrides such as naming conventions (ie snake instead of camel).
+
+The 4 "param" annotations are to offer supplemental information in data classes that describe the set of parameters types 
+that a notarized route needs to analyze.
 
 ## Examples
 
@@ -108,16 +114,16 @@ fun Application.mainModule() {
         }
       }
       route("/single") {
-        notarizedGet<ExampleRequest, ExampleResponse>(testSingleGetInfo) {
+        notarizedGet<ExampleParams, ExampleResponse>(testSingleGetInfo) {
           call.respondText("get single")
         }
-        notarizedPost<ExampleParams, ExampleRequest, ExampleCreatedResponse>(testSinglePostInfo) {
+        notarizedPost<Unit, ExampleRequest, ExampleCreatedResponse>(testSinglePostInfo) {
           call.respondText("test post")
         }
         notarizedPut<ExampleParams, ExampleRequest, ExampleCreatedResponse>(testSinglePutInfo) {
           call.respondText { "hey" }
         }
-        notarizedDelete<Unit, DeleteResponse>(testSingleDeleteInfo) {
+        notarizedDelete<Unit, Unit>(testSingleDeleteInfo) {
           call.respondText { "heya" }
         }
       }

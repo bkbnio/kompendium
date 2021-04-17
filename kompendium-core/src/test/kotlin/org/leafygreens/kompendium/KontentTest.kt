@@ -4,9 +4,11 @@ import java.util.UUID
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 import org.leafygreens.kompendium.Kontent.generateKontent
+import org.leafygreens.kompendium.Kontent.generateParameterKontent
 import org.leafygreens.kompendium.models.oas.DictionarySchema
 import org.leafygreens.kompendium.models.oas.FormatSchema
 import org.leafygreens.kompendium.models.oas.ObjectSchema
@@ -171,6 +173,17 @@ internal class KontentTest {
     val ds = result["Map-String-CrazyItem"] as DictionarySchema
     val rs = ds.additionalProperties as ReferencedSchema
     assertEquals(ReferencedSchema("#/components/schemas/CrazyItem"), rs)
+  }
+
+  @Test
+  fun `Parameter kontent filters out top level declaration`() {
+    // do
+    val result = generateParameterKontent<TestSimpleModel>()
+
+    // expect
+    assertNotNull(result)
+    assertEquals(2, result.count())
+    assertFalse { result.containsKey(TestSimpleModel::class.simpleName) }
   }
 
 }

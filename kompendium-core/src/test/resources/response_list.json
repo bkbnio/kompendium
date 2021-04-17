@@ -28,6 +28,23 @@
         "tags" : [ ],
         "summary" : "Another get test",
         "description" : "testing more",
+        "parameters" : [ {
+          "name" : "a",
+          "in" : "path",
+          "schema" : {
+            "$ref" : "#/components/schemas/String"
+          },
+          "required" : true,
+          "deprecated" : false
+        }, {
+          "name" : "aa",
+          "in" : "query",
+          "schema" : {
+            "$ref" : "#/components/schemas/Int"
+          },
+          "required" : true,
+          "deprecated" : false
+        } ],
         "responses" : {
           "200" : {
             "description" : "A Successful Endeavor",
@@ -62,6 +79,10 @@
           "$ref" : "#/components/schemas/TestResponse"
         },
         "type" : "array"
+      },
+      "Int" : {
+        "format" : "int32",
+        "type" : "integer"
       }
     },
     "securitySchemes" : { }

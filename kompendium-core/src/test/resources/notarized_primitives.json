@@ -28,6 +28,7 @@
         "tags" : [ ],
         "summary" : "Test put endpoint",
         "description" : "Put your tests here!",
+        "parameters" : [ ],
         "requestBody" : {
           "description" : "A Test request",
           "content" : {

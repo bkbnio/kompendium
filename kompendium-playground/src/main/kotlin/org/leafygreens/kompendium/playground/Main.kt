@@ -31,6 +31,8 @@ import org.leafygreens.kompendium.Kompendium.notarizedPost
 import org.leafygreens.kompendium.Kompendium.notarizedPut
 import org.leafygreens.kompendium.Kompendium.openApiSpec
 import org.leafygreens.kompendium.annotations.KompendiumField
+import org.leafygreens.kompendium.annotations.PathParam
+import org.leafygreens.kompendium.annotations.QueryParam
 import org.leafygreens.kompendium.models.meta.MethodInfo
 import org.leafygreens.kompendium.models.meta.RequestInfo
 import org.leafygreens.kompendium.models.meta.ResponseInfo
@@ -70,16 +72,16 @@ fun Application.mainModule() {
         }
       }
       route("/single") {
-        notarizedGet<ExampleRequest, ExampleResponse>(testSingleGetInfo) {
+        notarizedGet<Unit, ExampleResponse>(testSingleGetInfo) {
           call.respondText("get single")
         }
-        notarizedPost<ExampleParams, ExampleRequest, ExampleCreatedResponse>(testSinglePostInfo) {
+        notarizedPost<Unit, ExampleRequest, ExampleCreatedResponse>(testSinglePostInfo) {
           call.respondText("test post")
         }
-        notarizedPut<ExampleParams, ExampleRequest, ExampleCreatedResponse>(testSinglePutInfo) {
+        notarizedPut<JustQuery, ExampleRequest, ExampleCreatedResponse>(testSinglePutInfo) {
           call.respondText { "hey" }
         }
-        notarizedDelete<Unit, DeleteResponse>(testSingleDeleteInfo) {
+        notarizedDelete<Unit, Unit>(testSingleDeleteInfo) {
           call.respondText { "heya" }
         }
       }
@@ -87,11 +89,17 @@ fun Application.mainModule() {
   }
 }
 
-data class ExampleParams(val a: String, val aa: Int)
+data class ExampleParams(
+  @PathParam val id: Int,
+  @QueryParam val name: String
+)
+
+data class JustQuery(
+  @QueryParam val potato: Boolean,
+  @QueryParam val tomato: String
+)
 
 data class ExampleNested(val nesty: String)
-
-object DeleteResponse
 
 data class ExampleRequest(
   @KompendiumField(name = "field_name")
@@ -150,7 +158,8 @@ object KompendiumTOC {
     description = "testing my deletes",
     responseInfo = ResponseInfo(
       status = KompendiumHttpCodes.NO_CONTENT,
-      description = "Signifies that your item was deleted succesfully"
+      description = "Signifies that your item was deleted successfully",
+      mediaTypes = emptyList()
     )
   )
 }

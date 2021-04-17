@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.4.0] - April 17th, 2021
+
+### Added
+
+- Basic Query and Path Parameter Support 🍻
+
+### Changed
+
+- No content workaround, flow will likely need refactoring for clarity.
+
 ## [0.3.0] - April 17th, 2021
 
 ### Changed

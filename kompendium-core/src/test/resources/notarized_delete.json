@@ -28,16 +28,26 @@
         "tags" : [ ],
         "summary" : "Test delete endpoint",
         "description" : "testing my deletes",
+        "parameters" : [ {
+          "name" : "a",
+          "in" : "path",
+          "schema" : {
+            "$ref" : "#/components/schemas/String"
+          },
+          "required" : true,
+          "deprecated" : false
+        }, {
+          "name" : "aa",
+          "in" : "query",
+          "schema" : {
+            "$ref" : "#/components/schemas/Int"
+          },
+          "required" : true,
+          "deprecated" : false
+        } ],
         "responses" : {
           "204" : {
-            "description" : "A Successful Endeavor",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/TestDeleteResponse"
-                }
-              }
-            }
+            "description" : "A Successful Endeavor"
           }
         },
         "deprecated" : false
@@ -46,9 +56,12 @@
   },
   "components" : {
     "schemas" : {
-      "TestDeleteResponse" : {
-        "properties" : { },
-        "type" : "object"
+      "String" : {
+        "type" : "string"
+      },
+      "Int" : {
+        "format" : "int32",
+        "type" : "integer"
       }
     },
     "securitySchemes" : { }

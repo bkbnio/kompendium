@@ -24,13 +24,13 @@ data class OpenApiSpecHeader(
 data class OpenApiSpecParameter(
   val name: String,
   val `in`: String, // TODO Enum? "query", "header", "path" or "cookie"
-  val description: String?,
+  val schema: OpenApiSpecSchema,
+  val description: String? = null,
   val required: Boolean = true,
   val deprecated: Boolean = false,
-  val allowEmptyValue: Boolean = false,
+  val allowEmptyValue: Boolean? = null,
   val style: String? = null,
-  val explode: Boolean? = false,
-  val schema: OpenApiSpecSchema? = null
+  val explode: Boolean? = null
 ) : OpenApiSpecReferencable()
 
 data class OpenApiSpecRequest(
