@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.5.1] - April 19th, 2021
+
+### Changed
+
+- Resolved bug where paths under root route where appending a trailing `/`
+
 ## [0.5.0] - April 19th, 2021
 
 ### Added

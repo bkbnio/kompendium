@@ -229,6 +229,22 @@ internal class KompendiumTest {
   }
 
   @Test
+  fun `Nested under root module does not append trailing slash`() {
+    withTestApplication({
+      configModule()
+      docs()
+      nestedUnderRootModule()
+    }) {
+      // do
+      val json = handleRequest(HttpMethod.Get, "/openapi.json").response.content
+
+      // expect
+      val expected = TestData.getFileSnapshot("nested_under_root.json").trim()
+      assertEquals(expected, json, "The received json spec should match the expected content")
+    }
+  }
+
+  @Test
   fun `Can notarize a trailing slash route`() {
     withTestApplication({
       configModule()
@@ -328,7 +344,8 @@ internal class KompendiumTest {
   private companion object {
     val testGetResponse = ResponseInfo(KompendiumHttpCodes.OK, "A Successful Endeavor")
     val testPostResponse = ResponseInfo(KompendiumHttpCodes.CREATED, "A Successful Endeavor")
-    val testDeleteResponse = ResponseInfo(KompendiumHttpCodes.NO_CONTENT, "A Successful Endeavor", mediaTypes = emptyList())
+    val testDeleteResponse =
+      ResponseInfo(KompendiumHttpCodes.NO_CONTENT, "A Successful Endeavor", mediaTypes = emptyList())
     val testRequest = RequestInfo("A Test request")
     val testGetInfo = MethodInfo("Another get test", "testing more", testGetResponse)
     val testPostInfo = MethodInfo("Test post endpoint", "Post your tests here!", testPostResponse, testRequest)
@@ -410,6 +427,18 @@ internal class KompendiumTest {
       route("/") {
         notarizedGet<TestParams, TestResponse>(testGetInfo) {
           call.respondText { "☎️🏠🌲" }
+        }
+      }
+    }
+  }
+
+  private fun Application.nestedUnderRootModule() {
+    routing {
+      route("/") {
+        route("/testerino") {
+          notarizedGet<TestParams, TestResponse>(testGetInfo) {
+            call.respondText { "🤔🔥" }
+          }
         }
       }
     }
