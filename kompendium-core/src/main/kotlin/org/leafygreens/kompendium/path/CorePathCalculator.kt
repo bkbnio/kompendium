@@ -38,11 +38,11 @@ open class CorePathCalculator : PathCalculator {
           val newTail = tail.ifBlank { "/" }
           calculate(route.parent, newTail)
         }
-        else -> handleUnknownSelector(route, tail)
+        else -> handleCustomSelectors(route, tail)
       }
     }
   }
 
-  override fun handleUnknownSelector(route: Route, tail: String): String = error("Unknown selector ${route.selector}")
+  override fun handleCustomSelectors(route: Route, tail: String): String = error("Unknown selector ${route.selector}")
 
 }

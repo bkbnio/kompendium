@@ -6,6 +6,6 @@ interface PathCalculator {
 
   fun calculate(route: Route?, tail: String = ""): String
 
-  fun handleUnknownSelector(route: Route, tail: String): String
+  fun handleCustomSelectors(route: Route, tail: String): String
 
 }
