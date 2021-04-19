@@ -31,6 +31,7 @@ import org.leafygreens.kompendium.models.oas.OpenApiSpecReferenceObject
 import org.leafygreens.kompendium.models.oas.OpenApiSpecRequest
 import org.leafygreens.kompendium.models.oas.OpenApiSpecResponse
 import org.leafygreens.kompendium.models.oas.OpenApiSpecSchemaRef
+import org.leafygreens.kompendium.models.oas.OpenApiSpecPathItemSecurity
 import org.leafygreens.kompendium.util.Helpers.calculatePath
 import org.leafygreens.kompendium.util.Helpers.getReferenceSlug
 
@@ -43,6 +44,8 @@ object Kompendium {
     servers = mutableListOf(),
     paths = mutableMapOf()
   )
+
+  var currentSecuritySchemeName: String? = null
 
   @OptIn(ExperimentalStdlibApi::class)
   inline fun <reified TParam : Any, reified TResp : Any> Route.notarizedGet(
@@ -98,8 +101,21 @@ object Kompendium {
     deprecated = this.deprecated,
     parameters = paramType.toParameterSpec(),
     responses = responseType.toResponseSpec(responseInfo)?.let { mapOf(it) },
-    requestBody = if (method != HttpMethod.Get) requestType.toRequestSpec(requestInfo) else null
+    requestBody = if (method != HttpMethod.Get) requestType.toRequestSpec(requestInfo) else null,
+    security = getPathItemSecurityScheme()
   )
+
+  private fun getPathItemSecurityScheme(): OpenApiSpecPathItemSecurity? = currentSecuritySchemeName?.let { schemeName ->
+    require(openApiSpec.components.securitySchemes[schemeName] != null) {
+      "Unknown security scheme $schemeName. Is it notarized?"
+    }
+    listOf(
+      mapOf(
+        // TODO: support scopes
+        schemeName to listOf()
+      )
+    )
+  }
 
   @OptIn(ExperimentalStdlibApi::class)
   inline fun <reified TParam : Any, reified TReq : Any, reified TResp : Any> notarizationPreFlight(

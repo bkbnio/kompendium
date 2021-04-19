@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.SerializationFeature
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
+import io.ktor.auth.*
 import io.ktor.features.ContentNegotiation
 import io.ktor.html.respondHtml
 import io.ktor.jackson.jackson
@@ -30,6 +31,8 @@ import org.leafygreens.kompendium.Kompendium.notarizedGet
 import org.leafygreens.kompendium.Kompendium.notarizedPost
 import org.leafygreens.kompendium.Kompendium.notarizedPut
 import org.leafygreens.kompendium.Kompendium.openApiSpec
+import org.leafygreens.kompendium.KompendiumAuth.notarizedAuthentication
+import org.leafygreens.kompendium.KompendiumAuth.notarizedBasic
 import org.leafygreens.kompendium.annotations.KompendiumField
 import org.leafygreens.kompendium.annotations.PathParam
 import org.leafygreens.kompendium.annotations.QueryParam
@@ -40,11 +43,13 @@ import org.leafygreens.kompendium.models.oas.OpenApiSpecInfo
 import org.leafygreens.kompendium.models.oas.OpenApiSpecInfoContact
 import org.leafygreens.kompendium.models.oas.OpenApiSpecInfoLicense
 import org.leafygreens.kompendium.models.oas.OpenApiSpecServer
+import org.leafygreens.kompendium.playground.KompendiumTOC.authenticatedSingleGet
 import org.leafygreens.kompendium.playground.KompendiumTOC.testIdGetInfo
 import org.leafygreens.kompendium.playground.KompendiumTOC.testSingleDeleteInfo
 import org.leafygreens.kompendium.playground.KompendiumTOC.testSingleGetInfo
 import org.leafygreens.kompendium.playground.KompendiumTOC.testSinglePostInfo
 import org.leafygreens.kompendium.playground.KompendiumTOC.testSinglePutInfo
+import org.leafygreens.kompendium.playground.KompendiumTOC.unauthenticatedSingleGet
 import org.leafygreens.kompendium.util.KompendiumHttpCodes
 
 fun main() {
@@ -54,13 +59,29 @@ fun main() {
     module = Application::mainModule
   ).start(wait = true)
 }
+private var installedFeatures = false
 
 fun Application.mainModule() {
-  install(ContentNegotiation) {
-    jackson {
-      enable(SerializationFeature.INDENT_OUTPUT)
-      setSerializationInclusion(JsonInclude.Include.NON_NULL)
+  if (!installedFeatures) {
+    install(ContentNegotiation) {
+      jackson {
+        enable(SerializationFeature.INDENT_OUTPUT)
+        setSerializationInclusion(JsonInclude.Include.NON_NULL)
+      }
     }
+    install(Authentication) {
+      notarizedBasic("basic") {
+        realm = "ktor-auth-basic"
+        validate { credentials ->
+          if (credentials.name == credentials.password) {
+            UserIdPrincipal(credentials.name)
+          } else {
+            null
+          }
+        }
+      }
+    }
+    installedFeatures = true
   }
   routing {
     openApi()
@@ -83,6 +104,18 @@ fun Application.mainModule() {
         }
         notarizedDelete<Unit, Unit>(testSingleDeleteInfo) {
           call.respondText { "heya" }
+        }
+      }
+      notarizedAuthentication("basic") {
+        route("/authenticated/single") {
+          notarizedGet<Unit, Unit>(authenticatedSingleGet) {
+            call.respondText("get authentiticated single")
+          }
+        }
+      }
+      route("/unauthenticated/single") {
+        notarizedGet<Unit, Unit>(unauthenticatedSingleGet) {
+          call.respondText("get unauthentiticated single")
         }
       }
     }
@@ -160,6 +193,24 @@ object KompendiumTOC {
       status = KompendiumHttpCodes.NO_CONTENT,
       description = "Signifies that your item was deleted successfully",
       mediaTypes = emptyList()
+    )
+  )
+  val authenticatedSingleGet = MethodInfo(
+    summary = "Authenticated get test",
+    description = "provider is basic",
+    tags = setOf("authenticated", "sample"),
+    responseInfo = ResponseInfo(
+      status = KompendiumHttpCodes.OK,
+      description = "Returns a different sample"
+    )
+  )
+  val unauthenticatedSingleGet = MethodInfo(
+    summary = "Unauthenticated get test",
+    description = "no longer authenticated",
+    tags = setOf("unauthenticated", "sample"),
+    responseInfo = ResponseInfo(
+      status = KompendiumHttpCodes.OK,
+      description = "Returns a different sample"
     )
   )
 }

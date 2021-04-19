@@ -1,5 +1,6 @@
 rootProject.name = "kompendium"
 include("kompendium-core")
+include("kompendium-auth")
 include("kompendium-playground")
 
 // Feature Previews
