@@ -6,30 +6,18 @@ import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.features.ContentNegotiation
-import io.ktor.html.respondHtml
 import io.ktor.jackson.jackson
-import io.ktor.response.respond
 import io.ktor.response.respondText
-import io.ktor.routing.Routing
-import io.ktor.routing.get
 import io.ktor.routing.route
 import io.ktor.routing.routing
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import java.net.URI
-import kotlinx.html.body
-import kotlinx.html.head
-import kotlinx.html.link
-import kotlinx.html.meta
-import kotlinx.html.script
-import kotlinx.html.style
-import kotlinx.html.title
-import kotlinx.html.unsafe
+import org.leafygreens.kompendium.Kompendium
 import org.leafygreens.kompendium.Kompendium.notarizedDelete
 import org.leafygreens.kompendium.Kompendium.notarizedGet
 import org.leafygreens.kompendium.Kompendium.notarizedPost
 import org.leafygreens.kompendium.Kompendium.notarizedPut
-import org.leafygreens.kompendium.Kompendium.openApiSpec
 import org.leafygreens.kompendium.annotations.KompendiumField
 import org.leafygreens.kompendium.annotations.PathParam
 import org.leafygreens.kompendium.annotations.QueryParam
@@ -45,7 +33,37 @@ import org.leafygreens.kompendium.playground.KompendiumTOC.testSingleDeleteInfo
 import org.leafygreens.kompendium.playground.KompendiumTOC.testSingleGetInfo
 import org.leafygreens.kompendium.playground.KompendiumTOC.testSinglePostInfo
 import org.leafygreens.kompendium.playground.KompendiumTOC.testSinglePutInfo
+import org.leafygreens.kompendium.routes.openApi
+import org.leafygreens.kompendium.routes.redoc
 import org.leafygreens.kompendium.util.KompendiumHttpCodes
+
+private val oas = Kompendium.openApiSpec.copy(
+  info = OpenApiSpecInfo(
+    title = "Test API",
+    version = "1.33.7",
+    description = "An amazing, fully-ish 😉 generated API spec",
+    termsOfService = URI("https://example.com"),
+    contact = OpenApiSpecInfoContact(
+      name = "Homer Simpson",
+      email = "chunkylover53@aol.com",
+      url = URI("https://gph.is/1NPUDiM")
+    ),
+    license = OpenApiSpecInfoLicense(
+      name = "MIT",
+      url = URI("https://github.com/lg-backbone/kompendium/blob/main/LICENSE")
+    )
+  ),
+  servers = mutableListOf(
+    OpenApiSpecServer(
+      url = URI("https://myawesomeapi.com"),
+      description = "Production instance of my API"
+    ),
+    OpenApiSpecServer(
+      url = URI("https://staging.myawesomeapi.com"),
+      description = "Where the fun stuff happens"
+    )
+  )
+)
 
 fun main() {
   embeddedServer(
@@ -63,8 +81,8 @@ fun Application.mainModule() {
     }
   }
   routing {
-    openApi()
-    redoc()
+    openApi(oas)
+    redoc(oas)
     route("/test") {
       route("/{id}") {
         notarizedGet<ExampleParams, ExampleResponse>(testIdGetInfo) {
@@ -162,77 +180,4 @@ object KompendiumTOC {
       mediaTypes = emptyList()
     )
   )
-}
-
-fun Routing.openApi() {
-  route("/openapi.json") {
-    get {
-      call.respond(
-        openApiSpec.copy(
-          info = OpenApiSpecInfo(
-            title = "Test API",
-            version = "1.33.7",
-            description = "An amazing, fully-ish 😉 generated API spec",
-            termsOfService = URI("https://example.com"),
-            contact = OpenApiSpecInfoContact(
-              name = "Homer Simpson",
-              email = "chunkylover53@aol.com",
-              url = URI("https://gph.is/1NPUDiM")
-            ),
-            license = OpenApiSpecInfoLicense(
-              name = "MIT",
-              url = URI("https://github.com/lg-backbone/kompendium/blob/main/LICENSE")
-            )
-          ),
-          servers = mutableListOf(
-            OpenApiSpecServer(
-              url = URI("https://myawesomeapi.com"),
-              description = "Production instance of my API"
-            ),
-            OpenApiSpecServer(
-              url = URI("https://staging.myawesomeapi.com"),
-              description = "Where the fun stuff happens"
-            )
-          )
-        )
-      )
-    }
-  }
-}
-
-fun Routing.redoc() {
-  route("/docs") {
-    get {
-      call.respondHtml {
-        head {
-          title {
-            +"${openApiSpec.info.title}"
-          }
-          meta {
-            charset = "utf-8"
-          }
-          meta {
-            name = "viewport"
-            content = "width=device-width, initial-scale=1"
-          }
-          link {
-            href = "https://fonts.googleapis.com/css?family=Montserrat:300,400,700|Roboto:300,400,700"
-            rel = "stylesheet"
-          }
-          style {
-            unsafe {
-              raw("body { margin: 0; padding: 0; }")
-            }
-          }
-        }
-        body {
-          // TODO needs to mirror openApi route
-          unsafe { +"<redoc spec-url='/openapi.json'></redoc>" }
-          script {
-            src = "https://cdn.jsdelivr.net/npm/redoc@next/bundles/redoc.standalone.js"
-          }
-        }
-      }
-    }
-  }
 }

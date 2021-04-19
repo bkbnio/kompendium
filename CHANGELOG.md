@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.5.0] - April 19th, 2021
+
+### Added
+
+- Expose `/openapi.json` and `/docs` as opt-in pre-built Routes 
+
 ## [0.4.0] - April 17th, 2021
 
 ### Added
