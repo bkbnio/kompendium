@@ -49,7 +49,7 @@ object Helpers {
         // dumb ass workaround to this object being internal to ktor
         "TrailingSlashRouteSelector" -> {
           logger.info("Found trailing slash route selector")
-          val newTail = "$tail/"
+          val newTail = tail.ifBlank { "/" }
           parent?.calculatePath(newTail) ?: run {
             logger.info("No parent found, returning current path")
             newTail
