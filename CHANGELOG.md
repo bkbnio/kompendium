@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.5.2] - April 19th, 2021
+
+### Removed 
+
+- Removed `Route.calculatePath`
+  
+### Added 
+
+- Added an explicit  `PathCalculator` interface to allow for easier handling of routes external to the core set of Ktor route selectors.
+
 ## [0.5.1] - April 19th, 2021
 
 ### Changed

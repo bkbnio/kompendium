@@ -31,7 +31,8 @@ import org.leafygreens.kompendium.models.oas.OpenApiSpecReferenceObject
 import org.leafygreens.kompendium.models.oas.OpenApiSpecRequest
 import org.leafygreens.kompendium.models.oas.OpenApiSpecResponse
 import org.leafygreens.kompendium.models.oas.OpenApiSpecSchemaRef
-import org.leafygreens.kompendium.util.Helpers.calculatePath
+import org.leafygreens.kompendium.path.CorePathCalculator
+import org.leafygreens.kompendium.path.PathCalculator
 import org.leafygreens.kompendium.util.Helpers.getReferenceSlug
 
 object Kompendium {
@@ -44,12 +45,14 @@ object Kompendium {
     paths = mutableMapOf()
   )
 
+  var pathCalculator: PathCalculator = CorePathCalculator()
+
   @OptIn(ExperimentalStdlibApi::class)
   inline fun <reified TParam : Any, reified TResp : Any> Route.notarizedGet(
     info: MethodInfo,
     noinline body: PipelineInterceptor<Unit, ApplicationCall>
   ): Route = notarizationPreFlight<TParam, Unit, TResp>() { paramType, requestType, responseType ->
-    val path = calculatePath()
+    val path = pathCalculator.calculate(this)
     openApiSpec.paths.getOrPut(path) { OpenApiSpecPathItem() }
     openApiSpec.paths[path]?.get = info.parseMethodInfo(HttpMethod.Get, paramType, requestType, responseType)
     return method(HttpMethod.Get) { handle(body) }
@@ -59,7 +62,7 @@ object Kompendium {
     info: MethodInfo,
     noinline body: PipelineInterceptor<Unit, ApplicationCall>
   ): Route = notarizationPreFlight<TParam, TReq, TResp>() { paramType, requestType, responseType ->
-    val path = calculatePath()
+    val path = pathCalculator.calculate(this)
     openApiSpec.paths.getOrPut(path) { OpenApiSpecPathItem() }
     openApiSpec.paths[path]?.post = info.parseMethodInfo(HttpMethod.Post, paramType, requestType, responseType)
     return method(HttpMethod.Post) { handle(body) }
@@ -69,7 +72,7 @@ object Kompendium {
     info: MethodInfo,
     noinline body: PipelineInterceptor<Unit, ApplicationCall>,
   ): Route = notarizationPreFlight<TParam, TReq, TResp>() { paramType, requestType, responseType ->
-    val path = calculatePath()
+    val path = pathCalculator.calculate(this)
     openApiSpec.paths.getOrPut(path) { OpenApiSpecPathItem() }
     openApiSpec.paths[path]?.put = info.parseMethodInfo(HttpMethod.Put, paramType, requestType, responseType)
     return method(HttpMethod.Put) { handle(body) }
@@ -79,7 +82,7 @@ object Kompendium {
     info: MethodInfo,
     noinline body: PipelineInterceptor<Unit, ApplicationCall>
   ): Route = notarizationPreFlight<TParam, Unit, TResp> { paramType, requestType, responseType ->
-    val path = calculatePath()
+    val path = pathCalculator.calculate(this)
     openApiSpec.paths.getOrPut(path) { OpenApiSpecPathItem() }
     openApiSpec.paths[path]?.delete = info.parseMethodInfo(HttpMethod.Delete, paramType, requestType, responseType)
     return method(HttpMethod.Delete) { handle(body) }
