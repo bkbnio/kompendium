@@ -103,7 +103,7 @@ object Kompendium {
     responses = responseType.toResponseSpec(responseInfo)?.let { mapOf(it) },
     requestBody = if (method != HttpMethod.Get) requestType.toRequestSpec(requestInfo) else null,
     security = listOf(
-      // TODO: support scopes
+      // TODO support scopes
       this.securitySchemes.associateWith { listOf() }
     )
   )

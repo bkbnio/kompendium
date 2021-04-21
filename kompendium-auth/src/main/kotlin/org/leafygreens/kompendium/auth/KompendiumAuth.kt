@@ -1,7 +1,10 @@
 package org.leafygreens.kompendium.auth
 
-import io.ktor.auth.*
-import io.ktor.auth.jwt.*
+import io.ktor.auth.Authentication
+import io.ktor.auth.basic
+import io.ktor.auth.BasicAuthenticationProvider
+import io.ktor.auth.jwt.jwt
+import io.ktor.auth.jwt.JWTAuthenticationProvider
 import org.leafygreens.kompendium.Kompendium
 import org.leafygreens.kompendium.models.oas.OpenApiSpecSchemaSecurity
 
@@ -22,7 +25,7 @@ object KompendiumAuth {
     basic(name, configure)
   }
 
-  // TODO: move jwt to separate module?
+  // TODO move jwt to separate module?
   fun Authentication.Configuration.notarizedJwt(
     name: String? = null,
     header: String? = null,
@@ -44,5 +47,5 @@ object KompendiumAuth {
     jwt(name, configure)
   }
 
-  // TODO: support other authentication providers (e.g., oAuth)?
+  // TODO support other authentication providers (e.g., oAuth)?
 }

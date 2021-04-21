@@ -1,7 +1,7 @@
 package org.leafygreens.kompendium.auth
 
-import io.ktor.auth.*
-import io.ktor.routing.*
+import io.ktor.auth.AuthenticationRouteSelector
+import io.ktor.routing.Route
 import org.leafygreens.kompendium.path.CorePathCalculator
 import org.slf4j.LoggerFactory
 
