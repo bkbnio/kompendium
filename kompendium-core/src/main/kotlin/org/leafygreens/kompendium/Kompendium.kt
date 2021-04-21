@@ -102,10 +102,10 @@ object Kompendium {
     parameters = paramType.toParameterSpec(),
     responses = responseType.toResponseSpec(responseInfo)?.let { mapOf(it) },
     requestBody = if (method != HttpMethod.Get) requestType.toRequestSpec(requestInfo) else null,
-    security = listOf(
+    security = if (this.securitySchemes.isNotEmpty()) listOf(
       // TODO support scopes
       this.securitySchemes.associateWith { listOf() }
-    )
+    ) else null
   )
 
   @OptIn(ExperimentalStdlibApi::class)
