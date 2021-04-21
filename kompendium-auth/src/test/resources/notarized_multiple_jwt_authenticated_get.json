@@ -1,0 +1,81 @@
+{
+  "openapi" : "3.0.3",
+  "info" : { },
+  "servers" : [ ],
+  "paths" : {
+    "/test" : {
+      "get" : {
+        "tags" : [ ],
+        "summary" : "Another get test",
+        "description" : "testing more",
+        "parameters" : [ {
+          "name" : "a",
+          "in" : "path",
+          "schema" : {
+            "$ref" : "#/components/schemas/String"
+          },
+          "required" : true,
+          "deprecated" : false
+        }, {
+          "name" : "aa",
+          "in" : "query",
+          "schema" : {
+            "$ref" : "#/components/schemas/Int"
+          },
+          "required" : true,
+          "deprecated" : false
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "A Successful Endeavor",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/TestResponse"
+                }
+              }
+            }
+          }
+        },
+        "deprecated" : false,
+        "security" : [ {
+          "jwt1" : [ ],
+          "jwt2" : [ ]
+        } ]
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "String" : {
+        "type" : "string"
+      },
+      "TestResponse" : {
+        "properties" : {
+          "c" : {
+            "$ref" : "#/components/schemas/String"
+          }
+        },
+        "type" : "object"
+      },
+      "Int" : {
+        "format" : "int32",
+        "type" : "integer"
+      }
+    },
+    "securitySchemes" : {
+      "jwt1" : {
+        "type" : "apiKey",
+        "name" : "x-api-key-1",
+        "in" : "header"
+      },
+      "jwt2" : {
+        "type" : "apiKey",
+        "name" : "x-api-key-2",
+        "in" : "header"
+      }
+    }
+  },
+  "security" : [ ],
+  "tags" : [ ]
+}
