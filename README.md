@@ -41,7 +41,6 @@ dependencies {
 Kompendium is still under active development ⚠️ There are a number of yet-to-be-implemented features, including 
 
 - Multiple Responses 📜
-- Security Schemas 🔏
 - Sealed Class / Polymorphic Support 😬  
 - Validation / Enforcement (❓👀❓)
 
@@ -134,6 +133,55 @@ fun Application.mainModule() {
 When run in the playground, this would output the following at `/openapi.json` 
 
 https://gist.github.com/rgbrizzlehizzle/b9544922f2e99a2815177f8bdbf80668
+
+### Kompendium Auth and security schemes
+
+There is a seperate library to handle security schemes: `kompendium-auth`. 
+This needs to be added to your project as dependency.
+
+At the moment, the basic and jwt authentication is only supported.
+
+A minimal example would be:
+```kotlin
+  install(Authentication) {
+  notarizedBasic("basic") {
+    realm = "Ktor realm 1"
+    // ...
+    }
+    notarizedJwt("jwt") {
+      realm = "Ktor realm 2"
+      // ...
+    }
+  }
+  routing {
+    authenticate("basic") {
+      route("/basic_auth") {
+        notarizedGet<TestParams, TestResponse>(
+          MethodInfo(
+            // securitySchemes needs to be set
+            "Another get test", "testing more", testGetResponse, securitySchemes = setOf("basic")
+          )
+        ) {
+          call.respondText { "basic auth" }
+        }
+      }
+    }
+    authenticate("jwt") {
+      route("/jwt") {
+        notarizedGet<TestParams, TestResponse>(
+          MethodInfo(
+            // securitySchemes needs to be set
+            "Another get test", "testing more", testGetResponse, securitySchemes = setOf("jwt")
+          )
+        ) {
+          call.respondText { "jwt" }
+        }
+      }
+    }
+  }
+```
+
+
 
 ## Limitations
 

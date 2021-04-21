@@ -7,8 +7,7 @@ dependencies {
   implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
   implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
   implementation(libs.bundles.ktor)
-  implementation("io.ktor:ktor-auth:1.5.3")
-  implementation("io.ktor:ktor-auth-jwt:1.5.3")
+  implementation(libs.bundles.ktorAuth)
   implementation(projects.kompendiumCore)
 
   testImplementation("org.jetbrains.kotlin:kotlin-test")

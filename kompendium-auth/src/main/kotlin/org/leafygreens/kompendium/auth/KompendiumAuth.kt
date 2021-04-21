@@ -25,7 +25,6 @@ object KompendiumAuth {
     basic(name, configure)
   }
 
-  // TODO move jwt to separate module?
   fun Authentication.Configuration.notarizedJwt(
     name: String? = null,
     header: String? = null,
