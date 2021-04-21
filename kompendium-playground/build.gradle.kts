@@ -7,8 +7,10 @@ dependencies {
   implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
   implementation(projects.kompendiumCore)
+  implementation(projects.kompendiumAuth)
 
   implementation(libs.bundles.ktor)
+  implementation(libs.bundles.ktorAuth)
   implementation(libs.bundles.logging)
 
   testImplementation("org.jetbrains.kotlin:kotlin-test")

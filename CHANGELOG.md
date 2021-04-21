@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.6.0] - April 21st, 2021
+
+### Added
+
+- Added basic and jwt security scheme support with the new module kompendium-auth 
+
 ## [0.5.2] - April 19th, 2021
 
 ### Removed 

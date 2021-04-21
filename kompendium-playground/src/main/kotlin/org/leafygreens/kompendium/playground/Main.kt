@@ -5,6 +5,9 @@ import com.fasterxml.jackson.databind.SerializationFeature
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
+import io.ktor.auth.Authentication
+import io.ktor.auth.authenticate
+import io.ktor.auth.UserIdPrincipal
 import io.ktor.features.ContentNegotiation
 import io.ktor.jackson.jackson
 import io.ktor.response.respondText
@@ -18,6 +21,7 @@ import org.leafygreens.kompendium.Kompendium.notarizedDelete
 import org.leafygreens.kompendium.Kompendium.notarizedGet
 import org.leafygreens.kompendium.Kompendium.notarizedPost
 import org.leafygreens.kompendium.Kompendium.notarizedPut
+import org.leafygreens.kompendium.auth.KompendiumAuth.notarizedBasic
 import org.leafygreens.kompendium.annotations.KompendiumField
 import org.leafygreens.kompendium.annotations.PathParam
 import org.leafygreens.kompendium.annotations.QueryParam
@@ -28,6 +32,7 @@ import org.leafygreens.kompendium.models.oas.OpenApiSpecInfo
 import org.leafygreens.kompendium.models.oas.OpenApiSpecInfoContact
 import org.leafygreens.kompendium.models.oas.OpenApiSpecInfoLicense
 import org.leafygreens.kompendium.models.oas.OpenApiSpecServer
+import org.leafygreens.kompendium.playground.KompendiumTOC.testAuthenticatedSingleGetInfo
 import org.leafygreens.kompendium.playground.KompendiumTOC.testIdGetInfo
 import org.leafygreens.kompendium.playground.KompendiumTOC.testSingleDeleteInfo
 import org.leafygreens.kompendium.playground.KompendiumTOC.testSingleGetInfo
@@ -73,12 +78,29 @@ fun main() {
   ).start(wait = true)
 }
 
+var featuresInstalled = false
 fun Application.mainModule() {
-  install(ContentNegotiation) {
-    jackson {
-      enable(SerializationFeature.INDENT_OUTPUT)
-      setSerializationInclusion(JsonInclude.Include.NON_NULL)
+  // only install once in case of auto reload
+  if (!featuresInstalled) {
+    install(ContentNegotiation) {
+      jackson {
+        enable(SerializationFeature.INDENT_OUTPUT)
+        setSerializationInclusion(JsonInclude.Include.NON_NULL)
+      }
     }
+    install(Authentication) {
+      notarizedBasic("basic") {
+        realm = "Ktor Server"
+        validate { credentials ->
+          if (credentials.name == credentials.password) {
+            UserIdPrincipal(credentials.name)
+          } else {
+            null
+          }
+        }
+      }
+    }
+    featuresInstalled = true
   }
   routing {
     openApi(oas)
@@ -101,6 +123,13 @@ fun Application.mainModule() {
         }
         notarizedDelete<Unit, Unit>(testSingleDeleteInfo) {
           call.respondText { "heya" }
+        }
+      }
+      authenticate("basic") {
+        route("/authenticated/single") {
+          notarizedGet<Unit, Unit>(testAuthenticatedSingleGetInfo) {
+            call.respondText("get authentiticated single")
+          }
         }
       }
     }
@@ -179,5 +208,15 @@ object KompendiumTOC {
       description = "Signifies that your item was deleted successfully",
       mediaTypes = emptyList()
     )
+  )
+  val testAuthenticatedSingleGetInfo = MethodInfo(
+    summary = "Another get test",
+    description = "testing more",
+    tags = setOf("anotherTest", "sample"),
+    responseInfo = ResponseInfo(
+      status = KompendiumHttpCodes.OK,
+      description = "Returns a different sample"
+    ),
+    securitySchemes = setOf("basic")
   )
 }

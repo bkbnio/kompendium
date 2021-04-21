@@ -7,5 +7,6 @@ data class MethodInfo(
   val responseInfo: ResponseInfo? = null,
   val requestInfo: RequestInfo? = null,
   val tags: Set<String> = emptySet(),
-  val deprecated: Boolean = false
+  val deprecated: Boolean = false,
+  val securitySchemes: Set<String> = emptySet()
 )
