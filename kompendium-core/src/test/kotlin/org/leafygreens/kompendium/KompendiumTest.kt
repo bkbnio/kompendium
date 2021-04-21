@@ -11,7 +11,6 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.jackson.jackson
 import io.ktor.response.respond
 import io.ktor.response.respondText
-import io.ktor.routing.get
 import io.ktor.routing.route
 import io.ktor.routing.routing
 import io.ktor.server.testing.handleRequest
@@ -31,11 +30,12 @@ import org.leafygreens.kompendium.models.oas.OpenApiSpecInfo
 import org.leafygreens.kompendium.models.oas.OpenApiSpecInfoContact
 import org.leafygreens.kompendium.models.oas.OpenApiSpecInfoLicense
 import org.leafygreens.kompendium.models.oas.OpenApiSpecServer
+import org.leafygreens.kompendium.routes.openApi
+import org.leafygreens.kompendium.routes.redoc
 import org.leafygreens.kompendium.util.ComplexRequest
 import org.leafygreens.kompendium.util.KompendiumHttpCodes
 import org.leafygreens.kompendium.util.TestCreatedResponse
 import org.leafygreens.kompendium.util.TestData
-import org.leafygreens.kompendium.util.TestDeleteResponse
 import org.leafygreens.kompendium.util.TestParams
 import org.leafygreens.kompendium.util.TestRequest
 import org.leafygreens.kompendium.util.TestResponse
@@ -56,7 +56,7 @@ internal class KompendiumTest {
   fun `Notarized Get records all expected information`() {
     withTestApplication({
       configModule()
-      openApiModule()
+      docs()
       notarizedGetModule()
     }) {
       // do
@@ -72,7 +72,7 @@ internal class KompendiumTest {
   fun `Notarized Get does not interrupt the pipeline`() {
     withTestApplication({
       configModule()
-      openApiModule()
+      docs()
       notarizedGetModule()
     }) {
       // do
@@ -88,7 +88,7 @@ internal class KompendiumTest {
   fun `Notarized Post records all expected information`() {
     withTestApplication({
       configModule()
-      openApiModule()
+      docs()
       notarizedPostModule()
     }) {
       // do
@@ -104,7 +104,7 @@ internal class KompendiumTest {
   fun `Notarized post does not interrupt the pipeline`() {
     withTestApplication({
       configModule()
-      openApiModule()
+      docs()
       notarizedPostModule()
     }) {
       // do
@@ -120,7 +120,7 @@ internal class KompendiumTest {
   fun `Notarized Put records all expected information`() {
     withTestApplication({
       configModule()
-      openApiModule()
+      docs()
       notarizedPutModule()
     }) {
       // do
@@ -137,7 +137,7 @@ internal class KompendiumTest {
   fun `Notarized put does not interrupt the pipeline`() {
     withTestApplication({
       configModule()
-      openApiModule()
+      docs()
       notarizedPutModule()
     }) {
       // do
@@ -153,7 +153,7 @@ internal class KompendiumTest {
   fun `Notarized delete records all expected information`() {
     withTestApplication({
       configModule()
-      openApiModule()
+      docs()
       notarizedDeleteModule()
     }) {
       // do
@@ -169,7 +169,7 @@ internal class KompendiumTest {
   fun `Notarized delete does not interrupt the pipeline`() {
     withTestApplication({
       configModule()
-      openApiModule()
+      docs()
       notarizedDeleteModule()
     }) {
       // do
@@ -184,7 +184,7 @@ internal class KompendiumTest {
   fun `Path parser stores the expected path`() {
     withTestApplication({
       configModule()
-      openApiModule()
+      docs()
       pathParsingTestModule()
     }) {
       // do
@@ -200,7 +200,7 @@ internal class KompendiumTest {
   fun `Can notarize the root route`() {
     withTestApplication({
       configModule()
-      openApiModule()
+      docs()
       rootModule()
     }) {
       // do
@@ -216,7 +216,7 @@ internal class KompendiumTest {
   fun `Can call the root route`() {
     withTestApplication({
       configModule()
-      openApiModule()
+      docs()
       rootModule()
     }) {
       // do
@@ -229,10 +229,26 @@ internal class KompendiumTest {
   }
 
   @Test
+  fun `Nested under root module does not append trailing slash`() {
+    withTestApplication({
+      configModule()
+      docs()
+      nestedUnderRootModule()
+    }) {
+      // do
+      val json = handleRequest(HttpMethod.Get, "/openapi.json").response.content
+
+      // expect
+      val expected = TestData.getFileSnapshot("nested_under_root.json").trim()
+      assertEquals(expected, json, "The received json spec should match the expected content")
+    }
+  }
+
+  @Test
   fun `Can notarize a trailing slash route`() {
     withTestApplication({
       configModule()
-      openApiModule()
+      docs()
       trailingSlash()
     }) {
       // do
@@ -248,7 +264,7 @@ internal class KompendiumTest {
   fun `Can call a trailing slash route`() {
     withTestApplication({
       configModule()
-      openApiModule()
+      docs()
       trailingSlash()
     }) {
       // do
@@ -264,7 +280,7 @@ internal class KompendiumTest {
   fun `Can notarize a complex type`() {
     withTestApplication({
       configModule()
-      openApiModule()
+      docs()
       complexType()
     }) {
       // do
@@ -280,7 +296,7 @@ internal class KompendiumTest {
   fun `Can notarize primitives`() {
     withTestApplication({
       configModule()
-      openApiModule()
+      docs()
       primitives()
     }) {
       // do
@@ -296,7 +312,7 @@ internal class KompendiumTest {
   fun `Can notarize a top level list response`() {
     withTestApplication({
       configModule()
-      openApiModule()
+      docs()
       returnsList()
     }) {
       // do
@@ -308,10 +324,28 @@ internal class KompendiumTest {
     }
   }
 
+  @Test
+  fun `Generates the expected redoc`() {
+    withTestApplication({
+      configModule()
+      docs()
+      returnsList()
+    }) {
+
+      // do
+      val html = handleRequest(HttpMethod.Get, "/docs").response.content
+
+      // expected
+      val expected = TestData.getFileSnapshot("redoc.html")
+      assertEquals(expected, html)
+    }
+  }
+
   private companion object {
     val testGetResponse = ResponseInfo(KompendiumHttpCodes.OK, "A Successful Endeavor")
     val testPostResponse = ResponseInfo(KompendiumHttpCodes.CREATED, "A Successful Endeavor")
-    val testDeleteResponse = ResponseInfo(KompendiumHttpCodes.NO_CONTENT, "A Successful Endeavor", mediaTypes = emptyList())
+    val testDeleteResponse =
+      ResponseInfo(KompendiumHttpCodes.NO_CONTENT, "A Successful Endeavor", mediaTypes = emptyList())
     val testRequest = RequestInfo("A Test request")
     val testGetInfo = MethodInfo("Another get test", "testing more", testGetResponse)
     val testPostInfo = MethodInfo("Test post endpoint", "Post your tests here!", testPostResponse, testRequest)
@@ -398,6 +432,18 @@ internal class KompendiumTest {
     }
   }
 
+  private fun Application.nestedUnderRootModule() {
+    routing {
+      route("/") {
+        route("/testerino") {
+          notarizedGet<TestParams, TestResponse>(testGetInfo) {
+            call.respondText { "🤔🔥" }
+          }
+        }
+      }
+    }
+  }
+
   private fun Application.trailingSlash() {
     routing {
       route("/test") {
@@ -440,41 +486,38 @@ internal class KompendiumTest {
     }
   }
 
-  private fun Application.openApiModule() {
+  private val oas = Kompendium.openApiSpec.copy(
+    info = OpenApiSpecInfo(
+      title = "Test API",
+      version = "1.33.7",
+      description = "An amazing, fully-ish 😉 generated API spec",
+      termsOfService = URI("https://example.com"),
+      contact = OpenApiSpecInfoContact(
+        name = "Homer Simpson",
+        email = "chunkylover53@aol.com",
+        url = URI("https://gph.is/1NPUDiM")
+      ),
+      license = OpenApiSpecInfoLicense(
+        name = "MIT",
+        url = URI("https://github.com/lg-backbone/kompendium/blob/main/LICENSE")
+      )
+    ),
+    servers = mutableListOf(
+      OpenApiSpecServer(
+        url = URI("https://myawesomeapi.com"),
+        description = "Production instance of my API"
+      ),
+      OpenApiSpecServer(
+        url = URI("https://staging.myawesomeapi.com"),
+        description = "Where the fun stuff happens"
+      )
+    )
+  )
+
+  private fun Application.docs() {
     routing {
-      route("/openapi.json") {
-        get {
-          call.respond(
-            Kompendium.openApiSpec.copy(
-              info = OpenApiSpecInfo(
-                title = "Test API",
-                version = "1.33.7",
-                description = "An amazing, fully-ish 😉 generated API spec",
-                termsOfService = URI("https://example.com"),
-                contact = OpenApiSpecInfoContact(
-                  name = "Homer Simpson",
-                  email = "chunkylover53@aol.com",
-                  url = URI("https://gph.is/1NPUDiM")
-                ),
-                license = OpenApiSpecInfoLicense(
-                  name = "MIT",
-                  url = URI("https://github.com/lg-backbone/kompendium/blob/main/LICENSE")
-                )
-              ),
-              servers = mutableListOf(
-                OpenApiSpecServer(
-                  url = URI("https://myawesomeapi.com"),
-                  description = "Production instance of my API"
-                ),
-                OpenApiSpecServer(
-                  url = URI("https://staging.myawesomeapi.com"),
-                  description = "Where the fun stuff happens"
-                )
-              )
-            )
-          )
-        }
-      }
+      openApi(oas)
+      redoc(oas)
     }
   }
 

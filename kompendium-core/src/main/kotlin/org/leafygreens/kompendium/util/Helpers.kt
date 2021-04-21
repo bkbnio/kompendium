@@ -18,55 +18,6 @@ object Helpers {
 
   const val COMPONENT_SLUG = "#/components/schemas"
 
-  /**
-   * TODO Explain this
-   */
-  @OptIn(InternalAPI::class)
-  fun Route.calculatePath(tail: String = ""): String {
-    logger.debug("Building path for ${selector::class}")
-    return when (selector) {
-      is RootRouteSelector -> {
-        logger.debug("Root route detected, returning path: $tail")
-        tail
-      }
-      is PathSegmentParameterRouteSelector -> {
-        logger.debug("Found segment parameter $selector, continuing to parent")
-        val newTail = "/$selector$tail"
-        parent?.calculatePath(newTail) ?: run {
-          logger.info("No parent found, returning current path")
-          newTail
-        }
-      }
-      is PathSegmentConstantRouteSelector -> {
-        logger.debug("Found segment constant $selector, continuing to parent")
-        val newTail = "/$selector$tail"
-        parent?.calculatePath(newTail) ?: run {
-          logger.debug("No parent found, returning current path")
-          newTail
-        }
-      }
-      else -> when (selector.javaClass.simpleName) {
-        // Auth route selector is not in default ktor lib but only in ktor-auth
-        "AuthenticationRouteSelector" -> {
-          logger.debug("Found authentication route selector $selector")
-          parent?.calculatePath(tail) ?: run {
-            logger.debug("No parent found, returning current path")
-            tail
-          }
-        }
-        // dumb ass workaround to this object being internal to ktor
-        "TrailingSlashRouteSelector" -> {
-          logger.debug("Found trailing slash route selector")
-          val newTail = "$tail/"
-          parent?.calculatePath(newTail) ?: run {
-            logger.debug("No parent found, returning current path")
-            newTail
-          }
-        }
-        else -> error("Unhandled selector type ${selector::class}")
-      }
-    }
-  }
 
   /**
    * Simple extension function that will take a [Pair] and place it (if absent) into a [MutableMap].
