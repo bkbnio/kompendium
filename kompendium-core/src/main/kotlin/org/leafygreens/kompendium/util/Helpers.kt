@@ -11,6 +11,7 @@ import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.jvm.javaField
 import org.slf4j.LoggerFactory
+import kotlin.reflect.full.createType
 
 object Helpers {
 
@@ -18,6 +19,7 @@ object Helpers {
 
   const val COMPONENT_SLUG = "#/components/schemas"
 
+  val UNIT_TYPE by lazy { Unit::class.createType() }
 
   /**
    * Simple extension function that will take a [Pair] and place it (if absent) into a [MutableMap].

@@ -33,6 +33,7 @@ import org.leafygreens.kompendium.models.oas.OpenApiSpecResponse
 import org.leafygreens.kompendium.models.oas.OpenApiSpecSchemaRef
 import org.leafygreens.kompendium.path.CorePathCalculator
 import org.leafygreens.kompendium.path.PathCalculator
+import org.leafygreens.kompendium.util.Helpers
 import org.leafygreens.kompendium.util.Helpers.getReferenceSlug
 
 object Kompendium {
@@ -123,37 +124,36 @@ object Kompendium {
   }
 
   // TODO These two lookin' real similar 👀 Combine?
-  private fun KType.toRequestSpec(requestInfo: RequestInfo?): OpenApiSpecRequest? = when (this) {
-    Unit::class -> null
-    else -> when (requestInfo) {
-      null -> null
-      else -> OpenApiSpecRequest(
+  private fun KType.toRequestSpec(requestInfo: RequestInfo?): OpenApiSpecRequest? = when (requestInfo) {
+    null -> null
+    else -> {
+      OpenApiSpecRequest(
         description = requestInfo.description,
-        content = requestInfo.mediaTypes.associateWith {
-          val ref = getReferenceSlug()
-          OpenApiSpecMediaType.Referenced(OpenApiSpecReferenceObject(ref))
-        }
+        content = resolveContent(requestInfo.mediaTypes) ?: mapOf()
       )
     }
   }
 
-  private fun KType.toResponseSpec(responseInfo: ResponseInfo?): Pair<Int, OpenApiSpecResponse>? = when (this) {
-    Unit::class -> null // TODO Maybe not though? could be unit but 200 🤔
-    else -> when (responseInfo) {
-      null -> null // TODO again probably revisit this
-      else -> {
-        val content = responseInfo.mediaTypes.associateWith {
-          val ref = getReferenceSlug()
-          OpenApiSpecMediaType.Referenced(OpenApiSpecReferenceObject(ref))
-        }
-        val specResponse = OpenApiSpecResponse(
-          description = responseInfo.description,
-          content = content.ifEmpty { null }
-        )
-        Pair(responseInfo.status, specResponse)
-      }
+  private fun KType.toResponseSpec(responseInfo: ResponseInfo?): Pair<Int, OpenApiSpecResponse>? = when (responseInfo) {
+    null -> null // TODO again probably revisit this
+    else -> {
+      val specResponse = OpenApiSpecResponse(
+        description = responseInfo.description,
+        content = resolveContent(responseInfo.mediaTypes)
+      )
+      Pair(responseInfo.status, specResponse)
     }
   }
+
+  private fun KType.resolveContent(mediaTypes: List<String>): Map<String, OpenApiSpecMediaType>? {
+    return if (this != Helpers.UNIT_TYPE && mediaTypes.isNotEmpty()) {
+      mediaTypes.associateWith {
+        val ref = getReferenceSlug()
+        OpenApiSpecMediaType.Referenced(OpenApiSpecReferenceObject(ref))
+      }
+    } else null
+  }
+
 
   // TODO God these annotations make this hideous... any way to improve?
   private fun KType.toParameterSpec(): List<OpenApiSpecParameter> {
