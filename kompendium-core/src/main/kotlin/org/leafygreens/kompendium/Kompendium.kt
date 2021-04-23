@@ -182,7 +182,8 @@ object Kompendium {
           is HeaderParam -> anny.description.ifBlank { null }
           is CookieParam -> anny.description.ifBlank { null }
           else -> error("should not be reachable")
-        }
+        },
+        required = !prop.returnType.isMarkedNullable
       )
     }
   }

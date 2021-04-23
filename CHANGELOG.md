@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.6.2] - April 23rd, 2021
+
+### Added
+
+- Request params are not required when property is nullable
+
 ## [0.6.1] - April 23rd, 2021
 
 ### Added
