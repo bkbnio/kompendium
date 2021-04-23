@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.6.2] - April 23rd, 2021
+
+### Added
+
+- Request params are not required when property is nullable
+
 ## [0.6.1] - April 23rd, 2021
 
 ### Added
@@ -9,21 +15,21 @@
 ### Changed
 
 - Set jvm target to 11
-- Resolved bug for empty params and/or empty response body 
+- Resolved bug for empty params and/or empty response body
 
 ## [0.6.0] - April 21st, 2021
 
 ### Added
 
-- Added basic and jwt security scheme support with the new module kompendium-auth 
+- Added basic and jwt security scheme support with the new module kompendium-auth
 
 ## [0.5.2] - April 19th, 2021
 
-### Removed 
+### Removed
 
 - Removed `Route.calculatePath`
-  
-### Added 
+
+### Added
 
 - Added an explicit  `PathCalculator` interface to allow for easier handling of routes external to the core set of Ktor route selectors.
 
@@ -37,7 +43,7 @@
 
 ### Added
 
-- Expose `/openapi.json` and `/docs` as opt-in pre-built Routes 
+- Expose `/openapi.json` and `/docs` as opt-in pre-built Routes
 
 ## [0.4.0] - April 17th, 2021
 
@@ -116,8 +122,8 @@
 
 ### Added
 
-- Beginning of an implementation.  Currently, able to generate a rough outline of the API at runtime, along with generating 
-full data classes represented by JSON Schema.  
+- Beginning of an implementation.  Currently, able to generate a rough outline of the API at runtime, along with generating
+  full data classes represented by JSON Schema.
 
 ## [0.0.1] - April 11th, 2021
 

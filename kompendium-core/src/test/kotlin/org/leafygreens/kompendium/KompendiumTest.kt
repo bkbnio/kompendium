@@ -23,6 +23,7 @@ import org.leafygreens.kompendium.Kompendium.notarizedDelete
 import org.leafygreens.kompendium.Kompendium.notarizedGet
 import org.leafygreens.kompendium.Kompendium.notarizedPost
 import org.leafygreens.kompendium.Kompendium.notarizedPut
+import org.leafygreens.kompendium.annotations.QueryParam
 import org.leafygreens.kompendium.models.meta.MethodInfo
 import org.leafygreens.kompendium.models.meta.RequestInfo
 import org.leafygreens.kompendium.models.meta.ResponseInfo
@@ -341,6 +342,22 @@ internal class KompendiumTest {
   }
 
   @Test
+  fun `Can notarize route with non-required params`() {
+    withTestApplication({
+      configModule()
+      docs()
+      nonRequiredParamsGet()
+    }) {
+      // do
+      val json = handleRequest(HttpMethod.Get, "/openapi.json").response.content
+
+      // expect
+      val expected = TestData.getFileSnapshot("non_required_params.json").trim()
+      assertEquals(expected, json, "The received json spec should match the expected content")
+    }
+  }
+
+  @Test
   fun `Generates the expected redoc`() {
     withTestApplication({
       configModule()
@@ -507,6 +524,17 @@ internal class KompendiumTest {
     routing {
       route("/test/empty") {
         notarizedGet<Unit, Unit>(emptyTestGetInfo) {
+          call.respond(HttpStatusCode.OK)
+        }
+      }
+    }
+  }
+
+  data class OptionalParams(@QueryParam val required: String, @QueryParam val notRequired: String?)
+  private fun Application.nonRequiredParamsGet() {
+    routing {
+      route("/test/optional") {
+        notarizedGet<OptionalParams, Unit>(emptyTestGetInfo) {
           call.respond(HttpStatusCode.OK)
         }
       }
