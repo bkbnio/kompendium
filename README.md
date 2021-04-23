@@ -144,13 +144,13 @@ At the moment, the basic and jwt authentication is only supported.
 A minimal example would be:
 ```kotlin
   install(Authentication) {
-  notarizedBasic("basic") {
-    realm = "Ktor realm 1"
-    // ...
+    notarizedBasic("basic") {
+      realm = "Ktor realm 1"
+      // configure basic authentication provider..
     }
     notarizedJwt("jwt") {
       realm = "Ktor realm 2"
-      // ...
+      // configure jwt authentication provider...
     }
   }
   routing {
@@ -181,7 +181,17 @@ A minimal example would be:
   }
 ```
 
-
+### Enabling Swagger ui
+To enable Swagger UI, `kompendium-swagger-ui` needs to be added.
+This will also add the [ktor webjars feature](https://ktor.io/docs/webjars.html) to your classpath as it is required for swagger ui.
+Minimal Example:
+```kotlin
+  install(Webjars)
+  routing {
+    openApi()
+    swaggerUI()
+  }
+```
 
 ## Limitations
 

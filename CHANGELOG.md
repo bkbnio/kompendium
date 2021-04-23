@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.6.1] - April 23rd, 2021
+
+### Added
+
+- Added support for Swagger ui
+
+### Changed
+
+- Set jvm target to 11
+- Resolved bug for empty params and/or empty response body 
+
 ## [0.6.0] - April 21st, 2021
 
 ### Added

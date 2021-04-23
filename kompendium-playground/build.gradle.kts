@@ -8,6 +8,7 @@ dependencies {
 
   implementation(projects.kompendiumCore)
   implementation(projects.kompendiumAuth)
+  implementation(projects.kompendiumSwaggerUi)
 
   implementation(libs.bundles.ktor)
   implementation(libs.bundles.ktorAuth)

@@ -3,6 +3,7 @@ kotlin = "1.4.32"
 ktor = "1.5.3"
 slf4j = "1.7.30"
 logback = "1.2.3"
+swagger-ui = "3.47.1"
 
 [libraries]
 # API
@@ -12,11 +13,15 @@ ktor-jackson = { group = "io.ktor", name = "ktor-jackson", version.ref = "ktor" 
 ktor-html-builder = { group = "io.ktor", name = "ktor-html-builder", version.ref = "ktor" }
 ktor-auth-lib = { group = "io.ktor", name = "ktor-auth", version.ref = "ktor" }
 ktor-auth-jwt = { group = "io.ktor", name = "ktor-auth-jwt", version.ref = "ktor" }
+ktor-webjars = { group = "io.ktor", name = "ktor-webjars", version.ref = "ktor" }
 
 # Logging
 slf4j = { group = "org.slf4j", name = "slf4j-api", version.ref = "slf4j" }
 logback-classic = { group = "ch.qos.logback", name = "logback-classic", version.ref = "logback" }
 logback-core = { group = "ch.qos.logback", name = "logback-core", version.ref = "logback" }
+
+# webjars
+webjars-swagger-ui = { group "org.webjars", name = "swagger-ui", version.ref = "swagger-ui" }
 
 [bundles]
 ktor = [ "ktor-server-core", "ktor-server-netty", "ktor-jackson", "ktor-html-builder" ]

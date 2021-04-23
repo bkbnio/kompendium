@@ -325,6 +325,22 @@ internal class KompendiumTest {
   }
 
   @Test
+  fun `Can notarize route with no request params and no response body`() {
+    withTestApplication({
+      configModule()
+      docs()
+      emptyGet()
+    }) {
+      // do
+      val json = handleRequest(HttpMethod.Get, "/openapi.json").response.content
+
+      // expect
+      val expected = TestData.getFileSnapshot("no_request_params_and_no_response_body.json").trim()
+      assertEquals(expected, json, "The received json spec should match the expected content")
+    }
+  }
+
+  @Test
   fun `Generates the expected redoc`() {
     withTestApplication({
       configModule()
@@ -351,6 +367,7 @@ internal class KompendiumTest {
     val testPostInfo = MethodInfo("Test post endpoint", "Post your tests here!", testPostResponse, testRequest)
     val testPutInfo = MethodInfo("Test put endpoint", "Put your tests here!", testPostResponse, testRequest)
     val testDeleteInfo = MethodInfo("Test delete endpoint", "testing my deletes", testDeleteResponse)
+    val emptyTestGetInfo = MethodInfo("No request params and response body", "testing more")
   }
 
   private fun Application.configModule() {
@@ -481,6 +498,16 @@ internal class KompendiumTest {
       route("/test") {
         notarizedPut<Unit, Int, Boolean>(testPutInfo) {
           call.respondText { "heya" }
+        }
+      }
+    }
+  }
+
+  private fun Application.emptyGet() {
+    routing {
+      route("/test/empty") {
+        notarizedGet<Unit, Unit>(emptyTestGetInfo) {
+          call.respond(HttpStatusCode.OK)
         }
       }
     }
