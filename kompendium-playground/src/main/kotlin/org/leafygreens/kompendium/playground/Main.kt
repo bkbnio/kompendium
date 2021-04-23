@@ -9,12 +9,15 @@ import io.ktor.auth.Authentication
 import io.ktor.auth.authenticate
 import io.ktor.auth.UserIdPrincipal
 import io.ktor.features.ContentNegotiation
+import io.ktor.http.HttpStatusCode
 import io.ktor.jackson.jackson
+import io.ktor.response.respond
 import io.ktor.response.respondText
 import io.ktor.routing.route
 import io.ktor.routing.routing
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
+import io.ktor.webjars.Webjars
 import java.net.URI
 import org.leafygreens.kompendium.Kompendium
 import org.leafygreens.kompendium.Kompendium.notarizedDelete
@@ -40,6 +43,7 @@ import org.leafygreens.kompendium.playground.KompendiumTOC.testSinglePostInfo
 import org.leafygreens.kompendium.playground.KompendiumTOC.testSinglePutInfo
 import org.leafygreens.kompendium.routes.openApi
 import org.leafygreens.kompendium.routes.redoc
+import org.leafygreens.kompendium.swagger.swaggerUI
 import org.leafygreens.kompendium.util.KompendiumHttpCodes
 
 private val oas = Kompendium.openApiSpec.copy(
@@ -100,11 +104,13 @@ fun Application.mainModule() {
         }
       }
     }
+    install(Webjars)
     featuresInstalled = true
   }
   routing {
     openApi(oas)
     redoc(oas)
+    swaggerUI()
     route("/test") {
       route("/{id}") {
         notarizedGet<ExampleParams, ExampleResponse>(testIdGetInfo) {
@@ -128,7 +134,7 @@ fun Application.mainModule() {
       authenticate("basic") {
         route("/authenticated/single") {
           notarizedGet<Unit, Unit>(testAuthenticatedSingleGetInfo) {
-            call.respondText("get authentiticated single")
+            call.respond(HttpStatusCode.OK)
           }
         }
       }
