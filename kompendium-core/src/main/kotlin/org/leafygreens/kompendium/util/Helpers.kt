@@ -47,9 +47,9 @@ object Helpers {
    * along with the result of the function invocation
    */
   fun <T> logged(functionName: String, entities: Map<String, Any>, block: () -> T): T {
-    entities.forEach { (name, entity) -> logger.info("Ahead of $functionName invocation, $name: $entity") }
+    entities.forEach { (name, entity) -> logger.debug("Ahead of $functionName invocation, $name: $entity") }
     val result = block.invoke()
-    logger.info("Result of $functionName invocation: $result")
+    logger.debug("Result of $functionName invocation: $result")
     return result
   }
 
