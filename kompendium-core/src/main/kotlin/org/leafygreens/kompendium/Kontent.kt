@@ -46,7 +46,7 @@ object Kontent {
     type: KType,
     cache: SchemaMap = emptyMap()
   ): SchemaMap = Helpers.logged(object {}.javaClass.enclosingMethod.name, mapOf("cache" to cache)) {
-    logger.info("Parsing Kontent of $type")
+    logger.debug("Parsing Kontent of $type")
     when (val clazz = type.classifier as KClass<*>) {
       Unit::class -> cache
       Int::class -> cache.plus(clazz.simpleName!! to FormatSchema("int32", "integer"))
@@ -68,26 +68,26 @@ object Kontent {
   private fun handleComplexType(clazz: KClass<*>, cache: SchemaMap): SchemaMap =
     when (cache.containsKey(clazz.simpleName)) {
       true -> {
-        logger.info("Cache already contains ${clazz.simpleName}, returning cache untouched")
+        logger.debug("Cache already contains ${clazz.simpleName}, returning cache untouched")
         cache
       }
       false -> {
-        logger.info("${clazz.simpleName} was not found in cache, generating now")
+        logger.debug("${clazz.simpleName} was not found in cache, generating now")
         var newCache = cache
         val fieldMap = clazz.memberProperties.associate { prop ->
-          logger.info("Analyzing $prop in class $clazz")
+          logger.debug("Analyzing $prop in class $clazz")
           val field = prop.javaField?.type?.kotlin ?: error("Unable to parse field type from $prop")
-          logger.info("Detected field $field")
+          logger.debug("Detected field $field")
           if (!newCache.containsKey(field.simpleName)) {
-            logger.info("Cache was missing ${field.simpleName}, adding now")
+            logger.debug("Cache was missing ${field.simpleName}, adding now")
             newCache = generateKTypeKontent(prop.returnType, newCache)
           }
           val propSchema = ReferencedSchema(field.getReferenceSlug(prop))
           Pair(prop.name, propSchema)
         }
-        logger.info("${clazz.simpleName} contains $fieldMap")
+        logger.debug("${clazz.simpleName} contains $fieldMap")
         val schema = ObjectSchema(fieldMap)
-        logger.info("${clazz.simpleName} schema: $schema")
+        logger.debug("${clazz.simpleName} schema: $schema")
         newCache.plus(clazz.simpleName!! to schema)
       }
     }
@@ -98,9 +98,9 @@ object Kontent {
   }
 
   private fun handleMapType(type: KType, clazz: KClass<*>, cache: SchemaMap): SchemaMap {
-    logger.info("Map detected for $type, generating schema and appending to cache")
+    logger.debug("Map detected for $type, generating schema and appending to cache")
     val (keyType, valType) = type.arguments.map { it.type }
-    logger.info("Obtained map types -> key: $keyType and value: $valType")
+    logger.debug("Obtained map types -> key: $keyType and value: $valType")
     if (keyType?.classifier != String::class) {
       error("Invalid Map $type: OpenAPI dictionaries must have keys of type String")
     }
@@ -113,10 +113,10 @@ object Kontent {
   }
 
   private fun handleCollectionType(type: KType, clazz: KClass<*>, cache: SchemaMap): SchemaMap {
-    logger.info("Collection detected for $type, generating schema and appending to cache")
+    logger.debug("Collection detected for $type, generating schema and appending to cache")
     val collectionType = type.arguments.first().type!!
     val collectionClass = collectionType.classifier as KClass<*>
-    logger.info("Obtained collection class: $collectionClass")
+    logger.debug("Obtained collection class: $collectionClass")
     val referenceName = genericNameAdapter(type, clazz)
     val valueReference = ReferencedSchema("${COMPONENT_SLUG}/${collectionClass.simpleName}")
     val schema = ArraySchema(items = valueReference)
