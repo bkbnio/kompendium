@@ -6,8 +6,8 @@ import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.auth.Authentication
-import io.ktor.auth.authenticate
 import io.ktor.auth.UserIdPrincipal
+import io.ktor.auth.authenticate
 import io.ktor.features.ContentNegotiation
 import io.ktor.features.StatusPages
 import io.ktor.http.HttpStatusCode
@@ -26,10 +26,10 @@ import org.leafygreens.kompendium.Notarized.notarizedException
 import org.leafygreens.kompendium.Notarized.notarizedGet
 import org.leafygreens.kompendium.Notarized.notarizedPost
 import org.leafygreens.kompendium.Notarized.notarizedPut
-import org.leafygreens.kompendium.auth.KompendiumAuth.notarizedBasic
 import org.leafygreens.kompendium.annotations.KompendiumField
 import org.leafygreens.kompendium.annotations.PathParam
 import org.leafygreens.kompendium.annotations.QueryParam
+import org.leafygreens.kompendium.auth.KompendiumAuth.notarizedBasic
 import org.leafygreens.kompendium.models.meta.MethodInfo
 import org.leafygreens.kompendium.models.meta.RequestInfo
 import org.leafygreens.kompendium.models.meta.ResponseInfo
@@ -109,7 +109,12 @@ fun Application.mainModule() {
     }
     install(Webjars)
     install(StatusPages) {
-      notarizedException<Exception, ExceptionResponse>(info = ResponseInfo(400, "Bad Things Happened")) {
+      notarizedException<Exception, ExceptionResponse>(
+        info = ResponseInfo(
+          KompendiumHttpCodes.BAD_REQUEST,
+          "Bad Things Happened"
+        )
+      ) {
         call.respond(HttpStatusCode.BadRequest, ExceptionResponse("Why you do dis?"))
       }
     }
