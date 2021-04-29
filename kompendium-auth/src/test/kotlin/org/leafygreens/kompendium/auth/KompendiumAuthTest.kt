@@ -12,7 +12,6 @@ import io.ktor.routing.*
 import io.ktor.server.testing.*
 import org.junit.Test
 import org.leafygreens.kompendium.Kompendium
-import org.leafygreens.kompendium.Kompendium.notarizedGet
 import org.leafygreens.kompendium.auth.KompendiumAuth.notarizedBasic
 import org.leafygreens.kompendium.auth.KompendiumAuth.notarizedJwt
 import org.leafygreens.kompendium.auth.util.TestData
@@ -27,6 +26,7 @@ import org.leafygreens.kompendium.routes.redoc
 import org.leafygreens.kompendium.util.KompendiumHttpCodes
 import kotlin.test.AfterTest
 import kotlin.test.assertEquals
+import org.leafygreens.kompendium.Notarized.notarizedGet
 
 internal class KompendiumAuthTest {
 

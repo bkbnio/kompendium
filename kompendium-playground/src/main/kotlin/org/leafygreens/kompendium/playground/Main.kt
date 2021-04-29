@@ -6,9 +6,10 @@ import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.auth.Authentication
-import io.ktor.auth.authenticate
 import io.ktor.auth.UserIdPrincipal
+import io.ktor.auth.authenticate
 import io.ktor.features.ContentNegotiation
+import io.ktor.features.StatusPages
 import io.ktor.http.HttpStatusCode
 import io.ktor.jackson.jackson
 import io.ktor.response.respond
@@ -20,14 +21,15 @@ import io.ktor.server.netty.Netty
 import io.ktor.webjars.Webjars
 import java.net.URI
 import org.leafygreens.kompendium.Kompendium
-import org.leafygreens.kompendium.Kompendium.notarizedDelete
-import org.leafygreens.kompendium.Kompendium.notarizedGet
-import org.leafygreens.kompendium.Kompendium.notarizedPost
-import org.leafygreens.kompendium.Kompendium.notarizedPut
-import org.leafygreens.kompendium.auth.KompendiumAuth.notarizedBasic
+import org.leafygreens.kompendium.Notarized.notarizedDelete
+import org.leafygreens.kompendium.Notarized.notarizedException
+import org.leafygreens.kompendium.Notarized.notarizedGet
+import org.leafygreens.kompendium.Notarized.notarizedPost
+import org.leafygreens.kompendium.Notarized.notarizedPut
 import org.leafygreens.kompendium.annotations.KompendiumField
 import org.leafygreens.kompendium.annotations.PathParam
 import org.leafygreens.kompendium.annotations.QueryParam
+import org.leafygreens.kompendium.auth.KompendiumAuth.notarizedBasic
 import org.leafygreens.kompendium.models.meta.MethodInfo
 import org.leafygreens.kompendium.models.meta.RequestInfo
 import org.leafygreens.kompendium.models.meta.ResponseInfo
@@ -39,6 +41,7 @@ import org.leafygreens.kompendium.playground.KompendiumTOC.testAuthenticatedSing
 import org.leafygreens.kompendium.playground.KompendiumTOC.testIdGetInfo
 import org.leafygreens.kompendium.playground.KompendiumTOC.testSingleDeleteInfo
 import org.leafygreens.kompendium.playground.KompendiumTOC.testSingleGetInfo
+import org.leafygreens.kompendium.playground.KompendiumTOC.testSingleGetInfoWithThrowable
 import org.leafygreens.kompendium.playground.KompendiumTOC.testSinglePostInfo
 import org.leafygreens.kompendium.playground.KompendiumTOC.testSinglePutInfo
 import org.leafygreens.kompendium.routes.openApi
@@ -105,6 +108,16 @@ fun Application.mainModule() {
       }
     }
     install(Webjars)
+    install(StatusPages) {
+      notarizedException<Exception, ExceptionResponse>(
+        info = ResponseInfo(
+          KompendiumHttpCodes.BAD_REQUEST,
+          "Bad Things Happened"
+        )
+      ) {
+        call.respond(HttpStatusCode.BadRequest, ExceptionResponse("Why you do dis?"))
+      }
+    }
     featuresInstalled = true
   }
   routing {
@@ -139,6 +152,11 @@ fun Application.mainModule() {
         }
       }
     }
+    route("/error") {
+      notarizedGet<Unit, ExampleResponse>(testSingleGetInfoWithThrowable) {
+        error("bad things just happened")
+      }
+    }
   }
 }
 
@@ -163,6 +181,8 @@ data class ExampleRequest(
 
 data class ExampleResponse(val c: String)
 
+data class ExceptionResponse(val message: String)
+
 data class ExampleCreatedResponse(val id: Int, val c: String)
 
 object KompendiumTOC {
@@ -183,6 +203,10 @@ object KompendiumTOC {
       status = KompendiumHttpCodes.OK,
       description = "Returns a different sample"
     )
+  )
+  val testSingleGetInfoWithThrowable = testSingleGetInfo.copy(
+    summary = "Show me the error baby 🙏",
+    canThrow = setOf(Exception::class)
   )
   val testSinglePostInfo = MethodInfo(
     summary = "Test post endpoint",
