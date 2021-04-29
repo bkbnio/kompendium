@@ -394,6 +394,25 @@ internal class KompendiumTest {
     }
   }
 
+
+
+  @Test
+  fun `Generates additional responses when passed multiple throwables`() {
+    withTestApplication({
+      statusPageMultiExceptions()
+      configModule()
+      docs()
+      notarizedGetWithMultipleThrowables()
+    }) {
+      // do
+      val json = handleRequest(HttpMethod.Get, "/openapi.json").response.content
+
+      // expect
+      val expected = TestData.getFileSnapshot("notarized_get_with_multiple_exception_responses.json").trim()
+      assertEquals(expected, json, "The received json spec should match the expected content")
+    }
+  }
+
   private companion object {
     val testGetResponse = ResponseInfo(KompendiumHttpCodes.OK, "A Successful Endeavor")
     val testPostResponse = ResponseInfo(KompendiumHttpCodes.CREATED, "A Successful Endeavor")
@@ -403,6 +422,9 @@ internal class KompendiumTest {
     val testGetInfo = MethodInfo("Another get test", "testing more", testGetResponse)
     val testGetWithException = testGetInfo.copy(
       canThrow = setOf(Exception::class)
+    )
+    val testGetWithMultipleExceptions = testGetInfo.copy(
+      canThrow = setOf(AccessDeniedException::class, Exception::class)
     )
     val testPostInfo = MethodInfo("Test post endpoint", "Post your tests here!", testPostResponse, testRequest)
     val testPutInfo = MethodInfo("Test put endpoint", "Put your tests here!", testPostResponse, testRequest)
@@ -427,10 +449,31 @@ internal class KompendiumTest {
     }
   }
 
+  private fun Application.statusPageMultiExceptions() {
+    install(StatusPages) {
+      notarizedException<AccessDeniedException, Unit>(info = ResponseInfo(403, "New API who dis?")) {
+        call.respond(HttpStatusCode.Forbidden)
+      }
+      notarizedException<Exception, ExceptionResponse>(info = ResponseInfo(400, "Bad Things Happened")) {
+        call.respond(HttpStatusCode.BadRequest, ExceptionResponse("Why you do dis?"))
+      }
+    }
+  }
+
   private fun Application.notarizedGetWithNotarizedException() {
     routing {
       route("/test") {
         notarizedGet<TestParams, TestResponse>(testGetWithException) {
+          error("something terrible has happened!")
+        }
+      }
+    }
+  }
+
+  private fun Application.notarizedGetWithMultipleThrowables() {
+    routing {
+      route("/test") {
+        notarizedGet<TestParams, TestResponse>(testGetWithMultipleExceptions) {
           error("something terrible has happened!")
         }
       }
