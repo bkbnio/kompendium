@@ -5,6 +5,7 @@
 ### Added
 
 - `notarizedException` for notarizing `StatusPage` handlers 🎉
+- `com.adarshr.test-logger` Gradle plugin for improved test output clarity and insight
 
 ### Changed
 
