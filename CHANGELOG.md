@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.7.0] - April 29th, 2021
+
+### Added
+
+- `notarizedException` for notarizing `StatusPage` handlers 🎉
+
+### Changed
+
+- Refactored `kompendium-core` to break up the `Kompendium` object into slightly more manageable chunks
+
 ## [0.6.2] - April 23rd, 2021
 
 ### Added
