@@ -58,7 +58,13 @@ object Kompendium {
     parameters = paramType.toParameterSpec(),
     responses = responseType.toResponseSpec(responseInfo)?.let { mapOf(it) }.let {
       when (it) {
-        null -> parseThrowables(canThrow)
+        null -> {
+          val throwables = parseThrowables(canThrow)
+          when (throwables.isEmpty()) {
+            true -> null
+            false -> throwables
+          }
+        }
         else -> it.plus(parseThrowables(canThrow))
       }
     },
