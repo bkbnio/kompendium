@@ -6,6 +6,7 @@ import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.features.ContentNegotiation
+import io.ktor.features.StatusPages
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
 import io.ktor.jackson.jackson
@@ -19,10 +20,11 @@ import java.net.URI
 import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import org.leafygreens.kompendium.Kompendium.notarizedDelete
-import org.leafygreens.kompendium.Kompendium.notarizedGet
-import org.leafygreens.kompendium.Kompendium.notarizedPost
-import org.leafygreens.kompendium.Kompendium.notarizedPut
+import org.leafygreens.kompendium.Notarized.notarizedDelete
+import org.leafygreens.kompendium.Notarized.notarizedException
+import org.leafygreens.kompendium.Notarized.notarizedGet
+import org.leafygreens.kompendium.Notarized.notarizedPost
+import org.leafygreens.kompendium.Notarized.notarizedPut
 import org.leafygreens.kompendium.annotations.QueryParam
 import org.leafygreens.kompendium.models.meta.MethodInfo
 import org.leafygreens.kompendium.models.meta.RequestInfo
@@ -34,6 +36,7 @@ import org.leafygreens.kompendium.models.oas.OpenApiSpecServer
 import org.leafygreens.kompendium.routes.openApi
 import org.leafygreens.kompendium.routes.redoc
 import org.leafygreens.kompendium.util.ComplexRequest
+import org.leafygreens.kompendium.util.ExceptionResponse
 import org.leafygreens.kompendium.util.KompendiumHttpCodes
 import org.leafygreens.kompendium.util.TestCreatedResponse
 import org.leafygreens.kompendium.util.TestData
@@ -374,6 +377,23 @@ internal class KompendiumTest {
     }
   }
 
+  @Test
+  fun `Generates additional responses when passed a throwable`() {
+    withTestApplication({
+      statusPageModule()
+      configModule()
+      docs()
+      notarizedGetWithNotarizedException()
+    }) {
+      // do
+      val json = handleRequest(HttpMethod.Get, "/openapi.json").response.content
+
+      // expect
+      val expected = TestData.getFileSnapshot("non_required_params.json").trim()
+      assertEquals(expected, json, "The received json spec should match the expected content")
+    }
+  }
+
   private companion object {
     val testGetResponse = ResponseInfo(KompendiumHttpCodes.OK, "A Successful Endeavor")
     val testPostResponse = ResponseInfo(KompendiumHttpCodes.CREATED, "A Successful Endeavor")
@@ -381,6 +401,9 @@ internal class KompendiumTest {
       ResponseInfo(KompendiumHttpCodes.NO_CONTENT, "A Successful Endeavor", mediaTypes = emptyList())
     val testRequest = RequestInfo("A Test request")
     val testGetInfo = MethodInfo("Another get test", "testing more", testGetResponse)
+    val testGetWithException = testGetInfo.copy(
+      canThrow = setOf(Exception::class)
+    )
     val testPostInfo = MethodInfo("Test post endpoint", "Post your tests here!", testPostResponse, testRequest)
     val testPutInfo = MethodInfo("Test put endpoint", "Put your tests here!", testPostResponse, testRequest)
     val testDeleteInfo = MethodInfo("Test delete endpoint", "testing my deletes", testDeleteResponse)
@@ -392,6 +415,24 @@ internal class KompendiumTest {
       jackson {
         enable(SerializationFeature.INDENT_OUTPUT)
         setSerializationInclusion(JsonInclude.Include.NON_NULL)
+      }
+    }
+  }
+
+  private fun Application.statusPageModule() {
+    install(StatusPages) {
+      notarizedException<Exception, ExceptionResponse>(info = ResponseInfo(400, "Bad Things Happened")) {
+        call.respond(HttpStatusCode.BadRequest, ExceptionResponse("Why you do dis?"))
+      }
+    }
+  }
+
+  private fun Application.notarizedGetWithNotarizedException() {
+    routing {
+      route("/test") {
+        notarizedGet<TestParams, TestResponse>(testGetWithException) {
+          error("something terrible has happened!")
+        }
       }
     }
   }
