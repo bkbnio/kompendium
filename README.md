@@ -40,11 +40,12 @@ dependencies {
 ### Warning 🚨
 Kompendium is still under active development ⚠️ There are a number of yet-to-be-implemented features, including 
 
-- Multiple Responses 📜
 - Sealed Class / Polymorphic Support 😬  
 - Validation / Enforcement (❓👀❓)
 
 If you have a feature that is not listed here, please open an issue!
+
+In addition, if you find any 🐞😱 please open an issue as well!
 
 ### Notarized Routes 
 
@@ -58,6 +59,14 @@ will consume are
 - `TResp`: Used to build the object schema for a response body
 
 `GET` and `DELETE` take `TParam` and `TResp` while `PUT` and `POST` take all three.
+
+
+In addition to standard HTTP Methods, Kompendium also introduced the concept of `notarizedExceptions`.  Using the `StatusPage`
+extension, users can notarize all handled exceptions, along with their respective HTTP codes and response types. 
+Exceptions that have been `notarized` require two types as supplemental information
+
+- `TErr`: Used to notarize the exception being handled by this use case.  Used for matching responses at the route level.
+- `TResp`: Same as above, this dictates the expected return type of the error response.  
 
 In keeping with minimal invasion, these extension methods all consume the same code block as a standard Ktor route method,
 meaning that swapping in a default Ktor route and a Kompendium `notarized` route is as simple as a single method change.
@@ -102,6 +111,11 @@ fun Application.mainModule() {
       setSerializationInclusion(JsonInclude.Include.NON_NULL)
     }
   }
+  install(StatusPages) {
+    notarizedException<Exception, ExceptionResponse>(exceptionResponseInfo) {
+      call.respond(HttpStatusCode.BadRequest, ExceptionResponse("Why you do dis?"))
+    }
+  }
   routing {
     openApi()
     redoc()
@@ -125,9 +139,19 @@ fun Application.mainModule() {
           call.respondText { "heya" }
         }
       }
+      route("/error") {
+        notarizedGet<Unit, ExampleResponse>(testSingleGetInfoWithThrowable) {
+          error("bad things just happened")
+        }
+      }
     }
   }
 }
+
+val testSingleGetInfoWithThrowable = testSingleGetInfo.copy(
+  summary = "Show me the error baby 🙏",
+  canThrow = setOf(Exception::class) // Must match an exception that has been notarized in the `StatusPages`
+)
 ```
 
 When run in the playground, this would output the following at `/openapi.json` 
@@ -136,7 +160,7 @@ https://gist.github.com/rgbrizzlehizzle/b9544922f2e99a2815177f8bdbf80668
 
 ### Kompendium Auth and security schemes
 
-There is a seperate library to handle security schemes: `kompendium-auth`. 
+There is a separate library to handle security schemes: `kompendium-auth`. 
 This needs to be added to your project as dependency.
 
 At the moment, the basic and jwt authentication is only supported.
@@ -188,9 +212,20 @@ Minimal Example:
 ```kotlin
   install(Webjars)
   routing {
-    openApi()
+    openApi(oas)
     swaggerUI()
   }
+```
+
+### Enabling ReDoc
+Unlike swagger, redoc is provided (perhaps confusingly, in the `core` module).  This means out of the box with `kompendium-core`, you can add 
+[ReDoc](https://github.com/Redocly/redoc) as follows
+
+```kotlin
+routing {
+  openApi(oas)
+  redoc(oas)
+}
 ```
 
 ## Limitations
