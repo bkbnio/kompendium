@@ -40,6 +40,7 @@ import org.leafygreens.kompendium.util.ExceptionResponse
 import org.leafygreens.kompendium.util.KompendiumHttpCodes
 import org.leafygreens.kompendium.util.TestCreatedResponse
 import org.leafygreens.kompendium.util.TestHelpers.getFileSnapshot
+import org.leafygreens.kompendium.util.TestNested
 import org.leafygreens.kompendium.util.TestParams
 import org.leafygreens.kompendium.util.TestRequest
 import org.leafygreens.kompendium.util.TestResponse
@@ -367,7 +368,6 @@ internal class KompendiumTest {
       docs()
       returnsList()
     }) {
-
       // do
       val html = handleRequest(HttpMethod.Get, "/docs").response.content
 
@@ -394,8 +394,6 @@ internal class KompendiumTest {
     }
   }
 
-
-
   @Test
   fun `Generates additional responses when passed multiple throwables`() {
     withTestApplication({
@@ -409,6 +407,22 @@ internal class KompendiumTest {
 
       // expect
       val expected = getFileSnapshot("notarized_get_with_multiple_exception_responses.json").trim()
+      assertEquals(expected, json, "The received json spec should match the expected content")
+    }
+  }
+
+  @Test
+  fun `Can generate example response and request bodies`() {
+    withTestApplication({
+      configModule()
+      docs()
+      withExamples()
+    }) {
+      // do
+      val json = handleRequest(HttpMethod.Get, "/openapi.json").response.content
+
+      // expect
+      val expected = getFileSnapshot("example_req_and_resp.json").trim()
       assertEquals(expected, json, "The received json spec should match the expected content")
     }
   }
@@ -616,6 +630,31 @@ internal class KompendiumTest {
     routing {
       route("/test/empty") {
         notarizedGet(trulyEmptyTestGetInfo) {
+          call.respond(HttpStatusCode.OK)
+        }
+      }
+    }
+  }
+
+  private fun Application.withExamples() {
+    routing {
+      route("/test/examples") {
+        notarizedPost(info = MethodInfo<Unit, TestRequest, TestResponse>(
+          summary = "Example Parameters",
+          description = "A test for setting parameter examples",
+          requestInfo = RequestInfo(
+            description = "Test",
+            examples = mapOf(
+              "one" to TestRequest(fieldName = TestNested(nesty = "hey"), b = 4.0, aaa = emptyList()),
+              "two" to TestRequest(fieldName = TestNested(nesty = "hello"), b = 3.8, aaa = listOf(31324234))
+            )
+          ),
+          responseInfo = ResponseInfo(
+            status = 201,
+            description = "nice",
+            examples = mapOf("test" to TestResponse(c = "spud"))
+          ),
+        )) {
           call.respond(HttpStatusCode.OK)
         }
       }

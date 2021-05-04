@@ -1,0 +1,140 @@
+{
+  "openapi" : "3.0.3",
+  "info" : {
+    "title" : "Test API",
+    "version" : "1.33.7",
+    "description" : "An amazing, fully-ish \uD83D\uDE09 generated API spec",
+    "termsOfService" : "https://example.com",
+    "contact" : {
+      "name" : "Homer Simpson",
+      "url" : "https://gph.is/1NPUDiM",
+      "email" : "chunkylover53@aol.com"
+    },
+    "license" : {
+      "name" : "MIT",
+      "url" : "https://github.com/lg-backbone/kompendium/blob/main/LICENSE"
+    }
+  },
+  "servers" : [ {
+    "url" : "https://myawesomeapi.com",
+    "description" : "Production instance of my API"
+  }, {
+    "url" : "https://staging.myawesomeapi.com",
+    "description" : "Where the fun stuff happens"
+  } ],
+  "paths" : {
+    "/test/examples" : {
+      "post" : {
+        "tags" : [ ],
+        "summary" : "Example Parameters",
+        "description" : "A test for setting parameter examples",
+        "parameters" : [ ],
+        "requestBody" : {
+          "description" : "Test",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/TestRequest"
+              },
+              "examples" : {
+                "one" : {
+                  "value" : {
+                    "fieldName" : {
+                      "nesty" : "hey"
+                    },
+                    "b" : 4.0,
+                    "aaa" : [ ]
+                  }
+                },
+                "two" : {
+                  "value" : {
+                    "fieldName" : {
+                      "nesty" : "hello"
+                    },
+                    "b" : 3.8,
+                    "aaa" : [ 31324234 ]
+                  }
+                }
+              }
+            }
+          },
+          "required" : false
+        },
+        "responses" : {
+          "201" : {
+            "description" : "nice",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/TestResponse"
+                },
+                "examples" : {
+                  "test" : {
+                    "value" : {
+                      "c" : "spud"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "String" : {
+        "type" : "string"
+      },
+      "TestResponse" : {
+        "properties" : {
+          "c" : {
+            "$ref" : "#/components/schemas/String"
+          }
+        },
+        "type" : "object"
+      },
+      "Long" : {
+        "format" : "int64",
+        "type" : "integer"
+      },
+      "List-Long" : {
+        "items" : {
+          "$ref" : "#/components/schemas/Long"
+        },
+        "type" : "array"
+      },
+      "Double" : {
+        "format" : "double",
+        "type" : "number"
+      },
+      "TestNested" : {
+        "properties" : {
+          "nesty" : {
+            "$ref" : "#/components/schemas/String"
+          }
+        },
+        "type" : "object"
+      },
+      "TestRequest" : {
+        "properties" : {
+          "aaa" : {
+            "$ref" : "#/components/schemas/List-Long"
+          },
+          "b" : {
+            "$ref" : "#/components/schemas/Double"
+          },
+          "fieldName" : {
+            "$ref" : "#/components/schemas/TestNested"
+          }
+        },
+        "type" : "object"
+      }
+    },
+    "securitySchemes" : { }
+  },
+  "security" : [ ],
+  "tags" : [ ]
+}
