@@ -43,6 +43,7 @@ import org.leafygreens.kompendium.models.oas.OpenApiSpecServer
 import org.leafygreens.kompendium.playground.KompendiumTOC.testAuthenticatedSingleGetInfo
 import org.leafygreens.kompendium.playground.KompendiumTOC.testGetWithExamples
 import org.leafygreens.kompendium.playground.KompendiumTOC.testIdGetInfo
+import org.leafygreens.kompendium.playground.KompendiumTOC.testPostWithExamples
 import org.leafygreens.kompendium.playground.KompendiumTOC.testSingleDeleteInfo
 import org.leafygreens.kompendium.playground.KompendiumTOC.testSingleGetInfo
 import org.leafygreens.kompendium.playground.KompendiumTOC.testSingleGetInfoWithThrowable
@@ -116,7 +117,8 @@ fun Application.configModule() {
       notarizedException<Exception, ExceptionResponse>(
         info = ResponseInfo(
           KompendiumHttpCodes.BAD_REQUEST,
-          "Bad Things Happened"
+          "Bad Things Happened",
+          examples = mapOf("example" to ExceptionResponse("hey bad things happened sorry"))
         )
       ) {
         call.respond(HttpStatusCode.BadRequest, ExceptionResponse("Why you do dis?"))
@@ -135,6 +137,9 @@ fun Application.mainModule() {
     route("/potato/spud") {
       notarizedGet(testGetWithExamples) {
         call.respond(HttpStatusCode.OK)
+      }
+      notarizedPost(testPostWithExamples) {
+        call.respond(HttpStatusCode.Created, ExampleResponse("hey"))
       }
     }
     route("/test") {
@@ -207,7 +212,29 @@ object KompendiumTOC {
       description = "nice",
       examples = mapOf("test" to ExampleResponse(c = "spud"))
     ),
+    canThrow = setOf(Exception::class)
   )
+  @Suppress("MagicNumber")
+  val testPostWithExamples = PostInfo<ExampleParams, ExampleRequest, ExampleResponse>(
+    summary = "Full Example",
+    description = "Throws just about all Kompendium has to offer into one endpoint",
+    requestInfo = RequestInfo(
+      description = "Necessary deetz",
+      examples = mapOf(
+        "Send This" to ExampleRequest(ExampleNested("potato"), 13.37, listOf(12341))
+      )
+    ),
+    responseInfo = ResponseInfo(
+      status = KompendiumHttpCodes.CREATED,
+      description = "Congratz you hit da endpoint",
+      examples = mapOf(
+        "Expect This" to ExampleResponse(c = "Hi"),
+        "Or This" to ExampleResponse(c = "Hey")
+      )
+    ),
+    canThrow = setOf(Exception::class)
+  )
+
   val testIdGetInfo = GetInfo<ExampleParams, ExampleResponse>(
     summary = "Get Test",
     description = "Test for the getting",
