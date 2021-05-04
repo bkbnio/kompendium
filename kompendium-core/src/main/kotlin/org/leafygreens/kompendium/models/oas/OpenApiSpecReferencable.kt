@@ -4,21 +4,11 @@ sealed class OpenApiSpecReferencable
 
 class OpenApiSpecReferenceObject(val `$ref`: String) : OpenApiSpecReferencable()
 
-data class OpenApiSpecCallback(
-  val todo: String // todo fuck me -> https://swagger.io/specification/#callback-object
-) : OpenApiSpecReferencable()
-
-data class OpenApiSpecResponse(
+data class OpenApiSpecResponse<T>(
     val description: String? = null,
     val headers: Map<String, OpenApiSpecReferencable>? = null,
-    val content: Map<String, OpenApiSpecMediaType>? = null,
+    val content: Map<String, OpenApiSpecMediaType<T>>? = null,
     val links: Map<String, OpenApiSpecReferencable>? = null
-) : OpenApiSpecReferencable()
-
-data class OpenApiSpecHeader(
-  val name: String,
-  val description: String?,
-  val externalDocs: OpenApiSpecExternalDocumentation?
 ) : OpenApiSpecReferencable()
 
 data class OpenApiSpecParameter(
@@ -33,8 +23,8 @@ data class OpenApiSpecParameter(
   val explode: Boolean? = null
 ) : OpenApiSpecReferencable()
 
-data class OpenApiSpecRequest(
+data class OpenApiSpecRequest<T>(
     val description: String?,
-    val content: Map<String, OpenApiSpecMediaType>,
+    val content: Map<String, OpenApiSpecMediaType<T>>,
     val required: Boolean = false
 ) : OpenApiSpecReferencable()

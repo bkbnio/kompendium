@@ -23,18 +23,38 @@
     "description" : "Where the fun stuff happens"
   } ],
   "paths" : {
-    "/test" : {
-      "put" : {
+    "/test/examples" : {
+      "post" : {
         "tags" : [ ],
-        "summary" : "Test put endpoint",
-        "description" : "Put your tests here!",
+        "summary" : "Example Parameters",
+        "description" : "A test for setting parameter examples",
         "parameters" : [ ],
         "requestBody" : {
-          "description" : "A Complex request",
+          "description" : "Test",
           "content" : {
             "application/json" : {
               "schema" : {
-                "$ref" : "#/components/schemas/ComplexRequest"
+                "$ref" : "#/components/schemas/TestRequest"
+              },
+              "examples" : {
+                "one" : {
+                  "value" : {
+                    "fieldName" : {
+                      "nesty" : "hey"
+                    },
+                    "b" : 4.0,
+                    "aaa" : [ ]
+                  }
+                },
+                "two" : {
+                  "value" : {
+                    "fieldName" : {
+                      "nesty" : "hello"
+                    },
+                    "b" : 3.8,
+                    "aaa" : [ 31324234 ]
+                  }
+                }
               }
             }
           },
@@ -42,11 +62,18 @@
         },
         "responses" : {
           "201" : {
-            "description" : "A Successful Endeavor",
+            "description" : "nice",
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/TestCreatedResponse"
+                  "$ref" : "#/components/schemas/TestResponse"
+                },
+                "examples" : {
+                  "test" : {
+                    "value" : {
+                      "c" : "spud"
+                    }
+                  }
                 }
               }
             }
@@ -61,66 +88,46 @@
       "String" : {
         "type" : "string"
       },
-      "Int" : {
-        "format" : "int32",
-        "type" : "integer"
-      },
-      "TestCreatedResponse" : {
+      "TestResponse" : {
         "properties" : {
           "c" : {
             "$ref" : "#/components/schemas/String"
-          },
-          "id" : {
-            "$ref" : "#/components/schemas/Int"
           }
         },
         "type" : "object"
       },
-      "SimpleEnum" : {
-        "enum" : [ "ONE", "TWO" ],
-        "type" : "string"
+      "Long" : {
+        "format" : "int64",
+        "type" : "integer"
       },
-      "CrazyItem" : {
-        "properties" : {
-          "enumeration" : {
-            "$ref" : "#/components/schemas/SimpleEnum"
-          }
-        },
-        "type" : "object"
-      },
-      "Map-String-CrazyItem" : {
-        "additionalProperties" : {
-          "$ref" : "#/components/schemas/CrazyItem"
-        },
-        "type" : "object"
-      },
-      "NestedComplexItem" : {
-        "properties" : {
-          "alias" : {
-            "$ref" : "#/components/schemas/Map-String-CrazyItem"
-          },
-          "name" : {
-            "$ref" : "#/components/schemas/String"
-          }
-        },
-        "type" : "object"
-      },
-      "List-NestedComplexItem" : {
+      "List-Long" : {
         "items" : {
-          "$ref" : "#/components/schemas/NestedComplexItem"
+          "$ref" : "#/components/schemas/Long"
         },
         "type" : "array"
       },
-      "ComplexRequest" : {
+      "Double" : {
+        "format" : "double",
+        "type" : "number"
+      },
+      "TestNested" : {
         "properties" : {
-          "amazingField" : {
+          "nesty" : {
             "$ref" : "#/components/schemas/String"
+          }
+        },
+        "type" : "object"
+      },
+      "TestRequest" : {
+        "properties" : {
+          "aaa" : {
+            "$ref" : "#/components/schemas/List-Long"
           },
-          "org" : {
-            "$ref" : "#/components/schemas/String"
+          "b" : {
+            "$ref" : "#/components/schemas/Double"
           },
-          "tables" : {
-            "$ref" : "#/components/schemas/List-NestedComplexItem"
+          "fieldName" : {
+            "$ref" : "#/components/schemas/TestNested"
           }
         },
         "type" : "object"

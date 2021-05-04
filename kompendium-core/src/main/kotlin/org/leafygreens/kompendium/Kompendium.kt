@@ -16,6 +16,7 @@ import org.leafygreens.kompendium.models.meta.MethodInfo
 import org.leafygreens.kompendium.models.meta.RequestInfo
 import org.leafygreens.kompendium.models.meta.ResponseInfo
 import org.leafygreens.kompendium.models.meta.SchemaMap
+import org.leafygreens.kompendium.models.oas.ExampleWrapper
 import org.leafygreens.kompendium.models.oas.OpenApiSpec
 import org.leafygreens.kompendium.models.oas.OpenApiSpecInfo
 import org.leafygreens.kompendium.models.oas.OpenApiSpecMediaType
@@ -45,33 +46,37 @@ object Kompendium {
   var pathCalculator: PathCalculator = CorePathCalculator()
 
   // TODO here down is a mess, needs refactor once core functionality is in place
-  fun MethodInfo.parseMethodInfo(
-    method: HttpMethod,
+  fun parseMethodInfo(
+    info: MethodInfo<*, *>,
     paramType: KType,
     requestType: KType,
     responseType: KType
   ) = OpenApiSpecPathItemOperation(
-    summary = this.summary,
-    description = this.description,
-    tags = this.tags,
-    deprecated = this.deprecated,
+    summary = info.summary,
+    description = info.description,
+    tags = info.tags,
+    deprecated = info.deprecated,
     parameters = paramType.toParameterSpec(),
-    responses = responseType.toResponseSpec(responseInfo)?.let { mapOf(it) }.let {
+    responses = responseType.toResponseSpec(info.responseInfo)?.let { mapOf(it) }.let {
       when (it) {
         null -> {
-          val throwables = parseThrowables(canThrow)
+          val throwables = parseThrowables(info.canThrow)
           when (throwables.isEmpty()) {
             true -> null
             false -> throwables
           }
         }
-        else -> it.plus(parseThrowables(canThrow))
+        else -> it.plus(parseThrowables(info.canThrow))
       }
     },
-    requestBody = if (method != HttpMethod.Get) requestType.toRequestSpec(requestInfo) else null,
-    security = if (this.securitySchemes.isNotEmpty()) listOf(
+    requestBody = when (info) {
+      is MethodInfo.PutInfo<*, *, *> -> requestType.toRequestSpec(info.requestInfo)
+      is MethodInfo.PostInfo<*, *, *> -> requestType.toRequestSpec(info.requestInfo)
+      else -> null
+    },
+    security = if (info.securitySchemes.isNotEmpty()) listOf(
       // TODO support scopes
-      this.securitySchemes.associateWith { listOf() }
+      info.securitySchemes.associateWith { listOf() }
     ) else null
   )
 
@@ -79,7 +84,7 @@ object Kompendium {
     errorMap[it.createType()]
   }.toMap()
 
-  fun ResponseInfo.parseErrorInfo(
+  fun <TResp> ResponseInfo<TResp>.parseErrorInfo(
     errorType: KType,
     responseType: KType
   ) {
@@ -87,36 +92,43 @@ object Kompendium {
   }
 
   // TODO These two lookin' real similar 👀 Combine?
-  private fun KType.toRequestSpec(requestInfo: RequestInfo?): OpenApiSpecRequest? = when (requestInfo) {
-    null -> null
-    else -> {
-      OpenApiSpecRequest(
-        description = requestInfo.description,
-        content = resolveContent(requestInfo.mediaTypes) ?: mapOf()
-      )
+  private fun <TReq> KType.toRequestSpec(requestInfo: RequestInfo<TReq>?): OpenApiSpecRequest<TReq>? =
+    when (requestInfo) {
+      null -> null
+      else -> {
+        OpenApiSpecRequest(
+          description = requestInfo.description,
+          content = resolveContent(requestInfo.mediaTypes, requestInfo.examples) ?: mapOf()
+        )
+      }
     }
-  }
 
-  private fun KType.toResponseSpec(responseInfo: ResponseInfo?): Pair<Int, OpenApiSpecResponse>? = when (responseInfo) {
-    null -> null // TODO again probably revisit this
-    else -> {
-      val specResponse = OpenApiSpecResponse(
-        description = responseInfo.description,
-        content = resolveContent(responseInfo.mediaTypes)
-      )
-      Pair(responseInfo.status, specResponse)
+  private fun <TResp> KType.toResponseSpec(responseInfo: ResponseInfo<TResp>?): Pair<Int, OpenApiSpecResponse<TResp>>? =
+    when (responseInfo) {
+      null -> null // TODO again probably revisit this
+      else -> {
+        val specResponse = OpenApiSpecResponse(
+          description = responseInfo.description,
+          content = resolveContent(responseInfo.mediaTypes, responseInfo.examples)
+        )
+        Pair(responseInfo.status, specResponse)
+      }
     }
-  }
 
-  private fun KType.resolveContent(mediaTypes: List<String>): Map<String, OpenApiSpecMediaType>? {
+  private fun <F> KType.resolveContent(
+    mediaTypes: List<String>,
+    examples: Map<String, F>
+  ): Map<String, OpenApiSpecMediaType<F>>? {
     return if (this != Helpers.UNIT_TYPE && mediaTypes.isNotEmpty()) {
       mediaTypes.associateWith {
         val ref = getReferenceSlug()
-        OpenApiSpecMediaType.Referenced(OpenApiSpecReferenceObject(ref))
+        OpenApiSpecMediaType(
+          schema = OpenApiSpecReferenceObject(ref),
+          examples = examples.mapValues { (_, v) -> ExampleWrapper(v) }.ifEmpty { null }
+        )
       }
     } else null
   }
-
 
   // TODO God these annotations make this hideous... any way to improve?
   private fun KType.toParameterSpec(): List<OpenApiSpecParameter> {
@@ -151,7 +163,7 @@ object Kompendium {
     }
   }
 
-  internal fun resetSchema() {
+  fun resetSchema() {
     openApiSpec = OpenApiSpec(
       info = OpenApiSpecInfo(),
       servers = mutableListOf(),

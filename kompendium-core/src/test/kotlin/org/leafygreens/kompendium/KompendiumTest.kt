@@ -26,7 +26,10 @@ import org.leafygreens.kompendium.Notarized.notarizedGet
 import org.leafygreens.kompendium.Notarized.notarizedPost
 import org.leafygreens.kompendium.Notarized.notarizedPut
 import org.leafygreens.kompendium.annotations.QueryParam
-import org.leafygreens.kompendium.models.meta.MethodInfo
+import org.leafygreens.kompendium.models.meta.MethodInfo.GetInfo
+import org.leafygreens.kompendium.models.meta.MethodInfo.PostInfo
+import org.leafygreens.kompendium.models.meta.MethodInfo.PutInfo
+import org.leafygreens.kompendium.models.meta.MethodInfo.DeleteInfo
 import org.leafygreens.kompendium.models.meta.RequestInfo
 import org.leafygreens.kompendium.models.meta.ResponseInfo
 import org.leafygreens.kompendium.models.oas.OpenApiSpecInfo
@@ -39,7 +42,8 @@ import org.leafygreens.kompendium.util.ComplexRequest
 import org.leafygreens.kompendium.util.ExceptionResponse
 import org.leafygreens.kompendium.util.KompendiumHttpCodes
 import org.leafygreens.kompendium.util.TestCreatedResponse
-import org.leafygreens.kompendium.util.TestData
+import org.leafygreens.kompendium.util.TestHelpers.getFileSnapshot
+import org.leafygreens.kompendium.util.TestNested
 import org.leafygreens.kompendium.util.TestParams
 import org.leafygreens.kompendium.util.TestRequest
 import org.leafygreens.kompendium.util.TestResponse
@@ -67,7 +71,7 @@ internal class KompendiumTest {
       val json = handleRequest(HttpMethod.Get, "/openapi.json").response.content
 
       // expect
-      val expected = TestData.getFileSnapshot("notarized_get.json").trim()
+      val expected = getFileSnapshot("notarized_get.json").trim()
       assertEquals(expected, json, "The received json spec should match the expected content")
     }
   }
@@ -99,7 +103,7 @@ internal class KompendiumTest {
       val json = handleRequest(HttpMethod.Get, "/openapi.json").response.content
 
       // expect
-      val expected = TestData.getFileSnapshot("notarized_post.json").trim()
+      val expected = getFileSnapshot("notarized_post.json").trim()
       assertEquals(expected, json, "The received json spec should match the expected content")
     }
   }
@@ -131,7 +135,7 @@ internal class KompendiumTest {
       val json = handleRequest(HttpMethod.Get, "/openapi.json").response.content
 
       // expect
-      val expected = TestData.getFileSnapshot("notarized_put.json").trim()
+      val expected = getFileSnapshot("notarized_put.json").trim()
       assertEquals(expected, json, "The received json spec should match the expected content")
     }
   }
@@ -164,7 +168,7 @@ internal class KompendiumTest {
       val json = handleRequest(HttpMethod.Get, "/openapi.json").response.content
 
       // expect
-      val expected = TestData.getFileSnapshot("notarized_delete.json").trim()
+      val expected = getFileSnapshot("notarized_delete.json").trim()
       assertEquals(expected, json, "The received json spec should match the expected content")
     }
   }
@@ -195,7 +199,7 @@ internal class KompendiumTest {
       val json = handleRequest(HttpMethod.Get, "/openapi.json").response.content
 
       // expect
-      val expected = TestData.getFileSnapshot("path_parser.json").trim()
+      val expected = getFileSnapshot("path_parser.json").trim()
       assertEquals(expected, json, "The received json spec should match the expected content")
     }
   }
@@ -211,7 +215,7 @@ internal class KompendiumTest {
       val json = handleRequest(HttpMethod.Get, "/openapi.json").response.content
 
       // expect
-      val expected = TestData.getFileSnapshot("root_route.json").trim()
+      val expected = getFileSnapshot("root_route.json").trim()
       assertEquals(expected, json, "The received json spec should match the expected content")
     }
   }
@@ -243,7 +247,7 @@ internal class KompendiumTest {
       val json = handleRequest(HttpMethod.Get, "/openapi.json").response.content
 
       // expect
-      val expected = TestData.getFileSnapshot("nested_under_root.json").trim()
+      val expected = getFileSnapshot("nested_under_root.json").trim()
       assertEquals(expected, json, "The received json spec should match the expected content")
     }
   }
@@ -259,7 +263,7 @@ internal class KompendiumTest {
       val json = handleRequest(HttpMethod.Get, "/openapi.json").response.content
 
       // expect
-      val expected = TestData.getFileSnapshot("trailing_slash.json").trim()
+      val expected = getFileSnapshot("trailing_slash.json").trim()
       assertEquals(expected, json, "The received json spec should match the expected content")
     }
   }
@@ -291,7 +295,7 @@ internal class KompendiumTest {
       val json = handleRequest(HttpMethod.Get, "/openapi.json").response.content
 
       // expect
-      val expected = TestData.getFileSnapshot("complex_type.json").trim()
+      val expected = getFileSnapshot("complex_type.json").trim()
       assertEquals(expected, json, "The received json spec should match the expected content")
     }
   }
@@ -307,7 +311,7 @@ internal class KompendiumTest {
       val json = handleRequest(HttpMethod.Get, "/openapi.json").response.content
 
       // expect
-      val expected = TestData.getFileSnapshot("notarized_primitives.json").trim()
+      val expected = getFileSnapshot("notarized_primitives.json").trim()
       assertEquals(expected, json, "The received json spec should match the expected content")
     }
   }
@@ -323,7 +327,7 @@ internal class KompendiumTest {
       val json = handleRequest(HttpMethod.Get, "/openapi.json").response.content
 
       // expect
-      val expected = TestData.getFileSnapshot("response_list.json").trim()
+      val expected = getFileSnapshot("response_list.json").trim()
       assertEquals(expected, json, "The received json spec should match the expected content")
     }
   }
@@ -339,7 +343,7 @@ internal class KompendiumTest {
       val json = handleRequest(HttpMethod.Get, "/openapi.json").response.content
 
       // expect
-      val expected = TestData.getFileSnapshot("no_request_params_and_no_response_body.json").trim()
+      val expected = getFileSnapshot("no_request_params_and_no_response_body.json").trim()
       assertEquals(expected, json, "The received json spec should match the expected content")
     }
   }
@@ -355,7 +359,7 @@ internal class KompendiumTest {
       val json = handleRequest(HttpMethod.Get, "/openapi.json").response.content
 
       // expect
-      val expected = TestData.getFileSnapshot("non_required_params.json").trim()
+      val expected = getFileSnapshot("non_required_params.json").trim()
       assertEquals(expected, json, "The received json spec should match the expected content")
     }
   }
@@ -367,12 +371,11 @@ internal class KompendiumTest {
       docs()
       returnsList()
     }) {
-
       // do
       val html = handleRequest(HttpMethod.Get, "/docs").response.content
 
       // expected
-      val expected = TestData.getFileSnapshot("redoc.html")
+      val expected = getFileSnapshot("redoc.html")
       assertEquals(expected, html)
     }
   }
@@ -389,12 +392,10 @@ internal class KompendiumTest {
       val json = handleRequest(HttpMethod.Get, "/openapi.json").response.content
 
       // expect
-      val expected = TestData.getFileSnapshot("notarized_get_with_exception_response.json").trim()
+      val expected = getFileSnapshot("notarized_get_with_exception_response.json").trim()
       assertEquals(expected, json, "The received json spec should match the expected content")
     }
   }
-
-
 
   @Test
   fun `Generates additional responses when passed multiple throwables`() {
@@ -408,28 +409,52 @@ internal class KompendiumTest {
       val json = handleRequest(HttpMethod.Get, "/openapi.json").response.content
 
       // expect
-      val expected = TestData.getFileSnapshot("notarized_get_with_multiple_exception_responses.json").trim()
+      val expected = getFileSnapshot("notarized_get_with_multiple_exception_responses.json").trim()
+      assertEquals(expected, json, "The received json spec should match the expected content")
+    }
+  }
+
+  @Test
+  fun `Can generate example response and request bodies`() {
+    withTestApplication({
+      configModule()
+      docs()
+      withExamples()
+    }) {
+      // do
+      val json = handleRequest(HttpMethod.Get, "/openapi.json").response.content
+
+      // expect
+      val expected = getFileSnapshot("example_req_and_resp.json").trim()
       assertEquals(expected, json, "The received json spec should match the expected content")
     }
   }
 
   private companion object {
-    val testGetResponse = ResponseInfo(KompendiumHttpCodes.OK, "A Successful Endeavor")
-    val testPostResponse = ResponseInfo(KompendiumHttpCodes.CREATED, "A Successful Endeavor")
+    val testGetResponse = ResponseInfo<TestResponse>(KompendiumHttpCodes.OK, "A Successful Endeavor")
+    val testGetListResponse = ResponseInfo<List<TestResponse>>(KompendiumHttpCodes.OK, "A Successful List-y Endeavor")
+    val testPostResponse = ResponseInfo<TestCreatedResponse>(KompendiumHttpCodes.CREATED, "A Successful Endeavor")
+    val testPostResponseAgain = ResponseInfo<Boolean>(KompendiumHttpCodes.CREATED, "A Successful Endeavor")
     val testDeleteResponse =
-      ResponseInfo(KompendiumHttpCodes.NO_CONTENT, "A Successful Endeavor", mediaTypes = emptyList())
-    val testRequest = RequestInfo("A Test request")
-    val testGetInfo = MethodInfo("Another get test", "testing more", testGetResponse)
+      ResponseInfo<Unit>(KompendiumHttpCodes.NO_CONTENT, "A Successful Endeavor", mediaTypes = emptyList())
+    val testRequest = RequestInfo<TestRequest>("A Test request")
+    val testRequestAgain = RequestInfo<Int>("A Test request")
+    val complexRequest = RequestInfo<ComplexRequest>("A Complex request")
+    val testGetInfo = GetInfo<TestParams, TestResponse>(summary = "Another get test", description = "testing more", responseInfo = testGetResponse)
+    val testGetInfoAgain = GetInfo<TestParams, List<TestResponse>>(summary = "Another get test", description = "testing more", responseInfo = testGetListResponse)
     val testGetWithException = testGetInfo.copy(
       canThrow = setOf(Exception::class)
     )
     val testGetWithMultipleExceptions = testGetInfo.copy(
       canThrow = setOf(AccessDeniedException::class, Exception::class)
     )
-    val testPostInfo = MethodInfo("Test post endpoint", "Post your tests here!", testPostResponse, testRequest)
-    val testPutInfo = MethodInfo("Test put endpoint", "Put your tests here!", testPostResponse, testRequest)
-    val testDeleteInfo = MethodInfo("Test delete endpoint", "testing my deletes", testDeleteResponse)
-    val emptyTestGetInfo = MethodInfo("No request params and response body", "testing more")
+    val testPostInfo = PostInfo<TestParams, TestRequest, TestCreatedResponse>(summary = "Test post endpoint", description = "Post your tests here!", responseInfo = testPostResponse, requestInfo = testRequest)
+    val testPutInfo = PutInfo<Unit, ComplexRequest, TestCreatedResponse>(summary = "Test put endpoint", description = "Put your tests here!", responseInfo = testPostResponse, requestInfo = complexRequest)
+    val testPutInfoAlso = PutInfo<TestParams, TestRequest, TestCreatedResponse>(summary = "Test put endpoint", description = "Put your tests here!", responseInfo = testPostResponse, requestInfo = testRequest)
+    val testPutInfoAgain = PutInfo<Unit, Int, Boolean>(summary = "Test put endpoint", description = "Put your tests here!", responseInfo = testPostResponseAgain, requestInfo = testRequestAgain)
+    val testDeleteInfo = DeleteInfo<TestParams, Unit>(summary = "Test delete endpoint", description =  "testing my deletes", responseInfo = testDeleteResponse)
+    val emptyTestGetInfo = GetInfo<OptionalParams, Unit>(summary = "No request params and response body", description =  "testing more")
+    val trulyEmptyTestGetInfo = GetInfo<Unit, Unit>(summary = "No request params and response body", description = "testing more")
   }
 
   private fun Application.configModule() {
@@ -463,7 +488,7 @@ internal class KompendiumTest {
   private fun Application.notarizedGetWithNotarizedException() {
     routing {
       route("/test") {
-        notarizedGet<TestParams, TestResponse>(testGetWithException) {
+        notarizedGet(testGetWithException) {
           error("something terrible has happened!")
         }
       }
@@ -473,7 +498,7 @@ internal class KompendiumTest {
   private fun Application.notarizedGetWithMultipleThrowables() {
     routing {
       route("/test") {
-        notarizedGet<TestParams, TestResponse>(testGetWithMultipleExceptions) {
+        notarizedGet(testGetWithMultipleExceptions) {
           error("something terrible has happened!")
         }
       }
@@ -483,7 +508,7 @@ internal class KompendiumTest {
   private fun Application.notarizedGetModule() {
     routing {
       route("/test") {
-        notarizedGet<TestParams, TestResponse>(testGetInfo) {
+        notarizedGet(testGetInfo) {
           call.respondText { "hey dude ‼️ congratz on the get request" }
         }
       }
@@ -493,7 +518,7 @@ internal class KompendiumTest {
   private fun Application.notarizedPostModule() {
     routing {
       route("/test") {
-        notarizedPost<TestParams, TestRequest, TestCreatedResponse>(testPostInfo) {
+        notarizedPost(testPostInfo) {
           call.respondText { "hey dude ✌️ congratz on the post request" }
         }
       }
@@ -503,7 +528,7 @@ internal class KompendiumTest {
   private fun Application.notarizedDeleteModule() {
     routing {
       route("/test") {
-        notarizedDelete<TestParams, Unit>(testDeleteInfo) {
+        notarizedDelete(testDeleteInfo) {
           call.respond(HttpStatusCode.NoContent)
         }
       }
@@ -513,7 +538,7 @@ internal class KompendiumTest {
   private fun Application.notarizedPutModule() {
     routing {
       route("/test") {
-        notarizedPut<TestParams, TestRequest, TestCreatedResponse>(testPutInfo) {
+        notarizedPut(testPutInfoAlso) {
           call.respondText { "hey pal 🌝 whatcha doin' here?" }
         }
       }
@@ -528,7 +553,7 @@ internal class KompendiumTest {
             route("/complex") {
               route("path") {
                 route("with/an/{id}") {
-                  notarizedGet<TestParams, TestResponse>(testGetInfo) {
+                  notarizedGet(testGetInfo) {
                     call.respondText { "Aww you followed this whole route 🥺" }
                   }
                 }
@@ -543,7 +568,7 @@ internal class KompendiumTest {
   private fun Application.rootModule() {
     routing {
       route("/") {
-        notarizedGet<TestParams, TestResponse>(testGetInfo) {
+        notarizedGet(testGetInfo) {
           call.respondText { "☎️🏠🌲" }
         }
       }
@@ -554,7 +579,7 @@ internal class KompendiumTest {
     routing {
       route("/") {
         route("/testerino") {
-          notarizedGet<TestParams, TestResponse>(testGetInfo) {
+          notarizedGet(testGetInfo) {
             call.respondText { "🤔🔥" }
           }
         }
@@ -566,7 +591,7 @@ internal class KompendiumTest {
     routing {
       route("/test") {
         route("/") {
-          notarizedGet<TestParams, TestResponse>(testGetInfo) {
+          notarizedGet(testGetInfo) {
             call.respondText { "🙀👾" }
           }
         }
@@ -577,7 +602,7 @@ internal class KompendiumTest {
   private fun Application.returnsList() {
     routing {
       route("/test") {
-        notarizedGet<TestParams, List<TestResponse>>(testGetInfo) {
+        notarizedGet(testGetInfoAgain) {
           call.respondText { "hey dude ur doing amazing work!" }
         }
       }
@@ -587,7 +612,7 @@ internal class KompendiumTest {
   private fun Application.complexType() {
     routing {
       route("/test") {
-        notarizedPut<Unit, ComplexRequest, TestResponse>(testPutInfo) {
+        notarizedPut(testPutInfo) {
           call.respondText { "heya" }
         }
       }
@@ -597,7 +622,7 @@ internal class KompendiumTest {
   private fun Application.primitives() {
     routing {
       route("/test") {
-        notarizedPut<Unit, Int, Boolean>(testPutInfo) {
+        notarizedPut(testPutInfoAgain) {
           call.respondText { "heya" }
         }
       }
@@ -607,7 +632,32 @@ internal class KompendiumTest {
   private fun Application.emptyGet() {
     routing {
       route("/test/empty") {
-        notarizedGet<Unit, Unit>(emptyTestGetInfo) {
+        notarizedGet(trulyEmptyTestGetInfo) {
+          call.respond(HttpStatusCode.OK)
+        }
+      }
+    }
+  }
+
+  private fun Application.withExamples() {
+    routing {
+      route("/test/examples") {
+        notarizedPost(info = PostInfo<Unit, TestRequest, TestResponse>(
+          summary = "Example Parameters",
+          description = "A test for setting parameter examples",
+          requestInfo = RequestInfo(
+            description = "Test",
+            examples = mapOf(
+              "one" to TestRequest(fieldName = TestNested(nesty = "hey"), b = 4.0, aaa = emptyList()),
+              "two" to TestRequest(fieldName = TestNested(nesty = "hello"), b = 3.8, aaa = listOf(31324234))
+            )
+          ),
+          responseInfo = ResponseInfo(
+            status = 201,
+            description = "nice",
+            examples = mapOf("test" to TestResponse(c = "spud"))
+          ),
+        )) {
           call.respond(HttpStatusCode.OK)
         }
       }
@@ -618,7 +668,7 @@ internal class KompendiumTest {
   private fun Application.nonRequiredParamsGet() {
     routing {
       route("/test/optional") {
-        notarizedGet<OptionalParams, Unit>(emptyTestGetInfo) {
+        notarizedGet(emptyTestGetInfo) {
           call.respond(HttpStatusCode.OK)
         }
       }

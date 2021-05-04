@@ -2,16 +2,26 @@ package org.leafygreens.kompendium.auth
 
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.databind.SerializationFeature
-import io.ktor.application.*
-import io.ktor.auth.*
-import io.ktor.features.*
-import io.ktor.http.*
-import io.ktor.jackson.*
-import io.ktor.response.*
-import io.ktor.routing.*
-import io.ktor.server.testing.*
+import io.ktor.application.Application
+import io.ktor.application.call
+import io.ktor.application.install
+import io.ktor.auth.Authentication
+import io.ktor.auth.UserIdPrincipal
+import io.ktor.auth.authenticate
+import io.ktor.features.ContentNegotiation
+import io.ktor.http.ContentType
+import io.ktor.http.HttpMethod
+import io.ktor.jackson.jackson
+import io.ktor.response.respondText
+import io.ktor.routing.route
+import io.ktor.routing.routing
+import io.ktor.server.testing.handleRequest
+import io.ktor.server.testing.withTestApplication
+import kotlin.test.AfterTest
+import kotlin.test.assertEquals
 import org.junit.Test
 import org.leafygreens.kompendium.Kompendium
+import org.leafygreens.kompendium.Notarized.notarizedGet
 import org.leafygreens.kompendium.auth.KompendiumAuth.notarizedBasic
 import org.leafygreens.kompendium.auth.KompendiumAuth.notarizedJwt
 import org.leafygreens.kompendium.auth.util.TestData
@@ -19,27 +29,16 @@ import org.leafygreens.kompendium.auth.util.TestParams
 import org.leafygreens.kompendium.auth.util.TestResponse
 import org.leafygreens.kompendium.models.meta.MethodInfo
 import org.leafygreens.kompendium.models.meta.ResponseInfo
-import org.leafygreens.kompendium.models.oas.OpenApiSpec
-import org.leafygreens.kompendium.models.oas.OpenApiSpecInfo
 import org.leafygreens.kompendium.routes.openApi
 import org.leafygreens.kompendium.routes.redoc
 import org.leafygreens.kompendium.util.KompendiumHttpCodes
-import kotlin.test.AfterTest
-import kotlin.test.assertEquals
-import org.leafygreens.kompendium.Notarized.notarizedGet
 
 internal class KompendiumAuthTest {
 
   @AfterTest
   fun `reset kompendium`() {
-    Kompendium.openApiSpec = OpenApiSpec(
-      info = OpenApiSpecInfo(),
-      servers = mutableListOf(),
-      paths = mutableMapOf()
-    )
-    Kompendium.cache = emptyMap()
+    Kompendium.resetSchema()
   }
-
 
   @Test
   fun `Notarized Get with basic authentication records all expected information`() {
@@ -172,7 +171,7 @@ internal class KompendiumAuthTest {
     routing {
       authenticate(*authenticationConfigName) {
         route(TestData.getRoutePath) {
-          notarizedGet<TestParams, TestResponse>(testGetInfo(*authenticationConfigName)) {
+          notarizedGet(testGetInfo(*authenticationConfigName)) {
             call.respondText { "hey dude ‼️ congratz on the get request" }
           }
         }
@@ -190,8 +189,13 @@ internal class KompendiumAuthTest {
   }
 
   private companion object {
-    val testGetResponse = ResponseInfo(KompendiumHttpCodes.OK, "A Successful Endeavor")
+    val testGetResponse = ResponseInfo<TestResponse>(KompendiumHttpCodes.OK, "A Successful Endeavor")
     fun testGetInfo(vararg security: String) =
-      MethodInfo("Another get test", "testing more", testGetResponse, securitySchemes = security.toSet())
+      MethodInfo.GetInfo<TestParams, TestResponse>(
+        summary = "Another get test",
+        description = "testing more",
+        responseInfo = testGetResponse,
+        securitySchemes = security.toSet()
+      )
   }
 }

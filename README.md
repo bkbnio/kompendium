@@ -91,72 +91,44 @@ that a notarized route needs to analyze.
 
 ## Examples
 
-The full source code can be found in the `kompendium-playground` module.  Here we show just the adjustments 
-needed to a standard Ktor server to get up and running in Kompendium.  
+The full source code can be found in the `kompendium-playground` module. Here is a simple get endpoint example 
 
 ```kotlin
 // Minimal API Example
-fun main() {
-  embeddedServer(
-    Netty,
-    port = 8081,
-    module = Application::mainModule
-  ).start(wait = true)
-}
-
 fun Application.mainModule() {
-  install(ContentNegotiation) {
-    jackson {
-      enable(SerializationFeature.INDENT_OUTPUT)
-      setSerializationInclusion(JsonInclude.Include.NON_NULL)
-    }
-  }
   install(StatusPages) {
-    notarizedException<Exception, ExceptionResponse>(exceptionResponseInfo) {
+    notarizedException<Exception, ExceptionResponse>(
+      info = ResponseInfo(
+        KompendiumHttpCodes.BAD_REQUEST,
+        "Bad Things Happened"
+      )
+    ) {
       call.respond(HttpStatusCode.BadRequest, ExceptionResponse("Why you do dis?"))
     }
   }
   routing {
-    openApi()
-    redoc()
-    route("/test") {
-      route("/{id}") {
-        notarizedGet<ExampleParams, ExampleResponse>(testIdGetInfo) {
-          call.respondText("get by id")
-        }
-      }
-      route("/single") {
-        notarizedGet<ExampleParams, ExampleResponse>(testSingleGetInfo) {
-          call.respondText("get single")
-        }
-        notarizedPost<Unit, ExampleRequest, ExampleCreatedResponse>(testSinglePostInfo) {
-          call.respondText("test post")
-        }
-        notarizedPut<ExampleParams, ExampleRequest, ExampleCreatedResponse>(testSinglePutInfo) {
-          call.respondText { "hey" }
-        }
-        notarizedDelete<Unit, Unit>(testSingleDeleteInfo) {
-          call.respondText { "heya" }
-        }
-      }
-      route("/error") {
-        notarizedGet<Unit, ExampleResponse>(testSingleGetInfoWithThrowable) {
-          error("bad things just happened")
-        }
+    openApi(oas)
+    redoc(oas)
+    swaggerUI()
+    route("/potato/spud") {
+      notarizedGet(simpleGetInfo) {
+        call.respond(HttpStatusCode.OK)
       }
     }
   }
 }
 
-val testSingleGetInfoWithThrowable = testSingleGetInfo.copy(
-  summary = "Show me the error baby 🙏",
-  canThrow = setOf(Exception::class) // Must match an exception that has been notarized in the `StatusPages`
+val simpleGetInfo = GetInfo<Unit, ExampleResponse>(
+  summary = "Example Parameters",
+  description = "A test for setting parameter examples",
+  responseInfo = ResponseInfo(
+    status = 200,
+    description = "nice",
+    examples = mapOf("test" to ExampleResponse(c = "spud"))
+  ),
+  canThrow = setOf(Exception::class)
 )
 ```
-
-When run in the playground, this would output the following at `/openapi.json` 
-
-https://gist.github.com/rgbrizzlehizzle/b9544922f2e99a2815177f8bdbf80668
 
 ### Kompendium Auth and security schemes
 
@@ -167,42 +139,40 @@ At the moment, the basic and jwt authentication is only supported.
 
 A minimal example would be:
 ```kotlin
-  install(Authentication) {
-    notarizedBasic("basic") {
-      realm = "Ktor realm 1"
-      // configure basic authentication provider..
-    }
-    notarizedJwt("jwt") {
-      realm = "Ktor realm 2"
-      // configure jwt authentication provider...
-    }
+install(Authentication) {
+  notarizedBasic("basic") {
+    realm = "Ktor realm 1"
+    // configure basic authentication provider..
   }
-  routing {
-    authenticate("basic") {
-      route("/basic_auth") {
-        notarizedGet<TestParams, TestResponse>(
-          MethodInfo(
-            // securitySchemes needs to be set
-            "Another get test", "testing more", testGetResponse, securitySchemes = setOf("basic")
-          )
-        ) {
-          call.respondText { "basic auth" }
-        }
-      }
-    }
-    authenticate("jwt") {
-      route("/jwt") {
-        notarizedGet<TestParams, TestResponse>(
-          MethodInfo(
-            // securitySchemes needs to be set
-            "Another get test", "testing more", testGetResponse, securitySchemes = setOf("jwt")
-          )
-        ) {
-          call.respondText { "jwt" }
-        }
+  notarizedJwt("jwt") {
+    realm = "Ktor realm 2"
+    // configure jwt authentication provider...
+  }
+}
+routing {
+  authenticate("basic") {
+    route("/basic_auth") {
+      notarizedGet(basicAuthGetInfo) {
+        call.respondText { "basic auth" }
       }
     }
   }
+  authenticate("jwt") {
+    route("/jwt") {
+      notarizedGet(jwtAuthGetInfo) {
+        call.respondText { "jwt" }
+      }
+    }
+  }
+}
+
+val basicAuthGetInfo = MethodInfo<Unit, ExampleResponse>(
+  summary = "Another get test", 
+  description = "testing more", 
+  responseInfo = testGetResponse, 
+  securitySchemes = setOf("basic")
+)
+val jwtAuthGetInfo = basicAuthGetInfo.copy(securitySchemes = setOf("jwt"))
 ```
 
 ### Enabling Swagger ui

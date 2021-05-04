@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.8.0] - May 4th, 2021
+
+### Added
+
+- Support for example request and response bodies.  Parameter examples / defaults are a separate issue for later.
+
+### Changed
+
+- Converted `MethodInfo` into a sealed class with distinct method types for Get, Post, Put, and Delete
+
 ## [0.7.0] - April 29th, 2021
 
 ### Added
@@ -10,6 +20,7 @@
 ### Changed
 
 - Refactored `kompendium-core` to break up the `Kompendium` object into slightly more manageable chunks
+- Notarization Parameters can now be inferred from method info 
 
 ## [0.6.2] - April 23rd, 2021
 

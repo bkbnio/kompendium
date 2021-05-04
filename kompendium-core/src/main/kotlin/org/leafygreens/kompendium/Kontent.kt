@@ -15,10 +15,10 @@ import org.leafygreens.kompendium.models.oas.FormatSchema
 import org.leafygreens.kompendium.models.oas.ObjectSchema
 import org.leafygreens.kompendium.models.oas.ReferencedSchema
 import org.leafygreens.kompendium.models.oas.SimpleSchema
-import org.leafygreens.kompendium.util.Helpers
 import org.leafygreens.kompendium.util.Helpers.COMPONENT_SLUG
 import org.leafygreens.kompendium.util.Helpers.genericNameAdapter
 import org.leafygreens.kompendium.util.Helpers.getReferenceSlug
+import org.leafygreens.kompendium.util.Helpers.logged
 import org.slf4j.LoggerFactory
 
 object Kontent {
@@ -45,7 +45,7 @@ object Kontent {
   fun generateKTypeKontent(
     type: KType,
     cache: SchemaMap = emptyMap()
-  ): SchemaMap = Helpers.logged(object {}.javaClass.enclosingMethod.name, mapOf("cache" to cache)) {
+  ): SchemaMap = logged(object {}.javaClass.enclosingMethod.name, mapOf("cache" to cache)) {
     logger.debug("Parsing Kontent of $type")
     when (val clazz = type.classifier as KClass<*>) {
       Unit::class -> cache
