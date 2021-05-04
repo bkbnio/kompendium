@@ -30,7 +30,10 @@ import org.leafygreens.kompendium.annotations.KompendiumField
 import org.leafygreens.kompendium.annotations.PathParam
 import org.leafygreens.kompendium.annotations.QueryParam
 import org.leafygreens.kompendium.auth.KompendiumAuth.notarizedBasic
-import org.leafygreens.kompendium.models.meta.MethodInfo
+import org.leafygreens.kompendium.models.meta.MethodInfo.GetInfo
+import org.leafygreens.kompendium.models.meta.MethodInfo.PostInfo
+import org.leafygreens.kompendium.models.meta.MethodInfo.PutInfo
+import org.leafygreens.kompendium.models.meta.MethodInfo.DeleteInfo
 import org.leafygreens.kompendium.models.meta.RequestInfo
 import org.leafygreens.kompendium.models.meta.ResponseInfo
 import org.leafygreens.kompendium.models.oas.OpenApiSpecInfo
@@ -38,6 +41,7 @@ import org.leafygreens.kompendium.models.oas.OpenApiSpecInfoContact
 import org.leafygreens.kompendium.models.oas.OpenApiSpecInfoLicense
 import org.leafygreens.kompendium.models.oas.OpenApiSpecServer
 import org.leafygreens.kompendium.playground.KompendiumTOC.testAuthenticatedSingleGetInfo
+import org.leafygreens.kompendium.playground.KompendiumTOC.testGetWithExamples
 import org.leafygreens.kompendium.playground.KompendiumTOC.testIdGetInfo
 import org.leafygreens.kompendium.playground.KompendiumTOC.testSingleDeleteInfo
 import org.leafygreens.kompendium.playground.KompendiumTOC.testSingleGetInfo
@@ -129,15 +133,7 @@ fun Application.mainModule() {
     redoc(oas)
     swaggerUI()
     route("/potato/spud") {
-      notarizedGet(info = MethodInfo<Unit, Unit, ExampleResponse>(
-        summary = "Example Parameters",
-        description = "A test for setting parameter examples",
-        responseInfo = ResponseInfo(
-          status = 200,
-          description = "nice",
-          examples = mapOf("test" to ExampleResponse(c = "spud"))
-        ),
-      )) {
+      notarizedGet(testGetWithExamples) {
         call.respond(HttpStatusCode.OK)
       }
     }
@@ -203,7 +199,16 @@ data class ExceptionResponse(val message: String)
 data class ExampleCreatedResponse(val id: Int, val c: String)
 
 object KompendiumTOC {
-  val testIdGetInfo = MethodInfo<ExampleParams, Unit, ExampleResponse>(
+  val testGetWithExamples = GetInfo<Unit, ExampleResponse>(
+    summary = "Example Parameters",
+    description = "A test for setting parameter examples",
+    responseInfo = ResponseInfo(
+      status = 200,
+      description = "nice",
+      examples = mapOf("test" to ExampleResponse(c = "spud"))
+    ),
+  )
+  val testIdGetInfo = GetInfo<ExampleParams, ExampleResponse>(
     summary = "Get Test",
     description = "Test for the getting",
     tags = setOf("test", "sample", "get"),
@@ -212,7 +217,7 @@ object KompendiumTOC {
       description = "Returns sample info"
     )
   )
-  val testSingleGetInfo = MethodInfo<Unit, Unit, ExampleResponse>(
+  val testSingleGetInfo = GetInfo<Unit, ExampleResponse>(
     summary = "Another get test",
     description = "testing more",
     tags = setOf("anotherTest", "sample"),
@@ -225,7 +230,7 @@ object KompendiumTOC {
     summary = "Show me the error baby 🙏",
     canThrow = setOf(Exception::class)
   )
-  val testSinglePostInfo = MethodInfo<Unit, ExampleRequest, ExampleCreatedResponse>(
+  val testSinglePostInfo = PostInfo<Unit, ExampleRequest, ExampleCreatedResponse>(
     summary = "Test post endpoint",
     description = "Post your tests here!",
     requestInfo = RequestInfo(
@@ -236,7 +241,7 @@ object KompendiumTOC {
       description = "Worlds most complex response"
     )
   )
-  val testSinglePutInfo = MethodInfo<JustQuery, ExampleRequest, ExampleCreatedResponse>(
+  val testSinglePutInfo = PutInfo<JustQuery, ExampleRequest, ExampleCreatedResponse>(
     summary = "Test put endpoint",
     description = "Put your tests here!",
     requestInfo = RequestInfo(
@@ -247,7 +252,7 @@ object KompendiumTOC {
       description = "What we give you when u do the puts"
     )
   )
-  val testSingleDeleteInfo = MethodInfo<Unit, Unit, Unit>(
+  val testSingleDeleteInfo = DeleteInfo<Unit, Unit>(
     summary = "Test delete endpoint",
     description = "testing my deletes",
     responseInfo = ResponseInfo(
@@ -256,7 +261,7 @@ object KompendiumTOC {
       mediaTypes = emptyList()
     )
   )
-  val testAuthenticatedSingleGetInfo = MethodInfo<Unit, Unit, Unit>(
+  val testAuthenticatedSingleGetInfo = GetInfo<Unit, Unit>(
     summary = "Another get test",
     description = "testing more",
     tags = setOf("anotherTest", "sample"),

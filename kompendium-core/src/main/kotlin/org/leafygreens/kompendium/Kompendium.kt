@@ -46,33 +46,37 @@ object Kompendium {
   var pathCalculator: PathCalculator = CorePathCalculator()
 
   // TODO here down is a mess, needs refactor once core functionality is in place
-  fun <TParam, TReq, TResp> MethodInfo<TParam, TReq, TResp>.parseMethodInfo(
-    method: HttpMethod,
+  fun parseMethodInfo(
+    info: MethodInfo<*, *>,
     paramType: KType,
     requestType: KType,
     responseType: KType
   ) = OpenApiSpecPathItemOperation(
-    summary = this.summary,
-    description = this.description,
-    tags = this.tags,
-    deprecated = this.deprecated,
+    summary = info.summary,
+    description = info.description,
+    tags = info.tags,
+    deprecated = info.deprecated,
     parameters = paramType.toParameterSpec(),
-    responses = responseType.toResponseSpec(responseInfo)?.let { mapOf(it) }.let {
+    responses = responseType.toResponseSpec(info.responseInfo)?.let { mapOf(it) }.let {
       when (it) {
         null -> {
-          val throwables = parseThrowables(canThrow)
+          val throwables = parseThrowables(info.canThrow)
           when (throwables.isEmpty()) {
             true -> null
             false -> throwables
           }
         }
-        else -> it.plus(parseThrowables(canThrow))
+        else -> it.plus(parseThrowables(info.canThrow))
       }
     },
-    requestBody = if (method != HttpMethod.Get) requestType.toRequestSpec(requestInfo) else null,
-    security = if (this.securitySchemes.isNotEmpty()) listOf(
+    requestBody = when (info) {
+      is MethodInfo.PutInfo<*, *, *> -> requestType.toRequestSpec(info.requestInfo)
+      is MethodInfo.PostInfo<*, *, *> -> requestType.toRequestSpec(info.requestInfo)
+      else -> null
+    },
+    security = if (info.securitySchemes.isNotEmpty()) listOf(
       // TODO support scopes
-      this.securitySchemes.associateWith { listOf() }
+      info.securitySchemes.associateWith { listOf() }
     ) else null
   )
 

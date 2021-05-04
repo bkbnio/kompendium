@@ -191,10 +191,10 @@ internal class KompendiumAuthTest {
   private companion object {
     val testGetResponse = ResponseInfo<TestResponse>(KompendiumHttpCodes.OK, "A Successful Endeavor")
     fun testGetInfo(vararg security: String) =
-      MethodInfo<TestParams, Unit, TestResponse>(
-        "Another get test",
-        "testing more",
-        testGetResponse,
+      MethodInfo.GetInfo<TestParams, TestResponse>(
+        summary = "Another get test",
+        description = "testing more",
+        responseInfo = testGetResponse,
         securitySchemes = security.toSet()
       )
   }

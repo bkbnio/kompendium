@@ -26,7 +26,10 @@ import org.leafygreens.kompendium.Notarized.notarizedGet
 import org.leafygreens.kompendium.Notarized.notarizedPost
 import org.leafygreens.kompendium.Notarized.notarizedPut
 import org.leafygreens.kompendium.annotations.QueryParam
-import org.leafygreens.kompendium.models.meta.MethodInfo
+import org.leafygreens.kompendium.models.meta.MethodInfo.GetInfo
+import org.leafygreens.kompendium.models.meta.MethodInfo.PostInfo
+import org.leafygreens.kompendium.models.meta.MethodInfo.PutInfo
+import org.leafygreens.kompendium.models.meta.MethodInfo.DeleteInfo
 import org.leafygreens.kompendium.models.meta.RequestInfo
 import org.leafygreens.kompendium.models.meta.ResponseInfo
 import org.leafygreens.kompendium.models.oas.OpenApiSpecInfo
@@ -437,21 +440,21 @@ internal class KompendiumTest {
     val testRequest = RequestInfo<TestRequest>("A Test request")
     val testRequestAgain = RequestInfo<Int>("A Test request")
     val complexRequest = RequestInfo<ComplexRequest>("A Complex request")
-    val testGetInfo = MethodInfo<TestParams, Unit, TestResponse>("Another get test", "testing more", testGetResponse)
-    val testGetInfoAgain = MethodInfo<TestParams, Unit, List<TestResponse>>("Another get test", "testing more", testGetListResponse)
+    val testGetInfo = GetInfo<TestParams, TestResponse>(summary = "Another get test", description = "testing more", responseInfo = testGetResponse)
+    val testGetInfoAgain = GetInfo<TestParams, List<TestResponse>>(summary = "Another get test", description = "testing more", responseInfo = testGetListResponse)
     val testGetWithException = testGetInfo.copy(
       canThrow = setOf(Exception::class)
     )
     val testGetWithMultipleExceptions = testGetInfo.copy(
       canThrow = setOf(AccessDeniedException::class, Exception::class)
     )
-    val testPostInfo = MethodInfo<TestParams, TestRequest, TestCreatedResponse>("Test post endpoint", "Post your tests here!", testPostResponse, testRequest)
-    val testPutInfo = MethodInfo<Unit, ComplexRequest, TestCreatedResponse>("Test put endpoint", "Put your tests here!", testPostResponse, complexRequest)
-    val testPutInfoAlso = MethodInfo<TestParams, TestRequest, TestCreatedResponse>("Test put endpoint", "Put your tests here!", testPostResponse, testRequest)
-    val testPutInfoAgain = MethodInfo<Unit, Int, Boolean>("Test put endpoint", "Put your tests here!", testPostResponseAgain, testRequestAgain)
-    val testDeleteInfo = MethodInfo<TestParams, Unit, Unit>("Test delete endpoint", "testing my deletes", testDeleteResponse)
-    val emptyTestGetInfo = MethodInfo<OptionalParams, Unit, Unit>("No request params and response body", "testing more")
-    val trulyEmptyTestGetInfo = MethodInfo<Unit, Unit, Unit>("No request params and response body", "testing more")
+    val testPostInfo = PostInfo<TestParams, TestRequest, TestCreatedResponse>(summary = "Test post endpoint", description = "Post your tests here!", responseInfo = testPostResponse, requestInfo = testRequest)
+    val testPutInfo = PutInfo<Unit, ComplexRequest, TestCreatedResponse>(summary = "Test put endpoint", description = "Put your tests here!", responseInfo = testPostResponse, requestInfo = complexRequest)
+    val testPutInfoAlso = PutInfo<TestParams, TestRequest, TestCreatedResponse>(summary = "Test put endpoint", description = "Put your tests here!", responseInfo = testPostResponse, requestInfo = testRequest)
+    val testPutInfoAgain = PutInfo<Unit, Int, Boolean>(summary = "Test put endpoint", description = "Put your tests here!", responseInfo = testPostResponseAgain, requestInfo = testRequestAgain)
+    val testDeleteInfo = DeleteInfo<TestParams, Unit>(summary = "Test delete endpoint", description =  "testing my deletes", responseInfo = testDeleteResponse)
+    val emptyTestGetInfo = GetInfo<OptionalParams, Unit>(summary = "No request params and response body", description =  "testing more")
+    val trulyEmptyTestGetInfo = GetInfo<Unit, Unit>(summary = "No request params and response body", description = "testing more")
   }
 
   private fun Application.configModule() {
@@ -485,7 +488,7 @@ internal class KompendiumTest {
   private fun Application.notarizedGetWithNotarizedException() {
     routing {
       route("/test") {
-        notarizedGet<TestParams, TestResponse>(testGetWithException) {
+        notarizedGet(testGetWithException) {
           error("something terrible has happened!")
         }
       }
@@ -639,7 +642,7 @@ internal class KompendiumTest {
   private fun Application.withExamples() {
     routing {
       route("/test/examples") {
-        notarizedPost(info = MethodInfo<Unit, TestRequest, TestResponse>(
+        notarizedPost(info = PostInfo<Unit, TestRequest, TestResponse>(
           summary = "Example Parameters",
           description = "A test for setting parameter examples",
           requestInfo = RequestInfo(
