@@ -86,8 +86,8 @@ fun main() {
 }
 
 var featuresInstalled = false
-fun Application.mainModule() {
-  // only install once in case of auto reload
+
+fun Application.configModule() {
   if (!featuresInstalled) {
     install(ContentNegotiation) {
       jackson {
@@ -120,33 +120,50 @@ fun Application.mainModule() {
     }
     featuresInstalled = true
   }
+}
+
+fun Application.mainModule() {
+  configModule()
   routing {
     openApi(oas)
     redoc(oas)
     swaggerUI()
+    route("/potato/spud") {
+      notarizedGet(info = MethodInfo<Unit, Unit, ExampleResponse>(
+        summary = "Example Parameters",
+        description = "A test for setting parameter examples",
+        responseInfo = ResponseInfo(
+          status = 200,
+          description = "nice",
+          examples = mapOf("test" to ExampleResponse(c = "spud"))
+        ),
+      )) {
+        call.respond(HttpStatusCode.OK)
+      }
+    }
     route("/test") {
       route("/{id}") {
-        notarizedGet<ExampleParams, ExampleResponse>(testIdGetInfo) {
+        notarizedGet(testIdGetInfo) {
           call.respondText("get by id")
         }
       }
       route("/single") {
-        notarizedGet<Unit, ExampleResponse>(testSingleGetInfo) {
+        notarizedGet(testSingleGetInfo) {
           call.respondText("get single")
         }
-        notarizedPost<Unit, ExampleRequest, ExampleCreatedResponse>(testSinglePostInfo) {
+        notarizedPost(testSinglePostInfo) {
           call.respondText("test post")
         }
-        notarizedPut<JustQuery, ExampleRequest, ExampleCreatedResponse>(testSinglePutInfo) {
+        notarizedPut(testSinglePutInfo) {
           call.respondText { "hey" }
         }
-        notarizedDelete<Unit, Unit>(testSingleDeleteInfo) {
+        notarizedDelete(testSingleDeleteInfo) {
           call.respondText { "heya" }
         }
       }
       authenticate("basic") {
         route("/authenticated/single") {
-          notarizedGet<Unit, Unit>(testAuthenticatedSingleGetInfo) {
+          notarizedGet(testAuthenticatedSingleGetInfo) {
             call.respond(HttpStatusCode.OK)
           }
         }
@@ -186,7 +203,7 @@ data class ExceptionResponse(val message: String)
 data class ExampleCreatedResponse(val id: Int, val c: String)
 
 object KompendiumTOC {
-  val testIdGetInfo = MethodInfo(
+  val testIdGetInfo = MethodInfo<ExampleParams, Unit, ExampleResponse>(
     summary = "Get Test",
     description = "Test for the getting",
     tags = setOf("test", "sample", "get"),
@@ -195,7 +212,7 @@ object KompendiumTOC {
       description = "Returns sample info"
     )
   )
-  val testSingleGetInfo = MethodInfo(
+  val testSingleGetInfo = MethodInfo<Unit, Unit, ExampleResponse>(
     summary = "Another get test",
     description = "testing more",
     tags = setOf("anotherTest", "sample"),
@@ -208,7 +225,7 @@ object KompendiumTOC {
     summary = "Show me the error baby 🙏",
     canThrow = setOf(Exception::class)
   )
-  val testSinglePostInfo = MethodInfo(
+  val testSinglePostInfo = MethodInfo<Unit, ExampleRequest, ExampleCreatedResponse>(
     summary = "Test post endpoint",
     description = "Post your tests here!",
     requestInfo = RequestInfo(
@@ -219,7 +236,7 @@ object KompendiumTOC {
       description = "Worlds most complex response"
     )
   )
-  val testSinglePutInfo = MethodInfo(
+  val testSinglePutInfo = MethodInfo<JustQuery, ExampleRequest, ExampleCreatedResponse>(
     summary = "Test put endpoint",
     description = "Put your tests here!",
     requestInfo = RequestInfo(
@@ -230,7 +247,7 @@ object KompendiumTOC {
       description = "What we give you when u do the puts"
     )
   )
-  val testSingleDeleteInfo = MethodInfo(
+  val testSingleDeleteInfo = MethodInfo<Unit, Unit, Unit>(
     summary = "Test delete endpoint",
     description = "testing my deletes",
     responseInfo = ResponseInfo(
@@ -239,7 +256,7 @@ object KompendiumTOC {
       mediaTypes = emptyList()
     )
   )
-  val testAuthenticatedSingleGetInfo = MethodInfo(
+  val testAuthenticatedSingleGetInfo = MethodInfo<Unit, Unit, Unit>(
     summary = "Another get test",
     description = "testing more",
     tags = setOf("anotherTest", "sample"),

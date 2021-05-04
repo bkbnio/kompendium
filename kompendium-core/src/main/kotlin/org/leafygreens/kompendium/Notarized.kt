@@ -18,7 +18,7 @@ object Notarized {
 
   @OptIn(ExperimentalStdlibApi::class)
   inline fun <reified TParam : Any, reified TResp : Any> Route.notarizedGet(
-    info: MethodInfo,
+    info: MethodInfo<TParam, Unit, TResp>,
     noinline body: PipelineInterceptor<Unit, ApplicationCall>
   ): Route =
     KompendiumPreFlight.methodNotarizationPreFlight<TParam, Unit, TResp>() { paramType, requestType, responseType ->
@@ -30,7 +30,7 @@ object Notarized {
     }
 
   inline fun <reified TParam : Any, reified TReq : Any, reified TResp : Any> Route.notarizedPost(
-    info: MethodInfo,
+    info: MethodInfo<TParam, TReq, TResp>,
     noinline body: PipelineInterceptor<Unit, ApplicationCall>
   ): Route =
     KompendiumPreFlight.methodNotarizationPreFlight<TParam, TReq, TResp>() { paramType, requestType, responseType ->
@@ -42,7 +42,7 @@ object Notarized {
     }
 
   inline fun <reified TParam : Any, reified TReq : Any, reified TResp : Any> Route.notarizedPut(
-    info: MethodInfo,
+    info: MethodInfo<TParam, TReq, TResp>,
     noinline body: PipelineInterceptor<Unit, ApplicationCall>,
   ): Route =
     KompendiumPreFlight.methodNotarizationPreFlight<TParam, TReq, TResp>() { paramType, requestType, responseType ->
@@ -54,7 +54,7 @@ object Notarized {
     }
 
   inline fun <reified TParam : Any, reified TResp : Any> Route.notarizedDelete(
-    info: MethodInfo,
+    info: MethodInfo<TParam, Unit, TResp>,
     noinline body: PipelineInterceptor<Unit, ApplicationCall>
   ): Route =
     KompendiumPreFlight.methodNotarizationPreFlight<TParam, Unit, TResp> { paramType, requestType, responseType ->
@@ -66,7 +66,7 @@ object Notarized {
     }
 
   inline fun <reified TErr : Throwable, reified TResp : Any> StatusPages.Configuration.notarizedException(
-    info: ResponseInfo,
+    info: ResponseInfo<TResp>,
     noinline handler: suspend PipelineContext<Unit, ApplicationCall>.(TErr) -> Unit
   ) = errorNotarizationPreFlight<TErr, TResp>() { errorType, responseType ->
     info.parseErrorInfo(errorType, responseType)

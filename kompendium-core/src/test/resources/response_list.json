@@ -47,7 +47,7 @@
         } ],
         "responses" : {
           "200" : {
-            "description" : "A Successful Endeavor",
+            "description" : "A Successful List-y Endeavor",
             "content" : {
               "application/json" : {
                 "schema" : {

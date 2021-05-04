@@ -30,7 +30,7 @@
         "description" : "Put your tests here!",
         "parameters" : [ ],
         "requestBody" : {
-          "description" : "A Test request",
+          "description" : "A Complex request",
           "content" : {
             "application/json" : {
               "schema" : {
@@ -46,7 +46,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/TestResponse"
+                  "$ref" : "#/components/schemas/TestCreatedResponse"
                 }
               }
             }
@@ -61,10 +61,17 @@
       "String" : {
         "type" : "string"
       },
-      "TestResponse" : {
+      "Int" : {
+        "format" : "int32",
+        "type" : "integer"
+      },
+      "TestCreatedResponse" : {
         "properties" : {
           "c" : {
             "$ref" : "#/components/schemas/String"
+          },
+          "id" : {
+            "$ref" : "#/components/schemas/Int"
           }
         },
         "type" : "object"
