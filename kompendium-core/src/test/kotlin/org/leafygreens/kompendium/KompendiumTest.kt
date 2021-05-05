@@ -25,11 +25,12 @@ import org.leafygreens.kompendium.Notarized.notarizedException
 import org.leafygreens.kompendium.Notarized.notarizedGet
 import org.leafygreens.kompendium.Notarized.notarizedPost
 import org.leafygreens.kompendium.Notarized.notarizedPut
-import org.leafygreens.kompendium.annotations.QueryParam
+import org.leafygreens.kompendium.annotations.KompendiumParam
+import org.leafygreens.kompendium.annotations.ParamType
+import org.leafygreens.kompendium.models.meta.MethodInfo.DeleteInfo
 import org.leafygreens.kompendium.models.meta.MethodInfo.GetInfo
 import org.leafygreens.kompendium.models.meta.MethodInfo.PostInfo
 import org.leafygreens.kompendium.models.meta.MethodInfo.PutInfo
-import org.leafygreens.kompendium.models.meta.MethodInfo.DeleteInfo
 import org.leafygreens.kompendium.models.meta.RequestInfo
 import org.leafygreens.kompendium.models.meta.ResponseInfo
 import org.leafygreens.kompendium.models.oas.OpenApiSpecInfo
@@ -440,21 +441,55 @@ internal class KompendiumTest {
     val testRequest = RequestInfo<TestRequest>("A Test request")
     val testRequestAgain = RequestInfo<Int>("A Test request")
     val complexRequest = RequestInfo<ComplexRequest>("A Complex request")
-    val testGetInfo = GetInfo<TestParams, TestResponse>(summary = "Another get test", description = "testing more", responseInfo = testGetResponse)
-    val testGetInfoAgain = GetInfo<TestParams, List<TestResponse>>(summary = "Another get test", description = "testing more", responseInfo = testGetListResponse)
+    val testGetInfo = GetInfo<TestParams, TestResponse>(
+      summary = "Another get test",
+      description = "testing more",
+      responseInfo = testGetResponse
+    )
+    val testGetInfoAgain = GetInfo<TestParams, List<TestResponse>>(
+      summary = "Another get test",
+      description = "testing more",
+      responseInfo = testGetListResponse
+    )
     val testGetWithException = testGetInfo.copy(
       canThrow = setOf(Exception::class)
     )
     val testGetWithMultipleExceptions = testGetInfo.copy(
       canThrow = setOf(AccessDeniedException::class, Exception::class)
     )
-    val testPostInfo = PostInfo<TestParams, TestRequest, TestCreatedResponse>(summary = "Test post endpoint", description = "Post your tests here!", responseInfo = testPostResponse, requestInfo = testRequest)
-    val testPutInfo = PutInfo<Unit, ComplexRequest, TestCreatedResponse>(summary = "Test put endpoint", description = "Put your tests here!", responseInfo = testPostResponse, requestInfo = complexRequest)
-    val testPutInfoAlso = PutInfo<TestParams, TestRequest, TestCreatedResponse>(summary = "Test put endpoint", description = "Put your tests here!", responseInfo = testPostResponse, requestInfo = testRequest)
-    val testPutInfoAgain = PutInfo<Unit, Int, Boolean>(summary = "Test put endpoint", description = "Put your tests here!", responseInfo = testPostResponseAgain, requestInfo = testRequestAgain)
-    val testDeleteInfo = DeleteInfo<TestParams, Unit>(summary = "Test delete endpoint", description =  "testing my deletes", responseInfo = testDeleteResponse)
-    val emptyTestGetInfo = GetInfo<OptionalParams, Unit>(summary = "No request params and response body", description =  "testing more")
-    val trulyEmptyTestGetInfo = GetInfo<Unit, Unit>(summary = "No request params and response body", description = "testing more")
+    val testPostInfo = PostInfo<TestParams, TestRequest, TestCreatedResponse>(
+      summary = "Test post endpoint",
+      description = "Post your tests here!",
+      responseInfo = testPostResponse,
+      requestInfo = testRequest
+    )
+    val testPutInfo = PutInfo<Unit, ComplexRequest, TestCreatedResponse>(
+      summary = "Test put endpoint",
+      description = "Put your tests here!",
+      responseInfo = testPostResponse,
+      requestInfo = complexRequest
+    )
+    val testPutInfoAlso = PutInfo<TestParams, TestRequest, TestCreatedResponse>(
+      summary = "Test put endpoint",
+      description = "Put your tests here!",
+      responseInfo = testPostResponse,
+      requestInfo = testRequest
+    )
+    val testPutInfoAgain = PutInfo<Unit, Int, Boolean>(
+      summary = "Test put endpoint",
+      description = "Put your tests here!",
+      responseInfo = testPostResponseAgain,
+      requestInfo = testRequestAgain
+    )
+    val testDeleteInfo = DeleteInfo<TestParams, Unit>(
+      summary = "Test delete endpoint",
+      description = "testing my deletes",
+      responseInfo = testDeleteResponse
+    )
+    val emptyTestGetInfo =
+      GetInfo<OptionalParams, Unit>(summary = "No request params and response body", description = "testing more")
+    val trulyEmptyTestGetInfo =
+      GetInfo<Unit, Unit>(summary = "No request params and response body", description = "testing more")
   }
 
   private fun Application.configModule() {
@@ -642,29 +677,35 @@ internal class KompendiumTest {
   private fun Application.withExamples() {
     routing {
       route("/test/examples") {
-        notarizedPost(info = PostInfo<Unit, TestRequest, TestResponse>(
-          summary = "Example Parameters",
-          description = "A test for setting parameter examples",
-          requestInfo = RequestInfo(
-            description = "Test",
-            examples = mapOf(
-              "one" to TestRequest(fieldName = TestNested(nesty = "hey"), b = 4.0, aaa = emptyList()),
-              "two" to TestRequest(fieldName = TestNested(nesty = "hello"), b = 3.8, aaa = listOf(31324234))
-            )
-          ),
-          responseInfo = ResponseInfo(
-            status = 201,
-            description = "nice",
-            examples = mapOf("test" to TestResponse(c = "spud"))
-          ),
-        )) {
+        notarizedPost(
+          info = PostInfo<Unit, TestRequest, TestResponse>(
+            summary = "Example Parameters",
+            description = "A test for setting parameter examples",
+            requestInfo = RequestInfo(
+              description = "Test",
+              examples = mapOf(
+                "one" to TestRequest(fieldName = TestNested(nesty = "hey"), b = 4.0, aaa = emptyList()),
+                "two" to TestRequest(fieldName = TestNested(nesty = "hello"), b = 3.8, aaa = listOf(31324234))
+              )
+            ),
+            responseInfo = ResponseInfo(
+              status = 201,
+              description = "nice",
+              examples = mapOf("test" to TestResponse(c = "spud"))
+            ),
+          )
+        ) {
           call.respond(HttpStatusCode.OK)
         }
       }
     }
   }
 
-  data class OptionalParams(@QueryParam val required: String, @QueryParam val notRequired: String?)
+  data class OptionalParams(
+    @KompendiumParam(ParamType.QUERY) val required: String,
+    @KompendiumParam(ParamType.QUERY) val notRequired: String?
+  )
+
   private fun Application.nonRequiredParamsGet() {
     routing {
       route("/test/optional") {

@@ -1,17 +1,17 @@
 package org.leafygreens.kompendium.playground
 
 import org.leafygreens.kompendium.annotations.KompendiumField
-import org.leafygreens.kompendium.annotations.PathParam
-import org.leafygreens.kompendium.annotations.QueryParam
+import org.leafygreens.kompendium.annotations.KompendiumParam
+import org.leafygreens.kompendium.annotations.ParamType
 
 data class ExampleParams(
-  @PathParam val id: Int,
-  @QueryParam val name: String
+  @KompendiumParam(ParamType.PATH) val id: Int,
+  @KompendiumParam(ParamType.QUERY) val name: String
 )
 
 data class JustQuery(
-  @QueryParam val potato: Boolean,
-  @QueryParam val tomato: String
+  @KompendiumParam(ParamType.QUERY) val potato: Boolean,
+  @KompendiumParam(ParamType.QUERY) val tomato: String
 )
 
 data class ExampleNested(val nesty: String)

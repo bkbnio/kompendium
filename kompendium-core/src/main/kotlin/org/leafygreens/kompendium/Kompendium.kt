@@ -1,16 +1,12 @@
 package org.leafygreens.kompendium
 
-import io.ktor.http.HttpMethod
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.full.createType
 import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.jvm.javaField
-import org.leafygreens.kompendium.annotations.CookieParam
-import org.leafygreens.kompendium.annotations.HeaderParam
-import org.leafygreens.kompendium.annotations.PathParam
-import org.leafygreens.kompendium.annotations.QueryParam
+import org.leafygreens.kompendium.annotations.KompendiumParam
 import org.leafygreens.kompendium.models.meta.ErrorMap
 import org.leafygreens.kompendium.models.meta.MethodInfo
 import org.leafygreens.kompendium.models.meta.RequestInfo
@@ -136,28 +132,13 @@ object Kompendium {
     return clazz.memberProperties.map { prop ->
       val field = prop.javaField?.type?.kotlin
         ?: error("Unable to parse field type from $prop")
-      val anny = prop.findAnnotation<PathParam>()
-        ?: prop.findAnnotation<QueryParam>()
-        ?: prop.findAnnotation<HeaderParam>()
-        ?: prop.findAnnotation<CookieParam>()
-        ?: error("Unable to find any relevant parameter specifier annotations on field ${prop.name}")
+      val anny = prop.findAnnotation<KompendiumParam>()
+        ?: error("Field ${prop.name} is not annotated with KompendiumParam")
       OpenApiSpecParameter(
         name = prop.name,
-        `in` = when (anny) {
-          is PathParam -> "path"
-          is QueryParam -> "query"
-          is HeaderParam -> "header"
-          is CookieParam -> "cookie"
-          else -> error("should not be reachable")
-        },
+        `in` = anny.type.name.toLowerCase(),
         schema = OpenApiSpecSchemaRef(field.getReferenceSlug(prop)),
-        description = when (anny) {
-          is PathParam -> anny.description.ifBlank { null }
-          is QueryParam -> anny.description.ifBlank { null }
-          is HeaderParam -> anny.description.ifBlank { null }
-          is CookieParam -> anny.description.ifBlank { null }
-          else -> error("should not be reachable")
-        },
+        description = anny.description.ifBlank { null },
         required = !prop.returnType.isMarkedNullable
       )
     }

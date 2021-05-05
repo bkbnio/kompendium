@@ -1,12 +1,12 @@
 package org.leafygreens.kompendium.auth.util
 
 import org.leafygreens.kompendium.annotations.KompendiumField
-import org.leafygreens.kompendium.annotations.PathParam
-import org.leafygreens.kompendium.annotations.QueryParam
+import org.leafygreens.kompendium.annotations.KompendiumParam
+import org.leafygreens.kompendium.annotations.ParamType
 
 data class TestParams(
-  @PathParam val a: String,
-  @QueryParam val aa: Int
+  @KompendiumParam(ParamType.PATH) val a: String,
+  @KompendiumParam(ParamType.QUERY) val aa: Int
 )
 
 data class TestRequest(
