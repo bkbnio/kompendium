@@ -11,6 +11,7 @@ import io.ktor.auth.authenticate
 import io.ktor.features.ContentNegotiation
 import io.ktor.http.ContentType
 import io.ktor.http.HttpMethod
+import io.ktor.http.HttpStatusCode
 import io.ktor.jackson.jackson
 import io.ktor.response.respondText
 import io.ktor.routing.route
@@ -31,7 +32,6 @@ import org.leafygreens.kompendium.models.meta.MethodInfo
 import org.leafygreens.kompendium.models.meta.ResponseInfo
 import org.leafygreens.kompendium.routes.openApi
 import org.leafygreens.kompendium.routes.redoc
-import org.leafygreens.kompendium.util.KompendiumHttpCodes
 
 internal class KompendiumAuthTest {
 
@@ -189,7 +189,7 @@ internal class KompendiumAuthTest {
   }
 
   private companion object {
-    val testGetResponse = ResponseInfo<TestResponse>(KompendiumHttpCodes.OK, "A Successful Endeavor")
+    val testGetResponse = ResponseInfo<TestResponse>(HttpStatusCode.OK, "A Successful Endeavor")
     fun testGetInfo(vararg security: String) =
       MethodInfo.GetInfo<TestParams, TestResponse>(
         summary = "Another get test",

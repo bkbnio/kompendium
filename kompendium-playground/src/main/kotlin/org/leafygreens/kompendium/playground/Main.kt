@@ -38,7 +38,6 @@ import org.leafygreens.kompendium.playground.PlaygroundToC.testSinglePutInfo
 import org.leafygreens.kompendium.routes.openApi
 import org.leafygreens.kompendium.routes.redoc
 import org.leafygreens.kompendium.swagger.swaggerUI
-import org.leafygreens.kompendium.util.KompendiumHttpCodes
 
 fun main() {
   embeddedServer(
@@ -74,7 +73,7 @@ fun Application.configModule() {
     install(StatusPages) {
       notarizedException<Exception, ExceptionResponse>(
         info = ResponseInfo(
-          KompendiumHttpCodes.BAD_REQUEST,
+          HttpStatusCode.BadRequest,
           "Bad Things Happened",
           examples = mapOf("example" to ExceptionResponse("hey bad things happened sorry"))
         )

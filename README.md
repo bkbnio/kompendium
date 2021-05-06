@@ -37,16 +37,6 @@ dependencies {
 
 ## In depth
 
-### Warning 🚨
-Kompendium is still under active development ⚠️ There are a number of yet-to-be-implemented features, including 
-
-- Sealed Class / Polymorphic Support 😬  
-- Validation / Enforcement (❓👀❓)
-
-If you have a feature that is not listed here, please open an issue!
-
-In addition, if you find any 🐞😱 please open an issue as well!
-
 ### Notarized Routes 
 
 Kompendium introduces the concept of `notarized` HTTP methods.  That is, for all your `GET`, `POST`, `PUT`, and `DELETE`
@@ -204,3 +194,17 @@ it offers a seriously clean UX where the implementer doesn't need to worry about
 drawback, however, is that you are limited to a single API per classpath.  
 
 If this is a blocker, please open a GitHub issue, and we can start to think out solutions! 
+
+## Future Work
+Work on V1 of Kompendium has come to a close.  This, however, does not mean it has achieved complete
+parity with the OpenAPI feature spec, nor does it have all-of-the nice to have features that a truly next-gen API spec 
+should have.  There are several outstanding features that have been added to the
+[V2 Milestone](https://github.com/lg-backbone/kompendium/milestone/2).  Among others, this includes 
+
+- Polymorphic support
+- AsyncAPI Integration
+- Field Validation
+- MavenCentral Release
+
+If you have a feature that you would like to see implemented that is not on this list, or discover a 🐞, please open 
+an issue [here](https://github.com/lg-backbone/kompendium/issues/new)

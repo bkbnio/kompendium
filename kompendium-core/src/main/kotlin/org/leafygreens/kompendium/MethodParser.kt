@@ -26,7 +26,19 @@ import org.leafygreens.kompendium.util.Helpers
 import org.leafygreens.kompendium.util.Helpers.getReferenceSlug
 import org.leafygreens.kompendium.util.Helpers.getSimpleSlug
 
+/**
+ * The MethodParser is responsible for converting route metadata and types into an OpenAPI compatible data class.
+ */
 object MethodParser {
+
+  /**
+   * Generates the OpenAPI Path spec from provided metadata
+   * @param info implementation of the [MethodInfo] sealed class
+   * @param paramType Type of `TParam`
+   * @param requestType Type of `TReq` if required
+   * @param responseType Type of `TResp`
+   * @return object representing the OpenAPI Path spec.
+   */
   fun parseMethodInfo(
     info: MethodInfo<*, *>,
     paramType: KType,
@@ -61,19 +73,34 @@ object MethodParser {
     ) else null
   )
 
-  private fun parseThrowables(throwables: Set<KClass<*>>): Map<Int, OpenApiSpecReferencable> = throwables.mapNotNull {
-    Kompendium.errorMap[it.createType()]
-  }.toMap()
-
-  fun <TResp> ResponseInfo<TResp>.parseErrorInfo(
+  /**
+   * Adds the error to the [Kompendium.errorMap] for reference in notarized routes.
+   * @param errorType [KType] of the throwable being handled
+   * @param responseType [KType] the type of the response sent in event of error
+   */
+  fun ResponseInfo<*>.parseErrorInfo(
     errorType: KType,
     responseType: KType
   ) {
     Kompendium.errorMap = Kompendium.errorMap.plus(errorType to responseType.toResponseSpec(this))
   }
 
-  // TODO These two lookin' real similar 👀 Combine?
-  private fun <TReq> KType.toRequestSpec(requestInfo: RequestInfo<TReq>?): OpenApiSpecRequest<TReq>? =
+  /**
+   * Parses possible errors thrown by a route
+   * @param throwables Set of classes that can be thrown
+   * @return Mapping of status codes to their corresponding error spec
+   */
+  private fun parseThrowables(throwables: Set<KClass<*>>): Map<Int, OpenApiSpecReferencable> = throwables.mapNotNull {
+    Kompendium.errorMap[it.createType()]
+  }.toMap()
+
+  /**
+   * Converts a [KType] to an [OpenApiSpecRequest]
+   * @receiver [KType] to convert
+   * @param requestInfo request metadata
+   * @return Will return a generated [OpenApiSpecRequest] if requestInfo is not null
+   */
+  private fun KType.toRequestSpec(requestInfo: RequestInfo<*>?): OpenApiSpecRequest<*>? =
     when (requestInfo) {
       null -> null
       else -> {
@@ -84,18 +111,31 @@ object MethodParser {
       }
     }
 
-  private fun <TResp> KType.toResponseSpec(responseInfo: ResponseInfo<TResp>?): Pair<Int, OpenApiSpecResponse<TResp>>? =
+  /**
+   * Converts a [KType] to a pairing of http status code to [OpenApiSpecRequest]
+   * @receiver [KType] to convert
+   * @param responseInfo response metadata
+   * @return Will return a generated [Pair] if responseInfo is not null
+   */
+  private fun KType.toResponseSpec(responseInfo: ResponseInfo<*>?): Pair<Int, OpenApiSpecResponse<*>>? =
     when (responseInfo) {
-      null -> null // TODO again probably revisit this
+      null -> null
       else -> {
         val specResponse = OpenApiSpecResponse(
           description = responseInfo.description,
           content = resolveContent(responseInfo.mediaTypes, responseInfo.examples)
         )
-        Pair(responseInfo.status, specResponse)
+        Pair(responseInfo.status.value, specResponse)
       }
     }
 
+  /**
+   * Generates MediaTypes along with any examples provided
+   * @receiver [KType] Type of the object
+   * @param mediaTypes list of acceptable http media types
+   * @param examples Mapping of named examples of valid bodies.
+   * @return Named mapping of media types.
+   */
   private fun <F> KType.resolveContent(
     mediaTypes: List<String>,
     examples: Map<String, F>
@@ -111,6 +151,13 @@ object MethodParser {
     } else null
   }
 
+  /**
+   * Parses a type for all parameter information.  All fields in the receiver
+   * must be annotated with [org.leafygreens.kompendium.annotations.KompendiumParam].
+   * @receiver type
+   * @return list of valid parameter specs as detailed by the [KType] members
+   * @throws [IllegalStateException] if the class could not be parsed properly
+   */
   private fun KType.toParameterSpec(): List<OpenApiSpecParameter> {
     val clazz = classifier as KClass<*>
     return clazz.memberProperties.map { prop ->
@@ -131,6 +178,12 @@ object MethodParser {
     }
   }
 
+  /**
+   * Absolutely disgusting reflection to determine if a default value is available for a given property.
+   * @param clazz to which the property belongs
+   * @param prop the property in question
+   * @return The default value if found
+   */
   private fun getDefaultParameterValue(clazz: KClass<*>, prop: KProperty<*>): Any? {
     val constructor = clazz.primaryConstructor
     val parameterInQuestion = constructor
@@ -152,6 +205,12 @@ object MethodParser {
     return getterFunction.invoke(instance)
   }
 
+  /**
+   * Allows the reflection invoker to populate a parameter map with values in order to sus out any default parameters.
+   * @param param Parameter to provide value for
+   * @return value of the proper type to match param
+   * @throws [IllegalStateException] if parameter type is not one of the basic types supported below.
+   */
   private fun defaultValueInjector(param: KParameter): Any = when (param.type.classifier) {
     String::class -> "test"
     Boolean::class -> false
@@ -162,5 +221,4 @@ object MethodParser {
     UUID::class -> UUID.randomUUID()
     else -> error("Unsupported Type")
   }
-
 }

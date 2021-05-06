@@ -1,5 +1,17 @@
 # Changelog
 
+### [1.0.0-beta] - May 6th, 2021
+
+### Added
+
+- Release action to package a release JAR 🍻
+- EXTREME DOCUMENTATION 📜
+
+### Changed
+
+- Cleanup to test files
+- Removes KompendiumHttpCodes in favor of Ktor HttpStatusCode
+
 ### [0.9.0] - May 5th, 2021
 
 ### Added

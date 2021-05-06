@@ -21,10 +21,19 @@ import org.leafygreens.kompendium.util.Helpers.getReferenceSlug
 import org.leafygreens.kompendium.util.Helpers.logged
 import org.slf4j.LoggerFactory
 
+/**
+ * Responsible for generating the schema map that is used to power all object references across the API Spec.
+ */
 object Kontent {
 
   private val logger = LoggerFactory.getLogger(javaClass)
 
+  /**
+   * Analyzes a type [T] for its top-level and any nested schemas, and adds them to a [SchemaMap], if provided
+   * @param T type to analyze
+   * @param cache Existing schema map to append to
+   * @return an updated schema map containing all type information for [T]
+   */
   @OptIn(ExperimentalStdlibApi::class)
   inline fun <reified T> generateKontent(
     cache: SchemaMap = emptyMap()
@@ -33,6 +42,12 @@ object Kontent {
     return generateKTypeKontent(kontentType, cache)
   }
 
+  /**
+   * Analyze a type [T], but filters out the top-level type
+   * @param T type to analyze
+   * @param cache Existing schema map to append to
+   * @return an updated schema map containing all type information for [T]
+   */
   @OptIn(ExperimentalStdlibApi::class)
   inline fun <reified T> generateParameterKontent(
     cache: SchemaMap = emptyMap()
@@ -42,6 +57,11 @@ object Kontent {
       .filterNot { (slug, _) -> slug == (kontentType.classifier as KClass<*>).simpleName }
   }
 
+  /**
+   * Recursively fills schema map depending on [KType] classifier
+   * @param type [KType] to parse
+   * @param cache Existing schema map to append to
+   */
   fun generateKTypeKontent(
     type: KType,
     cache: SchemaMap = emptyMap()
@@ -65,6 +85,11 @@ object Kontent {
     }
   }
 
+  /**
+   * In the event of an object type, this method will parse out individual fields to recursively aggregate object map.
+   * @param clazz Class of the object to analyze
+   * @param cache Existing schema map to append to
+   */
   private fun handleComplexType(clazz: KClass<*>, cache: SchemaMap): SchemaMap =
     when (cache.containsKey(clazz.simpleName)) {
       true -> {
@@ -92,11 +117,22 @@ object Kontent {
       }
     }
 
+  /**
+   * Handler for when an [Enum] is encountered
+   * @param clazz Class of the object to analyze
+   * @param cache Existing schema map to append to
+   */
   private fun handleEnumType(clazz: KClass<*>, cache: SchemaMap): SchemaMap {
     val options = clazz.java.enumConstants.map { it.toString() }.toSet()
     return cache.plus(clazz.simpleName!! to EnumSchema(options))
   }
 
+  /**
+   * Handler for when a [Map] is encountered
+   * @param type Map type information
+   * @param clazz Map class information
+   * @param cache Existing schema map to append to
+   */
   private fun handleMapType(type: KType, clazz: KClass<*>, cache: SchemaMap): SchemaMap {
     logger.debug("Map detected for $type, generating schema and appending to cache")
     val (keyType, valType) = type.arguments.map { it.type }
@@ -112,6 +148,12 @@ object Kontent {
     return updatedCache.plus(referenceName to schema)
   }
 
+  /**
+   * Handler for when a [Collection] is encountered
+   * @param type Collection type information
+   * @param clazz Collection class information
+   * @param cache Existing schema map to append to
+   */
   private fun handleCollectionType(type: KType, clazz: KClass<*>, cache: SchemaMap): SchemaMap {
     logger.debug("Collection detected for $type, generating schema and appending to cache")
     val collectionType = type.arguments.first().type!!

@@ -1,16 +1,16 @@
 package org.leafygreens.kompendium.playground
 
+import io.ktor.http.HttpStatusCode
 import org.leafygreens.kompendium.models.meta.MethodInfo
 import org.leafygreens.kompendium.models.meta.RequestInfo
 import org.leafygreens.kompendium.models.meta.ResponseInfo
-import org.leafygreens.kompendium.util.KompendiumHttpCodes
 
 object PlaygroundToC {
   val testGetWithExamples = MethodInfo.GetInfo<Unit, ExampleResponse>(
     summary = "Example Parameters",
     description = "A test for setting parameter examples",
     responseInfo = ResponseInfo(
-      status = 200,
+      status = HttpStatusCode.OK,
       description = "nice",
       examples = mapOf("test" to ExampleResponse(c = "spud"))
     ),
@@ -27,7 +27,7 @@ object PlaygroundToC {
       )
     ),
     responseInfo = ResponseInfo(
-      status = KompendiumHttpCodes.CREATED,
+      status = HttpStatusCode.Created,
       description = "Congratz you hit da endpoint",
       examples = mapOf(
         "Expect This" to ExampleResponse(c = "Hi"),
@@ -42,7 +42,7 @@ object PlaygroundToC {
     description = "Test for the getting",
     tags = setOf("test", "sample", "get"),
     responseInfo = ResponseInfo(
-      status = KompendiumHttpCodes.OK,
+      status = HttpStatusCode.OK,
       description = "Returns sample info"
     )
   )
@@ -51,7 +51,7 @@ object PlaygroundToC {
     description = "testing more",
     tags = setOf("anotherTest", "sample"),
     responseInfo = ResponseInfo(
-      status = KompendiumHttpCodes.OK,
+      status = HttpStatusCode.OK,
       description = "Returns a different sample"
     )
   )
@@ -66,7 +66,7 @@ object PlaygroundToC {
       description = "Simple request body"
     ),
     responseInfo = ResponseInfo(
-      status = KompendiumHttpCodes.CREATED,
+      status = HttpStatusCode.Created,
       description = "Worlds most complex response"
     )
   )
@@ -77,7 +77,7 @@ object PlaygroundToC {
       description = "Info needed to perform this put request"
     ),
     responseInfo = ResponseInfo(
-      status = KompendiumHttpCodes.CREATED,
+      status = HttpStatusCode.Created,
       description = "What we give you when u do the puts"
     )
   )
@@ -85,7 +85,7 @@ object PlaygroundToC {
     summary = "Test delete endpoint",
     description = "testing my deletes",
     responseInfo = ResponseInfo(
-      status = KompendiumHttpCodes.NO_CONTENT,
+      status = HttpStatusCode.NoContent,
       description = "Signifies that your item was deleted successfully",
       mediaTypes = emptyList()
     )
@@ -95,7 +95,7 @@ object PlaygroundToC {
     description = "testing more",
     tags = setOf("anotherTest", "sample"),
     responseInfo = ResponseInfo(
-      status = KompendiumHttpCodes.OK,
+      status = HttpStatusCode.OK,
       description = "Returns a different sample"
     ),
     securitySchemes = setOf("basic")
