@@ -15,7 +15,12 @@ import kotlinx.html.title
 import kotlinx.html.unsafe
 import org.leafygreens.kompendium.models.oas.OpenApiSpec
 
-fun Routing.redoc(oas: OpenApiSpec) {
+/**
+ * Provides an out-of-the-box route to view docs using ReDoc
+ * @param oas spec to reference
+ * @param specUrl url to point ReDoc to the OpenAPI json document
+ */
+fun Routing.redoc(oas: OpenApiSpec, specUrl: String = "/openapi.json") {
   route("/docs") {
     get {
       call.respondHtml {
@@ -41,8 +46,7 @@ fun Routing.redoc(oas: OpenApiSpec) {
           }
         }
         body {
-          // TODO needs to mirror openApi route
-          unsafe { +"<redoc spec-url='/openapi.json'></redoc>" }
+          unsafe { +"<redoc spec-url='${specUrl}'></redoc>" }
           script {
             src = "https://cdn.jsdelivr.net/npm/redoc@next/bundles/redoc.standalone.js"
           }

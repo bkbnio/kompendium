@@ -7,6 +7,9 @@ import org.leafygreens.kompendium.models.oas.OpenApiSpecInfo
 import org.leafygreens.kompendium.path.CorePathCalculator
 import org.leafygreens.kompendium.path.PathCalculator
 
+/**
+ * Maintains all state for the Kompendium library
+ */
 object Kompendium {
 
   var errorMap: ErrorMap = emptyMap()

@@ -1,17 +1,18 @@
 package org.leafygreens.kompendium.util
 
+import io.ktor.http.HttpStatusCode
 import org.leafygreens.kompendium.models.meta.MethodInfo
 import org.leafygreens.kompendium.models.meta.RequestInfo
 import org.leafygreens.kompendium.models.meta.ResponseInfo
 
 object TestResponseInfo {
-  private val testGetResponse = ResponseInfo<TestResponse>(KompendiumHttpCodes.OK, "A Successful Endeavor")
+  private val testGetResponse = ResponseInfo<TestResponse>(HttpStatusCode.OK, "A Successful Endeavor")
   private val testGetListResponse =
-    ResponseInfo<List<TestResponse>>(KompendiumHttpCodes.OK, "A Successful List-y Endeavor")
-  private val testPostResponse = ResponseInfo<TestCreatedResponse>(KompendiumHttpCodes.CREATED, "A Successful Endeavor")
-  private val testPostResponseAgain = ResponseInfo<Boolean>(KompendiumHttpCodes.CREATED, "A Successful Endeavor")
+    ResponseInfo<List<TestResponse>>(HttpStatusCode.OK, "A Successful List-y Endeavor")
+  private val testPostResponse = ResponseInfo<TestCreatedResponse>(HttpStatusCode.Created, "A Successful Endeavor")
+  private val testPostResponseAgain = ResponseInfo<Boolean>(HttpStatusCode.Created, "A Successful Endeavor")
   private val testDeleteResponse =
-    ResponseInfo<Unit>(KompendiumHttpCodes.NO_CONTENT, "A Successful Endeavor", mediaTypes = emptyList())
+    ResponseInfo<Unit>(HttpStatusCode.NoContent, "A Successful Endeavor", mediaTypes = emptyList())
   private val testRequest = RequestInfo<TestRequest>("A Test request")
   private val testRequestAgain = RequestInfo<Int>("A Test request")
   private val complexRequest = RequestInfo<ComplexRequest>("A Complex request")

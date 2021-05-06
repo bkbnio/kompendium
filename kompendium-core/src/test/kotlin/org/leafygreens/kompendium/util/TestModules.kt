@@ -33,7 +33,7 @@ fun Application.configModule() {
 
 fun Application.statusPageModule() {
   install(StatusPages) {
-    notarizedException<Exception, ExceptionResponse>(info = ResponseInfo(400, "Bad Things Happened")) {
+    notarizedException<Exception, ExceptionResponse>(info = ResponseInfo(HttpStatusCode.BadRequest, "Bad Things Happened")) {
       call.respond(HttpStatusCode.BadRequest, ExceptionResponse("Why you do dis?"))
     }
   }
@@ -41,10 +41,10 @@ fun Application.statusPageModule() {
 
 fun Application.statusPageMultiExceptions() {
   install(StatusPages) {
-    notarizedException<AccessDeniedException, Unit>(info = ResponseInfo(403, "New API who dis?")) {
+    notarizedException<AccessDeniedException, Unit>(info = ResponseInfo(HttpStatusCode.Forbidden, "New API who dis?")) {
       call.respond(HttpStatusCode.Forbidden)
     }
-    notarizedException<Exception, ExceptionResponse>(info = ResponseInfo(400, "Bad Things Happened")) {
+    notarizedException<Exception, ExceptionResponse>(info = ResponseInfo(HttpStatusCode.BadRequest, "Bad Things Happened")) {
       call.respond(HttpStatusCode.BadRequest, ExceptionResponse("Why you do dis?"))
     }
   }
@@ -219,7 +219,7 @@ fun Application.withExamples() {
             )
           ),
           responseInfo = ResponseInfo(
-            status = 201,
+            status = HttpStatusCode.Created,
             description = "nice",
             examples = mapOf("test" to TestResponse(c = "spud"))
           ),

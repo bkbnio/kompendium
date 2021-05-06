@@ -7,6 +7,9 @@ import io.ktor.routing.Route
 import io.ktor.util.InternalAPI
 import org.slf4j.LoggerFactory
 
+/**
+ * Default [PathCalculator] meant to be overridden as necessary
+ */
 open class CorePathCalculator : PathCalculator {
 
   private val logger = LoggerFactory.getLogger(javaClass)
