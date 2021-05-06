@@ -1,5 +1,6 @@
 package org.leafygreens.kompendium
 
+import java.util.UUID
 import kotlin.reflect.KClass
 import kotlin.reflect.KParameter
 import kotlin.reflect.KProperty
@@ -155,6 +156,10 @@ object MethodParser {
     String::class -> "test"
     Boolean::class -> false
     Int::class -> 1
+    Long::class -> 2
+    Double::class -> 4.0
+    Float::class -> 4.2
+    UUID::class -> UUID.randomUUID()
     else -> error("Unsupported Type")
   }
 

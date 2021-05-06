@@ -54,7 +54,7 @@ operations, there is a corresponding `notarized` method.  These operations are s
 a lot of the class based reflection that powers Kompendium.  Generally speaking the three types that a `notarized` method
 will consume are
 
-i- `TParam`: Used to notarize expected request parameters
+- `TParam`: Used to notarize expected request parameters
 - `TReq`: Used to build the object schema for a request body
 - `TResp`: Used to build the object schema for a response body
 
