@@ -1,18 +1,8 @@
 package org.leafygreens.kompendium
 
-import com.fasterxml.jackson.annotation.JsonInclude
-import com.fasterxml.jackson.databind.SerializationFeature
 import io.ktor.application.Application
-import io.ktor.application.call
-import io.ktor.application.install
-import io.ktor.features.ContentNegotiation
-import io.ktor.features.StatusPages
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
-import io.ktor.jackson.jackson
-import io.ktor.response.respond
-import io.ktor.response.respondText
-import io.ktor.routing.route
 import io.ktor.routing.routing
 import io.ktor.server.testing.handleRequest
 import io.ktor.server.testing.withTestApplication
@@ -20,47 +10,33 @@ import java.net.URI
 import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import org.leafygreens.kompendium.Notarized.notarizedDelete
-import org.leafygreens.kompendium.Notarized.notarizedException
-import org.leafygreens.kompendium.Notarized.notarizedGet
-import org.leafygreens.kompendium.Notarized.notarizedPost
-import org.leafygreens.kompendium.Notarized.notarizedPut
-import org.leafygreens.kompendium.annotations.KompendiumParam
-import org.leafygreens.kompendium.annotations.ParamType
-import org.leafygreens.kompendium.models.meta.MethodInfo.DeleteInfo
-import org.leafygreens.kompendium.models.meta.MethodInfo.GetInfo
-import org.leafygreens.kompendium.models.meta.MethodInfo.PostInfo
-import org.leafygreens.kompendium.models.meta.MethodInfo.PutInfo
-import org.leafygreens.kompendium.models.meta.RequestInfo
-import org.leafygreens.kompendium.models.meta.ResponseInfo
 import org.leafygreens.kompendium.models.oas.OpenApiSpecInfo
 import org.leafygreens.kompendium.models.oas.OpenApiSpecInfoContact
 import org.leafygreens.kompendium.models.oas.OpenApiSpecInfoLicense
 import org.leafygreens.kompendium.models.oas.OpenApiSpecServer
 import org.leafygreens.kompendium.routes.openApi
 import org.leafygreens.kompendium.routes.redoc
-import org.leafygreens.kompendium.util.ComplexRequest
-import org.leafygreens.kompendium.util.DefaultParameter
-import org.leafygreens.kompendium.util.ExceptionResponse
-import org.leafygreens.kompendium.util.KompendiumHttpCodes
-import org.leafygreens.kompendium.util.OptionalParams
-import org.leafygreens.kompendium.util.TestCreatedResponse
 import org.leafygreens.kompendium.util.TestHelpers.getFileSnapshot
-import org.leafygreens.kompendium.util.TestNested
-import org.leafygreens.kompendium.util.TestParams
-import org.leafygreens.kompendium.util.TestRequest
-import org.leafygreens.kompendium.util.TestResponse
-import org.leafygreens.kompendium.util.TestResponseInfo.emptyTestGetInfo
-import org.leafygreens.kompendium.util.TestResponseInfo.testDeleteInfo
-import org.leafygreens.kompendium.util.TestResponseInfo.testGetInfo
-import org.leafygreens.kompendium.util.TestResponseInfo.testGetInfoAgain
-import org.leafygreens.kompendium.util.TestResponseInfo.testGetWithException
-import org.leafygreens.kompendium.util.TestResponseInfo.testGetWithMultipleExceptions
-import org.leafygreens.kompendium.util.TestResponseInfo.testPostInfo
-import org.leafygreens.kompendium.util.TestResponseInfo.testPutInfo
-import org.leafygreens.kompendium.util.TestResponseInfo.testPutInfoAgain
-import org.leafygreens.kompendium.util.TestResponseInfo.testPutInfoAlso
-import org.leafygreens.kompendium.util.TestResponseInfo.trulyEmptyTestGetInfo
+import org.leafygreens.kompendium.util.complexType
+import org.leafygreens.kompendium.util.configModule
+import org.leafygreens.kompendium.util.emptyGet
+import org.leafygreens.kompendium.util.nestedUnderRootModule
+import org.leafygreens.kompendium.util.nonRequiredParamsGet
+import org.leafygreens.kompendium.util.notarizedDeleteModule
+import org.leafygreens.kompendium.util.notarizedGetModule
+import org.leafygreens.kompendium.util.notarizedGetWithMultipleThrowables
+import org.leafygreens.kompendium.util.notarizedGetWithNotarizedException
+import org.leafygreens.kompendium.util.notarizedPostModule
+import org.leafygreens.kompendium.util.notarizedPutModule
+import org.leafygreens.kompendium.util.pathParsingTestModule
+import org.leafygreens.kompendium.util.primitives
+import org.leafygreens.kompendium.util.returnsList
+import org.leafygreens.kompendium.util.rootModule
+import org.leafygreens.kompendium.util.statusPageModule
+import org.leafygreens.kompendium.util.statusPageMultiExceptions
+import org.leafygreens.kompendium.util.trailingSlash
+import org.leafygreens.kompendium.util.withDefaultParameter
+import org.leafygreens.kompendium.util.withExamples
 
 internal class KompendiumTest {
 
@@ -460,239 +436,6 @@ internal class KompendiumTest {
     }
   }
 
-  private fun Application.configModule() {
-    install(ContentNegotiation) {
-      jackson {
-        enable(SerializationFeature.INDENT_OUTPUT)
-        setSerializationInclusion(JsonInclude.Include.NON_NULL)
-      }
-    }
-  }
-
-  private fun Application.statusPageModule() {
-    install(StatusPages) {
-      notarizedException<Exception, ExceptionResponse>(info = ResponseInfo(400, "Bad Things Happened")) {
-        call.respond(HttpStatusCode.BadRequest, ExceptionResponse("Why you do dis?"))
-      }
-    }
-  }
-
-  private fun Application.statusPageMultiExceptions() {
-    install(StatusPages) {
-      notarizedException<AccessDeniedException, Unit>(info = ResponseInfo(403, "New API who dis?")) {
-        call.respond(HttpStatusCode.Forbidden)
-      }
-      notarizedException<Exception, ExceptionResponse>(info = ResponseInfo(400, "Bad Things Happened")) {
-        call.respond(HttpStatusCode.BadRequest, ExceptionResponse("Why you do dis?"))
-      }
-    }
-  }
-
-  private fun Application.notarizedGetWithNotarizedException() {
-    routing {
-      route("/test") {
-        notarizedGet(testGetWithException) {
-          error("something terrible has happened!")
-        }
-      }
-    }
-  }
-
-  private fun Application.notarizedGetWithMultipleThrowables() {
-    routing {
-      route("/test") {
-        notarizedGet(testGetWithMultipleExceptions) {
-          error("something terrible has happened!")
-        }
-      }
-    }
-  }
-
-  private fun Application.notarizedGetModule() {
-    routing {
-      route("/test") {
-        notarizedGet(testGetInfo) {
-          call.respondText { "hey dude ‼️ congratz on the get request" }
-        }
-      }
-    }
-  }
-
-  private fun Application.notarizedPostModule() {
-    routing {
-      route("/test") {
-        notarizedPost(testPostInfo) {
-          call.respondText { "hey dude ✌️ congratz on the post request" }
-        }
-      }
-    }
-  }
-
-  private fun Application.notarizedDeleteModule() {
-    routing {
-      route("/test") {
-        notarizedDelete(testDeleteInfo) {
-          call.respond(HttpStatusCode.NoContent)
-        }
-      }
-    }
-  }
-
-  private fun Application.notarizedPutModule() {
-    routing {
-      route("/test") {
-        notarizedPut(testPutInfoAlso) {
-          call.respondText { "hey pal 🌝 whatcha doin' here?" }
-        }
-      }
-    }
-  }
-
-  private fun Application.pathParsingTestModule() {
-    routing {
-      route("/this") {
-        route("/is") {
-          route("/a") {
-            route("/complex") {
-              route("path") {
-                route("with/an/{id}") {
-                  notarizedGet(testGetInfo) {
-                    call.respondText { "Aww you followed this whole route 🥺" }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-
-  private fun Application.rootModule() {
-    routing {
-      route("/") {
-        notarizedGet(testGetInfo) {
-          call.respondText { "☎️🏠🌲" }
-        }
-      }
-    }
-  }
-
-  private fun Application.nestedUnderRootModule() {
-    routing {
-      route("/") {
-        route("/testerino") {
-          notarizedGet(testGetInfo) {
-            call.respondText { "🤔🔥" }
-          }
-        }
-      }
-    }
-  }
-
-  private fun Application.trailingSlash() {
-    routing {
-      route("/test") {
-        route("/") {
-          notarizedGet(testGetInfo) {
-            call.respondText { "🙀👾" }
-          }
-        }
-      }
-    }
-  }
-
-  private fun Application.returnsList() {
-    routing {
-      route("/test") {
-        notarizedGet(testGetInfoAgain) {
-          call.respondText { "hey dude ur doing amazing work!" }
-        }
-      }
-    }
-  }
-
-  private fun Application.complexType() {
-    routing {
-      route("/test") {
-        notarizedPut(testPutInfo) {
-          call.respondText { "heya" }
-        }
-      }
-    }
-  }
-
-  private fun Application.primitives() {
-    routing {
-      route("/test") {
-        notarizedPut(testPutInfoAgain) {
-          call.respondText { "heya" }
-        }
-      }
-    }
-  }
-
-  private fun Application.emptyGet() {
-    routing {
-      route("/test/empty") {
-        notarizedGet(trulyEmptyTestGetInfo) {
-          call.respond(HttpStatusCode.OK)
-        }
-      }
-    }
-  }
-
-  private fun Application.withExamples() {
-    routing {
-      route("/test/examples") {
-        notarizedPost(
-          info = PostInfo<Unit, TestRequest, TestResponse>(
-            summary = "Example Parameters",
-            description = "A test for setting parameter examples",
-            requestInfo = RequestInfo(
-              description = "Test",
-              examples = mapOf(
-                "one" to TestRequest(fieldName = TestNested(nesty = "hey"), b = 4.0, aaa = emptyList()),
-                "two" to TestRequest(fieldName = TestNested(nesty = "hello"), b = 3.8, aaa = listOf(31324234))
-              )
-            ),
-            responseInfo = ResponseInfo(
-              status = 201,
-              description = "nice",
-              examples = mapOf("test" to TestResponse(c = "spud"))
-            ),
-          )
-        ) {
-          call.respond(HttpStatusCode.OK)
-        }
-      }
-    }
-  }
-
-  private fun Application.withDefaultParameter() {
-    routing {
-      route("/test") {
-        notarizedGet(
-          info = GetInfo<DefaultParameter, TestResponse>(
-            summary = "Testing Default Params",
-            description = "Should have a default parameter value"
-          )
-        ) {
-          call.respond(TestResponse("hey"))
-        }
-      }
-    }
-  }
-
-  private fun Application.nonRequiredParamsGet() {
-    routing {
-      route("/test/optional") {
-        notarizedGet(emptyTestGetInfo) {
-          call.respond(HttpStatusCode.OK)
-        }
-      }
-    }
-  }
 
   private val oas = Kompendium.openApiSpec.copy(
     info = OpenApiSpecInfo(
