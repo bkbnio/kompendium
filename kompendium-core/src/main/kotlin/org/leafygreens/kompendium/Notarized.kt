@@ -7,9 +7,9 @@ import io.ktor.routing.Route
 import io.ktor.routing.method
 import io.ktor.util.pipeline.PipelineContext
 import io.ktor.util.pipeline.PipelineInterceptor
-import org.leafygreens.kompendium.Kompendium.parseErrorInfo
-import org.leafygreens.kompendium.Kompendium.parseMethodInfo
 import org.leafygreens.kompendium.KompendiumPreFlight.errorNotarizationPreFlight
+import org.leafygreens.kompendium.MethodParser.parseErrorInfo
+import org.leafygreens.kompendium.MethodParser.parseMethodInfo
 import org.leafygreens.kompendium.models.meta.MethodInfo.GetInfo
 import org.leafygreens.kompendium.models.meta.MethodInfo.PostInfo
 import org.leafygreens.kompendium.models.meta.MethodInfo.PutInfo

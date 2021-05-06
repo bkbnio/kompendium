@@ -1,9 +1,12 @@
 package org.leafygreens.kompendium.util
 
 import java.util.UUID
+import kotlin.reflect.KParameter
+import kotlin.reflect.full.primaryConstructor
+import org.leafygreens.kompendium.MethodParser
 import org.leafygreens.kompendium.annotations.KompendiumField
-import org.leafygreens.kompendium.annotations.PathParam
-import org.leafygreens.kompendium.annotations.QueryParam
+import org.leafygreens.kompendium.annotations.KompendiumParam
+import org.leafygreens.kompendium.annotations.ParamType
 
 data class TestSimpleModel(val a: String, val b: Int)
 
@@ -20,8 +23,8 @@ data class TestSimpleWithEnumList(val a: Double, val b: List<SimpleEnum>)
 data class TestInvalidMap(val a: Map<Int, TestSimpleModel>)
 
 data class TestParams(
-  @PathParam val a: String,
-  @QueryParam val aa: Int
+  @KompendiumParam(ParamType.PATH) val a: String,
+  @KompendiumParam(ParamType.QUERY) val aa: Int
 )
 
 data class TestNested(val nesty: String)
@@ -65,6 +68,12 @@ enum class SimpleEnum {
   ONE,
   TWO
 }
+
+data class DefaultParameter(
+  @KompendiumParam(ParamType.QUERY) val a: Int = 100,
+  @KompendiumParam(ParamType.PATH) val b: String?,
+  @KompendiumParam(ParamType.PATH) val c: Boolean
+)
 
 sealed class TestSealedClass(open val a: String)
 

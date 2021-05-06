@@ -25,11 +25,12 @@ import org.leafygreens.kompendium.Notarized.notarizedException
 import org.leafygreens.kompendium.Notarized.notarizedGet
 import org.leafygreens.kompendium.Notarized.notarizedPost
 import org.leafygreens.kompendium.Notarized.notarizedPut
-import org.leafygreens.kompendium.annotations.QueryParam
+import org.leafygreens.kompendium.annotations.KompendiumParam
+import org.leafygreens.kompendium.annotations.ParamType
+import org.leafygreens.kompendium.models.meta.MethodInfo.DeleteInfo
 import org.leafygreens.kompendium.models.meta.MethodInfo.GetInfo
 import org.leafygreens.kompendium.models.meta.MethodInfo.PostInfo
 import org.leafygreens.kompendium.models.meta.MethodInfo.PutInfo
-import org.leafygreens.kompendium.models.meta.MethodInfo.DeleteInfo
 import org.leafygreens.kompendium.models.meta.RequestInfo
 import org.leafygreens.kompendium.models.meta.ResponseInfo
 import org.leafygreens.kompendium.models.oas.OpenApiSpecInfo
@@ -39,6 +40,7 @@ import org.leafygreens.kompendium.models.oas.OpenApiSpecServer
 import org.leafygreens.kompendium.routes.openApi
 import org.leafygreens.kompendium.routes.redoc
 import org.leafygreens.kompendium.util.ComplexRequest
+import org.leafygreens.kompendium.util.DefaultParameter
 import org.leafygreens.kompendium.util.ExceptionResponse
 import org.leafygreens.kompendium.util.KompendiumHttpCodes
 import org.leafygreens.kompendium.util.TestCreatedResponse
@@ -430,6 +432,22 @@ internal class KompendiumTest {
     }
   }
 
+  @Test
+  fun `Can generate a default parameter value`() {
+    withTestApplication({
+      configModule()
+      docs()
+      withDefaultParameter()
+    }) {
+      // do
+      val json = handleRequest(HttpMethod.Get, "/openapi.json").response.content
+
+      // expect
+      val expected = getFileSnapshot("query_with_default_parameter.json").trim()
+      assertEquals(expected, json, "The received json spec should match the expected content")
+    }
+  }
+
   private companion object {
     val testGetResponse = ResponseInfo<TestResponse>(KompendiumHttpCodes.OK, "A Successful Endeavor")
     val testGetListResponse = ResponseInfo<List<TestResponse>>(KompendiumHttpCodes.OK, "A Successful List-y Endeavor")
@@ -440,21 +458,55 @@ internal class KompendiumTest {
     val testRequest = RequestInfo<TestRequest>("A Test request")
     val testRequestAgain = RequestInfo<Int>("A Test request")
     val complexRequest = RequestInfo<ComplexRequest>("A Complex request")
-    val testGetInfo = GetInfo<TestParams, TestResponse>(summary = "Another get test", description = "testing more", responseInfo = testGetResponse)
-    val testGetInfoAgain = GetInfo<TestParams, List<TestResponse>>(summary = "Another get test", description = "testing more", responseInfo = testGetListResponse)
+    val testGetInfo = GetInfo<TestParams, TestResponse>(
+      summary = "Another get test",
+      description = "testing more",
+      responseInfo = testGetResponse
+    )
+    val testGetInfoAgain = GetInfo<TestParams, List<TestResponse>>(
+      summary = "Another get test",
+      description = "testing more",
+      responseInfo = testGetListResponse
+    )
     val testGetWithException = testGetInfo.copy(
       canThrow = setOf(Exception::class)
     )
     val testGetWithMultipleExceptions = testGetInfo.copy(
       canThrow = setOf(AccessDeniedException::class, Exception::class)
     )
-    val testPostInfo = PostInfo<TestParams, TestRequest, TestCreatedResponse>(summary = "Test post endpoint", description = "Post your tests here!", responseInfo = testPostResponse, requestInfo = testRequest)
-    val testPutInfo = PutInfo<Unit, ComplexRequest, TestCreatedResponse>(summary = "Test put endpoint", description = "Put your tests here!", responseInfo = testPostResponse, requestInfo = complexRequest)
-    val testPutInfoAlso = PutInfo<TestParams, TestRequest, TestCreatedResponse>(summary = "Test put endpoint", description = "Put your tests here!", responseInfo = testPostResponse, requestInfo = testRequest)
-    val testPutInfoAgain = PutInfo<Unit, Int, Boolean>(summary = "Test put endpoint", description = "Put your tests here!", responseInfo = testPostResponseAgain, requestInfo = testRequestAgain)
-    val testDeleteInfo = DeleteInfo<TestParams, Unit>(summary = "Test delete endpoint", description =  "testing my deletes", responseInfo = testDeleteResponse)
-    val emptyTestGetInfo = GetInfo<OptionalParams, Unit>(summary = "No request params and response body", description =  "testing more")
-    val trulyEmptyTestGetInfo = GetInfo<Unit, Unit>(summary = "No request params and response body", description = "testing more")
+    val testPostInfo = PostInfo<TestParams, TestRequest, TestCreatedResponse>(
+      summary = "Test post endpoint",
+      description = "Post your tests here!",
+      responseInfo = testPostResponse,
+      requestInfo = testRequest
+    )
+    val testPutInfo = PutInfo<Unit, ComplexRequest, TestCreatedResponse>(
+      summary = "Test put endpoint",
+      description = "Put your tests here!",
+      responseInfo = testPostResponse,
+      requestInfo = complexRequest
+    )
+    val testPutInfoAlso = PutInfo<TestParams, TestRequest, TestCreatedResponse>(
+      summary = "Test put endpoint",
+      description = "Put your tests here!",
+      responseInfo = testPostResponse,
+      requestInfo = testRequest
+    )
+    val testPutInfoAgain = PutInfo<Unit, Int, Boolean>(
+      summary = "Test put endpoint",
+      description = "Put your tests here!",
+      responseInfo = testPostResponseAgain,
+      requestInfo = testRequestAgain
+    )
+    val testDeleteInfo = DeleteInfo<TestParams, Unit>(
+      summary = "Test delete endpoint",
+      description = "testing my deletes",
+      responseInfo = testDeleteResponse
+    )
+    val emptyTestGetInfo =
+      GetInfo<OptionalParams, Unit>(summary = "No request params and response body", description = "testing more")
+    val trulyEmptyTestGetInfo =
+      GetInfo<Unit, Unit>(summary = "No request params and response body", description = "testing more")
   }
 
   private fun Application.configModule() {
@@ -642,29 +694,50 @@ internal class KompendiumTest {
   private fun Application.withExamples() {
     routing {
       route("/test/examples") {
-        notarizedPost(info = PostInfo<Unit, TestRequest, TestResponse>(
-          summary = "Example Parameters",
-          description = "A test for setting parameter examples",
-          requestInfo = RequestInfo(
-            description = "Test",
-            examples = mapOf(
-              "one" to TestRequest(fieldName = TestNested(nesty = "hey"), b = 4.0, aaa = emptyList()),
-              "two" to TestRequest(fieldName = TestNested(nesty = "hello"), b = 3.8, aaa = listOf(31324234))
-            )
-          ),
-          responseInfo = ResponseInfo(
-            status = 201,
-            description = "nice",
-            examples = mapOf("test" to TestResponse(c = "spud"))
-          ),
-        )) {
+        notarizedPost(
+          info = PostInfo<Unit, TestRequest, TestResponse>(
+            summary = "Example Parameters",
+            description = "A test for setting parameter examples",
+            requestInfo = RequestInfo(
+              description = "Test",
+              examples = mapOf(
+                "one" to TestRequest(fieldName = TestNested(nesty = "hey"), b = 4.0, aaa = emptyList()),
+                "two" to TestRequest(fieldName = TestNested(nesty = "hello"), b = 3.8, aaa = listOf(31324234))
+              )
+            ),
+            responseInfo = ResponseInfo(
+              status = 201,
+              description = "nice",
+              examples = mapOf("test" to TestResponse(c = "spud"))
+            ),
+          )
+        ) {
           call.respond(HttpStatusCode.OK)
         }
       }
     }
   }
 
-  data class OptionalParams(@QueryParam val required: String, @QueryParam val notRequired: String?)
+  private fun Application.withDefaultParameter() {
+    routing {
+      route("/test") {
+        notarizedGet(
+          info = GetInfo<DefaultParameter, TestResponse>(
+            summary = "Testing Default Params",
+            description = "Should have a default parameter value"
+          )
+        ) {
+          call.respond(TestResponse("hey"))
+        }
+      }
+    }
+  }
+
+  data class OptionalParams(
+    @KompendiumParam(ParamType.QUERY) val required: String,
+    @KompendiumParam(ParamType.QUERY) val notRequired: String?
+  )
+
   private fun Application.nonRequiredParamsGet() {
     routing {
       route("/test/optional") {

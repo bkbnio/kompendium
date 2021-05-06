@@ -1,5 +1,17 @@
 # Changelog
 
+### [0.9.0] - May 5th, 2021
+
+### Added
+
+- Support for default parameter responses
+
+### Changed
+
+- In order to facilitate default parameters, a couple changes were needed
+  - `KompendiumParam` was added in replacement of the four parameter annotations
+  - Specs now explicitly declare type of parameter rather than a reference in order to not override default values. 
+
 ## [0.8.0] - May 4th, 2021
 
 ### Added

@@ -14,7 +14,7 @@ data class OpenApiSpecResponse<T>(
 data class OpenApiSpecParameter(
   val name: String,
   val `in`: String, // TODO Enum? "query", "header", "path" or "cookie"
-  val schema: OpenApiSpecSchema,
+  val schema: OpenApiSpecComponentSchema,
   val description: String? = null,
   val required: Boolean = true,
   val deprecated: Boolean = false,
