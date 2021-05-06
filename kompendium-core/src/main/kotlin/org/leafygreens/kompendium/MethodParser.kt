@@ -157,8 +157,8 @@ object MethodParser {
     Boolean::class -> false
     Int::class -> 1
     Long::class -> 2
-    Double::class -> 4.0
-    Float::class -> 4.2
+    Double::class -> 1.0
+    Float::class -> 1.0
     UUID::class -> UUID.randomUUID()
     else -> error("Unsupported Type")
   }
