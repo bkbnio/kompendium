@@ -43,12 +43,24 @@ import org.leafygreens.kompendium.util.ComplexRequest
 import org.leafygreens.kompendium.util.DefaultParameter
 import org.leafygreens.kompendium.util.ExceptionResponse
 import org.leafygreens.kompendium.util.KompendiumHttpCodes
+import org.leafygreens.kompendium.util.OptionalParams
 import org.leafygreens.kompendium.util.TestCreatedResponse
 import org.leafygreens.kompendium.util.TestHelpers.getFileSnapshot
 import org.leafygreens.kompendium.util.TestNested
 import org.leafygreens.kompendium.util.TestParams
 import org.leafygreens.kompendium.util.TestRequest
 import org.leafygreens.kompendium.util.TestResponse
+import org.leafygreens.kompendium.util.TestResponseInfo.emptyTestGetInfo
+import org.leafygreens.kompendium.util.TestResponseInfo.testDeleteInfo
+import org.leafygreens.kompendium.util.TestResponseInfo.testGetInfo
+import org.leafygreens.kompendium.util.TestResponseInfo.testGetInfoAgain
+import org.leafygreens.kompendium.util.TestResponseInfo.testGetWithException
+import org.leafygreens.kompendium.util.TestResponseInfo.testGetWithMultipleExceptions
+import org.leafygreens.kompendium.util.TestResponseInfo.testPostInfo
+import org.leafygreens.kompendium.util.TestResponseInfo.testPutInfo
+import org.leafygreens.kompendium.util.TestResponseInfo.testPutInfoAgain
+import org.leafygreens.kompendium.util.TestResponseInfo.testPutInfoAlso
+import org.leafygreens.kompendium.util.TestResponseInfo.trulyEmptyTestGetInfo
 
 internal class KompendiumTest {
 
@@ -448,67 +460,6 @@ internal class KompendiumTest {
     }
   }
 
-  private companion object {
-    val testGetResponse = ResponseInfo<TestResponse>(KompendiumHttpCodes.OK, "A Successful Endeavor")
-    val testGetListResponse = ResponseInfo<List<TestResponse>>(KompendiumHttpCodes.OK, "A Successful List-y Endeavor")
-    val testPostResponse = ResponseInfo<TestCreatedResponse>(KompendiumHttpCodes.CREATED, "A Successful Endeavor")
-    val testPostResponseAgain = ResponseInfo<Boolean>(KompendiumHttpCodes.CREATED, "A Successful Endeavor")
-    val testDeleteResponse =
-      ResponseInfo<Unit>(KompendiumHttpCodes.NO_CONTENT, "A Successful Endeavor", mediaTypes = emptyList())
-    val testRequest = RequestInfo<TestRequest>("A Test request")
-    val testRequestAgain = RequestInfo<Int>("A Test request")
-    val complexRequest = RequestInfo<ComplexRequest>("A Complex request")
-    val testGetInfo = GetInfo<TestParams, TestResponse>(
-      summary = "Another get test",
-      description = "testing more",
-      responseInfo = testGetResponse
-    )
-    val testGetInfoAgain = GetInfo<TestParams, List<TestResponse>>(
-      summary = "Another get test",
-      description = "testing more",
-      responseInfo = testGetListResponse
-    )
-    val testGetWithException = testGetInfo.copy(
-      canThrow = setOf(Exception::class)
-    )
-    val testGetWithMultipleExceptions = testGetInfo.copy(
-      canThrow = setOf(AccessDeniedException::class, Exception::class)
-    )
-    val testPostInfo = PostInfo<TestParams, TestRequest, TestCreatedResponse>(
-      summary = "Test post endpoint",
-      description = "Post your tests here!",
-      responseInfo = testPostResponse,
-      requestInfo = testRequest
-    )
-    val testPutInfo = PutInfo<Unit, ComplexRequest, TestCreatedResponse>(
-      summary = "Test put endpoint",
-      description = "Put your tests here!",
-      responseInfo = testPostResponse,
-      requestInfo = complexRequest
-    )
-    val testPutInfoAlso = PutInfo<TestParams, TestRequest, TestCreatedResponse>(
-      summary = "Test put endpoint",
-      description = "Put your tests here!",
-      responseInfo = testPostResponse,
-      requestInfo = testRequest
-    )
-    val testPutInfoAgain = PutInfo<Unit, Int, Boolean>(
-      summary = "Test put endpoint",
-      description = "Put your tests here!",
-      responseInfo = testPostResponseAgain,
-      requestInfo = testRequestAgain
-    )
-    val testDeleteInfo = DeleteInfo<TestParams, Unit>(
-      summary = "Test delete endpoint",
-      description = "testing my deletes",
-      responseInfo = testDeleteResponse
-    )
-    val emptyTestGetInfo =
-      GetInfo<OptionalParams, Unit>(summary = "No request params and response body", description = "testing more")
-    val trulyEmptyTestGetInfo =
-      GetInfo<Unit, Unit>(summary = "No request params and response body", description = "testing more")
-  }
-
   private fun Application.configModule() {
     install(ContentNegotiation) {
       jackson {
@@ -732,11 +683,6 @@ internal class KompendiumTest {
       }
     }
   }
-
-  data class OptionalParams(
-    @KompendiumParam(ParamType.QUERY) val required: String,
-    @KompendiumParam(ParamType.QUERY) val notRequired: String?
-  )
 
   private fun Application.nonRequiredParamsGet() {
     routing {
