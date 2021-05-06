@@ -24,33 +24,37 @@
   } ],
   "paths" : {
     "/test" : {
-      "delete" : {
+      "get" : {
         "tags" : [ ],
-        "summary" : "Test delete endpoint",
-        "description" : "testing my deletes",
+        "summary" : "Testing Default Params",
+        "description" : "Should have a default parameter value",
         "parameters" : [ {
           "name" : "a",
-          "in" : "path",
+          "in" : "query",
           "schema" : {
-            "type" : "string"
+            "format" : "int32",
+            "type" : "integer",
+            "default" : 100
           },
           "required" : true,
           "deprecated" : false
         }, {
-          "name" : "aa",
-          "in" : "query",
+          "name" : "b",
+          "in" : "path",
           "schema" : {
-            "format" : "int32",
-            "type" : "integer"
+            "type" : "string"
+          },
+          "required" : false,
+          "deprecated" : false
+        }, {
+          "name" : "c",
+          "in" : "path",
+          "schema" : {
+            "type" : "boolean"
           },
           "required" : true,
           "deprecated" : false
         } ],
-        "responses" : {
-          "204" : {
-            "description" : "A Successful Endeavor"
-          }
-        },
         "deprecated" : false
       }
     }
@@ -60,9 +64,20 @@
       "String" : {
         "type" : "string"
       },
+      "TestResponse" : {
+        "properties" : {
+          "c" : {
+            "$ref" : "#/components/schemas/String"
+          }
+        },
+        "type" : "object"
+      },
       "Int" : {
         "format" : "int32",
         "type" : "integer"
+      },
+      "Boolean" : {
+        "type" : "boolean"
       }
     },
     "securitySchemes" : { }

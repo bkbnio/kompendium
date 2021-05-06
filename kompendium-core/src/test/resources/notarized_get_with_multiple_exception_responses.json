@@ -32,7 +32,7 @@
           "name" : "a",
           "in" : "path",
           "schema" : {
-            "$ref" : "#/components/schemas/String"
+            "type" : "string"
           },
           "required" : true,
           "deprecated" : false
@@ -40,7 +40,8 @@
           "name" : "aa",
           "in" : "query",
           "schema" : {
-            "$ref" : "#/components/schemas/Int"
+            "format" : "int32",
+            "type" : "integer"
           },
           "required" : true,
           "deprecated" : false

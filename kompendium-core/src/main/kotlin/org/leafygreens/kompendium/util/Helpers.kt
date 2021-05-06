@@ -1,17 +1,13 @@
 package org.leafygreens.kompendium.util
 
-import io.ktor.routing.PathSegmentConstantRouteSelector
-import io.ktor.routing.PathSegmentParameterRouteSelector
-import io.ktor.routing.RootRouteSelector
-import io.ktor.routing.Route
-import io.ktor.util.InternalAPI
 import java.lang.reflect.ParameterizedType
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
-import kotlin.reflect.jvm.javaField
-import org.slf4j.LoggerFactory
 import kotlin.reflect.full.createType
+import kotlin.reflect.jvm.javaField
+import org.leafygreens.kompendium.util.Helpers.getReferenceSlug
+import org.slf4j.LoggerFactory
 
 object Helpers {
 
@@ -51,6 +47,11 @@ object Helpers {
     val result = block.invoke()
     logger.debug("Result of $functionName invocation: $result")
     return result
+  }
+
+  fun KClass<*>.getSimpleSlug(prop: KProperty<*>): String = when {
+    this.typeParameters.isNotEmpty() -> genericNameAdapter(this, prop)
+    else -> simpleName ?: error("Could not determine simple name for $this")
   }
 
   fun KType.getReferenceSlug(): String = when {

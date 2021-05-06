@@ -40,6 +40,7 @@ import org.leafygreens.kompendium.models.oas.OpenApiSpecServer
 import org.leafygreens.kompendium.routes.openApi
 import org.leafygreens.kompendium.routes.redoc
 import org.leafygreens.kompendium.util.ComplexRequest
+import org.leafygreens.kompendium.util.DefaultParameter
 import org.leafygreens.kompendium.util.ExceptionResponse
 import org.leafygreens.kompendium.util.KompendiumHttpCodes
 import org.leafygreens.kompendium.util.TestCreatedResponse
@@ -431,6 +432,22 @@ internal class KompendiumTest {
     }
   }
 
+  @Test
+  fun `Can generate a default parameter value`() {
+    withTestApplication({
+      configModule()
+      docs()
+      withDefaultParameter()
+    }) {
+      // do
+      val json = handleRequest(HttpMethod.Get, "/openapi.json").response.content
+
+      // expect
+      val expected = getFileSnapshot("query_with_default_parameter.json").trim()
+      assertEquals(expected, json, "The received json spec should match the expected content")
+    }
+  }
+
   private companion object {
     val testGetResponse = ResponseInfo<TestResponse>(KompendiumHttpCodes.OK, "A Successful Endeavor")
     val testGetListResponse = ResponseInfo<List<TestResponse>>(KompendiumHttpCodes.OK, "A Successful List-y Endeavor")
@@ -696,6 +713,21 @@ internal class KompendiumTest {
           )
         ) {
           call.respond(HttpStatusCode.OK)
+        }
+      }
+    }
+  }
+
+  private fun Application.withDefaultParameter() {
+    routing {
+      route("/test") {
+        notarizedGet(
+          info = GetInfo<DefaultParameter, TestResponse>(
+            summary = "Testing Default Params",
+            description = "Should have a default parameter value"
+          )
+        ) {
+          call.respond(TestResponse("hey"))
         }
       }
     }

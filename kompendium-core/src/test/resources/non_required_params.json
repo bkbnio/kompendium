@@ -32,7 +32,7 @@
           "name" : "notRequired",
           "in" : "query",
           "schema" : {
-            "$ref" : "#/components/schemas/String"
+            "type" : "string"
           },
           "required" : false,
           "deprecated" : false
@@ -40,7 +40,7 @@
           "name" : "required",
           "in" : "query",
           "schema" : {
-            "$ref" : "#/components/schemas/String"
+            "type" : "string"
           },
           "required" : true,
           "deprecated" : false

@@ -1,10 +1,13 @@
 package org.leafygreens.kompendium
 
 import kotlin.reflect.KClass
+import kotlin.reflect.KParameter
+import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.full.createType
 import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.memberProperties
+import kotlin.reflect.full.primaryConstructor
 import kotlin.reflect.jvm.javaField
 import org.leafygreens.kompendium.annotations.KompendiumParam
 import org.leafygreens.kompendium.models.meta.MethodInfo
@@ -18,9 +21,9 @@ import org.leafygreens.kompendium.models.oas.OpenApiSpecReferencable
 import org.leafygreens.kompendium.models.oas.OpenApiSpecReferenceObject
 import org.leafygreens.kompendium.models.oas.OpenApiSpecRequest
 import org.leafygreens.kompendium.models.oas.OpenApiSpecResponse
-import org.leafygreens.kompendium.models.oas.OpenApiSpecSchemaRef
 import org.leafygreens.kompendium.util.Helpers
 import org.leafygreens.kompendium.util.Helpers.getReferenceSlug
+import org.leafygreens.kompendium.util.Helpers.getSimpleSlug
 
 object MethodParser {
   fun parseMethodInfo(
@@ -107,7 +110,6 @@ object MethodParser {
     } else null
   }
 
-  // TODO God these annotations make this hideous... any way to improve?
   private fun KType.toParameterSpec(): List<OpenApiSpecParameter> {
     val clazz = classifier as KClass<*>
     return clazz.memberProperties.map { prop ->
@@ -115,13 +117,45 @@ object MethodParser {
         ?: error("Unable to parse field type from $prop")
       val anny = prop.findAnnotation<KompendiumParam>()
         ?: error("Field ${prop.name} is not annotated with KompendiumParam")
+      val schema = Kompendium.cache[field.getSimpleSlug(prop)]
+        ?: error("Could not find component type for $prop")
+      val defaultValue = getDefaultParameterValue(clazz, prop)
       OpenApiSpecParameter(
         name = prop.name,
         `in` = anny.type.name.toLowerCase(),
-        schema = OpenApiSpecSchemaRef(field.getReferenceSlug(prop)),
+        schema = schema.addDefault(defaultValue),
         description = anny.description.ifBlank { null },
         required = !prop.returnType.isMarkedNullable
       )
     }
   }
+
+  private fun getDefaultParameterValue(clazz: KClass<*>, prop: KProperty<*>): Any? {
+    val constructor = clazz.primaryConstructor
+    val parameterInQuestion = constructor
+      ?.parameters
+      ?.find { it.name == prop.name }
+      ?: error("could not find parameter ${prop.name}")
+    if (!parameterInQuestion.isOptional) {
+      return null
+    }
+    val values = constructor
+      .parameters
+      .filterNot { it.isOptional }
+      .associateWith { defaultValueInjector(it) }
+    val instance = constructor.callBy(values)
+    val methods = clazz.java.methods
+    val getterName = "get${prop.name.capitalize()}"
+    val getterFunction = methods.find { it.name == getterName }
+      ?: error("Could not associate ${prop.name} with a getter")
+    return getterFunction.invoke(instance)
+  }
+
+  private fun defaultValueInjector(param: KParameter): Any = when (param.type.classifier) {
+    String::class -> "test"
+    Boolean::class -> false
+    Int::class -> 1
+    else -> error("Unsupported Type")
+  }
+
 }

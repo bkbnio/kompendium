@@ -1,6 +1,9 @@
 package org.leafygreens.kompendium.util
 
 import java.util.UUID
+import kotlin.reflect.KParameter
+import kotlin.reflect.full.primaryConstructor
+import org.leafygreens.kompendium.MethodParser
 import org.leafygreens.kompendium.annotations.KompendiumField
 import org.leafygreens.kompendium.annotations.KompendiumParam
 import org.leafygreens.kompendium.annotations.ParamType
@@ -65,6 +68,12 @@ enum class SimpleEnum {
   ONE,
   TWO
 }
+
+data class DefaultParameter(
+  @KompendiumParam(ParamType.QUERY) val a: Int = 100,
+  @KompendiumParam(ParamType.PATH) val b: String?,
+  @KompendiumParam(ParamType.PATH) val c: Boolean
+)
 
 sealed class TestSealedClass(open val a: String)
 
