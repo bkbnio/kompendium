@@ -54,7 +54,7 @@ operations, there is a corresponding `notarized` method.  These operations are s
 a lot of the class based reflection that powers Kompendium.  Generally speaking the three types that a `notarized` method
 will consume are
 
-- `TParam`: Used to notarize expected request parameters
+i- `TParam`: Used to notarize expected request parameters
 - `TReq`: Used to build the object schema for a request body
 - `TResp`: Used to build the object schema for a response body
 
@@ -79,15 +79,12 @@ integrated.
 Currently, the annotations used by Kompendium are as follows 
 
 - `KompendiumField`
-- `PathParam`
-- `QueryParam`
-- `HeaderParam`
-- `CookieParam`
+- `KompendiumParam`
 
 The intended purpose of `KompendiumField` is to offer field level overrides such as naming conventions (ie snake instead of camel).
 
-The 4 "param" annotations are to offer supplemental information in data classes that describe the set of parameters types 
-that a notarized route needs to analyze.
+The purpose of `KompendiumParam` is to provide supplemental information needed to properly assign the type of parameter 
+(cookie, header, query, path) as well as other parameter-level metadata. 
 
 ## Examples
 
