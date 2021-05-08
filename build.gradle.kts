@@ -5,7 +5,7 @@ plugins {
 }
 
 allprojects {
-  group = "org.leafygreens"
+  group = "io.bkbn"
   version = run {
     val baseVersion =
       project.findProperty("project.version") ?: error("project.version must be set in gradle.properties")

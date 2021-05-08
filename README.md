@@ -25,7 +25,7 @@ fun RepositoryHandler.github(packageUrl: String) = maven {
 
 // 2 Add the repo in question (in this case Kompendium)
 repositories {
-    github("https://maven.pkg.github.com/lg-backbone/kompendium")
+    github("https://maven.pkg.github.com/bkbnio/kompendium")
 }
 
 // 3 Add the package like any normal dependency
@@ -199,7 +199,7 @@ If this is a blocker, please open a GitHub issue, and we can start to think out 
 Work on V1 of Kompendium has come to a close.  This, however, does not mean it has achieved complete
 parity with the OpenAPI feature spec, nor does it have all-of-the nice to have features that a truly next-gen API spec 
 should have.  There are several outstanding features that have been added to the
-[V2 Milestone](https://github.com/lg-backbone/kompendium/milestone/2).  Among others, this includes 
+[V2 Milestone](https://github.com/bkbnio/kompendium/milestone/2).  Among others, this includes 
 
 - Polymorphic support
 - AsyncAPI Integration
@@ -207,4 +207,4 @@ should have.  There are several outstanding features that have been added to the
 - MavenCentral Release
 
 If you have a feature that you would like to see implemented that is not on this list, or discover a 🐞, please open 
-an issue [here](https://github.com/lg-backbone/kompendium/issues/new)
+an issue [here](https://github.com/bkbnio/kompendium/issues/new)
