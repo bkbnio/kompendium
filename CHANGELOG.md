@@ -1,5 +1,11 @@
 # Changelog
 
+### [1.0.0-rc] - May 8th, 2021
+
+### Changed
+
+- Migrated to io.bkbn group and package name
+
 ### [1.0.0-beta] - May 6th, 2021
 
 ### Added
