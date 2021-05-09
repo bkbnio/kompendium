@@ -20,7 +20,7 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle.kts') }}
           restore-keys: ${{ runner.os }}-gradle
       - name: Publish packages to Github
-        run: ./gradlew publish -Prelease=true
+        run: ./gradlew publishAllPublicationsToGithubPackagesRepository -Prelease=true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Publish packages to Nexus
