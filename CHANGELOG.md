@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.0.0] - May 9th, 2021
+
+### Added
+
+- SonaType integration to publish to MavenCentral
+
 ### [1.0.0-rc] - May 8th, 2021
 
 ### Changed
