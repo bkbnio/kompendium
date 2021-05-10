@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.0.1] - May 10th, 2021
+
+### Changed
+
+- a word to sweep my rude commit message to Nexus under the rug
+
 ## [1.0.0] - May 9th, 2021
 
 ### Added
