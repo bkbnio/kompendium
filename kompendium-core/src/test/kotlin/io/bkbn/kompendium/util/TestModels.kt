@@ -37,6 +37,8 @@ data class TestRequest(
 
 data class TestResponse(val c: String)
 
+data class TestGeneric<T>(val messy: String, val potato: T)
+
 data class TestCreatedResponse(val id: Int, val c: String)
 
 data class ComplexRequest(
@@ -77,3 +79,8 @@ sealed class FlibbityGibbit
 
 data class SimpleGibbit(val a: String) : FlibbityGibbit()
 data class ComplexGibbit(val b: String, val c: Int) : FlibbityGibbit()
+
+sealed interface Flibbity<T>
+
+data class Gibbity<T>(val a: T): Flibbity<T>
+data class Bibbity<T>(val b: String, val f: T) : Flibbity<T>

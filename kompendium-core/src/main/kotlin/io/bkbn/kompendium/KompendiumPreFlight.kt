@@ -59,8 +59,9 @@ object KompendiumPreFlight {
   fun gatherSubTypes(type: KType): List<KType> {
     val classifier = type.classifier as KClass<*>
     return if (classifier.isSealed) {
-      // TODO Will this fail if the sealed class takes type parameters?
-      classifier.sealedSubclasses.map { it.createType() }
+      classifier.sealedSubclasses.map {
+        it.createType(type.arguments)
+      }
     } else {
       listOf(type)
     }

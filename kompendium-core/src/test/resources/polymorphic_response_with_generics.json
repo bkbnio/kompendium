@@ -26,8 +26,8 @@
     "/test/polymorphic" : {
       "get" : {
         "tags" : [ ],
-        "summary" : "All the gibbits",
-        "description" : "Polymorphic response",
+        "summary" : "More flibbity",
+        "description" : "Polymorphic with generics",
         "parameters" : [ ],
         "responses" : {
           "200" : {
@@ -36,9 +36,9 @@
               "application/json" : {
                 "schema" : {
                   "anyOf" : [ {
-                    "$ref" : "#/components/schemas/SimpleGibbit"
+                    "$ref" : "#/components/schemas/Gibbity-TestNested"
                   }, {
-                    "$ref" : "#/components/schemas/ComplexGibbit"
+                    "$ref" : "#/components/schemas/Bibbity-TestNested"
                   } ]
                 }
               }
@@ -54,25 +54,29 @@
       "String" : {
         "type" : "string"
       },
-      "SimpleGibbit" : {
+      "TestNested" : {
         "properties" : {
-          "a" : {
+          "nesty" : {
             "$ref" : "#/components/schemas/String"
           }
         },
         "type" : "object"
       },
-      "Int" : {
-        "format" : "int32",
-        "type" : "integer"
+      "Gibbity-TestNested" : {
+        "properties" : {
+          "a" : {
+            "$ref" : "#/components/schemas/TestNested"
+          }
+        },
+        "type" : "object"
       },
-      "ComplexGibbit" : {
+      "Bibbity-TestNested" : {
         "properties" : {
           "b" : {
             "$ref" : "#/components/schemas/String"
           },
-          "c" : {
-            "$ref" : "#/components/schemas/Int"
+          "f" : {
+            "$ref" : "#/components/schemas/TestNested"
           }
         },
         "type" : "object"

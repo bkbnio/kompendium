@@ -148,7 +148,7 @@ object MethodParser {
       mediaTypes.associateWith {
         val schema = if (classifier.isSealed) {
           val refs = classifier.sealedSubclasses
-            .map { it.createType() }
+            .map { it.createType(type.arguments) }
             .map { it.getReferenceSlug() }
             .map { OpenApiSpecReferenceObject(it) }
           OpenApiAnyOf(refs)

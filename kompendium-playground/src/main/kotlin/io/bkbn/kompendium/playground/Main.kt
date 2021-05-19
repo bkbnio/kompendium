@@ -91,46 +91,46 @@ fun Application.mainModule() {
     openApi(oas)
     redoc(oas)
     swaggerUI()
-    route("/potato/spud") {
-      notarizedGet(testGetWithExamples) {
-        call.respond(HttpStatusCode.OK)
-      }
-      notarizedPost(testPostWithExamples) {
-        call.respond(HttpStatusCode.Created, ExampleResponse("hey"))
-      }
-    }
+//    route("/potato/spud") {
+//      notarizedGet(testGetWithExamples) {
+//        call.respond(HttpStatusCode.OK)
+//      }
+//      notarizedPost(testPostWithExamples) {
+//        call.respond(HttpStatusCode.Created, ExampleResponse("hey"))
+//      }
+//    }
     route("/test") {
       route("/{id}") {
         notarizedGet(testIdGetInfo) {
           call.respondText("get by id")
         }
       }
-      route("/single") {
-        notarizedGet(testSingleGetInfo) {
-          call.respondText("get single")
-        }
-        notarizedPost(testSinglePostInfo) {
-          call.respondText("test post")
-        }
-        notarizedPut(testSinglePutInfo) {
-          call.respondText { "hey" }
-        }
-        notarizedDelete(testSingleDeleteInfo) {
-          call.respondText { "heya" }
-        }
-      }
-      authenticate("basic") {
-        route("/authenticated/single") {
-          notarizedGet(testAuthenticatedSingleGetInfo) {
-            call.respond(HttpStatusCode.OK)
-          }
-        }
-      }
+//      route("/single") {
+//        notarizedGet(testSingleGetInfo) {
+//          call.respondText("get single")
+//        }
+//        notarizedPost(testSinglePostInfo) {
+//          call.respondText("test post")
+//        }
+//        notarizedPut(testSinglePutInfo) {
+//          call.respondText { "hey" }
+//        }
+//        notarizedDelete(testSingleDeleteInfo) {
+//          call.respondText { "heya" }
+//        }
+//      }
+//      authenticate("basic") {
+//        route("/authenticated/single") {
+//          notarizedGet(testAuthenticatedSingleGetInfo) {
+//            call.respond(HttpStatusCode.OK)
+//          }
+//        }
+//      }
     }
-    route("/error") {
-      notarizedGet(testSingleGetInfoWithThrowable) {
-        error("bad things just happened")
-      }
-    }
+//    route("/error") {
+//      notarizedGet(testSingleGetInfoWithThrowable) {
+//        error("bad things just happened")
+//      }
+//    }
   }
 }

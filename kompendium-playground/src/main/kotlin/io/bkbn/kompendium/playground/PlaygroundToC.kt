@@ -37,7 +37,7 @@ object PlaygroundToC {
     canThrow = setOf(Exception::class)
   )
 
-  val testIdGetInfo = MethodInfo.GetInfo<ExampleParams, ExampleResponse>(
+  val testIdGetInfo = MethodInfo.GetInfo<ExampleParams, ExampleGeneric<Int>>(
     summary = "Get Test",
     description = "Test for the getting",
     tags = setOf("test", "sample", "get"),

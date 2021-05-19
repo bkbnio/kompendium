@@ -26,8 +26,8 @@
     "/test/polymorphic" : {
       "get" : {
         "tags" : [ ],
-        "summary" : "All the gibbits",
-        "description" : "Polymorphic response",
+        "summary" : "Single Generic",
+        "description" : "Simple generic data class",
         "parameters" : [ ],
         "responses" : {
           "200" : {
@@ -35,11 +35,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "anyOf" : [ {
-                    "$ref" : "#/components/schemas/SimpleGibbit"
-                  }, {
-                    "$ref" : "#/components/schemas/ComplexGibbit"
-                  } ]
+                  "$ref" : "#/components/schemas/TestGeneric-Int"
                 }
               }
             }
@@ -54,24 +50,16 @@
       "String" : {
         "type" : "string"
       },
-      "SimpleGibbit" : {
-        "properties" : {
-          "a" : {
-            "$ref" : "#/components/schemas/String"
-          }
-        },
-        "type" : "object"
-      },
       "Int" : {
         "format" : "int32",
         "type" : "integer"
       },
-      "ComplexGibbit" : {
+      "TestGeneric-Int" : {
         "properties" : {
-          "b" : {
+          "messy" : {
             "$ref" : "#/components/schemas/String"
           },
-          "c" : {
+          "potato" : {
             "$ref" : "#/components/schemas/Int"
           }
         },

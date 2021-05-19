@@ -1,5 +1,6 @@
 package io.bkbn.kompendium.util
 
+import io.bkbn.kompendium.util.Helpers.getReferenceSlug
 import java.lang.reflect.ParameterizedType
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
@@ -30,6 +31,11 @@ object Helpers {
   fun KClass<*>.getSimpleSlug(prop: KProperty<*>): String = when {
     this.typeParameters.isNotEmpty() -> genericNameAdapter(this, prop)
     else -> simpleName ?: error("Could not determine simple name for $this")
+  }
+
+  fun KType.getSimpleSlug(): String = when {
+    this.arguments.isNotEmpty() -> genericNameAdapter(this, classifier as KClass<*>)
+    else -> (classifier as KClass<*>).simpleName ?: error("Could not determine simple name for $this")
   }
 
   fun KType.getReferenceSlug(): String = when {

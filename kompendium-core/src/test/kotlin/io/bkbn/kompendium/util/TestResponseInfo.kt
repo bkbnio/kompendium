@@ -76,6 +76,23 @@ object TestResponseInfo {
   val polymorphicResponse = GetInfo<Unit, FlibbityGibbit>(
     summary = "All the gibbits",
     description = "Polymorphic response",
-    responseInfo = ResponseInfo(HttpStatusCode.OK, "A Successful Endeavor")
+    responseInfo = simpleOkResponse()
   )
+  val genericPolymorphicResponse = GetInfo<Unit, Flibbity<TestNested>>(
+    summary = "More flibbity",
+    description = "Polymorphic with generics",
+    responseInfo = simpleOkResponse()
+  )
+  val anotherGenericPolymorphicResponse = GetInfo<Unit, Flibbity<FlibbityGibbit>>(
+    summary = "The Most Flibbity",
+    description = "Polymorphic with generics but like... crazier",
+    responseInfo = simpleOkResponse()
+  )
+  val genericResponse = GetInfo<Unit, TestGeneric<Int>>(
+    summary = "Single Generic",
+    description = "Simple generic data class",
+    responseInfo = simpleOkResponse()
+  )
+
+  private fun <T> simpleOkResponse() = ResponseInfo<T>(HttpStatusCode.OK, "A successful endeavor")
 }

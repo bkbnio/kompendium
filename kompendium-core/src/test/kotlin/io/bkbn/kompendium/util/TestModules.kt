@@ -277,3 +277,38 @@ fun Application.polymorphicResponse() {
     }
   }
 }
+
+fun Application.genericPolymorphicResponse() {
+  routing {
+    route("/test/polymorphic") {
+      notarizedGet(TestResponseInfo.genericPolymorphicResponse) {
+        call.respond(HttpStatusCode.OK, Gibbity("hey"))
+      }
+    }
+  }
+}
+
+fun Application.genericPolymorphicResponseMultipleImpls() {
+  routing {
+    route("/test/polymorphic") {
+      notarizedGet(TestResponseInfo.genericPolymorphicResponse) {
+        call.respond(HttpStatusCode.OK, Gibbity("hey"))
+      }
+    }
+    route("/test/also/poly") {
+      notarizedGet(TestResponseInfo.anotherGenericPolymorphicResponse) {
+        call.respond(HttpStatusCode.OK, Bibbity("test", ComplexGibbit("nice", 1)))
+      }
+    }
+  }
+}
+
+fun Application.simpleGenericResponse() {
+  routing {
+    route("/test/polymorphic") {
+      notarizedGet(TestResponseInfo.genericResponse) {
+        call.respond(HttpStatusCode.OK, Gibbity("hey"))
+      }
+    }
+  }
+}

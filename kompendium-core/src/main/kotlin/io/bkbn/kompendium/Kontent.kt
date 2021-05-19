@@ -1,12 +1,5 @@
 package io.bkbn.kompendium
 
-import java.util.UUID
-import kotlin.reflect.KClass
-import kotlin.reflect.KType
-import kotlin.reflect.full.isSubclassOf
-import kotlin.reflect.full.memberProperties
-import kotlin.reflect.jvm.javaField
-import kotlin.reflect.typeOf
 import io.bkbn.kompendium.models.meta.SchemaMap
 import io.bkbn.kompendium.models.oas.ArraySchema
 import io.bkbn.kompendium.models.oas.DictionarySchema
@@ -18,7 +11,15 @@ import io.bkbn.kompendium.models.oas.SimpleSchema
 import io.bkbn.kompendium.util.Helpers.COMPONENT_SLUG
 import io.bkbn.kompendium.util.Helpers.genericNameAdapter
 import io.bkbn.kompendium.util.Helpers.getReferenceSlug
+import io.bkbn.kompendium.util.Helpers.getSimpleSlug
 import io.bkbn.kompendium.util.Helpers.logged
+import java.util.UUID
+import kotlin.reflect.KClass
+import kotlin.reflect.KType
+import kotlin.reflect.full.isSubclassOf
+import kotlin.reflect.full.memberProperties
+import kotlin.reflect.jvm.javaField
+import kotlin.reflect.typeOf
 import org.slf4j.LoggerFactory
 
 /**
@@ -93,7 +94,7 @@ object Kontent {
         clazz.isSubclassOf(Collection::class) -> handleCollectionType(type, clazz, cache)
         clazz.isSubclassOf(Enum::class) -> handleEnumType(clazz, cache)
         clazz.isSubclassOf(Map::class) -> handleMapType(type, clazz, cache)
-        else -> handleComplexType(clazz, cache)
+        else -> handleComplexType(type, clazz, cache)
       }
     }
   }
@@ -103,32 +104,44 @@ object Kontent {
    * @param clazz Class of the object to analyze
    * @param cache Existing schema map to append to
    */
-  private fun handleComplexType(clazz: KClass<*>, cache: SchemaMap): SchemaMap =
-    when (cache.containsKey(clazz.simpleName)) {
+  private fun handleComplexType(type: KType, clazz: KClass<*>, cache: SchemaMap): SchemaMap {
+    val slug = type.getSimpleSlug()
+    return when (cache.containsKey(slug)) {
       true -> {
-        logger.debug("Cache already contains ${clazz.simpleName}, returning cache untouched")
+        logger.debug("Cache already contains $slug, returning cache untouched")
         cache
       }
       false -> {
-        logger.debug("${clazz.simpleName} was not found in cache, generating now")
+        logger.debug("$slug was not found in cache, generating now")
         var newCache = cache
+        val typeMap = clazz.typeParameters.zip(type.arguments).toMap()
         val fieldMap = clazz.memberProperties.associate { prop ->
           logger.debug("Analyzing $prop in class $clazz")
           val field = prop.javaField?.type?.kotlin ?: error("Unable to parse field type from $prop")
           logger.debug("Detected field $field")
           if (!newCache.containsKey(field.simpleName)) {
             logger.debug("Cache was missing ${field.simpleName}, adding now")
-            newCache = generateKTypeKontent(prop.returnType, newCache)
+            newCache = if (typeMap.containsKey(prop.returnType.classifier)) {
+              logger.debug("Generic type detected")
+              generateKTypeKontent(typeMap[prop.returnType.classifier]?.type!!, newCache)
+            } else {
+              generateKTypeKontent(prop.returnType, newCache)
+            }
           }
-          val propSchema = ReferencedSchema(field.getReferenceSlug(prop))
+          val propSchema = if (typeMap.containsKey(prop.returnType.classifier)) {
+            ReferencedSchema(typeMap[prop.returnType.classifier]?.type!!.getReferenceSlug())
+          } else {
+            ReferencedSchema(field.getReferenceSlug(prop))
+          }
           Pair(prop.name, propSchema)
         }
-        logger.debug("${clazz.simpleName} contains $fieldMap")
+        logger.debug("$slug contains $fieldMap")
         val schema = ObjectSchema(fieldMap)
-        logger.debug("${clazz.simpleName} schema: $schema")
-        newCache.plus(clazz.simpleName!! to schema)
+        logger.debug("$slug schema: $schema")
+        newCache.plus(slug to schema)
       }
     }
+  }
 
   /**
    * Handler for when an [Enum] is encountered

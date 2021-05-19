@@ -1,0 +1,138 @@
+{
+  "openapi" : "3.0.3",
+  "info" : {
+    "title" : "Test API",
+    "version" : "1.33.7",
+    "description" : "An amazing, fully-ish \uD83D\uDE09 generated API spec",
+    "termsOfService" : "https://example.com",
+    "contact" : {
+      "name" : "Homer Simpson",
+      "url" : "https://gph.is/1NPUDiM",
+      "email" : "chunkylover53@aol.com"
+    },
+    "license" : {
+      "name" : "MIT",
+      "url" : "https://github.com/bkbnio/kompendium/blob/main/LICENSE"
+    }
+  },
+  "servers" : [ {
+    "url" : "https://myawesomeapi.com",
+    "description" : "Production instance of my API"
+  }, {
+    "url" : "https://staging.myawesomeapi.com",
+    "description" : "Where the fun stuff happens"
+  } ],
+  "paths" : {
+    "/test/polymorphic" : {
+      "get" : {
+        "tags" : [ ],
+        "summary" : "More flibbity",
+        "description" : "Polymorphic with generics",
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "A successful endeavor",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "anyOf" : [ {
+                    "$ref" : "#/components/schemas/Gibbity-TestNested"
+                  }, {
+                    "$ref" : "#/components/schemas/Bibbity-TestNested"
+                  } ]
+                }
+              }
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/test/also/poly" : {
+      "get" : {
+        "tags" : [ ],
+        "summary" : "The Most Flibbity",
+        "description" : "Polymorphic with generics but like... crazier",
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "A successful endeavor",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "anyOf" : [ {
+                    "$ref" : "#/components/schemas/Gibbity-FlibbityGibbit"
+                  }, {
+                    "$ref" : "#/components/schemas/Bibbity-FlibbityGibbit"
+                  } ]
+                }
+              }
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "String" : {
+        "type" : "string"
+      },
+      "TestNested" : {
+        "properties" : {
+          "nesty" : {
+            "$ref" : "#/components/schemas/String"
+          }
+        },
+        "type" : "object"
+      },
+      "Gibbity-TestNested" : {
+        "properties" : {
+          "a" : {
+            "$ref" : "#/components/schemas/TestNested"
+          }
+        },
+        "type" : "object"
+      },
+      "Bibbity-TestNested" : {
+        "properties" : {
+          "b" : {
+            "$ref" : "#/components/schemas/String"
+          },
+          "f" : {
+            "$ref" : "#/components/schemas/TestNested"
+          }
+        },
+        "type" : "object"
+      },
+      // TODO Here down is wrong
+      "FlibbityGibbit" : {
+        "properties" : { },
+        "type" : "object"
+      },
+      "Gibbity-FlibbityGibbit" : {
+        "properties" : {
+          "a" : {
+            "$ref" : "#/components/schemas/FlibbityGibbit"
+          }
+        },
+        "type" : "object"
+      },
+      "Bibbity-FlibbityGibbit" : {
+        "properties" : {
+          "b" : {
+            "$ref" : "#/components/schemas/String"
+          },
+          "f" : {
+            "$ref" : "#/components/schemas/FlibbityGibbit"
+          }
+        },
+        "type" : "object"
+      }
+    },
+    "securitySchemes" : { }
+  },
+  "security" : [ ],
+  "tags" : [ ]
+}
