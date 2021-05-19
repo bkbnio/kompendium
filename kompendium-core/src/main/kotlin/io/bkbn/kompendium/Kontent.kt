@@ -1,6 +1,7 @@
 package io.bkbn.kompendium
 
 import io.bkbn.kompendium.models.meta.SchemaMap
+import io.bkbn.kompendium.models.oas.AnyOfReferencedSchema
 import io.bkbn.kompendium.models.oas.ArraySchema
 import io.bkbn.kompendium.models.oas.DictionarySchema
 import io.bkbn.kompendium.models.oas.EnumSchema
@@ -16,6 +17,7 @@ import io.bkbn.kompendium.util.Helpers.logged
 import java.util.UUID
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
+import kotlin.reflect.full.createType
 import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.jvm.javaField
@@ -99,6 +101,7 @@ object Kontent {
     }
   }
 
+  // TODO This shit is so gross, clean it up
   /**
    * In the event of an object type, this method will parse out individual fields to recursively aggregate object map.
    * @param clazz Class of the object to analyze
@@ -119,19 +122,42 @@ object Kontent {
           logger.debug("Analyzing $prop in class $clazz")
           val field = prop.javaField?.type?.kotlin ?: error("Unable to parse field type from $prop")
           logger.debug("Detected field $field")
+          val yoinkBaseType = if (typeMap.containsKey(prop.returnType.classifier)) {
+            logger.debug("Generic type detected")
+            typeMap[prop.returnType.classifier]?.type!!
+          } else {
+            prop.returnType
+          }
+          val yoinkedClassifier = yoinkBaseType.classifier as KClass<*>
+          val yoinkedTypes = if (yoinkedClassifier.isSealed) {
+            yoinkedClassifier.sealedSubclasses.map { it.createType(yoinkBaseType.arguments) }
+          } else {
+            listOf(yoinkBaseType)
+          }
           if (!newCache.containsKey(field.simpleName)) {
             logger.debug("Cache was missing ${field.simpleName}, adding now")
-            newCache = if (typeMap.containsKey(prop.returnType.classifier)) {
-              logger.debug("Generic type detected")
-              generateKTypeKontent(typeMap[prop.returnType.classifier]?.type!!, newCache)
-            } else {
-              generateKTypeKontent(prop.returnType, newCache)
+            yoinkedTypes.forEach {
+              newCache = generateKTypeKontent(it, newCache)
             }
           }
           val propSchema = if (typeMap.containsKey(prop.returnType.classifier)) {
-            ReferencedSchema(typeMap[prop.returnType.classifier]?.type!!.getReferenceSlug())
+            if (yoinkedClassifier.isSealed) {
+              val refs = yoinkedClassifier.sealedSubclasses
+                .map { it.createType(yoinkBaseType.arguments) }
+                .map { ReferencedSchema(it.getReferenceSlug()) }
+              AnyOfReferencedSchema(refs)
+            } else {
+              ReferencedSchema(typeMap[prop.returnType.classifier]?.type!!.getReferenceSlug())
+            }
           } else {
-            ReferencedSchema(field.getReferenceSlug(prop))
+            if (yoinkedClassifier.isSealed) {
+              val refs = yoinkedClassifier.sealedSubclasses
+                .map { it.createType(yoinkBaseType.arguments) }
+                .map { ReferencedSchema(it.getReferenceSlug()) }
+              AnyOfReferencedSchema(refs)
+            } else {
+              ReferencedSchema(field.getReferenceSlug(prop))
+            }
           }
           Pair(prop.name, propSchema)
         }

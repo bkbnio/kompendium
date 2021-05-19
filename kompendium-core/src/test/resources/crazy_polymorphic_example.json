@@ -106,15 +106,37 @@
         },
         "type" : "object"
       },
-      // TODO Here down is wrong
-      "FlibbityGibbit" : {
-        "properties" : { },
+      "SimpleGibbit" : {
+        "properties" : {
+          "a" : {
+            "$ref" : "#/components/schemas/String"
+          }
+        },
+        "type" : "object"
+      },
+      "Int" : {
+        "format" : "int32",
+        "type" : "integer"
+      },
+      "ComplexGibbit" : {
+        "properties" : {
+          "b" : {
+            "$ref" : "#/components/schemas/String"
+          },
+          "c" : {
+            "$ref" : "#/components/schemas/Int"
+          }
+        },
         "type" : "object"
       },
       "Gibbity-FlibbityGibbit" : {
         "properties" : {
           "a" : {
-            "$ref" : "#/components/schemas/FlibbityGibbit"
+            "anyOf" : [ {
+              "$ref" : "#/components/schemas/SimpleGibbit"
+            }, {
+              "$ref" : "#/components/schemas/ComplexGibbit"
+            } ]
           }
         },
         "type" : "object"
@@ -125,7 +147,11 @@
             "$ref" : "#/components/schemas/String"
           },
           "f" : {
-            "$ref" : "#/components/schemas/FlibbityGibbit"
+            "anyOf" : [ {
+              "$ref" : "#/components/schemas/SimpleGibbit"
+            }, {
+              "$ref" : "#/components/schemas/ComplexGibbit"
+            } ]
           }
         },
         "type" : "object"

@@ -3,6 +3,7 @@ package io.bkbn.kompendium.models.oas
 sealed class OpenApiSpecComponentSchema(open val default: Any? = null) {
 
   fun addDefault(default: Any?): OpenApiSpecComponentSchema = when (this) {
+    is AnyOfReferencedSchema -> error("Cannot add default to anyOf reference")
     is ReferencedSchema -> this.copy(default = default)
     is ObjectSchema -> this.copy(default = default)
     is DictionarySchema -> this.copy(default = default)
@@ -17,6 +18,7 @@ sealed class OpenApiSpecComponentSchema(open val default: Any? = null) {
 sealed class TypedSchema(open val type: String, override val default: Any? = null) : OpenApiSpecComponentSchema(default)
 
 data class ReferencedSchema(val `$ref`: String, override val default: Any? = null) : OpenApiSpecComponentSchema(default)
+data class AnyOfReferencedSchema(val anyOf: List<ReferencedSchema>) : OpenApiSpecComponentSchema()
 
 data class ObjectSchema(
   val properties: Map<String, OpenApiSpecComponentSchema>,
