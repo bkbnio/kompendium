@@ -37,7 +37,7 @@ import io.bkbn.kompendium.playground.PlaygroundToC.testSinglePostInfo
 import io.bkbn.kompendium.playground.PlaygroundToC.testSinglePutInfo
 import io.bkbn.kompendium.routes.openApi
 import io.bkbn.kompendium.routes.redoc
-import org.leafygreens.kompendium.swagger.swaggerUI
+import io.bkbn.kompendium.swagger.swaggerUI
 
 fun main() {
   embeddedServer(

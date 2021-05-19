@@ -267,3 +267,13 @@ fun Application.nonRequiredParamsGet() {
     }
   }
 }
+
+fun Application.polymorphicResponse() {
+  routing {
+    route("/test/polymorphic") {
+      notarizedGet(TestResponseInfo.polymorphicResponse) {
+        call.respond(HttpStatusCode.OK, SimpleGibbit("hey"))
+      }
+    }
+  }
+}

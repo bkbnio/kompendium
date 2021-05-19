@@ -1,7 +1,7 @@
 package io.bkbn.kompendium.models.oas
 
 data class OpenApiSpecMediaType<T>(
-  val schema: OpenApiSpecReferenceObject,
+  val schema: OpenApiSpecReferencable,
   val examples: Map<String, ExampleWrapper<T>>? = null
 )
 

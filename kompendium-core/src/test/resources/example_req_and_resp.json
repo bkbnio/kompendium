@@ -85,17 +85,6 @@
   },
   "components" : {
     "schemas" : {
-      "String" : {
-        "type" : "string"
-      },
-      "TestResponse" : {
-        "properties" : {
-          "c" : {
-            "$ref" : "#/components/schemas/String"
-          }
-        },
-        "type" : "object"
-      },
       "Long" : {
         "format" : "int64",
         "type" : "integer"
@@ -109,6 +98,9 @@
       "Double" : {
         "format" : "double",
         "type" : "number"
+      },
+      "String" : {
+        "type" : "string"
       },
       "TestNested" : {
         "properties" : {
@@ -128,6 +120,14 @@
           },
           "fieldName" : {
             "$ref" : "#/components/schemas/TestNested"
+          }
+        },
+        "type" : "object"
+      },
+      "TestResponse" : {
+        "properties" : {
+          "c" : {
+            "$ref" : "#/components/schemas/String"
           }
         },
         "type" : "object"

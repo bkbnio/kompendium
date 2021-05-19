@@ -30,7 +30,7 @@ repositories {
 
 // 3 Add the package like any normal dependency
 dependencies { 
-    implementation("org.leafygreens:kompendium-core:1.0.0")
+    implementation("io.bkbn:kompendium-core:1.0.0")
 }
 
 ```

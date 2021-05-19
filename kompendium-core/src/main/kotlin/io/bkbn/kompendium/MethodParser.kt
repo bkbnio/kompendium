@@ -1,20 +1,11 @@
 package io.bkbn.kompendium
 
-import java.util.UUID
-import kotlin.reflect.KClass
-import kotlin.reflect.KParameter
-import kotlin.reflect.KProperty
-import kotlin.reflect.KType
-import kotlin.reflect.full.createType
-import kotlin.reflect.full.findAnnotation
-import kotlin.reflect.full.memberProperties
-import kotlin.reflect.full.primaryConstructor
-import kotlin.reflect.jvm.javaField
 import io.bkbn.kompendium.annotations.KompendiumParam
 import io.bkbn.kompendium.models.meta.MethodInfo
 import io.bkbn.kompendium.models.meta.RequestInfo
 import io.bkbn.kompendium.models.meta.ResponseInfo
 import io.bkbn.kompendium.models.oas.ExampleWrapper
+import io.bkbn.kompendium.models.oas.OpenApiAnyOf
 import io.bkbn.kompendium.models.oas.OpenApiSpecMediaType
 import io.bkbn.kompendium.models.oas.OpenApiSpecParameter
 import io.bkbn.kompendium.models.oas.OpenApiSpecPathItemOperation
@@ -25,6 +16,17 @@ import io.bkbn.kompendium.models.oas.OpenApiSpecResponse
 import io.bkbn.kompendium.util.Helpers
 import io.bkbn.kompendium.util.Helpers.getReferenceSlug
 import io.bkbn.kompendium.util.Helpers.getSimpleSlug
+import java.util.Locale
+import java.util.UUID
+import kotlin.reflect.KClass
+import kotlin.reflect.KParameter
+import kotlin.reflect.KProperty
+import kotlin.reflect.KType
+import kotlin.reflect.full.createType
+import kotlin.reflect.full.findAnnotation
+import kotlin.reflect.full.memberProperties
+import kotlin.reflect.full.primaryConstructor
+import kotlin.reflect.jvm.javaField
 
 /**
  * The MethodParser is responsible for converting route metadata and types into an OpenAPI compatible data class.
@@ -106,7 +108,7 @@ object MethodParser {
       else -> {
         OpenApiSpecRequest(
           description = requestInfo.description,
-          content = resolveContent(requestInfo.mediaTypes, requestInfo.examples) ?: mapOf()
+          content = resolveContent(this, requestInfo.mediaTypes, requestInfo.examples) ?: mapOf()
         )
       }
     }
@@ -123,7 +125,7 @@ object MethodParser {
       else -> {
         val specResponse = OpenApiSpecResponse(
           description = responseInfo.description,
-          content = resolveContent(responseInfo.mediaTypes, responseInfo.examples)
+          content = resolveContent(this, responseInfo.mediaTypes, responseInfo.examples)
         )
         Pair(responseInfo.status.value, specResponse)
       }
@@ -131,20 +133,31 @@ object MethodParser {
 
   /**
    * Generates MediaTypes along with any examples provided
-   * @receiver [KType] Type of the object
+   * @param type [KType] Type of the object
    * @param mediaTypes list of acceptable http media types
    * @param examples Mapping of named examples of valid bodies.
    * @return Named mapping of media types.
    */
-  private fun <F> KType.resolveContent(
+  private fun <F> resolveContent(
+    type: KType,
     mediaTypes: List<String>,
     examples: Map<String, F>
   ): Map<String, OpenApiSpecMediaType<F>>? {
-    return if (this != Helpers.UNIT_TYPE && mediaTypes.isNotEmpty()) {
+    val classifier = type.classifier as KClass<*>
+    return if (type != Helpers.UNIT_TYPE && mediaTypes.isNotEmpty()) {
       mediaTypes.associateWith {
-        val ref = getReferenceSlug()
+        val schema = if (classifier.isSealed) {
+          val refs = classifier.sealedSubclasses
+            .map { it.createType() }
+            .map { it.getReferenceSlug() }
+            .map { OpenApiSpecReferenceObject(it) }
+          OpenApiAnyOf(refs)
+        } else {
+          val ref = type.getReferenceSlug()
+          OpenApiSpecReferenceObject(ref)
+        }
         OpenApiSpecMediaType(
-          schema = OpenApiSpecReferenceObject(ref),
+          schema = schema,
           examples = examples.mapValues { (_, v) -> ExampleWrapper(v) }.ifEmpty { null }
         )
       }
@@ -153,7 +166,7 @@ object MethodParser {
 
   /**
    * Parses a type for all parameter information.  All fields in the receiver
-   * must be annotated with [org.leafygreens.kompendium.annotations.KompendiumParam].
+   * must be annotated with [io.bkbn.kompendium.annotations.KompendiumParam].
    * @receiver type
    * @return list of valid parameter specs as detailed by the [KType] members
    * @throws [IllegalStateException] if the class could not be parsed properly
@@ -170,7 +183,7 @@ object MethodParser {
       val defaultValue = getDefaultParameterValue(clazz, prop)
       OpenApiSpecParameter(
         name = prop.name,
-        `in` = anny.type.name.toLowerCase(),
+        `in` = anny.type.name.lowercase(Locale.getDefault()),
         schema = schema.addDefault(defaultValue),
         description = anny.description.ifBlank { null },
         required = !prop.returnType.isMarkedNullable

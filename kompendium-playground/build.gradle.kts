@@ -20,6 +20,6 @@ dependencies {
 
 application {
   @Suppress("DEPRECATION")
-  mainClassName = "org.leafygreens.kompendium.playground.MainKt"
+  mainClassName = "io.bkbn.kompendium.playground.MainKt"
   applicationDefaultJvmArgs = listOf("-Dio.ktor.development=true") // TODO I don't think this is working 😢
 }

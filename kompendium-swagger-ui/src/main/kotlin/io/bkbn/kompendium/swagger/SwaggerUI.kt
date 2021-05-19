@@ -1,4 +1,4 @@
-package org.leafygreens.kompendium.swagger
+package io.bkbn.kompendium.swagger
 
 import io.ktor.application.call
 import io.ktor.response.respondRedirect

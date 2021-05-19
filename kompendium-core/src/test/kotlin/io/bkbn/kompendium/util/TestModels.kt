@@ -72,3 +72,8 @@ data class OptionalParams(
   @KompendiumParam(ParamType.QUERY) val required: String,
   @KompendiumParam(ParamType.QUERY) val notRequired: String?
 )
+
+sealed class FlibbityGibbit
+
+data class SimpleGibbit(val a: String) : FlibbityGibbit()
+data class ComplexGibbit(val b: String, val c: Int) : FlibbityGibbit()

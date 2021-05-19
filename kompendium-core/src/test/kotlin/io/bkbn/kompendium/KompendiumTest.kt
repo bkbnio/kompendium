@@ -29,6 +29,7 @@ import io.bkbn.kompendium.util.notarizedGetWithNotarizedException
 import io.bkbn.kompendium.util.notarizedPostModule
 import io.bkbn.kompendium.util.notarizedPutModule
 import io.bkbn.kompendium.util.pathParsingTestModule
+import io.bkbn.kompendium.util.polymorphicResponse
 import io.bkbn.kompendium.util.primitives
 import io.bkbn.kompendium.util.returnsList
 import io.bkbn.kompendium.util.rootModule
@@ -432,6 +433,22 @@ internal class KompendiumTest {
 
       // expect
       val expected = getFileSnapshot("query_with_default_parameter.json").trim()
+      assertEquals(expected, json, "The received json spec should match the expected content")
+    }
+  }
+
+  @Test
+  fun `Can generate a polymorphic response type`() {
+    withTestApplication({
+      configModule()
+      docs()
+      polymorphicResponse()
+    }) {
+      // do
+      val json = handleRequest(HttpMethod.Get, "/openapi.json").response.content
+
+      // expect
+      val expected = getFileSnapshot("polymorphic_response.json").trim()
       assertEquals(expected, json, "The received json spec should match the expected content")
     }
   }

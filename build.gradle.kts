@@ -4,7 +4,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import io.gitlab.arturbosch.detekt.extensions.DetektExtension
 
 plugins {
-  id("org.jetbrains.kotlin.jvm") version "1.4.32" apply false
+  id("org.jetbrains.kotlin.jvm") version "1.5.0" apply false
   id("io.gitlab.arturbosch.detekt") version "1.17.0-RC3" apply false
   id("com.adarshr.test-logger") version "3.0.0" apply false
 }

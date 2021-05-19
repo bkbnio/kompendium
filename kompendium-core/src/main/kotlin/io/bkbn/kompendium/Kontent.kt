@@ -43,6 +43,19 @@ object Kontent {
   }
 
   /**
+   * Analyzes a [KType] for its top-level and any nested schemas, and adds them to a [SchemaMap], if provided
+   * @param type [KType] to analyze
+   * @param cache Existing schema map to append to
+   * @return an updated schema map containing all type information for [KType] type
+   */
+  fun generateKontent(
+    type: KType,
+    cache: SchemaMap = emptyMap()
+  ): SchemaMap {
+    return generateKTypeKontent(type, cache)
+  }
+
+  /**
    * Analyze a type [T], but filters out the top-level type
    * @param T type to analyze
    * @param cache Existing schema map to append to

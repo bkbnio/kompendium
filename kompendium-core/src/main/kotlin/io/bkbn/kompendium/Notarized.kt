@@ -27,7 +27,7 @@ object Notarized {
   /**
    * Notarization for an HTTP GET request
    * @param TParam The class containing all parameter fields.
-   * Each field must be annotated with @[org.leafygreens.kompendium.annotations.KompendiumField]
+   * Each field must be annotated with @[io.bkbn.kompendium.annotations.KompendiumField]
    * @param TResp Class detailing the expected API response
    * @param info Route metadata
    */
@@ -45,7 +45,7 @@ object Notarized {
   /**
    * Notarization for an HTTP POST request
    * @param TParam The class containing all parameter fields.
-   * Each field must be annotated with @[org.leafygreens.kompendium.annotations.KompendiumField]
+   * Each field must be annotated with @[io.bkbn.kompendium.annotations.KompendiumField]
    * @param TReq Class detailing the expected API request body
    * @param TResp Class detailing the expected API response
    * @param info Route metadata
@@ -64,7 +64,7 @@ object Notarized {
   /**
    * Notarization for an HTTP Delete request
    * @param TParam The class containing all parameter fields.
-   * Each field must be annotated with @[org.leafygreens.kompendium.annotations.KompendiumField]
+   * Each field must be annotated with @[io.bkbn.kompendium.annotations.KompendiumField]
    * @param TReq Class detailing the expected API request body
    * @param TResp Class detailing the expected API response
    * @param info Route metadata
@@ -84,7 +84,7 @@ object Notarized {
   /**
    * Notarization for an HTTP POST request
    * @param TParam The class containing all parameter fields.
-   * Each field must be annotated with @[org.leafygreens.kompendium.annotations.KompendiumField]
+   * Each field must be annotated with @[io.bkbn.kompendium.annotations.KompendiumField]
    * @param TResp Class detailing the expected API response
    * @param info Route metadata
    */
