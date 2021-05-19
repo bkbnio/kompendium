@@ -2,7 +2,6 @@ plugins {
   id("org.jetbrains.kotlin.jvm") version "1.4.32" apply false
   id("io.gitlab.arturbosch.detekt") version "1.16.0-RC2" apply false
   id("com.adarshr.test-logger") version "3.0.0" apply false
-  id("io.github.gradle-nexus.publish-plugin") version "1.1.0" apply true
 }
 
 allprojects {
@@ -59,16 +58,5 @@ allprojects {
 
   configure<JavaPluginExtension> {
     withSourcesJar()
-  }
-}
-
-nexusPublishing {
-  repositories {
-    sonatype {
-      username.set(System.getenv("SONATYPE_USER"))
-      password.set(System.getenv("SONATYPE_PASSWORD"))
-      nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"))
-      snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
-    }
   }
 }

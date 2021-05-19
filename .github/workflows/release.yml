@@ -20,11 +20,6 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle.kts') }}
           restore-keys: ${{ runner.os }}-gradle
       - name: Publish packages to Github
-        run: ./gradlew publishAllPublicationsToGithubPackagesRepository -Prelease=true
+        run: ./gradlew publish -Prelease=true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#      - name: Publish packages to Nexus
-#        run: ./gradlew publishToSonatype closeAndReleaseSonatypeStagingRepository -Prelease=true
-#        env:
-#          SONATYPE_USER: ${{ secrets.SONATYPE_USER }}
-#          SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
