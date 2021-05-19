@@ -1,6 +1,11 @@
+import com.adarshr.gradle.testlogger.theme.ThemeType
+import com.adarshr.gradle.testlogger.TestLoggerExtension
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import io.gitlab.arturbosch.detekt.extensions.DetektExtension
+
 plugins {
   id("org.jetbrains.kotlin.jvm") version "1.4.32" apply false
-  id("io.gitlab.arturbosch.detekt") version "1.16.0-RC2" apply false
+  id("io.gitlab.arturbosch.detekt") version "1.17.0-RC3" apply false
   id("com.adarshr.test-logger") version "3.0.0" apply false
 }
 
@@ -25,14 +30,14 @@ allprojects {
   apply(plugin = "com.adarshr.test-logger")
   apply(plugin = "idea")
 
-  tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+  tasks.withType<KotlinCompile>().configureEach {
     kotlinOptions {
       jvmTarget = "11"
     }
   }
 
-  configure<com.adarshr.gradle.testlogger.TestLoggerExtension> {
-    setTheme("standard")
+  configure<TestLoggerExtension> {
+    theme = ThemeType.MOCHA
     setLogLevel("lifecycle")
     showExceptions = true
     showStackTraces = true
@@ -50,8 +55,8 @@ allprojects {
     showFailedStandardStreams = true
   }
 
-  configure<io.gitlab.arturbosch.detekt.extensions.DetektExtension> {
-    toolVersion = "1.16.0-RC2"
+  configure<DetektExtension> {
+    toolVersion = "1.17.0-RC3"
     config = files("${rootProject.projectDir}/detekt.yml")
     buildUponDefaultConfig = true
   }

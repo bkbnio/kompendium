@@ -2,6 +2,14 @@ package io.bkbn.kompendium.util
 
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.databind.SerializationFeature
+import io.bkbn.kompendium.Notarized.notarizedDelete
+import io.bkbn.kompendium.Notarized.notarizedException
+import io.bkbn.kompendium.Notarized.notarizedGet
+import io.bkbn.kompendium.Notarized.notarizedPost
+import io.bkbn.kompendium.Notarized.notarizedPut
+import io.bkbn.kompendium.models.meta.MethodInfo
+import io.bkbn.kompendium.models.meta.RequestInfo
+import io.bkbn.kompendium.models.meta.ResponseInfo
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
@@ -13,14 +21,6 @@ import io.ktor.response.respond
 import io.ktor.response.respondText
 import io.ktor.routing.route
 import io.ktor.routing.routing
-import io.bkbn.kompendium.Notarized.notarizedDelete
-import io.bkbn.kompendium.Notarized.notarizedException
-import io.bkbn.kompendium.Notarized.notarizedGet
-import io.bkbn.kompendium.Notarized.notarizedPost
-import io.bkbn.kompendium.Notarized.notarizedPut
-import io.bkbn.kompendium.models.meta.MethodInfo
-import io.bkbn.kompendium.models.meta.RequestInfo
-import io.bkbn.kompendium.models.meta.ResponseInfo
 
 fun Application.configModule() {
   install(ContentNegotiation) {
@@ -33,7 +33,12 @@ fun Application.configModule() {
 
 fun Application.statusPageModule() {
   install(StatusPages) {
-    notarizedException<Exception, ExceptionResponse>(info = ResponseInfo(HttpStatusCode.BadRequest, "Bad Things Happened")) {
+    notarizedException<Exception, ExceptionResponse>(
+      info = ResponseInfo(
+        HttpStatusCode.BadRequest,
+        "Bad Things Happened"
+      )
+    ) {
       call.respond(HttpStatusCode.BadRequest, ExceptionResponse("Why you do dis?"))
     }
   }
@@ -41,10 +46,17 @@ fun Application.statusPageModule() {
 
 fun Application.statusPageMultiExceptions() {
   install(StatusPages) {
-    notarizedException<AccessDeniedException, Unit>(info = ResponseInfo(HttpStatusCode.Forbidden, "New API who dis?")) {
+    notarizedException<AccessDeniedException, Unit>(
+      info = ResponseInfo(HttpStatusCode.Forbidden, "New API who dis?")
+    ) {
       call.respond(HttpStatusCode.Forbidden)
     }
-    notarizedException<Exception, ExceptionResponse>(info = ResponseInfo(HttpStatusCode.BadRequest, "Bad Things Happened")) {
+    notarizedException<Exception, ExceptionResponse>(
+      info = ResponseInfo(
+        HttpStatusCode.BadRequest,
+        "Bad Things Happened"
+      )
+    ) {
       call.respond(HttpStatusCode.BadRequest, ExceptionResponse("Why you do dis?"))
     }
   }
