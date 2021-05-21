@@ -16,6 +16,8 @@ data class JustQuery(
 
 data class ExampleNested(val nesty: String)
 
+data class ExampleGeneric<T>(val potato: T)
+
 data class ExampleRequest(
   @KompendiumField(name = "field_name")
   val fieldName: ExampleNested,

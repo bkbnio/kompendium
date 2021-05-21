@@ -30,7 +30,7 @@ repositories {
 
 // 3 Add the package like any normal dependency
 dependencies { 
-    implementation("org.leafygreens:kompendium-core:1.0.0")
+    implementation("io.bkbn:kompendium-core:1.0.0")
 }
 
 ```
@@ -75,6 +75,12 @@ The intended purpose of `KompendiumField` is to offer field level overrides such
 
 The purpose of `KompendiumParam` is to provide supplemental information needed to properly assign the type of parameter 
 (cookie, header, query, path) as well as other parameter-level metadata. 
+
+### Polymorphism
+
+Out of the box, Kompendium has support for sealed classes. At runtime, it will build a mapping of all available sub-classes
+and build a spec that takes `anyOf` the implementations.  This is currently a weak point of the entire library, and 
+suggestions on better implementations are welcome 🤠
 
 ## Examples
 
@@ -201,7 +207,6 @@ parity with the OpenAPI feature spec, nor does it have all-of-the nice to have f
 should have.  There are several outstanding features that have been added to the
 [V2 Milestone](https://github.com/bkbnio/kompendium/milestone/2).  Among others, this includes 
 
-- Polymorphic support
 - AsyncAPI Integration
 - Field Validation
 - MavenCentral Release

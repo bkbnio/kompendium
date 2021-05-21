@@ -23,30 +23,23 @@
     "description" : "Where the fun stuff happens"
   } ],
   "paths" : {
-    "/test" : {
-      "put" : {
+    "/test/polymorphic" : {
+      "get" : {
         "tags" : [ ],
-        "summary" : "Test put endpoint",
-        "description" : "Put your tests here!",
+        "summary" : "All the gibbits",
+        "description" : "Polymorphic response",
         "parameters" : [ ],
-        "requestBody" : {
-          "description" : "A Test request",
-          "content" : {
-            "application/json" : {
-              "schema" : {
-                "$ref" : "#/components/schemas/Int"
-              }
-            }
-          },
-          "required" : false
-        },
         "responses" : {
-          "201" : {
-            "description" : "A Successful Endeavor",
+          "200" : {
+            "description" : "A successful endeavor",
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/Boolean"
+                  "anyOf" : [ {
+                    "$ref" : "#/components/schemas/SimpleGibbit"
+                  }, {
+                    "$ref" : "#/components/schemas/ComplexGibbit"
+                  } ]
                 }
               }
             }
@@ -58,12 +51,31 @@
   },
   "components" : {
     "schemas" : {
+      "String" : {
+        "type" : "string"
+      },
+      "SimpleGibbit" : {
+        "properties" : {
+          "a" : {
+            "$ref" : "#/components/schemas/String"
+          }
+        },
+        "type" : "object"
+      },
       "Int" : {
         "format" : "int32",
         "type" : "integer"
       },
-      "Boolean" : {
-        "type" : "boolean"
+      "ComplexGibbit" : {
+        "properties" : {
+          "b" : {
+            "$ref" : "#/components/schemas/String"
+          },
+          "c" : {
+            "$ref" : "#/components/schemas/Int"
+          }
+        },
+        "type" : "object"
       }
     },
     "securitySchemes" : { }

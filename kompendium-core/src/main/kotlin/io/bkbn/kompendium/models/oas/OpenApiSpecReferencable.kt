@@ -1,15 +1,16 @@
 package io.bkbn.kompendium.models.oas
 
-sealed class OpenApiSpecReferencable
+sealed interface OpenApiSpecReferencable
 
-class OpenApiSpecReferenceObject(val `$ref`: String) : OpenApiSpecReferencable()
+data class OpenApiAnyOf(val anyOf: List<OpenApiSpecReferenceObject>) : OpenApiSpecReferencable
+data class OpenApiSpecReferenceObject(val `$ref`: String) : OpenApiSpecReferencable
 
 data class OpenApiSpecResponse<T>(
     val description: String? = null,
     val headers: Map<String, OpenApiSpecReferencable>? = null,
     val content: Map<String, OpenApiSpecMediaType<T>>? = null,
     val links: Map<String, OpenApiSpecReferencable>? = null
-) : OpenApiSpecReferencable()
+) : OpenApiSpecReferencable
 
 data class OpenApiSpecParameter(
   val name: String,
@@ -21,10 +22,10 @@ data class OpenApiSpecParameter(
   val allowEmptyValue: Boolean? = null,
   val style: String? = null,
   val explode: Boolean? = null
-) : OpenApiSpecReferencable()
+) : OpenApiSpecReferencable
 
 data class OpenApiSpecRequest<T>(
     val description: String?,
     val content: Map<String, OpenApiSpecMediaType<T>>,
     val required: Boolean = false
-) : OpenApiSpecReferencable()
+) : OpenApiSpecReferencable

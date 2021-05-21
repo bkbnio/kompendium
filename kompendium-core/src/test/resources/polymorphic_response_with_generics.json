@@ -23,30 +23,23 @@
     "description" : "Where the fun stuff happens"
   } ],
   "paths" : {
-    "/test" : {
-      "put" : {
+    "/test/polymorphic" : {
+      "get" : {
         "tags" : [ ],
-        "summary" : "Test put endpoint",
-        "description" : "Put your tests here!",
+        "summary" : "More flibbity",
+        "description" : "Polymorphic with generics",
         "parameters" : [ ],
-        "requestBody" : {
-          "description" : "A Test request",
-          "content" : {
-            "application/json" : {
-              "schema" : {
-                "$ref" : "#/components/schemas/Int"
-              }
-            }
-          },
-          "required" : false
-        },
         "responses" : {
-          "201" : {
-            "description" : "A Successful Endeavor",
+          "200" : {
+            "description" : "A successful endeavor",
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/Boolean"
+                  "anyOf" : [ {
+                    "$ref" : "#/components/schemas/Gibbity-TestNested"
+                  }, {
+                    "$ref" : "#/components/schemas/Bibbity-TestNested"
+                  } ]
                 }
               }
             }
@@ -58,12 +51,35 @@
   },
   "components" : {
     "schemas" : {
-      "Int" : {
-        "format" : "int32",
-        "type" : "integer"
+      "String" : {
+        "type" : "string"
       },
-      "Boolean" : {
-        "type" : "boolean"
+      "TestNested" : {
+        "properties" : {
+          "nesty" : {
+            "$ref" : "#/components/schemas/String"
+          }
+        },
+        "type" : "object"
+      },
+      "Gibbity-TestNested" : {
+        "properties" : {
+          "a" : {
+            "$ref" : "#/components/schemas/TestNested"
+          }
+        },
+        "type" : "object"
+      },
+      "Bibbity-TestNested" : {
+        "properties" : {
+          "b" : {
+            "$ref" : "#/components/schemas/String"
+          },
+          "f" : {
+            "$ref" : "#/components/schemas/TestNested"
+          }
+        },
+        "type" : "object"
       }
     },
     "securitySchemes" : { }

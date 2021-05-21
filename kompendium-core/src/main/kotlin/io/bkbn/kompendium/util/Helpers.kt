@@ -1,5 +1,6 @@
 package io.bkbn.kompendium.util
 
+import io.bkbn.kompendium.util.Helpers.getReferenceSlug
 import java.lang.reflect.ParameterizedType
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
@@ -17,27 +18,6 @@ object Helpers {
   val UNIT_TYPE by lazy { Unit::class.createType() }
 
   /**
-   * Simple extension function that will take a [Pair] and place it (if absent) into a [MutableMap].
-   *
-   * @receiver [MutableMap]
-   * @param pair to add to map
-   */
-  fun <K, V> MutableMap<K, V>.putPairIfAbsent(pair: Pair<K, V>) = putIfAbsent(pair.first, pair.second)
-
-  /**
-   * Simple extension function that will convert a list with two items into a [Pair]
-   * @receiver [List]
-   * @return [Pair]
-   * @throws [IllegalArgumentException] when the list size is not exactly two
-   */
-  fun <T> List<T>.toPair(): Pair<T, T> {
-    if (this.size != 2) {
-      throw IllegalArgumentException("List is not of length 2!")
-    }
-    return Pair(this[0], this[1])
-  }
-
-  /**
    * Higher order function that takes a map of names to objects and will log their state ahead of function invocation
    * along with the result of the function invocation
    */
@@ -51,6 +31,11 @@ object Helpers {
   fun KClass<*>.getSimpleSlug(prop: KProperty<*>): String = when {
     this.typeParameters.isNotEmpty() -> genericNameAdapter(this, prop)
     else -> simpleName ?: error("Could not determine simple name for $this")
+  }
+
+  fun KType.getSimpleSlug(): String = when {
+    this.arguments.isNotEmpty() -> genericNameAdapter(this, classifier as KClass<*>)
+    else -> (classifier as KClass<*>).simpleName ?: error("Could not determine simple name for $this")
   }
 
   fun KType.getReferenceSlug(): String = when {

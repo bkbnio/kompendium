@@ -1,8 +1,12 @@
+import com.adarshr.gradle.testlogger.theme.ThemeType
+import com.adarshr.gradle.testlogger.TestLoggerExtension
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import io.gitlab.arturbosch.detekt.extensions.DetektExtension
+
 plugins {
-  id("org.jetbrains.kotlin.jvm") version "1.4.32" apply false
-  id("io.gitlab.arturbosch.detekt") version "1.16.0-RC2" apply false
+  id("org.jetbrains.kotlin.jvm") version "1.5.0" apply false
+  id("io.gitlab.arturbosch.detekt") version "1.17.0-RC3" apply false
   id("com.adarshr.test-logger") version "3.0.0" apply false
-  id("io.github.gradle-nexus.publish-plugin") version "1.1.0" apply true
 }
 
 allprojects {
@@ -26,14 +30,14 @@ allprojects {
   apply(plugin = "com.adarshr.test-logger")
   apply(plugin = "idea")
 
-  tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+  tasks.withType<KotlinCompile>().configureEach {
     kotlinOptions {
       jvmTarget = "11"
     }
   }
 
-  configure<com.adarshr.gradle.testlogger.TestLoggerExtension> {
-    setTheme("standard")
+  configure<TestLoggerExtension> {
+    theme = ThemeType.MOCHA
     setLogLevel("lifecycle")
     showExceptions = true
     showStackTraces = true
@@ -51,24 +55,13 @@ allprojects {
     showFailedStandardStreams = true
   }
 
-  configure<io.gitlab.arturbosch.detekt.extensions.DetektExtension> {
-    toolVersion = "1.16.0-RC2"
+  configure<DetektExtension> {
+    toolVersion = "1.17.0-RC3"
     config = files("${rootProject.projectDir}/detekt.yml")
     buildUponDefaultConfig = true
   }
 
   configure<JavaPluginExtension> {
     withSourcesJar()
-  }
-}
-
-nexusPublishing {
-  repositories {
-    sonatype {
-      username.set(System.getenv("SONATYPE_USER"))
-      password.set(System.getenv("SONATYPE_PASSWORD"))
-      nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"))
-      snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
-    }
   }
 }

@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0] - May 19th, 2021
+
+### Added
+
+- Support for sealed classes 🔥
+- Support for generic classes ☄️
+
 ## [1.0.1] - May 10th, 2021
 
 ### Changed

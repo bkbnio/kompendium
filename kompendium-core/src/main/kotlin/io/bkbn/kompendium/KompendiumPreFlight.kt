@@ -1,7 +1,9 @@
 package io.bkbn.kompendium
 
 import io.ktor.routing.Route
+import kotlin.reflect.KClass
 import kotlin.reflect.KType
+import kotlin.reflect.full.createType
 import kotlin.reflect.typeOf
 
 /**
@@ -21,13 +23,11 @@ object KompendiumPreFlight {
   inline fun <reified TParam : Any, reified TReq : Any, reified TResp : Any> methodNotarizationPreFlight(
     block: (KType, KType, KType) -> Route
   ): Route {
-    Kompendium.cache = Kontent.generateKontent<TResp>(Kompendium.cache)
-    Kompendium.cache = Kontent.generateKontent<TReq>(Kompendium.cache)
-    Kompendium.cache = Kontent.generateParameterKontent<TParam>(Kompendium.cache)
-    Kompendium.openApiSpec.components.schemas.putAll(Kompendium.cache)
     val requestType = typeOf<TReq>()
     val responseType = typeOf<TResp>()
     val paramType = typeOf<TParam>()
+    addToCache(paramType, requestType, responseType)
+    Kompendium.openApiSpec.components.schemas.putAll(Kompendium.cache)
     return block.invoke(paramType, requestType, responseType)
   }
 
@@ -38,13 +38,34 @@ object KompendiumPreFlight {
    * @param block The function to execute, provided type information of the parameters above
    */
   @OptIn(ExperimentalStdlibApi::class)
-  inline fun <reified TErr: Throwable, reified TResp : Any> errorNotarizationPreFlight(
+  inline fun <reified TErr : Throwable, reified TResp : Any> errorNotarizationPreFlight(
     block: (KType, KType) -> Unit
   ) {
-    Kompendium.cache = Kontent.generateKontent<TResp>(Kompendium.cache)
-    Kompendium.openApiSpec.components.schemas.putAll(Kompendium.cache)
     val errorType = typeOf<TErr>()
     val responseType = typeOf<TResp>()
+    addToCache(typeOf<Unit>(), typeOf<Unit>(), responseType)
+    Kompendium.openApiSpec.components.schemas.putAll(Kompendium.cache)
     return block.invoke(errorType, responseType)
+  }
+
+  fun addToCache(paramType: KType, requestType: KType, responseType: KType) {
+    gatherSubTypes(requestType).forEach {
+      Kompendium.cache = Kontent.generateKontent(it, Kompendium.cache)
+    }
+    gatherSubTypes(responseType).forEach {
+      Kompendium.cache = Kontent.generateKontent(it, Kompendium.cache)
+    }
+    Kompendium.cache = Kontent.generateParameterKontent(paramType, Kompendium.cache)
+  }
+
+  private fun gatherSubTypes(type: KType): List<KType> {
+    val classifier = type.classifier as KClass<*>
+    return if (classifier.isSealed) {
+      classifier.sealedSubclasses.map {
+        it.createType(type.arguments)
+      }
+    } else {
+      listOf(type)
+    }
   }
 }

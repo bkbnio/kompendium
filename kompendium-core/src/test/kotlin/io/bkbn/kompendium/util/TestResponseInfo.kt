@@ -1,9 +1,12 @@
 package io.bkbn.kompendium.util
 
-import io.ktor.http.HttpStatusCode
-import io.bkbn.kompendium.models.meta.MethodInfo
+import io.bkbn.kompendium.models.meta.MethodInfo.DeleteInfo
+import io.bkbn.kompendium.models.meta.MethodInfo.GetInfo
+import io.bkbn.kompendium.models.meta.MethodInfo.PostInfo
+import io.bkbn.kompendium.models.meta.MethodInfo.PutInfo
 import io.bkbn.kompendium.models.meta.RequestInfo
 import io.bkbn.kompendium.models.meta.ResponseInfo
+import io.ktor.http.HttpStatusCode
 
 object TestResponseInfo {
   private val testGetResponse = ResponseInfo<TestResponse>(HttpStatusCode.OK, "A Successful Endeavor")
@@ -16,12 +19,12 @@ object TestResponseInfo {
   private val testRequest = RequestInfo<TestRequest>("A Test request")
   private val testRequestAgain = RequestInfo<Int>("A Test request")
   private val complexRequest = RequestInfo<ComplexRequest>("A Complex request")
-  val testGetInfo = MethodInfo.GetInfo<TestParams, TestResponse>(
+  val testGetInfo = GetInfo<TestParams, TestResponse>(
     summary = "Another get test",
     description = "testing more",
     responseInfo = testGetResponse
   )
-  val testGetInfoAgain = MethodInfo.GetInfo<TestParams, List<TestResponse>>(
+  val testGetInfoAgain = GetInfo<TestParams, List<TestResponse>>(
     summary = "Another get test",
     description = "testing more",
     responseInfo = testGetListResponse
@@ -32,40 +35,64 @@ object TestResponseInfo {
   val testGetWithMultipleExceptions = testGetInfo.copy(
     canThrow = setOf(AccessDeniedException::class, Exception::class)
   )
-  val testPostInfo = MethodInfo.PostInfo<TestParams, TestRequest, TestCreatedResponse>(
+  val testPostInfo = PostInfo<TestParams, TestRequest, TestCreatedResponse>(
     summary = "Test post endpoint",
     description = "Post your tests here!",
     responseInfo = testPostResponse,
     requestInfo = testRequest
   )
-  val testPutInfo = MethodInfo.PutInfo<Unit, ComplexRequest, TestCreatedResponse>(
+  val testPutInfo = PutInfo<Unit, ComplexRequest, TestCreatedResponse>(
     summary = "Test put endpoint",
     description = "Put your tests here!",
     responseInfo = testPostResponse,
     requestInfo = complexRequest
   )
-  val testPutInfoAlso = MethodInfo.PutInfo<TestParams, TestRequest, TestCreatedResponse>(
+  val testPutInfoAlso = PutInfo<TestParams, TestRequest, TestCreatedResponse>(
     summary = "Test put endpoint",
     description = "Put your tests here!",
     responseInfo = testPostResponse,
     requestInfo = testRequest
   )
-  val testPutInfoAgain = MethodInfo.PutInfo<Unit, Int, Boolean>(
+  val testPutInfoAgain = PutInfo<Unit, Int, Boolean>(
     summary = "Test put endpoint",
     description = "Put your tests here!",
     responseInfo = testPostResponseAgain,
     requestInfo = testRequestAgain
   )
-  val testDeleteInfo = MethodInfo.DeleteInfo<TestParams, Unit>(
+  val testDeleteInfo = DeleteInfo<TestParams, Unit>(
     summary = "Test delete endpoint",
     description = "testing my deletes",
     responseInfo = testDeleteResponse
   )
   val emptyTestGetInfo =
-    MethodInfo.GetInfo<OptionalParams, Unit>(
+    GetInfo<OptionalParams, Unit>(
       summary = "No request params and response body",
       description = "testing more"
     )
-  val trulyEmptyTestGetInfo =
-    MethodInfo.GetInfo<Unit, Unit>(summary = "No request params and response body", description = "testing more")
+  val trulyEmptyTestGetInfo = GetInfo<Unit, Unit>(
+    summary = "No request params and response body",
+    description = "testing more"
+  )
+  val polymorphicResponse = GetInfo<Unit, FlibbityGibbit>(
+    summary = "All the gibbits",
+    description = "Polymorphic response",
+    responseInfo = simpleOkResponse()
+  )
+  val genericPolymorphicResponse = GetInfo<Unit, Flibbity<TestNested>>(
+    summary = "More flibbity",
+    description = "Polymorphic with generics",
+    responseInfo = simpleOkResponse()
+  )
+  val anotherGenericPolymorphicResponse = GetInfo<Unit, Flibbity<FlibbityGibbit>>(
+    summary = "The Most Flibbity",
+    description = "Polymorphic with generics but like... crazier",
+    responseInfo = simpleOkResponse()
+  )
+  val genericResponse = GetInfo<Unit, TestGeneric<Int>>(
+    summary = "Single Generic",
+    description = "Simple generic data class",
+    responseInfo = simpleOkResponse()
+  )
+
+  private fun <T> simpleOkResponse() = ResponseInfo<T>(HttpStatusCode.OK, "A successful endeavor")
 }

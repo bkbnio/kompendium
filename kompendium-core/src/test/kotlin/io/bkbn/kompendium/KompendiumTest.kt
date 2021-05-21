@@ -20,6 +20,8 @@ import io.bkbn.kompendium.util.TestHelpers.getFileSnapshot
 import io.bkbn.kompendium.util.complexType
 import io.bkbn.kompendium.util.configModule
 import io.bkbn.kompendium.util.emptyGet
+import io.bkbn.kompendium.util.genericPolymorphicResponse
+import io.bkbn.kompendium.util.genericPolymorphicResponseMultipleImpls
 import io.bkbn.kompendium.util.nestedUnderRootModule
 import io.bkbn.kompendium.util.nonRequiredParamsGet
 import io.bkbn.kompendium.util.notarizedDeleteModule
@@ -29,9 +31,11 @@ import io.bkbn.kompendium.util.notarizedGetWithNotarizedException
 import io.bkbn.kompendium.util.notarizedPostModule
 import io.bkbn.kompendium.util.notarizedPutModule
 import io.bkbn.kompendium.util.pathParsingTestModule
+import io.bkbn.kompendium.util.polymorphicResponse
 import io.bkbn.kompendium.util.primitives
 import io.bkbn.kompendium.util.returnsList
 import io.bkbn.kompendium.util.rootModule
+import io.bkbn.kompendium.util.simpleGenericResponse
 import io.bkbn.kompendium.util.statusPageModule
 import io.bkbn.kompendium.util.statusPageMultiExceptions
 import io.bkbn.kompendium.util.trailingSlash
@@ -436,6 +440,69 @@ internal class KompendiumTest {
     }
   }
 
+  @Test
+  fun `Can generate a polymorphic response type`() {
+    withTestApplication({
+      configModule()
+      docs()
+      polymorphicResponse()
+    }) {
+      // do
+      val json = handleRequest(HttpMethod.Get, "/openapi.json").response.content
+
+      // expect
+      val expected = getFileSnapshot("polymorphic_response.json").trim()
+      assertEquals(expected, json, "The received json spec should match the expected content")
+    }
+  }
+
+  @Test
+  fun `Can generate a response type with a generic type`() {
+    withTestApplication({
+      configModule()
+      docs()
+      simpleGenericResponse()
+    }) {
+      // do
+      val json = handleRequest(HttpMethod.Get, "/openapi.json").response.content
+
+      // expect
+      val expected = getFileSnapshot("generic_response.json").trim()
+      assertEquals(expected, json, "The received json spec should match the expected content")
+    }
+  }
+
+  @Test
+  fun `Can generate a polymorphic response type with generics`() {
+    withTestApplication({
+      configModule()
+      docs()
+      genericPolymorphicResponse()
+    }) {
+      // do
+      val json = handleRequest(HttpMethod.Get, "/openapi.json").response.content
+
+      // expect
+      val expected = getFileSnapshot("polymorphic_response_with_generics.json").trim()
+      assertEquals(expected, json, "The received json spec should match the expected content")
+    }
+  }
+
+  @Test
+  fun `Absolute Psycho Inheritance Test`() {
+    withTestApplication({
+      configModule()
+      docs()
+      genericPolymorphicResponseMultipleImpls()
+    }) {
+      // do
+      val json = handleRequest(HttpMethod.Get, "/openapi.json").response.content
+
+      // expect
+      val expected = getFileSnapshot("crazy_polymorphic_example.json").trim()
+      assertEquals(expected, json, "The received json spec should match the expected content")
+    }
+  }
 
   private val oas = Kompendium.openApiSpec.copy(
     info = OpenApiSpecInfo(

@@ -23,30 +23,19 @@
     "description" : "Where the fun stuff happens"
   } ],
   "paths" : {
-    "/test" : {
-      "put" : {
+    "/test/polymorphic" : {
+      "get" : {
         "tags" : [ ],
-        "summary" : "Test put endpoint",
-        "description" : "Put your tests here!",
+        "summary" : "Single Generic",
+        "description" : "Simple generic data class",
         "parameters" : [ ],
-        "requestBody" : {
-          "description" : "A Test request",
-          "content" : {
-            "application/json" : {
-              "schema" : {
-                "$ref" : "#/components/schemas/Int"
-              }
-            }
-          },
-          "required" : false
-        },
         "responses" : {
-          "201" : {
-            "description" : "A Successful Endeavor",
+          "200" : {
+            "description" : "A successful endeavor",
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/Boolean"
+                  "$ref" : "#/components/schemas/TestGeneric-Int"
                 }
               }
             }
@@ -58,12 +47,23 @@
   },
   "components" : {
     "schemas" : {
+      "String" : {
+        "type" : "string"
+      },
       "Int" : {
         "format" : "int32",
         "type" : "integer"
       },
-      "Boolean" : {
-        "type" : "boolean"
+      "TestGeneric-Int" : {
+        "properties" : {
+          "messy" : {
+            "$ref" : "#/components/schemas/String"
+          },
+          "potato" : {
+            "$ref" : "#/components/schemas/Int"
+          }
+        },
+        "type" : "object"
       }
     },
     "securitySchemes" : { }

@@ -61,21 +61,6 @@
       "String" : {
         "type" : "string"
       },
-      "Int" : {
-        "format" : "int32",
-        "type" : "integer"
-      },
-      "TestCreatedResponse" : {
-        "properties" : {
-          "c" : {
-            "$ref" : "#/components/schemas/String"
-          },
-          "id" : {
-            "$ref" : "#/components/schemas/Int"
-          }
-        },
-        "type" : "object"
-      },
       "SimpleEnum" : {
         "enum" : [ "ONE", "TWO" ],
         "type" : "string"
@@ -121,6 +106,21 @@
           },
           "tables" : {
             "$ref" : "#/components/schemas/List-NestedComplexItem"
+          }
+        },
+        "type" : "object"
+      },
+      "Int" : {
+        "format" : "int32",
+        "type" : "integer"
+      },
+      "TestCreatedResponse" : {
+        "properties" : {
+          "c" : {
+            "$ref" : "#/components/schemas/String"
+          },
+          "id" : {
+            "$ref" : "#/components/schemas/Int"
           }
         },
         "type" : "object"
