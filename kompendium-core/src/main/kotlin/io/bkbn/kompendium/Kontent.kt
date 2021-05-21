@@ -115,14 +115,15 @@ object Kontent {
     }
   }
 
-  // TODO This shit is so gross, clean it up
   /**
    * In the event of an object type, this method will parse out individual fields to recursively aggregate object map.
    * @param clazz Class of the object to analyze
    * @param cache Existing schema map to append to
    */
   private fun handleComplexType(type: KType, clazz: KClass<*>, cache: SchemaMap): SchemaMap {
+    // This needs to be simple because it will be stored under it's appropriate reference component implicitly
     val slug = type.getSimpleSlug()
+    // Only analyze if component has not already been stored in the cache
     return when (cache.containsKey(slug)) {
       true -> {
         logger.debug("Cache already contains $slug, returning cache untouched")
@@ -131,29 +132,38 @@ object Kontent {
       false -> {
         logger.debug("$slug was not found in cache, generating now")
         var newCache = cache
+        // Grabs any type parameters as a zip with the corresponding type argument
         val typeMap = clazz.typeParameters.zip(type.arguments).toMap()
+        // associates each member with a Pair of prop name to property schema
         val fieldMap = clazz.memberProperties.associate { prop ->
           logger.debug("Analyzing $prop in class $clazz")
+          // Grab the field of the current property
           val field = prop.javaField?.type?.kotlin ?: error("Unable to parse field type from $prop")
           logger.debug("Detected field $field")
+          // Yoinks any generic types from the type map should the field be a generic
           val yoinkBaseType = if (typeMap.containsKey(prop.returnType.classifier)) {
             logger.debug("Generic type detected")
             typeMap[prop.returnType.classifier]?.type!!
           } else {
             prop.returnType
           }
+          // converts the base type to a class
           val yoinkedClassifier = yoinkBaseType.classifier as KClass<*>
+          // in the event of a sealed class, grab all sealed subclasses and create a type from the base args
           val yoinkedTypes = if (yoinkedClassifier.isSealed) {
             yoinkedClassifier.sealedSubclasses.map { it.createType(yoinkBaseType.arguments) }
           } else {
             listOf(yoinkBaseType)
           }
+          // if the most up-to-date cache does not contain the content for this field, generate it and add to cache
           if (!newCache.containsKey(field.simpleName)) {
             logger.debug("Cache was missing ${field.simpleName}, adding now")
             yoinkedTypes.forEach {
               newCache = generateKTypeKontent(it, newCache)
             }
           }
+          // TODO This in particular is worthy of a refactor... just not very well written
+          // builds the appropriate property schema based on the property return type
           val propSchema = if (typeMap.containsKey(prop.returnType.classifier)) {
             if (yoinkedClassifier.isSealed) {
               val refs = yoinkedClassifier.sealedSubclasses

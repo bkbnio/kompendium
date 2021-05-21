@@ -58,7 +58,7 @@ object KompendiumPreFlight {
     Kompendium.cache = Kontent.generateParameterKontent(paramType, Kompendium.cache)
   }
 
-  fun gatherSubTypes(type: KType): List<KType> {
+  private fun gatherSubTypes(type: KType): List<KType> {
     val classifier = type.classifier as KClass<*>
     return if (classifier.isSealed) {
       classifier.sealedSubclasses.map {
