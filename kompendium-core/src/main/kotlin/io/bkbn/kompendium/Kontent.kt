@@ -74,6 +74,20 @@ object Kontent {
   }
 
   /**
+   * Analyze a type but filters out the top-level type
+   * @param type to analyze
+   * @param cache Existing schema map to append to
+   * @return an updated schema map containing all type information for [T]
+   */
+  fun generateParameterKontent(
+    type: KType,
+    cache: SchemaMap = emptyMap()
+  ): SchemaMap {
+    return generateKTypeKontent(type, cache)
+      .filterNot { (slug, _) -> slug == (type.classifier as KClass<*>).simpleName }
+  }
+
+  /**
    * Recursively fills schema map depending on [KType] classifier
    * @param type [KType] to parse
    * @param cache Existing schema map to append to

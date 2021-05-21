@@ -26,13 +26,7 @@ object KompendiumPreFlight {
     val requestType = typeOf<TReq>()
     val responseType = typeOf<TResp>()
     val paramType = typeOf<TParam>()
-    gatherSubTypes(requestType).forEach {
-      Kompendium.cache = Kontent.generateKontent(it, Kompendium.cache)
-    }
-    gatherSubTypes(responseType).forEach {
-      Kompendium.cache = Kontent.generateKontent(it, Kompendium.cache)
-    }
-    Kompendium.cache = Kontent.generateParameterKontent<TParam>(Kompendium.cache)
+    addToCache(paramType, requestType, responseType)
     Kompendium.openApiSpec.components.schemas.putAll(Kompendium.cache)
     return block.invoke(paramType, requestType, responseType)
   }
@@ -49,11 +43,19 @@ object KompendiumPreFlight {
   ) {
     val errorType = typeOf<TErr>()
     val responseType = typeOf<TResp>()
+    addToCache(typeOf<Unit>(), typeOf<Unit>(), responseType)
+    Kompendium.openApiSpec.components.schemas.putAll(Kompendium.cache)
+    return block.invoke(errorType, responseType)
+  }
+
+  fun addToCache(paramType: KType, requestType: KType, responseType: KType) {
+    gatherSubTypes(requestType).forEach {
+      Kompendium.cache = Kontent.generateKontent(it, Kompendium.cache)
+    }
     gatherSubTypes(responseType).forEach {
       Kompendium.cache = Kontent.generateKontent(it, Kompendium.cache)
     }
-    Kompendium.openApiSpec.components.schemas.putAll(Kompendium.cache)
-    return block.invoke(errorType, responseType)
+    Kompendium.cache = Kontent.generateParameterKontent(paramType, Kompendium.cache)
   }
 
   fun gatherSubTypes(type: KType): List<KType> {
