@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.2.2] - May 23rd, 2021
+
+This is just to get my repo back to normal now that I have confirmed sonatype publish is happening
+
+## [1.2.0] - May 23rd, 2021
+
+### Added
+
+- Finally, successfully pushed to Maven Central!!!
+
 ## [1.1.0] - May 19th, 2021
 
 ### Added

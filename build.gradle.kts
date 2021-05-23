@@ -7,6 +7,7 @@ plugins {
   id("org.jetbrains.kotlin.jvm") version "1.5.0" apply false
   id("io.gitlab.arturbosch.detekt") version "1.17.0-RC3" apply false
   id("com.adarshr.test-logger") version "3.0.0" apply false
+  id("io.github.gradle-nexus.publish-plugin") version "1.1.0" apply true
 }
 
 allprojects {
@@ -63,5 +64,15 @@ allprojects {
 
   configure<JavaPluginExtension> {
     withSourcesJar()
+    withJavadocJar()
+  }
+}
+
+nexusPublishing {
+  repositories {
+    sonatype {
+      nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
+      snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
+    }
   }
 }
