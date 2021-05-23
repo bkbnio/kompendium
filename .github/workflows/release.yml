@@ -1,10 +1,9 @@
 name: Publish to GitHub Packages
-#on:
-#  release:
-#    types:
-#      - prereleased
-#      - released
-on: pull_request
+on:
+  release:
+    types:
+      - prereleased
+      - released
 env:
   ORG_GRADLE_PROJECT_signingKey: ${{ secrets.SONATYPE_SIGNING_KEY }}
   ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.SONATYPE_SIGNING_PASSWORD }}
