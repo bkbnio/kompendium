@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.0] - May 23rd, 2021
+
+### Added
+
+- Finally, successfully pushed to Maven Central!!!
+
 ## [1.1.0] - May 19th, 2021
 
 ### Added
