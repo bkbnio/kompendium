@@ -20,9 +20,9 @@ repositories {
 
 dependencies {
   // other (less cool) dependencies
-  testImplementation("io.bkbn:kompendium-core:latest")
-  testImplementation("io.bkbn:kompendium-auth:latest")
-  testImplementation("io.bkbn:kompendium-swagger-ui:latest")
+  implementation("io.bkbn:kompendium-core:latest")
+  implementation("io.bkbn:kompendium-auth:latest")
+  implementation("io.bkbn:kompendium-swagger-ui:latest")
 }
 ```
 
