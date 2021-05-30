@@ -1,5 +1,7 @@
 # Kompendium
 
+[![version](https://img.shields.io/maven-central/v/io.bkbn/kompendium-core?style=flat-square)](https://search.maven.org/search?q=io.bkbn%20kompendium)
+
 ## What is Kompendium
 
 Kompendium is intended to be a minimally invasive OpenApi Specification generator for [Ktor](https://ktor.io). 
