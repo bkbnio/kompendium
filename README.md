@@ -10,8 +10,26 @@ supplement with Kompendium code in order to generate the appropriate spec.
 
 ## How to install
 
-Kompendium uses GitHub packages as its repository.  Installing with Gradle is pretty painless.  In your `build.gradle.kts`
-add the following 
+Kompendium publishes all releases to Maven Central.  As such, using the stable version of `Kompendium` is as simple 
+as declaring it as an implementation dependency in your `build.gradle.kts`
+
+```kotlin
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  // other (less cool) dependencies
+  testImplementation("io.bkbn:kompendium-core:latest")
+  testImplementation("io.bkbn:kompendium-auth:latest")
+  testImplementation("io.bkbn:kompendium-swagger-ui:latest")
+}
+```
+
+The last two dependencies are optional.
+
+If you want to get a little spicy 🤠 every merge of Kompendium is published to the GitHub package registry.  Pulling 
+from GitHub is slightly more involved, but such is the price you pay for bleeding edge fake data generation.  
 
 ```kotlin
 // 1 Setup a helper function to import any Github Repository Package
@@ -19,7 +37,7 @@ add the following
 fun RepositoryHandler.github(packageUrl: String) = maven { 
     name = "GithubPackages"
     url = uri(packageUrl)
-    credentials { // TODO Not sure this is necessary for public repositories?
+    credentials {
       username = java.lang.System.getenv("GITHUB_USER")
       password = java.lang.System.getenv("GITHUB_TOKEN")
     } 
