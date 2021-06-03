@@ -10,6 +10,7 @@ dependencies {
   implementation(libs.bundles.ktor)
   testImplementation("org.jetbrains.kotlin:kotlin-test")
   testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
+  testImplementation(libs.ktor.jackson)
   testImplementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.12.0")
   testImplementation("io.ktor:ktor-server-test-host:1.5.3")
 }
