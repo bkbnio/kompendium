@@ -102,6 +102,16 @@ Out of the box, Kompendium has support for sealed classes. At runtime, it will b
 and build a spec that takes `anyOf` the implementations.  This is currently a weak point of the entire library, and 
 suggestions on better implementations are welcome 🤠
 
+### Serialization
+
+Kompendium is serialization agnostic, meaning that there is no serializer library included out of the box.  This grants
+developer flexibility, at the cost of some potential extra legwork.  The example in the playground shows Jackson working 
+pretty much out of the box, but more explicit serializers like Moshi and Kotlinx Serialization will require registering 
+custom serializers in order to encode the api spec payload.
+
+This overhead is annoying, and will hopefully be reduced in the future.  Should you have ideas on how to tackle this 
+issue, please head on over to the discussion on this topic [here](https://github.com/bkbnio/kompendium/discussions/64)
+
 ## Examples
 
 The full source code can be found in the `kompendium-playground` module. Here is a simple get endpoint example 

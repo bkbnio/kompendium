@@ -11,6 +11,7 @@ dependencies {
   implementation(libs.bundles.ktorAuth)
   implementation(projects.kompendiumCore)
 
+  testImplementation(libs.ktor.jackson)
   testImplementation("org.jetbrains.kotlin:kotlin-test")
   testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
   testImplementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.12.0")

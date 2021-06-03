@@ -24,6 +24,6 @@ logback-core = { group = "ch.qos.logback", name = "logback-core", version.ref = 
 webjars-swagger-ui = { group = "org.webjars", name = "swagger-ui", version.ref = "swagger-ui" }
 
 [bundles]
-ktor = [ "ktor-server-core", "ktor-server-netty", "ktor-jackson", "ktor-html-builder" ]
+ktor = [ "ktor-server-core", "ktor-server-netty", "ktor-html-builder" ]
 ktorAuth = [ "ktor-auth-lib", "ktor-auth-jwt" ]
 logging = [ "slf4j", "logback-classic", "logback-core" ]

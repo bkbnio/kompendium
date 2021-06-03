@@ -1,4 +1,5 @@
 plugins {
+  kotlin("plugin.serialization") version "1.5.0"
   application
 }
 
@@ -11,6 +12,7 @@ dependencies {
   implementation(projects.kompendiumSwaggerUi)
 
   implementation(libs.bundles.ktor)
+  implementation(libs.ktor.jackson)
   implementation(libs.bundles.ktorAuth)
   implementation(libs.bundles.logging)
 
