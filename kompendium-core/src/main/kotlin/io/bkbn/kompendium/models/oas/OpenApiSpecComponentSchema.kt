@@ -1,6 +1,13 @@
 package io.bkbn.kompendium.models.oas
 
-sealed class OpenApiSpecComponentSchema(open val default: Any? = null) {
+import kotlinx.serialization.Contextual
+import kotlinx.serialization.Serializable
+
+@Serializable
+sealed class OpenApiSpecComponentSchema(
+  @Contextual
+  open val default: Any? = null
+) {
 
   fun addDefault(default: Any?): OpenApiSpecComponentSchema = when (this) {
     is AnyOfReferencedSchema -> error("Cannot add default to anyOf reference")

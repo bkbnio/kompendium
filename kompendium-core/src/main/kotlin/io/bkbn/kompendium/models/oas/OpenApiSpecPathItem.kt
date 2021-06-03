@@ -1,5 +1,8 @@
 package io.bkbn.kompendium.models.oas
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class OpenApiSpecPathItem(
   var get: OpenApiSpecPathItemOperation? = null,
   var put: OpenApiSpecPathItemOperation? = null,

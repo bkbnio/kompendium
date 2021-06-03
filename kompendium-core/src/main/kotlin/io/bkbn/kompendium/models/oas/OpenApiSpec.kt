@@ -1,5 +1,8 @@
 package io.bkbn.kompendium.models.oas
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class OpenApiSpec(
   val openapi: String = "3.0.3",
   val info: OpenApiSpecInfo,

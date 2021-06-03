@@ -2,12 +2,14 @@ plugins {
   `java-library`
   `maven-publish`
   signing
+  kotlin("plugin.serialization") version "1.5.0"
 }
 
 dependencies {
   implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
   implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
   implementation(libs.bundles.ktor)
+  implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.2.1")
   testImplementation("org.jetbrains.kotlin:kotlin-test")
   testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
   testImplementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.12.0")
@@ -66,9 +68,3 @@ publishing {
   }
 }
 
-signing {
-  val signingKey: String? by project
-  val signingPassword: String? by project
-  useInMemoryPgpKeys(signingKey, signingPassword)
-  sign(publishing.publications)
-}
