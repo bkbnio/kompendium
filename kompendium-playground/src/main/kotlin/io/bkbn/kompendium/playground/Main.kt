@@ -11,7 +11,6 @@ import io.ktor.auth.authenticate
 import io.ktor.features.ContentNegotiation
 import io.ktor.features.StatusPages
 import io.ktor.http.HttpStatusCode
-import io.ktor.jackson.jackson
 import io.ktor.response.respond
 import io.ktor.response.respondText
 import io.ktor.routing.route
@@ -38,6 +37,8 @@ import io.bkbn.kompendium.playground.PlaygroundToC.testSinglePutInfo
 import io.bkbn.kompendium.routes.openApi
 import io.bkbn.kompendium.routes.redoc
 import io.bkbn.kompendium.swagger.swaggerUI
+import io.ktor.jackson.jackson
+import io.ktor.serialization.json
 
 fun main() {
   embeddedServer(
@@ -52,10 +53,11 @@ var featuresInstalled = false
 fun Application.configModule() {
   if (!featuresInstalled) {
     install(ContentNegotiation) {
-      jackson {
-        enable(SerializationFeature.INDENT_OUTPUT)
-        setSerializationInclusion(JsonInclude.Include.NON_NULL)
-      }
+      json()
+//      jackson {
+//        enable(SerializationFeature.INDENT_OUTPUT)
+//        setSerializationInclusion(JsonInclude.Include.NON_NULL)
+//      }
     }
     install(Authentication) {
       notarizedBasic("basic") {

@@ -104,13 +104,8 @@ suggestions on better implementations are welcome 🤠
 
 ### Serialization
 
-Kompendium is serialization agnostic, meaning that there is no serializer library included out of the box.  This grants
-developer flexibility, at the cost of some potential extra legwork.  The example in the playground shows Jackson working 
-pretty much out of the box, but more explicit serializers like Moshi and Kotlinx Serialization will require registering 
-custom serializers in order to encode the api spec payload.
-
-This overhead is annoying, and will hopefully be reduced in the future.  Should you have ideas on how to tackle this 
-issue, please head on over to the discussion on this topic [here](https://github.com/bkbnio/kompendium/discussions/64)
+Under the hood, Kompendium uses Jackson to serialize the final api spec.  However, this implementation detail 
+does not leak to the actual API, meaning that users are free to choose the serialization library of their choice.  
 
 ## Examples
 

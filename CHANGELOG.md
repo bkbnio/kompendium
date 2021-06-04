@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.0] - June 4th, 2021
+
+### Changed
+
+- Explicitly encode JSON object by default
+
 ## [1.2.3] - June 3rd, 2021
 
 ### Added
