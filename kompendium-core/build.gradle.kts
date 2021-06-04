@@ -11,6 +11,8 @@ dependencies {
   implementation(libs.bundles.ktor)
   testImplementation("org.jetbrains.kotlin:kotlin-test")
   testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
+  testImplementation("io.ktor:ktor-serialization:1.5.3")
+  testImplementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.1")
   testImplementation(libs.ktor.jackson)
   testImplementation("io.ktor:ktor-server-test-host:1.5.3")
 }
