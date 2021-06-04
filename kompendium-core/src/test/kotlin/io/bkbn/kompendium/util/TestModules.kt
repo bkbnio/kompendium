@@ -21,13 +21,20 @@ import io.ktor.response.respond
 import io.ktor.response.respondText
 import io.ktor.routing.route
 import io.ktor.routing.routing
+import io.ktor.serialization.json
 
-fun Application.configModule() {
+fun Application.jacksonConfigModule() {
   install(ContentNegotiation) {
     jackson {
       enable(SerializationFeature.INDENT_OUTPUT)
       setSerializationInclusion(JsonInclude.Include.NON_NULL)
     }
+  }
+}
+
+fun Application.kotlinxConfigModule() {
+  install(ContentNegotiation) {
+    json()
   }
 }
 

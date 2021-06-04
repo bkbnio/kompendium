@@ -3,7 +3,7 @@
   "info" : {
     "title" : "Test API",
     "version" : "1.33.7",
-    "description" : "An amazing, fully-ish \uD83D\uDE09 generated API spec",
+    "description" : "An amazing, fully-ish 😉 generated API spec",
     "termsOfService" : "https://example.com",
     "contact" : {
       "name" : "Homer Simpson",
@@ -55,18 +55,19 @@
         "type" : "string"
       },
       "SimpleGibbit" : {
+        "type" : "object",
         "properties" : {
           "a" : {
             "$ref" : "#/components/schemas/String"
           }
-        },
-        "type" : "object"
+        }
       },
       "Int" : {
-        "format" : "int32",
-        "type" : "integer"
+        "type" : "integer",
+        "format" : "int32"
       },
       "ComplexGibbit" : {
+        "type" : "object",
         "properties" : {
           "b" : {
             "$ref" : "#/components/schemas/String"
@@ -74,8 +75,7 @@
           "c" : {
             "$ref" : "#/components/schemas/Int"
           }
-        },
-        "type" : "object"
+        }
       }
     },
     "securitySchemes" : { }

@@ -3,7 +3,7 @@
   "info" : {
     "title" : "Test API",
     "version" : "1.33.7",
-    "description" : "An amazing, fully-ish \uD83D\uDE09 generated API spec",
+    "description" : "An amazing, fully-ish 😉 generated API spec",
     "termsOfService" : "https://example.com",
     "contact" : {
       "name" : "Homer Simpson",
@@ -62,24 +62,25 @@
         "type" : "string"
       },
       "SimpleEnum" : {
-        "enum" : [ "ONE", "TWO" ],
-        "type" : "string"
+        "type" : "string",
+        "enum" : [ "ONE", "TWO" ]
       },
       "CrazyItem" : {
+        "type" : "object",
         "properties" : {
           "enumeration" : {
             "$ref" : "#/components/schemas/SimpleEnum"
           }
-        },
-        "type" : "object"
+        }
       },
       "Map-String-CrazyItem" : {
+        "type" : "object",
         "additionalProperties" : {
           "$ref" : "#/components/schemas/CrazyItem"
-        },
-        "type" : "object"
+        }
       },
       "NestedComplexItem" : {
+        "type" : "object",
         "properties" : {
           "alias" : {
             "$ref" : "#/components/schemas/Map-String-CrazyItem"
@@ -87,16 +88,16 @@
           "name" : {
             "$ref" : "#/components/schemas/String"
           }
-        },
-        "type" : "object"
+        }
       },
       "List-NestedComplexItem" : {
+        "type" : "array",
         "items" : {
           "$ref" : "#/components/schemas/NestedComplexItem"
-        },
-        "type" : "array"
+        }
       },
       "ComplexRequest" : {
+        "type" : "object",
         "properties" : {
           "amazingField" : {
             "$ref" : "#/components/schemas/String"
@@ -107,14 +108,14 @@
           "tables" : {
             "$ref" : "#/components/schemas/List-NestedComplexItem"
           }
-        },
-        "type" : "object"
+        }
       },
       "Int" : {
-        "format" : "int32",
-        "type" : "integer"
+        "type" : "integer",
+        "format" : "int32"
       },
       "TestCreatedResponse" : {
+        "type" : "object",
         "properties" : {
           "c" : {
             "$ref" : "#/components/schemas/String"
@@ -122,8 +123,7 @@
           "id" : {
             "$ref" : "#/components/schemas/Int"
           }
-        },
-        "type" : "object"
+        }
       }
     },
     "securitySchemes" : { }

@@ -1,7 +1,7 @@
-import com.adarshr.gradle.testlogger.theme.ThemeType
 import com.adarshr.gradle.testlogger.TestLoggerExtension
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import com.adarshr.gradle.testlogger.theme.ThemeType
 import io.gitlab.arturbosch.detekt.extensions.DetektExtension
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
   id("org.jetbrains.kotlin.jvm") version "1.5.0" apply false

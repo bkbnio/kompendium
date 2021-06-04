@@ -12,8 +12,8 @@ dependencies {
   implementation(libs.webjars.swagger.ui)
   testImplementation("org.jetbrains.kotlin:kotlin-test")
   testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
-  testImplementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.12.0")
-  testImplementation("io.ktor:ktor-server-test-host:1.5.3")
+  testImplementation(libs.jackson.module.kotlin)
+  testImplementation(libs.ktor.server.test.host)
 }
 
 java {

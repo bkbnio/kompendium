@@ -1,24 +1,5 @@
 package io.bkbn.kompendium.playground
 
-import com.fasterxml.jackson.annotation.JsonInclude
-import com.fasterxml.jackson.databind.SerializationFeature
-import io.ktor.application.Application
-import io.ktor.application.call
-import io.ktor.application.install
-import io.ktor.auth.Authentication
-import io.ktor.auth.UserIdPrincipal
-import io.ktor.auth.authenticate
-import io.ktor.features.ContentNegotiation
-import io.ktor.features.StatusPages
-import io.ktor.http.HttpStatusCode
-import io.ktor.jackson.jackson
-import io.ktor.response.respond
-import io.ktor.response.respondText
-import io.ktor.routing.route
-import io.ktor.routing.routing
-import io.ktor.server.engine.embeddedServer
-import io.ktor.server.netty.Netty
-import io.ktor.webjars.Webjars
 import io.bkbn.kompendium.Notarized.notarizedDelete
 import io.bkbn.kompendium.Notarized.notarizedException
 import io.bkbn.kompendium.Notarized.notarizedGet
@@ -38,6 +19,23 @@ import io.bkbn.kompendium.playground.PlaygroundToC.testSinglePutInfo
 import io.bkbn.kompendium.routes.openApi
 import io.bkbn.kompendium.routes.redoc
 import io.bkbn.kompendium.swagger.swaggerUI
+import io.ktor.application.Application
+import io.ktor.application.call
+import io.ktor.application.install
+import io.ktor.auth.Authentication
+import io.ktor.auth.UserIdPrincipal
+import io.ktor.auth.authenticate
+import io.ktor.features.ContentNegotiation
+import io.ktor.features.StatusPages
+import io.ktor.http.HttpStatusCode
+import io.ktor.response.respond
+import io.ktor.response.respondText
+import io.ktor.routing.route
+import io.ktor.routing.routing
+import io.ktor.serialization.json
+import io.ktor.server.engine.embeddedServer
+import io.ktor.server.netty.Netty
+import io.ktor.webjars.Webjars
 
 fun main() {
   embeddedServer(
@@ -52,10 +50,7 @@ var featuresInstalled = false
 fun Application.configModule() {
   if (!featuresInstalled) {
     install(ContentNegotiation) {
-      jackson {
-        enable(SerializationFeature.INDENT_OUTPUT)
-        setSerializationInclusion(JsonInclude.Include.NON_NULL)
-      }
+      json()
     }
     install(Authentication) {
       notarizedBasic("basic") {

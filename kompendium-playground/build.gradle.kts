@@ -13,6 +13,8 @@ dependencies {
 
   implementation(libs.bundles.ktor)
   implementation(libs.ktor.jackson)
+  implementation(libs.kotlinx.serialization.json)
+  implementation(libs.ktor.serialization)
   implementation(libs.bundles.ktorAuth)
   implementation(libs.bundles.logging)
 

@@ -18,10 +18,11 @@ import io.bkbn.kompendium.routes.openApi
 import io.bkbn.kompendium.routes.redoc
 import io.bkbn.kompendium.util.TestHelpers.getFileSnapshot
 import io.bkbn.kompendium.util.complexType
-import io.bkbn.kompendium.util.configModule
+import io.bkbn.kompendium.util.jacksonConfigModule
 import io.bkbn.kompendium.util.emptyGet
 import io.bkbn.kompendium.util.genericPolymorphicResponse
 import io.bkbn.kompendium.util.genericPolymorphicResponseMultipleImpls
+import io.bkbn.kompendium.util.kotlinxConfigModule
 import io.bkbn.kompendium.util.nestedUnderRootModule
 import io.bkbn.kompendium.util.nonRequiredParamsGet
 import io.bkbn.kompendium.util.notarizedDeleteModule
@@ -57,7 +58,7 @@ internal class KompendiumTest {
   @Test
   fun `Notarized Get records all expected information`() {
     withTestApplication({
-      configModule()
+      kotlinxConfigModule()
       docs()
       notarizedGetModule()
     }) {
@@ -73,7 +74,7 @@ internal class KompendiumTest {
   @Test
   fun `Notarized Get does not interrupt the pipeline`() {
     withTestApplication({
-      configModule()
+      jacksonConfigModule()
       docs()
       notarizedGetModule()
     }) {
@@ -89,7 +90,7 @@ internal class KompendiumTest {
   @Test
   fun `Notarized Post records all expected information`() {
     withTestApplication({
-      configModule()
+      jacksonConfigModule()
       docs()
       notarizedPostModule()
     }) {
@@ -105,7 +106,7 @@ internal class KompendiumTest {
   @Test
   fun `Notarized post does not interrupt the pipeline`() {
     withTestApplication({
-      configModule()
+      kotlinxConfigModule()
       docs()
       notarizedPostModule()
     }) {
@@ -121,7 +122,7 @@ internal class KompendiumTest {
   @Test
   fun `Notarized Put records all expected information`() {
     withTestApplication({
-      configModule()
+      jacksonConfigModule()
       docs()
       notarizedPutModule()
     }) {
@@ -138,7 +139,7 @@ internal class KompendiumTest {
   @Test
   fun `Notarized put does not interrupt the pipeline`() {
     withTestApplication({
-      configModule()
+      jacksonConfigModule()
       docs()
       notarizedPutModule()
     }) {
@@ -154,7 +155,7 @@ internal class KompendiumTest {
   @Test
   fun `Notarized delete records all expected information`() {
     withTestApplication({
-      configModule()
+      jacksonConfigModule()
       docs()
       notarizedDeleteModule()
     }) {
@@ -170,7 +171,7 @@ internal class KompendiumTest {
   @Test
   fun `Notarized delete does not interrupt the pipeline`() {
     withTestApplication({
-      configModule()
+      jacksonConfigModule()
       docs()
       notarizedDeleteModule()
     }) {
@@ -185,7 +186,7 @@ internal class KompendiumTest {
   @Test
   fun `Path parser stores the expected path`() {
     withTestApplication({
-      configModule()
+      jacksonConfigModule()
       docs()
       pathParsingTestModule()
     }) {
@@ -201,7 +202,7 @@ internal class KompendiumTest {
   @Test
   fun `Can notarize the root route`() {
     withTestApplication({
-      configModule()
+      jacksonConfigModule()
       docs()
       rootModule()
     }) {
@@ -217,7 +218,7 @@ internal class KompendiumTest {
   @Test
   fun `Can call the root route`() {
     withTestApplication({
-      configModule()
+      kotlinxConfigModule()
       docs()
       rootModule()
     }) {
@@ -233,7 +234,7 @@ internal class KompendiumTest {
   @Test
   fun `Nested under root module does not append trailing slash`() {
     withTestApplication({
-      configModule()
+      jacksonConfigModule()
       docs()
       nestedUnderRootModule()
     }) {
@@ -249,7 +250,7 @@ internal class KompendiumTest {
   @Test
   fun `Can notarize a trailing slash route`() {
     withTestApplication({
-      configModule()
+      jacksonConfigModule()
       docs()
       trailingSlash()
     }) {
@@ -265,7 +266,7 @@ internal class KompendiumTest {
   @Test
   fun `Can call a trailing slash route`() {
     withTestApplication({
-      configModule()
+      jacksonConfigModule()
       docs()
       trailingSlash()
     }) {
@@ -281,7 +282,7 @@ internal class KompendiumTest {
   @Test
   fun `Can notarize a complex type`() {
     withTestApplication({
-      configModule()
+      jacksonConfigModule()
       docs()
       complexType()
     }) {
@@ -297,7 +298,7 @@ internal class KompendiumTest {
   @Test
   fun `Can notarize primitives`() {
     withTestApplication({
-      configModule()
+      jacksonConfigModule()
       docs()
       primitives()
     }) {
@@ -313,7 +314,7 @@ internal class KompendiumTest {
   @Test
   fun `Can notarize a top level list response`() {
     withTestApplication({
-      configModule()
+      jacksonConfigModule()
       docs()
       returnsList()
     }) {
@@ -329,7 +330,7 @@ internal class KompendiumTest {
   @Test
   fun `Can notarize route with no request params and no response body`() {
     withTestApplication({
-      configModule()
+      kotlinxConfigModule()
       docs()
       emptyGet()
     }) {
@@ -345,7 +346,7 @@ internal class KompendiumTest {
   @Test
   fun `Can notarize route with non-required params`() {
     withTestApplication({
-      configModule()
+      jacksonConfigModule()
       docs()
       nonRequiredParamsGet()
     }) {
@@ -361,7 +362,7 @@ internal class KompendiumTest {
   @Test
   fun `Generates the expected redoc`() {
     withTestApplication({
-      configModule()
+      jacksonConfigModule()
       docs()
       returnsList()
     }) {
@@ -378,7 +379,7 @@ internal class KompendiumTest {
   fun `Generates additional responses when passed a throwable`() {
     withTestApplication({
       statusPageModule()
-      configModule()
+      jacksonConfigModule()
       docs()
       notarizedGetWithNotarizedException()
     }) {
@@ -395,7 +396,7 @@ internal class KompendiumTest {
   fun `Generates additional responses when passed multiple throwables`() {
     withTestApplication({
       statusPageMultiExceptions()
-      configModule()
+      jacksonConfigModule()
       docs()
       notarizedGetWithMultipleThrowables()
     }) {
@@ -411,7 +412,7 @@ internal class KompendiumTest {
   @Test
   fun `Can generate example response and request bodies`() {
     withTestApplication({
-      configModule()
+      kotlinxConfigModule()
       docs()
       withExamples()
     }) {
@@ -427,7 +428,7 @@ internal class KompendiumTest {
   @Test
   fun `Can generate a default parameter value`() {
     withTestApplication({
-      configModule()
+      jacksonConfigModule()
       docs()
       withDefaultParameter()
     }) {
@@ -443,7 +444,7 @@ internal class KompendiumTest {
   @Test
   fun `Can generate a polymorphic response type`() {
     withTestApplication({
-      configModule()
+      jacksonConfigModule()
       docs()
       polymorphicResponse()
     }) {
@@ -459,7 +460,7 @@ internal class KompendiumTest {
   @Test
   fun `Can generate a response type with a generic type`() {
     withTestApplication({
-      configModule()
+      jacksonConfigModule()
       docs()
       simpleGenericResponse()
     }) {
@@ -475,7 +476,7 @@ internal class KompendiumTest {
   @Test
   fun `Can generate a polymorphic response type with generics`() {
     withTestApplication({
-      configModule()
+      jacksonConfigModule()
       docs()
       genericPolymorphicResponse()
     }) {
@@ -491,7 +492,7 @@ internal class KompendiumTest {
   @Test
   fun `Absolute Psycho Inheritance Test`() {
     withTestApplication({
-      configModule()
+      kotlinxConfigModule()
       docs()
       genericPolymorphicResponseMultipleImpls()
     }) {

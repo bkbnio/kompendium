@@ -3,7 +3,7 @@
   "info" : {
     "title" : "Test API",
     "version" : "1.33.7",
-    "description" : "An amazing, fully-ish \uD83D\uDE09 generated API spec",
+    "description" : "An amazing, fully-ish 😉 generated API spec",
     "termsOfService" : "https://example.com",
     "contact" : {
       "name" : "Homer Simpson",
@@ -51,10 +51,11 @@
         "type" : "string"
       },
       "Int" : {
-        "format" : "int32",
-        "type" : "integer"
+        "type" : "integer",
+        "format" : "int32"
       },
       "TestGeneric-Int" : {
+        "type" : "object",
         "properties" : {
           "messy" : {
             "$ref" : "#/components/schemas/String"
@@ -62,8 +63,7 @@
           "potato" : {
             "$ref" : "#/components/schemas/Int"
           }
-        },
-        "type" : "object"
+        }
       }
     },
     "securitySchemes" : { }

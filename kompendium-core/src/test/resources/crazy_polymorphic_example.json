@@ -3,7 +3,7 @@
   "info" : {
     "title" : "Test API",
     "version" : "1.33.7",
-    "description" : "An amazing, fully-ish \uD83D\uDE09 generated API spec",
+    "description" : "An amazing, fully-ish 😉 generated API spec",
     "termsOfService" : "https://example.com",
     "contact" : {
       "name" : "Homer Simpson",
@@ -80,22 +80,23 @@
         "type" : "string"
       },
       "TestNested" : {
+        "type" : "object",
         "properties" : {
           "nesty" : {
             "$ref" : "#/components/schemas/String"
           }
-        },
-        "type" : "object"
+        }
       },
       "Gibbity-TestNested" : {
+        "type" : "object",
         "properties" : {
           "a" : {
             "$ref" : "#/components/schemas/TestNested"
           }
-        },
-        "type" : "object"
+        }
       },
       "Bibbity-TestNested" : {
+        "type" : "object",
         "properties" : {
           "b" : {
             "$ref" : "#/components/schemas/String"
@@ -103,22 +104,22 @@
           "f" : {
             "$ref" : "#/components/schemas/TestNested"
           }
-        },
-        "type" : "object"
+        }
       },
       "SimpleGibbit" : {
+        "type" : "object",
         "properties" : {
           "a" : {
             "$ref" : "#/components/schemas/String"
           }
-        },
-        "type" : "object"
+        }
       },
       "Int" : {
-        "format" : "int32",
-        "type" : "integer"
+        "type" : "integer",
+        "format" : "int32"
       },
       "ComplexGibbit" : {
+        "type" : "object",
         "properties" : {
           "b" : {
             "$ref" : "#/components/schemas/String"
@@ -126,10 +127,10 @@
           "c" : {
             "$ref" : "#/components/schemas/Int"
           }
-        },
-        "type" : "object"
+        }
       },
       "Gibbity-FlibbityGibbit" : {
+        "type" : "object",
         "properties" : {
           "a" : {
             "anyOf" : [ {
@@ -138,10 +139,10 @@
               "$ref" : "#/components/schemas/ComplexGibbit"
             } ]
           }
-        },
-        "type" : "object"
+        }
       },
       "Bibbity-FlibbityGibbit" : {
+        "type" : "object",
         "properties" : {
           "b" : {
             "$ref" : "#/components/schemas/String"
@@ -153,8 +154,7 @@
               "$ref" : "#/components/schemas/ComplexGibbit"
             } ]
           }
-        },
-        "type" : "object"
+        }
       }
     },
     "securitySchemes" : { }
