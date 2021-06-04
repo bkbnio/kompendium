@@ -20,8 +20,8 @@
           "name" : "aa",
           "in" : "query",
           "schema" : {
-            "format" : "int32",
-            "type" : "integer"
+            "type" : "integer",
+            "format" : "int32"
           },
           "required" : true,
           "deprecated" : false
@@ -51,16 +51,16 @@
         "type" : "string"
       },
       "TestResponse" : {
+        "type" : "object",
         "properties" : {
           "c" : {
             "$ref" : "#/components/schemas/String"
           }
-        },
-        "type" : "object"
+        }
       },
       "Int" : {
-        "format" : "int32",
-        "type" : "integer"
+        "type" : "integer",
+        "format" : "int32"
       }
     },
     "securitySchemes" : {

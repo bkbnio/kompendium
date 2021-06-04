@@ -3,7 +3,7 @@
   "info" : {
     "title" : "Test API",
     "version" : "1.33.7",
-    "description" : "An amazing, fully-ish \uD83D\uDE09 generated API spec",
+    "description" : "An amazing, fully-ish 😉 generated API spec",
     "termsOfService" : "https://example.com",
     "contact" : {
       "name" : "Homer Simpson",
@@ -40,8 +40,8 @@
           "name" : "aa",
           "in" : "query",
           "schema" : {
-            "format" : "int32",
-            "type" : "integer"
+            "type" : "integer",
+            "format" : "int32"
           },
           "required" : true,
           "deprecated" : false
@@ -76,31 +76,32 @@
   "components" : {
     "schemas" : {
       "Long" : {
-        "format" : "int64",
-        "type" : "integer"
+        "type" : "integer",
+        "format" : "int64"
       },
       "List-Long" : {
+        "type" : "array",
         "items" : {
           "$ref" : "#/components/schemas/Long"
-        },
-        "type" : "array"
+        }
       },
       "Double" : {
-        "format" : "double",
-        "type" : "number"
+        "type" : "number",
+        "format" : "double"
       },
       "String" : {
         "type" : "string"
       },
       "TestNested" : {
+        "type" : "object",
         "properties" : {
           "nesty" : {
             "$ref" : "#/components/schemas/String"
           }
-        },
-        "type" : "object"
+        }
       },
       "TestRequest" : {
+        "type" : "object",
         "properties" : {
           "aaa" : {
             "$ref" : "#/components/schemas/List-Long"
@@ -111,14 +112,14 @@
           "fieldName" : {
             "$ref" : "#/components/schemas/TestNested"
           }
-        },
-        "type" : "object"
+        }
       },
       "Int" : {
-        "format" : "int32",
-        "type" : "integer"
+        "type" : "integer",
+        "format" : "int32"
       },
       "TestCreatedResponse" : {
+        "type" : "object",
         "properties" : {
           "c" : {
             "$ref" : "#/components/schemas/String"
@@ -126,8 +127,7 @@
           "id" : {
             "$ref" : "#/components/schemas/Int"
           }
-        },
-        "type" : "object"
+        }
       }
     },
     "securitySchemes" : { }
