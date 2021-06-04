@@ -7,14 +7,14 @@ plugins {
 dependencies {
   implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
   implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-  implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.12.0")
+  implementation(libs.jackson.module.kotlin)
   implementation(libs.bundles.ktor)
   testImplementation("org.jetbrains.kotlin:kotlin-test")
   testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
-  testImplementation("io.ktor:ktor-serialization:1.5.3")
-  testImplementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.1")
+  testImplementation(libs.ktor.serialization)
+  testImplementation(libs.kotlinx.serialization.json)
   testImplementation(libs.ktor.jackson)
-  testImplementation("io.ktor:ktor-server-test-host:1.5.3")
+  testImplementation(libs.ktor.server.test.host)
 }
 
 java {

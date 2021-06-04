@@ -13,8 +13,8 @@ dependencies {
 
   implementation(libs.bundles.ktor)
   implementation(libs.ktor.jackson)
-  implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.1")
-  implementation("io.ktor:ktor-serialization:1.5.3")
+  implementation(libs.kotlinx.serialization.json)
+  implementation(libs.ktor.serialization)
   implementation(libs.bundles.ktorAuth)
   implementation(libs.bundles.logging)
 
