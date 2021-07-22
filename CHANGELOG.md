@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.4.0] - July 22nd, 2021
+
+### Changed
+
+- Decreased jvmTarget version from 11 to 1.8
+
 ## [1.3.0] - June 4th, 2021
 
 ### Changed
