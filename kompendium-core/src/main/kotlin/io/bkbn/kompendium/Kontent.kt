@@ -23,6 +23,8 @@ import kotlin.reflect.full.memberProperties
 import kotlin.reflect.jvm.javaField
 import kotlin.reflect.typeOf
 import org.slf4j.LoggerFactory
+import java.math.BigDecimal
+import java.math.BigInteger
 
 /**
  * Responsible for generating the schema map that is used to power all object references across the API Spec.
@@ -106,6 +108,8 @@ object Kontent {
       String::class -> cache.plus(clazz.simpleName!! to SimpleSchema("string"))
       Boolean::class -> cache.plus(clazz.simpleName!! to SimpleSchema("boolean"))
       UUID::class -> cache.plus(clazz.simpleName!! to FormatSchema("uuid", "string"))
+      BigDecimal::class -> cache.plus(clazz.simpleName!! to FormatSchema("double", "number"))
+      BigInteger::class -> cache.plus(clazz.simpleName!! to FormatSchema("int64", "integer"))
       else -> when {
         clazz.isSubclassOf(Collection::class) -> handleCollectionType(type, clazz, cache)
         clazz.isSubclassOf(Enum::class) -> handleEnumType(clazz, cache)

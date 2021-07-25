@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.5.0] - July 25th, 2021
+
+### Changed
+
+- Added support for BigInteger and BigDecimal in response types
+
 ## [1.4.0] - July 22nd, 2021
 
 ### Changed

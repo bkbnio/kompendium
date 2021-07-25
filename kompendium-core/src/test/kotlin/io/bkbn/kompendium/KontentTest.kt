@@ -13,15 +13,7 @@ import io.bkbn.kompendium.models.oas.DictionarySchema
 import io.bkbn.kompendium.models.oas.FormatSchema
 import io.bkbn.kompendium.models.oas.ObjectSchema
 import io.bkbn.kompendium.models.oas.ReferencedSchema
-import io.bkbn.kompendium.util.ComplexRequest
-import io.bkbn.kompendium.util.TestInvalidMap
-import io.bkbn.kompendium.util.TestNestedModel
-import io.bkbn.kompendium.util.TestSimpleModel
-import io.bkbn.kompendium.util.TestSimpleWithEnumList
-import io.bkbn.kompendium.util.TestSimpleWithEnums
-import io.bkbn.kompendium.util.TestSimpleWithList
-import io.bkbn.kompendium.util.TestSimpleWithMap
-import io.bkbn.kompendium.util.TestWithUUID
+import io.bkbn.kompendium.util.*
 
 @ExperimentalStdlibApi
 internal class KontentTest {
@@ -43,6 +35,18 @@ internal class KontentTest {
     // expect
     assertEquals(1, result.count(), "Should have a single result")
     assertEquals(FormatSchema("int64", "integer"), result["Long"])
+  }
+
+  @Test
+  fun `Object with BigDecimal and BigInteger types`() {
+    // do
+    val result = generateKontent<TestBigNumberModel>()
+
+    // expect
+    assertEquals(3, result.count())
+    assertTrue { result.containsKey(TestBigNumberModel::class.simpleName) }
+    assertEquals(FormatSchema("double", "number"), result["BigDecimal"])
+    assertEquals(FormatSchema("int64", "integer"), result["BigInteger"])
   }
 
   @Test

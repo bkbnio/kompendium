@@ -4,8 +4,12 @@ import java.util.UUID
 import io.bkbn.kompendium.annotations.KompendiumField
 import io.bkbn.kompendium.annotations.KompendiumParam
 import io.bkbn.kompendium.annotations.ParamType
+import java.math.BigDecimal
+import java.math.BigInteger
 
 data class TestSimpleModel(val a: String, val b: Int)
+
+data class TestBigNumberModel(val a: BigDecimal, val b: BigInteger)
 
 data class TestNestedModel(val inner: TestSimpleModel)
 
