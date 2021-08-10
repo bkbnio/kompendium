@@ -3,6 +3,7 @@ package io.bkbn.kompendium.playground
 import io.bkbn.kompendium.annotations.KompendiumField
 import io.bkbn.kompendium.annotations.KompendiumParam
 import io.bkbn.kompendium.annotations.ParamType
+import org.joda.time.DateTime
 
 data class ExampleParams(
   @KompendiumParam(ParamType.PATH) val id: Int,
@@ -22,7 +23,8 @@ data class ExampleRequest(
   @KompendiumField(name = "field_name")
   val fieldName: ExampleNested,
   val b: Double,
-  val aaa: List<Long>
+  val aaa: List<Long>,
+  val time: DateTime
 )
 
 data class ExampleResponse(val c: String)

@@ -3,6 +3,7 @@ package io.bkbn.kompendium.routes
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
+import com.fasterxml.jackson.datatype.joda.JodaModule
 import io.bkbn.kompendium.models.oas.OpenApiSpec
 import io.ktor.application.call
 import io.ktor.response.respondText
@@ -18,6 +19,8 @@ fun Routing.openApi(oas: OpenApiSpec) {
   val om = ObjectMapper()
     .setSerializationInclusion(JsonInclude.Include.NON_NULL)
     .enable(SerializationFeature.INDENT_OUTPUT)
+    .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+    .registerModule(JodaModule())
   route("/openapi.json") {
     get {
       call.respondText { om.writeValueAsString(oas) }

@@ -9,10 +9,7 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 import io.bkbn.kompendium.Kontent.generateKontent
 import io.bkbn.kompendium.Kontent.generateParameterKontent
-import io.bkbn.kompendium.models.oas.DictionarySchema
-import io.bkbn.kompendium.models.oas.FormatSchema
-import io.bkbn.kompendium.models.oas.ObjectSchema
-import io.bkbn.kompendium.models.oas.ReferencedSchema
+import io.bkbn.kompendium.models.oas.*
 import io.bkbn.kompendium.util.*
 
 @ExperimentalStdlibApi
@@ -47,6 +44,18 @@ internal class KontentTest {
     assertTrue { result.containsKey(TestBigNumberModel::class.simpleName) }
     assertEquals(FormatSchema("double", "number"), result["BigDecimal"])
     assertEquals(FormatSchema("int64", "integer"), result["BigInteger"])
+  }
+
+  @Test
+  fun `Object with joda DateTime`() {
+    // do
+    val result = generateKontent<TestDateTimeModel>()
+
+    // expect
+    assertEquals(3, result.count())
+    assertTrue { result.containsKey(TestDateTimeModel::class.simpleName) }
+    assertEquals(FormatSchema("date-time", "string"), result["DateTime"])
+    assertEquals(SimpleSchema("string"), result["String"])
   }
 
   @Test

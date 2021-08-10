@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.6.0] - August 10th, 2021
+
+### Changed
+
+- Added support for joda DateTime in response types
+
 ## [1.5.0] - July 25th, 2021
 
 ### Changed

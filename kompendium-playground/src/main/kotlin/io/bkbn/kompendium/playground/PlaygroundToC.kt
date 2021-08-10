@@ -4,6 +4,7 @@ import io.ktor.http.HttpStatusCode
 import io.bkbn.kompendium.models.meta.MethodInfo
 import io.bkbn.kompendium.models.meta.RequestInfo
 import io.bkbn.kompendium.models.meta.ResponseInfo
+import org.joda.time.DateTime
 
 object PlaygroundToC {
   val testGetWithExamples = MethodInfo.GetInfo<Unit, ExampleResponse>(
@@ -23,7 +24,7 @@ object PlaygroundToC {
     requestInfo = RequestInfo(
       description = "Necessary deetz",
       examples = mapOf(
-        "Send This" to ExampleRequest(ExampleNested("potato"), 13.37, listOf(12341))
+        "Send This" to ExampleRequest(ExampleNested("potato"), 13.37, listOf(12341), DateTime.parse("2021-01-01"))
       )
     ),
     responseInfo = ResponseInfo(

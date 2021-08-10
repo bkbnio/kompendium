@@ -9,6 +9,8 @@ dependencies {
   implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
   implementation(libs.jackson.module.kotlin)
   implementation(libs.bundles.ktor)
+  implementation("joda-time:joda-time:2.10.10")
+  implementation("com.fasterxml.jackson.datatype:jackson-datatype-joda")
   testImplementation("org.jetbrains.kotlin:kotlin-test")
   testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
   testImplementation(libs.ktor.serialization)
