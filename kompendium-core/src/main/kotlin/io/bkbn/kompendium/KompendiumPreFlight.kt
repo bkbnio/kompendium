@@ -49,23 +49,8 @@ object KompendiumPreFlight {
   }
 
   fun addToCache(paramType: KType, requestType: KType, responseType: KType) {
-    gatherSubTypes(requestType).forEach {
-      Kompendium.cache = Kontent.generateKontent(it, Kompendium.cache)
-    }
-    gatherSubTypes(responseType).forEach {
-      Kompendium.cache = Kontent.generateKontent(it, Kompendium.cache)
-    }
+    Kompendium.cache = Kontent.generateKontent(requestType, Kompendium.cache)
+    Kompendium.cache = Kontent.generateKontent(responseType, Kompendium.cache)
     Kompendium.cache = Kontent.generateParameterKontent(paramType, Kompendium.cache)
-  }
-
-  private fun gatherSubTypes(type: KType): List<KType> {
-    val classifier = type.classifier as KClass<*>
-    return if (classifier.isSealed) {
-      classifier.sealedSubclasses.map {
-        it.createType(type.arguments)
-      }
-    } else {
-      listOf(type)
-    }
   }
 }

@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.5.1] - August 12th, 2021
+
+### Changed
+
+- Fixed bug where polymorphic types were not being rendered correctly when part of collections and maps
+
 ## [1.5.0] - July 25th, 2021
 
 ### Changed
