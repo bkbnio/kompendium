@@ -84,6 +84,12 @@ sealed class FlibbityGibbit
 data class SimpleGibbit(val a: String) : FlibbityGibbit()
 data class ComplexGibbit(val b: String, val c: Int) : FlibbityGibbit()
 
+sealed interface SlammaJamma
+
+data class OneJamma(val a: Int) : SlammaJamma
+data class AnothaJamma(val b: Float) : SlammaJamma
+//data class InsaneJamma(val c: SlammaJamma) : SlammaJamma // 👀
+
 sealed interface Flibbity<T>
 
 data class Gibbity<T>(val a: T): Flibbity<T>

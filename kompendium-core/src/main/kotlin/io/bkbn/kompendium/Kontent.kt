@@ -57,7 +57,22 @@ object Kontent {
     type: KType,
     cache: SchemaMap = emptyMap()
   ): SchemaMap {
-    return generateKTypeKontent(type, cache)
+    var newCache = cache
+    gatherSubTypes(type).forEach {
+      newCache = generateKTypeKontent(it, newCache)
+    }
+    return newCache
+  }
+
+  private fun gatherSubTypes(type: KType): List<KType> {
+    val classifier = type.classifier as KClass<*>
+    return if (classifier.isSealed) {
+      classifier.sealedSubclasses.map {
+        it.createType(type.arguments)
+      }
+    } else {
+      listOf(type)
+    }
   }
 
   /**
@@ -220,11 +235,20 @@ object Kontent {
     if (keyType?.classifier != String::class) {
       error("Invalid Map $type: OpenAPI dictionaries must have keys of type String")
     }
-    val valClassName = (valType?.classifier as KClass<*>).simpleName
+    val valClass = valType?.classifier as KClass<*>
+    val valClassName = valClass.simpleName
     val referenceName = genericNameAdapter(type, clazz)
-    val valueReference = ReferencedSchema("$COMPONENT_SLUG/$valClassName")
+    val valueReference = when(valClass.isSealed) {
+      true -> {
+        val subTypes = gatherSubTypes(valType)
+        AnyOfReferencedSchema(subTypes.map {
+          ReferencedSchema(("$COMPONENT_SLUG/${it.getSimpleSlug()}"))
+        })
+      }
+      false -> ReferencedSchema("$COMPONENT_SLUG/$valClassName")
+    }
     val schema = DictionarySchema(additionalProperties = valueReference)
-    val updatedCache = generateKTypeKontent(valType, cache)
+    val updatedCache = generateKontent(valType, cache)
     return updatedCache.plus(referenceName to schema)
   }
 
@@ -240,9 +264,17 @@ object Kontent {
     val collectionClass = collectionType.classifier as KClass<*>
     logger.debug("Obtained collection class: $collectionClass")
     val referenceName = genericNameAdapter(type, clazz)
-    val valueReference = ReferencedSchema("${COMPONENT_SLUG}/${collectionClass.simpleName}")
+    val valueReference = when (collectionClass.isSealed) {
+      true -> {
+        val subTypes = gatherSubTypes(collectionType)
+        AnyOfReferencedSchema(subTypes.map {
+          ReferencedSchema(("$COMPONENT_SLUG/${it.getSimpleSlug()}"))
+        })
+      }
+      false -> ReferencedSchema("${COMPONENT_SLUG}/${collectionClass.simpleName}")
+    }
     val schema = ArraySchema(items = valueReference)
-    val updatedCache = generateKTypeKontent(collectionType, cache)
+    val updatedCache = generateKontent(collectionType, cache)
     return updatedCache.plus(referenceName to schema)
   }
 }

@@ -285,6 +285,36 @@ fun Application.polymorphicResponse() {
   }
 }
 
+fun Application.polymorphicCollectionResponse() {
+  routing {
+    route("/test/polymorphiclist") {
+      notarizedGet(TestResponseInfo.polymorphicListResponse) {
+        call.respond(HttpStatusCode.OK, listOf(SimpleGibbit("hi")))
+      }
+    }
+  }
+}
+
+fun Application.polymorphicMapResponse() {
+  routing {
+    route("/test/polymorphicmap") {
+      notarizedGet(TestResponseInfo.polymorphicMapResponse) {
+        call.respond(HttpStatusCode.OK, listOf(SimpleGibbit("hi")))
+      }
+    }
+  }
+}
+
+fun Application.polymorphicInterfaceResponse() {
+  routing {
+    route("/test/polymorphicmap") {
+      notarizedGet(TestResponseInfo.polymorphicInterfaceResponse) {
+        call.respond(HttpStatusCode.OK, listOf(SimpleGibbit("hi")))
+      }
+    }
+  }
+}
+
 fun Application.genericPolymorphicResponse() {
   routing {
     route("/test/polymorphic") {

@@ -32,6 +32,9 @@ import io.bkbn.kompendium.util.notarizedGetWithNotarizedException
 import io.bkbn.kompendium.util.notarizedPostModule
 import io.bkbn.kompendium.util.notarizedPutModule
 import io.bkbn.kompendium.util.pathParsingTestModule
+import io.bkbn.kompendium.util.polymorphicCollectionResponse
+import io.bkbn.kompendium.util.polymorphicInterfaceResponse
+import io.bkbn.kompendium.util.polymorphicMapResponse
 import io.bkbn.kompendium.util.polymorphicResponse
 import io.bkbn.kompendium.util.primitives
 import io.bkbn.kompendium.util.returnsList
@@ -453,6 +456,54 @@ internal class KompendiumTest {
 
       // expect
       val expected = getFileSnapshot("polymorphic_response.json").trim()
+      assertEquals(expected, json, "The received json spec should match the expected content")
+    }
+  }
+
+  @Test
+  fun `Can generate a collection with polymorphic response type`() {
+    withTestApplication({
+      jacksonConfigModule()
+      docs()
+      polymorphicCollectionResponse()
+    }) {
+      // do
+      val json = handleRequest(HttpMethod.Get, "/openapi.json").response.content
+
+      // expect
+      val expected = getFileSnapshot("polymorphic_list_response.json").trim()
+      assertEquals(expected, json, "The received json spec should match the expected content")
+    }
+  }
+
+  @Test
+  fun `Can generate a map with a polymorphic response type`() {
+    withTestApplication({
+      jacksonConfigModule()
+      docs()
+      polymorphicMapResponse()
+    }) {
+      // do
+      val json = handleRequest(HttpMethod.Get, "/openapi.json").response.content
+
+      // expect
+      val expected = getFileSnapshot("polymorphic_map_response.json").trim()
+      assertEquals(expected, json, "The received json spec should match the expected content")
+    }
+  }
+
+  @Test
+  fun `Can generate a polymorphic response from a sealed interface`() {
+    withTestApplication({
+      jacksonConfigModule()
+      docs()
+      polymorphicInterfaceResponse()
+    }) {
+      // do
+      val json = handleRequest(HttpMethod.Get, "/openapi.json").response.content
+
+      // expect
+      val expected = getFileSnapshot("sealed_interface_response.json").trim()
       assertEquals(expected, json, "The received json spec should match the expected content")
     }
   }

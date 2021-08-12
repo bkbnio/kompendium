@@ -78,6 +78,21 @@ object TestResponseInfo {
     description = "Polymorphic response",
     responseInfo = simpleOkResponse()
   )
+  val polymorphicListResponse = GetInfo<Unit, List<FlibbityGibbit>>(
+    summary = "Oh so many gibbits",
+    description = "Polymorphic list response",
+    responseInfo = simpleOkResponse()
+  )
+  val polymorphicMapResponse = GetInfo<Unit, Map<String, FlibbityGibbit>>(
+    summary = "By gawd that's a lot of gibbits",
+    description = "Polymorphic list response",
+    responseInfo = simpleOkResponse()
+  )
+  val polymorphicInterfaceResponse = GetInfo<Unit, SlammaJamma>(
+    summary = "Come on and slam",
+    description = "and welcome to the jam",
+    responseInfo = simpleOkResponse()
+  )
   val genericPolymorphicResponse = GetInfo<Unit, Flibbity<TestNested>>(
     summary = "More flibbity",
     description = "Polymorphic with generics",
