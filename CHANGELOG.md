@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.6.0] - August 12, 2021
+
+### Added
+
+- Ability to add custom type schema overrides for edge case types.
+
 ## [1.5.1] - August 12th, 2021
 
 ### Changed

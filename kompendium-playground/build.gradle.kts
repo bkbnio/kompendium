@@ -18,6 +18,8 @@ dependencies {
   implementation(libs.bundles.ktorAuth)
   implementation(libs.bundles.logging)
 
+  implementation("joda-time:joda-time:2.10.10")
+
   testImplementation("org.jetbrains.kotlin:kotlin-test")
   testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
 }

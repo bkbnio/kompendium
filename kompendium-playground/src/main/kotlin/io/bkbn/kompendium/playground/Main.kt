@@ -1,5 +1,6 @@
 package io.bkbn.kompendium.playground
 
+import io.bkbn.kompendium.Kompendium
 import io.bkbn.kompendium.Notarized.notarizedDelete
 import io.bkbn.kompendium.Notarized.notarizedException
 import io.bkbn.kompendium.Notarized.notarizedGet
@@ -7,7 +8,9 @@ import io.bkbn.kompendium.Notarized.notarizedPost
 import io.bkbn.kompendium.Notarized.notarizedPut
 import io.bkbn.kompendium.auth.KompendiumAuth.notarizedBasic
 import io.bkbn.kompendium.models.meta.ResponseInfo
+import io.bkbn.kompendium.models.oas.FormatSchema
 import io.bkbn.kompendium.playground.PlaygroundToC.testAuthenticatedSingleGetInfo
+import io.bkbn.kompendium.playground.PlaygroundToC.testCustomOverride
 import io.bkbn.kompendium.playground.PlaygroundToC.testGetWithExamples
 import io.bkbn.kompendium.playground.PlaygroundToC.testIdGetInfo
 import io.bkbn.kompendium.playground.PlaygroundToC.testPostWithExamples
@@ -36,8 +39,11 @@ import io.ktor.serialization.json
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import io.ktor.webjars.Webjars
+import org.joda.time.DateTime
 
 fun main() {
+  Kompendium.addCustomTypeSchema(DateTime::class, FormatSchema("date-time", "string"))
+
   embeddedServer(
     Netty,
     port = 8081,
@@ -112,6 +118,11 @@ fun Application.mainModule() {
         }
         notarizedDelete(testSingleDeleteInfo) {
           call.respondText { "heya" }
+        }
+      }
+      route("custom_override") {
+        notarizedGet(testCustomOverride) {
+          call.respondText { DateTime.now().toString() }
         }
       }
       authenticate("basic") {
