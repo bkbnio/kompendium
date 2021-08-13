@@ -216,6 +216,25 @@ routing {
 }
 ```
 
+## Custom Type Overrides
+
+Kompendium does its best to analyze types and to generate an OpenAPI format accordingly. However, there are certain 
+classes that just don't play nice with the standard reflection analysis that Kompendium performs.
+Should you encounter a data type that Kompendium cannot comprehend, you will need to 
+add it explicitly.  For example, adding the Joda Time `DateTime` object would be as simple as the following 
+
+```kotlin
+  Kompendium.addCustomTypeSchema(DateTime::class, FormatSchema("date-time", "string"))
+```
+
+Since `Kompendium` is an object, this needs to be declared once, ahead of the actual API instantiation.  This way, this 
+type override can be cached ahead of reflection.  Kompendium will then match all instances of this type and return the 
+specified schema.  
+
+So how do you know a type can and cannot be inferred?  The safe bet is that it can be.  So go ahead and give it a shot. 
+However, in the very odd scenario (almost always having to do with date/time libraries 😤) where it can't, you can rest
+safely knowing that you have the option to inject a custom override should you need to.
+
 ## Limitations
 
 ### Kompendium as a singleton
@@ -234,7 +253,6 @@ should have.  There are several outstanding features that have been added to the
 
 - AsyncAPI Integration
 - Field Validation
-- MavenCentral Release
 
 If you have a feature that you would like to see implemented that is not on this list, or discover a 🐞, please open 
 an issue [here](https://github.com/bkbnio/kompendium/issues/new)

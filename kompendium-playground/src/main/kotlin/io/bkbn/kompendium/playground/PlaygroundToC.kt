@@ -55,6 +55,15 @@ object PlaygroundToC {
       description = "Returns a different sample"
     )
   )
+  val testCustomOverride = MethodInfo.GetInfo<Unit, DateTimeWrapper>(
+    summary = "custom schema test",
+    description = "testing",
+    tags = setOf("custom"),
+    responseInfo = ResponseInfo(
+      status = HttpStatusCode.OK,
+      description = "good tings"
+    )
+  )
   val testSingleGetInfoWithThrowable = testSingleGetInfo.copy(
     summary = "Show me the error baby 🙏",
     canThrow = setOf(Exception::class)
