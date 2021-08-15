@@ -96,9 +96,21 @@ The intended purpose of `KompendiumField` is to offer field level overrides such
 The purpose of `KompendiumParam` is to provide supplemental information needed to properly assign the type of parameter 
 (cookie, header, query, path) as well as other parameter-level metadata. 
 
+### Undeclared Field
+
+There is also a final `UndeclaredField` annotation.  This should be used only in an absolutely emergency.  This annotation
+will allow you to inject a _single_ undeclared field that will be included as part of the schema. 
+
+Due to limitations in using repeated annotations, this can only be used once per class
+
+This is a complete hack, and is included for odd scenarios like kotlinx serialization polymorphic adapters that expect a 
+`type` field in order to perform their analysis.  
+
+Use this _only_ when **all** else fails
+
 ### Polymorphism
 
-Out of the box, Kompendium has support for sealed classes. At runtime, it will build a mapping of all available sub-classes
+Speaking of polymorphism... out of the box, Kompendium has support for sealed classes and interfaces. At runtime, it will build a mapping of all available sub-classes
 and build a spec that takes `anyOf` the implementations.  This is currently a weak point of the entire library, and 
 suggestions on better implementations are welcome 🤠
 

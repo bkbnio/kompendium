@@ -340,6 +340,16 @@ fun Application.genericPolymorphicResponseMultipleImpls() {
   }
 }
 
+fun Application.undeclaredType() {
+  routing {
+    route("/test/polymorphic") {
+      notarizedGet(TestResponseInfo.undeclaredResponseType) {
+        call.respond(HttpStatusCode.OK, Mysterious("hi"))
+      }
+    }
+  }
+}
+
 fun Application.simpleGenericResponse() {
   routing {
     route("/test/polymorphic") {

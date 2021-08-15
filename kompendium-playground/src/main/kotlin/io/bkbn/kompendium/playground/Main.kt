@@ -19,6 +19,7 @@ import io.bkbn.kompendium.playground.PlaygroundToC.testSingleGetInfo
 import io.bkbn.kompendium.playground.PlaygroundToC.testSingleGetInfoWithThrowable
 import io.bkbn.kompendium.playground.PlaygroundToC.testSinglePostInfo
 import io.bkbn.kompendium.playground.PlaygroundToC.testSinglePutInfo
+import io.bkbn.kompendium.playground.PlaygroundToC.testUndeclaredFields
 import io.bkbn.kompendium.routes.openApi
 import io.bkbn.kompendium.routes.redoc
 import io.bkbn.kompendium.swagger.swaggerUI
@@ -136,6 +137,11 @@ fun Application.mainModule() {
     route("/error") {
       notarizedGet(testSingleGetInfoWithThrowable) {
         error("bad things just happened")
+      }
+    }
+    route("/undeclared") {
+      notarizedGet(testUndeclaredFields) {
+        call.respondText { "hi" }
       }
     }
   }

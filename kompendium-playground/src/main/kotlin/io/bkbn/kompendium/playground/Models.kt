@@ -3,6 +3,7 @@ package io.bkbn.kompendium.playground
 import io.bkbn.kompendium.annotations.KompendiumField
 import io.bkbn.kompendium.annotations.KompendiumParam
 import io.bkbn.kompendium.annotations.ParamType
+import io.bkbn.kompendium.annotations.UndeclaredField
 import org.joda.time.DateTime
 
 data class ExampleParams(
@@ -33,3 +34,11 @@ data class ExceptionResponse(val message: String)
 data class ExampleCreatedResponse(val id: Int, val c: String)
 
 data class DateTimeWrapper(val dt: DateTime)
+
+enum class Testerino {
+  First,
+  Second
+}
+
+@UndeclaredField("type", Testerino::class)
+data class SimpleYetMysterious(val exists: Boolean)

@@ -43,6 +43,7 @@ import io.bkbn.kompendium.util.simpleGenericResponse
 import io.bkbn.kompendium.util.statusPageModule
 import io.bkbn.kompendium.util.statusPageMultiExceptions
 import io.bkbn.kompendium.util.trailingSlash
+import io.bkbn.kompendium.util.undeclaredType
 import io.bkbn.kompendium.util.withDefaultParameter
 import io.bkbn.kompendium.util.withExamples
 
@@ -552,6 +553,22 @@ internal class KompendiumTest {
 
       // expect
       val expected = getFileSnapshot("crazy_polymorphic_example.json").trim()
+      assertEquals(expected, json, "The received json spec should match the expected content")
+    }
+  }
+
+  @Test
+  fun `Can add an undeclared field`() {
+    withTestApplication({
+      kotlinxConfigModule()
+      docs()
+      undeclaredType()
+    }) {
+      // do
+      val json = handleRequest(HttpMethod.Get, "/openapi.json").response.content
+
+      // expect
+      val expected = getFileSnapshot("undeclared_field.json").trim()
       assertEquals(expected, json, "The received json spec should match the expected content")
     }
   }
