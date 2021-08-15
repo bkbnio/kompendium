@@ -1,5 +1,6 @@
 package io.bkbn.kompendium
 
+import io.bkbn.kompendium.annotations.UndeclaredField
 import io.bkbn.kompendium.models.meta.SchemaMap
 import io.bkbn.kompendium.models.oas.AnyOfReferencedSchema
 import io.bkbn.kompendium.models.oas.ArraySchema
@@ -7,6 +8,7 @@ import io.bkbn.kompendium.models.oas.DictionarySchema
 import io.bkbn.kompendium.models.oas.EnumSchema
 import io.bkbn.kompendium.models.oas.FormatSchema
 import io.bkbn.kompendium.models.oas.ObjectSchema
+import io.bkbn.kompendium.models.oas.OpenApiSpecComponentSchema
 import io.bkbn.kompendium.models.oas.ReferencedSchema
 import io.bkbn.kompendium.models.oas.SimpleSchema
 import io.bkbn.kompendium.util.Helpers.COMPONENT_SLUG
@@ -204,8 +206,14 @@ object Kontent {
           }
           Pair(prop.name, propSchema)
         }
+        logger.debug("Looking for undeclared fields")
+        val undeclaredFieldMap = clazz.annotations.filterIsInstance<UndeclaredField>().associate {
+          val undeclaredType = it.clazz.createType()
+          newCache = generateKontent(undeclaredType, newCache)
+          it.field to ReferencedSchema(undeclaredType.getReferenceSlug())
+        }
         logger.debug("$slug contains $fieldMap")
-        val schema = ObjectSchema(fieldMap)
+        val schema = ObjectSchema(fieldMap.plus(undeclaredFieldMap))
         logger.debug("$slug schema: $schema")
         newCache.plus(slug to schema)
       }
@@ -238,7 +246,7 @@ object Kontent {
     val valClass = valType?.classifier as KClass<*>
     val valClassName = valClass.simpleName
     val referenceName = genericNameAdapter(type, clazz)
-    val valueReference = when(valClass.isSealed) {
+    val valueReference = when (valClass.isSealed) {
       true -> {
         val subTypes = gatherSubTypes(valType)
         AnyOfReferencedSchema(subTypes.map {

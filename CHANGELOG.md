@@ -1,6 +1,12 @@
 # Changelog
 
-## [1.6.0] - August 12, 2021
+## [1.7.0] - August 14th, 2021
+
+### Added
+
+- Added ability to inject an emergency `UndeclaredField` in the event of certain polymorphic serializers and such
+
+## [1.6.0] - August 12th, 2021
 
 ### Added
 

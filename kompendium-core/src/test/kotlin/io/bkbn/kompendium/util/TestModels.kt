@@ -4,6 +4,7 @@ import java.util.UUID
 import io.bkbn.kompendium.annotations.KompendiumField
 import io.bkbn.kompendium.annotations.KompendiumParam
 import io.bkbn.kompendium.annotations.ParamType
+import io.bkbn.kompendium.annotations.UndeclaredField
 import java.math.BigDecimal
 import java.math.BigInteger
 
@@ -94,3 +95,11 @@ sealed interface Flibbity<T>
 
 data class Gibbity<T>(val a: T): Flibbity<T>
 data class Bibbity<T>(val b: String, val f: T) : Flibbity<T>
+
+enum class Hehe {
+  HAHA,
+  HOHO
+}
+
+@UndeclaredField("nowYouDont", Hehe::class)
+data class Mysterious(val nowYouSeeMe: String)

@@ -103,6 +103,11 @@ object TestResponseInfo {
     description = "Polymorphic with generics but like... crazier",
     responseInfo = simpleOkResponse()
   )
+  val undeclaredResponseType = GetInfo<Unit, Mysterious>(
+    summary = "spooky class",
+    description = "break this glass in scenario of emergency",
+    responseInfo = simpleOkResponse()
+  )
   val genericResponse = GetInfo<Unit, TestGeneric<Int>>(
     summary = "Single Generic",
     description = "Simple generic data class",

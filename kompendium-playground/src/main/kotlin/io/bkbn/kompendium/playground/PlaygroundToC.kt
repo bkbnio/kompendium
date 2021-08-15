@@ -109,4 +109,13 @@ object PlaygroundToC {
     ),
     securitySchemes = setOf("basic")
   )
+  val testUndeclaredFields = MethodInfo.GetInfo<Unit, SimpleYetMysterious>(
+    summary = "Tests adding undeclared fields",
+    description = "vvv mysterious",
+    tags = setOf("mysterious"),
+    responseInfo = ResponseInfo(
+      status = HttpStatusCode.OK,
+      description = "good tings"
+    )
+  )
 }
