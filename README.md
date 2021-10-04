@@ -119,6 +119,33 @@ suggestions on better implementations are welcome 🤠
 Under the hood, Kompendium uses Jackson to serialize the final api spec.  However, this implementation detail 
 does not leak to the actual API, meaning that users are free to choose the serialization library of their choice.  
 
+### Route Handling
+
+> ⚠️ Warning: Custom route handling is almost definitely an indication that a new Kompendium module needs to be added.  If you have encountered a route type that is not handled, please consider opening an [issue](https://github.com/bkbnio/kompendium/issues/new)
+
+Kompendium does its best to handle all Ktor routes out of the gate.  However, in keeping with the modular approach of 
+Ktor and Kompendium, this is not always possible. 
+
+Should you need to, custom route handlers can be registered via the 
+`Kompendium.addCustomRouteHandler` function.  
+
+The method declaration is a bit gross, so lets dig in to what is happening.
+
+```kotlin
+fun <T : RouteSelector> addCustomRouteHandler(
+  selector: KClass<T>,
+  handler: PathCalculator.(Route, String) -> String
+)
+```
+
+This function takes a selector, which _must_ be an implementation of the Ktor `RouteSelector`.  The handler is a function
+that extends the Kompendium `PathCalculator`.  This is necessary because it gives you access to `PathCalculator.calculate`, 
+which you are going to want in order to calculate the rest of the route :)
+
+Its parameters are the `Route` itself, along with the "tail" of the Path (the path that has been calculated thus far).
+
+Working examples `init` blocks of the `PathCalculator` and `KompendiumAuth` object.
+
 ## Examples
 
 The full source code can be found in the `kompendium-playground` module. Here is a simple get endpoint example 

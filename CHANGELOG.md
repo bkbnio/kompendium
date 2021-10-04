@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.8.0] - October 4th, 2021
+
+### Changed
+
+- Path calculation revamped to allow for simpler selector injection
+- Kotlin version bumped to 1.5.31
+- Ktor version bumped to 1.6.4
+
 ## [1.7.0] - August 14th, 2021
 
 ### Added

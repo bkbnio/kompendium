@@ -7,11 +7,14 @@ import io.ktor.auth.jwt.jwt
 import io.ktor.auth.jwt.JWTAuthenticationProvider
 import io.bkbn.kompendium.Kompendium
 import io.bkbn.kompendium.models.oas.OpenApiSpecSchemaSecurity
+import io.ktor.auth.AuthenticationRouteSelector
 
 object KompendiumAuth {
 
   init {
-      Kompendium.pathCalculator = AuthPathCalculator()
+    Kompendium.addCustomRouteHandler(AuthenticationRouteSelector::class) { route, tail ->
+      calculate(route.parent, tail)
+    }
   }
 
   fun Authentication.Configuration.notarizedBasic(
