@@ -4,6 +4,7 @@ import io.ktor.routing.PathSegmentConstantRouteSelector
 import io.ktor.routing.PathSegmentParameterRouteSelector
 import io.ktor.routing.RootRouteSelector
 import io.ktor.routing.Route
+import io.ktor.routing.TrailingSlashRouteSelector
 import io.ktor.util.InternalAPI
 import org.slf4j.LoggerFactory
 
@@ -35,14 +36,12 @@ open class CorePathCalculator : PathCalculator {
         val newTail = "/${route.selector}$tail"
         calculate(route.parent, newTail)
       }
-      else -> when (route.selector.javaClass.simpleName) {
-        "TrailingSlashRouteSelector" -> {
-          logger.debug("Found trailing slash route selector")
-          val newTail = tail.ifBlank { "/" }
-          calculate(route.parent, newTail)
-        }
-        else -> handleCustomSelectors(route, tail)
+      is TrailingSlashRouteSelector -> {
+        logger.debug("Found trailing slash route selector")
+        val newTail = tail.ifBlank { "/" }
+        calculate(route.parent, newTail)
       }
+      else -> handleCustomSelectors(route, tail)
     }
   }
 

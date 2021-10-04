@@ -7,12 +7,16 @@ import io.bkbn.kompendium.models.oas.OpenApiSpecInfo
 import io.bkbn.kompendium.models.oas.TypedSchema
 import io.bkbn.kompendium.path.CorePathCalculator
 import io.bkbn.kompendium.path.PathCalculator
+import io.ktor.routing.Route
+import io.ktor.routing.RouteSelector
 import kotlin.reflect.KClass
 
 /**
  * Maintains all state for the Kompendium library
  */
 object Kompendium {
+
+  private val pathHandler: MutableMap<RouteSelector, (Route?, String) -> String> = mutableMapOf()
 
   var errorMap: ErrorMap = emptyMap()
   var cache: SchemaMap = emptyMap()
@@ -36,5 +40,9 @@ object Kompendium {
 
   fun addCustomTypeSchema(clazz: KClass<*>, schema: TypedSchema) {
     cache = cache.plus(clazz.simpleName!! to schema)
+  }
+
+  fun addCustomRouteHandler(selector: RouteSelector, handler: (Route?, String) -> String) {
+    pathHandler[selector] = handler
   }
 }
