@@ -30,11 +30,27 @@ allprojects {
   apply(plugin = "io.gitlab.arturbosch.detekt")
   apply(plugin = "com.adarshr.test-logger")
   apply(plugin = "idea")
+  apply(plugin = "jacoco")
 
   tasks.withType<KotlinCompile>().configureEach {
     kotlinOptions {
       jvmTarget = "1.8"
     }
+  }
+
+  tasks.withType<Test>() {
+    finalizedBy(tasks.withType(JacocoReport::class))
+  }
+
+  tasks.withType<JacocoReport>() {
+    reports {
+      html.required.set(true)
+      xml.required.set(true)
+    }
+  }
+
+  configure<JacocoPluginExtension> {
+    toolVersion = "0.8.7"
   }
 
   configure<TestLoggerExtension> {

@@ -37,3 +37,28 @@ jobs:
         run: ./gradlew assemble
       - name: Run Unit Tests
         run: ./gradlew test
+      - name: Cache Coverage Results
+        uses: actions/cache@v2
+        with:
+          path: ./**/build/reports/jacoco
+          key: ${{ runner.os }}-unit-${{ env.GITHUB_SHA }
+  upload-code-coverage:
+    runs-on: ubuntu-latest
+    needs:
+      - unit
+    steps:
+      - uses: actions/checkout@v2
+      - name: Cache Coverage Results
+        uses: actions/cache@v2
+        with:
+          path: ./**/build/reports/jacoco
+          key: ${{ runner.os }}-unit-${{ env.GITHUB_SHA }}
+      - name: Cache Coverage Results
+        uses: actions/cache@v2
+        with:
+          path: ./**/build/reports/jacoco
+          key: ${{ runner.os }}-integration-${{ env.GITHUB_SHA }}
+      - name: Publish code coverage to Codacy
+        uses: codacy/codacy-coverage-reporter-action@v1
+        with:
+          project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
