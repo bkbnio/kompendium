@@ -123,7 +123,7 @@ does not leak to the actual API, meaning that users are free to choose the seria
 
 ### Route Handling
 
-> ⚠️ Warning: Custom route handling is almost definitely an indication that a new Kompendium module needs to be added.  If you have encountered a route type that is not handled, please consider opening an [issue](https://github.com/bkbnio/kompendium/issues/new)
+> ⚠️ Warning: Custom route handling is almost definitely an indication that either a new selector should be added to kompendium-core or that kompendium is in need of another module to handle a new ktor companion module.  If you have encountered a route selector that is not already handled, please consider opening an [issue](https://github.com/bkbnio/kompendium/issues/new)
 
 Kompendium does its best to handle all Ktor routes out of the gate.  However, in keeping with the modular approach of 
 Ktor and Kompendium, this is not always possible. 
@@ -131,7 +131,7 @@ Ktor and Kompendium, this is not always possible.
 Should you need to, custom route handlers can be registered via the 
 `Kompendium.addCustomRouteHandler` function.  
 
-The method declaration is a bit gross, so lets dig in to what is happening.
+The handler signature is as follows
 
 ```kotlin
 fun <T : RouteSelector> addCustomRouteHandler(
@@ -140,9 +140,9 @@ fun <T : RouteSelector> addCustomRouteHandler(
 )
 ```
 
-This function takes a selector, which _must_ be an implementation of the Ktor `RouteSelector`.  The handler is a function
+This function takes a selector, which _must_ be a KClass of the Ktor `RouteSelector` type.  The handler is a function
 that extends the Kompendium `PathCalculator`.  This is necessary because it gives you access to `PathCalculator.calculate`, 
-which you are going to want in order to calculate the rest of the route :)
+which you are going to want in order to recursively calculate the remainder of the route :)
 
 Its parameters are the `Route` itself, along with the "tail" of the Path (the path that has been calculated thus far).
 
