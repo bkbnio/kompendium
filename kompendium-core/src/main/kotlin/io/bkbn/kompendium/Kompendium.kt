@@ -25,7 +25,7 @@ object Kompendium {
     paths = mutableMapOf()
   )
 
-  fun calculate(route: Route) = PathCalculator.calculate(route)
+  fun calculatePath(route: Route) = PathCalculator.calculate(route)
 
   fun resetSchema() {
     openApiSpec = OpenApiSpec(
