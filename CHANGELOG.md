@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.8.1] - October 4th, 2021
+
+### Added
+
+- Codacy integration
+
 ## [1.8.0] - October 4th, 2021
 
 ### Changed
