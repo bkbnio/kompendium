@@ -21,10 +21,11 @@ repositories {
 }
 
 dependencies {
-  // other (less cool) dependencies
-  implementation("io.bkbn:kompendium-core:latest")
-  implementation("io.bkbn:kompendium-auth:latest")
-  implementation("io.bkbn:kompendium-swagger-ui:latest")
+  implementation("io.bkbn:kompendium-core:1.8.1")
+  implementation("io.bkbn:kompendium-auth:1.8.1")
+  implementation("io.bkbn:kompendium-swagger-ui:1.8.1")
+  
+  // Other dependencies...
 }
 ```
 
@@ -52,10 +53,14 @@ repositories {
 
 // 3 Add the package like any normal dependency
 dependencies { 
-    implementation("io.bkbn:kompendium-core:1.0.0")
+    implementation("io.bkbn:kompendium-core:1.8.1")
 }
 
 ```
+
+## Local Development
+
+Kompendium should run locally right out of the box, no configuration necessary (assuming you have JDK 1.8+ installed).  New features can be built locally and published to your local maven repository with the `./gradlew publishToMavenLocal` command! 
 
 ## In depth
 
