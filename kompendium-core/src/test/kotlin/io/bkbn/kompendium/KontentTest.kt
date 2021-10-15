@@ -50,6 +50,17 @@ internal class KontentTest {
   }
 
   @Test
+  fun `Object with ByteArray type`() {
+    // do
+    val result = generateKontent<TestByteArrayModel>()
+
+    // expect
+    assertEquals(2, result.count())
+    assertTrue { result.containsKey(TestByteArrayModel::class.simpleName) }
+    assertEquals(FormatSchema("byte", "string"), result["ByteArray"])
+  }
+
+  @Test
   fun `Objects reference their base types in the cache`() {
     // do
     val result = generateKontent<TestSimpleModel>()

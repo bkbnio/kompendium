@@ -127,6 +127,7 @@ object Kontent {
       UUID::class -> cache.plus(clazz.simpleName!! to FormatSchema("uuid", "string"))
       BigDecimal::class -> cache.plus(clazz.simpleName!! to FormatSchema("double", "number"))
       BigInteger::class -> cache.plus(clazz.simpleName!! to FormatSchema("int64", "integer"))
+      ByteArray::class -> cache.plus(clazz.simpleName!! to FormatSchema("byte", "string"))
       else -> when {
         clazz.isSubclassOf(Collection::class) -> handleCollectionType(type, clazz, cache)
         clazz.isSubclassOf(Enum::class) -> handleEnumType(clazz, cache)
