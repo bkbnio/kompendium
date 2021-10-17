@@ -46,5 +46,4 @@ object Kompendium {
   ) {
     PathCalculator.addCustomRouteHandler(selector, handler)
   }
-
 }

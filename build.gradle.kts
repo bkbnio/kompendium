@@ -5,7 +5,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
   id("org.jetbrains.kotlin.jvm") version "1.5.31" apply false
-  id("io.gitlab.arturbosch.detekt") version "1.17.0-RC3" apply false
+  id("io.gitlab.arturbosch.detekt") version "1.18.1" apply false
   id("com.adarshr.test-logger") version "3.0.0" apply false
   id("io.github.gradle-nexus.publish-plugin") version "1.1.0" apply true
 }
@@ -53,6 +53,7 @@ allprojects {
     toolVersion = "0.8.7"
   }
 
+  @Suppress("MagicNumber")
   configure<TestLoggerExtension> {
     theme = ThemeType.MOCHA
     setLogLevel("lifecycle")
@@ -73,7 +74,7 @@ allprojects {
   }
 
   configure<DetektExtension> {
-    toolVersion = "1.17.0-RC3"
+    toolVersion = "1.18.1"
     config = files("${rootProject.projectDir}/detekt.yml")
     buildUponDefaultConfig = true
   }

@@ -8,7 +8,6 @@ import io.bkbn.kompendium.models.oas.DictionarySchema
 import io.bkbn.kompendium.models.oas.EnumSchema
 import io.bkbn.kompendium.models.oas.FormatSchema
 import io.bkbn.kompendium.models.oas.ObjectSchema
-import io.bkbn.kompendium.models.oas.OpenApiSpecComponentSchema
 import io.bkbn.kompendium.models.oas.ReferencedSchema
 import io.bkbn.kompendium.models.oas.SimpleSchema
 import io.bkbn.kompendium.util.Helpers.COMPONENT_SLUG
@@ -16,6 +15,9 @@ import io.bkbn.kompendium.util.Helpers.genericNameAdapter
 import io.bkbn.kompendium.util.Helpers.getReferenceSlug
 import io.bkbn.kompendium.util.Helpers.getSimpleSlug
 import io.bkbn.kompendium.util.Helpers.logged
+import org.slf4j.LoggerFactory
+import java.math.BigDecimal
+import java.math.BigInteger
 import java.util.UUID
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
@@ -24,9 +26,6 @@ import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.jvm.javaField
 import kotlin.reflect.typeOf
-import org.slf4j.LoggerFactory
-import java.math.BigDecimal
-import java.math.BigInteger
 
 /**
  * Responsible for generating the schema map that is used to power all object references across the API Spec.
@@ -142,6 +141,8 @@ object Kontent {
    * @param clazz Class of the object to analyze
    * @param cache Existing schema map to append to
    */
+  // TODO Fix as part of this issue https://github.com/bkbnio/kompendium/issues/80
+  @Suppress("LongMethod", "ComplexMethod")
   private fun handleComplexType(type: KType, clazz: KClass<*>, cache: SchemaMap): SchemaMap {
     // This needs to be simple because it will be stored under it's appropriate reference component implicitly
     val slug = type.getSimpleSlug()
@@ -280,7 +281,7 @@ object Kontent {
           ReferencedSchema(("$COMPONENT_SLUG/${it.getSimpleSlug()}"))
         })
       }
-      false -> ReferencedSchema("${COMPONENT_SLUG}/${collectionClass.simpleName}")
+      false -> ReferencedSchema("$COMPONENT_SLUG/${collectionClass.simpleName}")
     }
     val schema = ArraySchema(items = valueReference)
     val updatedCache = generateKontent(collectionType, cache)
