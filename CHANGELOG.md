@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.9.0] - october 15th, 2021
+
+### Added
+
+- ByteArray added to the set of default types
+
+
 ## [1.8.1] - October 4th, 2021
 
 ### Added

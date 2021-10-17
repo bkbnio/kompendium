@@ -12,6 +12,8 @@ data class TestSimpleModel(val a: String, val b: Int)
 
 data class TestBigNumberModel(val a: BigDecimal, val b: BigInteger)
 
+data class TestByteArrayModel(val a: ByteArray)
+
 data class TestNestedModel(val inner: TestSimpleModel)
 
 data class TestSimpleWithEnums(val a: String, val b: SimpleEnum)
