@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.9.1] - October 17th, 2021
+
+### Changed
+
+- Code Coverage removed from PR checks due to limitations with GitHub workflows 
+- Minor linting fixes
+- Detekt now builds off of default config
+
 ## [1.9.0] - october 15th, 2021
 
 ### Added

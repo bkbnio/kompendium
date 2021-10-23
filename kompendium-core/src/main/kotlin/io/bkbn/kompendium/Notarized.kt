@@ -112,5 +112,4 @@ object Notarized {
     info.parseErrorInfo(errorType, responseType)
     exception(handler)
   }
-
 }

@@ -1,9 +1,7 @@
 package io.bkbn.kompendium
 
 import io.ktor.routing.Route
-import kotlin.reflect.KClass
 import kotlin.reflect.KType
-import kotlin.reflect.full.createType
 import kotlin.reflect.typeOf
 
 /**

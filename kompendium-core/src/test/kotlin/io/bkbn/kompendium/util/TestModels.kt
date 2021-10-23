@@ -95,7 +95,7 @@ data class AnothaJamma(val b: Float) : SlammaJamma
 
 sealed interface Flibbity<T>
 
-data class Gibbity<T>(val a: T): Flibbity<T>
+data class Gibbity<T>(val a: T) : Flibbity<T>
 data class Bibbity<T>(val b: String, val f: T) : Flibbity<T>
 
 enum class Hehe {
