@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.9.2] - October 24th, 2021
+
+### Changed
+
+- Jackson ObjectMapper passed by parameter to openapi module
+- Added serializable annotation to ExceptionResponse
+
 ## [1.9.1] - October 17th, 2021
 
 ### Changed
