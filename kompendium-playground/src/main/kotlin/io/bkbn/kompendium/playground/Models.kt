@@ -4,6 +4,7 @@ import io.bkbn.kompendium.annotations.KompendiumField
 import io.bkbn.kompendium.annotations.KompendiumParam
 import io.bkbn.kompendium.annotations.ParamType
 import io.bkbn.kompendium.annotations.UndeclaredField
+import kotlinx.serialization.Serializable
 import org.joda.time.DateTime
 
 data class ExampleParams(
@@ -27,6 +28,7 @@ data class ExampleRequest(
   val aaa: List<Long>
 )
 
+@Serializable
 data class ExampleResponse(val c: String)
 
 data class ExceptionResponse(val message: String)
