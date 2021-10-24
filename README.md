@@ -149,8 +149,6 @@ routing {
 }
 ```
 
-
-
 ### Route Handling
 
 > ⚠️ Warning: Custom route handling is almost definitely an indication that either a new selector should be added to kompendium-core or that kompendium is in need of another module to handle a new ktor companion module.  If you have encountered a route selector that is not already handled, please consider opening an [issue](https://github.com/bkbnio/kompendium/issues/new)
