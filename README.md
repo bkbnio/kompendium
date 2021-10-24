@@ -126,6 +126,29 @@ suggestions on better implementations are welcome 🤠
 Under the hood, Kompendium uses Jackson to serialize the final api spec.  However, this implementation detail 
 does not leak to the actual API, meaning that users are free to choose the serialization library of their choice.  
 
+Added the possibility to add your own ObjectMapper for Jackson. 
+
+Added a default parameter with the following configuration:
+
+```kotlin
+ObjectMapper()
+  .setSerializationInclusion(JsonInclude.Include.NON_NULL)
+  .enable(SerializationFeature.INDENT_OUTPUT)
+```
+
+If you want to change this default configuration and use your own ObjectMapper you only need to pass it as a second argument to the openApi module:
+
+```kotlin
+routing {
+  openApi(oas, objectMapper)
+  route("/potato/spud") {
+    notarizedGet(simpleGetInfo) {
+      call.respond(HttpStatusCode.OK)
+    }
+  }
+}
+```
+
 ### Route Handling
 
 > ⚠️ Warning: Custom route handling is almost definitely an indication that either a new selector should be added to kompendium-core or that kompendium is in need of another module to handle a new ktor companion module.  If you have encountered a route selector that is not already handled, please consider opening an [issue](https://github.com/bkbnio/kompendium/issues/new)
