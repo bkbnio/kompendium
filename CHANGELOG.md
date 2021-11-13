@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+### Added
+
+### Changed
+- `$ref` types are no longer generated, instead all objects are defined explicitly
+
+### Removed
+
+--- 
+
 ## [1.9.2] - October 24th, 2021
 
 ### Changed
