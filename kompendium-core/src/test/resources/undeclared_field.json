@@ -35,7 +35,16 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/Mysterious"
+                  "type" : "object",
+                  "properties" : {
+                    "nowYouSeeMe" : {
+                      "type" : "string"
+                    },
+                    "nowYouDont" : {
+                      "type" : "string",
+                      "enum" : [ "HAHA", "HOHO" ]
+                    }
+                  }
                 }
               }
             }
@@ -46,26 +55,6 @@
     }
   },
   "components" : {
-    "schemas" : {
-      "String" : {
-        "type" : "string"
-      },
-      "Hehe" : {
-        "type" : "string",
-        "enum" : [ "HAHA", "HOHO" ]
-      },
-      "Mysterious" : {
-        "type" : "object",
-        "properties" : {
-          "nowYouSeeMe" : {
-            "$ref" : "#/components/schemas/String"
-          },
-          "nowYouDont" : {
-            "$ref" : "#/components/schemas/Hehe"
-          }
-        }
-      }
-    },
     "securitySchemes" : { }
   },
   "security" : [ ],

@@ -35,7 +35,28 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/List-FlibbityGibbit"
+                  "type" : "array",
+                  "items" : {
+                    "anyOf" : [ {
+                      "type" : "object",
+                      "properties" : {
+                        "a" : {
+                          "type" : "string"
+                        }
+                      }
+                    }, {
+                      "type" : "object",
+                      "properties" : {
+                        "b" : {
+                          "type" : "string"
+                        },
+                        "c" : {
+                          "type" : "integer",
+                          "format" : "int32"
+                        }
+                      }
+                    } ]
+                  }
                 }
               }
             }
@@ -46,44 +67,6 @@
     }
   },
   "components" : {
-    "schemas" : {
-      "String" : {
-        "type" : "string"
-      },
-      "SimpleGibbit" : {
-        "type" : "object",
-        "properties" : {
-          "a" : {
-            "$ref" : "#/components/schemas/String"
-          }
-        }
-      },
-      "Int" : {
-        "type" : "integer",
-        "format" : "int32"
-      },
-      "ComplexGibbit" : {
-        "type" : "object",
-        "properties" : {
-          "b" : {
-            "$ref" : "#/components/schemas/String"
-          },
-          "c" : {
-            "$ref" : "#/components/schemas/Int"
-          }
-        }
-      },
-      "List-FlibbityGibbit" : {
-        "type" : "array",
-        "items" : {
-          "anyOf" : [ {
-            "$ref" : "#/components/schemas/SimpleGibbit"
-          }, {
-            "$ref" : "#/components/schemas/ComplexGibbit"
-          } ]
-        }
-      }
-    },
     "securitySchemes" : { }
   },
   "security" : [ ],

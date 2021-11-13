@@ -56,15 +56,6 @@
     }
   },
   "components" : {
-    "schemas" : {
-      "String" : {
-        "type" : "string"
-      },
-      "Int" : {
-        "type" : "integer",
-        "format" : "int32"
-      }
-    },
     "securitySchemes" : { }
   },
   "security" : [ ],

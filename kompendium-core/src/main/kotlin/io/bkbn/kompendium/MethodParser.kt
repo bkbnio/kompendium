@@ -10,14 +10,11 @@ import io.bkbn.kompendium.models.oas.OpenApiSpecMediaType
 import io.bkbn.kompendium.models.oas.OpenApiSpecParameter
 import io.bkbn.kompendium.models.oas.OpenApiSpecPathItemOperation
 import io.bkbn.kompendium.models.oas.OpenApiSpecReferencable
-import io.bkbn.kompendium.models.oas.OpenApiSpecReferenceObject
 import io.bkbn.kompendium.models.oas.OpenApiSpecRequest
 import io.bkbn.kompendium.models.oas.OpenApiSpecResponse
 import io.bkbn.kompendium.util.Helpers
-import io.bkbn.kompendium.util.Helpers.getReferenceSlug
 import io.bkbn.kompendium.util.Helpers.getSimpleSlug
-import java.util.Locale
-import java.util.UUID
+import java.util.*
 import kotlin.reflect.KClass
 import kotlin.reflect.KParameter
 import kotlin.reflect.KProperty
@@ -149,12 +146,12 @@ object MethodParser {
         val schema = if (classifier.isSealed) {
           val refs = classifier.sealedSubclasses
             .map { it.createType(type.arguments) }
-            .map { it.getReferenceSlug() }
-            .map { OpenApiSpecReferenceObject(it) }
+            .map { it.getSimpleSlug() }
+            .map { Kompendium.cache[it] ?: error("$it not available") }
           OpenApiAnyOf(refs)
         } else {
-          val ref = type.getReferenceSlug()
-          OpenApiSpecReferenceObject(ref)
+          val ref = type.getSimpleSlug()
+          Kompendium.cache[ref] ?: error("$ref not available")
         }
         OpenApiSpecMediaType(
           schema = schema,

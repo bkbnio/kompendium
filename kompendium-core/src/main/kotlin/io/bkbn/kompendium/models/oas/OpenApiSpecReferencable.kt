@@ -1,15 +1,15 @@
 package io.bkbn.kompendium.models.oas
 
+// TODO Rename
 sealed interface OpenApiSpecReferencable
 
-data class OpenApiAnyOf(val anyOf: List<OpenApiSpecReferenceObject>) : OpenApiSpecReferencable
-data class OpenApiSpecReferenceObject(val `$ref`: String) : OpenApiSpecReferencable
+data class OpenApiAnyOf(val anyOf: List<OpenApiSpecComponentSchema>) : OpenApiSpecReferencable
 
 data class OpenApiSpecResponse<T>(
-    val description: String? = null,
-    val headers: Map<String, OpenApiSpecReferencable>? = null,
-    val content: Map<String, OpenApiSpecMediaType<T>>? = null,
-    val links: Map<String, OpenApiSpecReferencable>? = null
+  val description: String? = null,
+  val headers: Map<String, OpenApiSpecReferencable>? = null,
+  val content: Map<String, OpenApiSpecMediaType<T>>? = null,
+  val links: Map<String, OpenApiSpecReferencable>? = null
 ) : OpenApiSpecReferencable
 
 data class OpenApiSpecParameter(
@@ -25,7 +25,7 @@ data class OpenApiSpecParameter(
 ) : OpenApiSpecReferencable
 
 data class OpenApiSpecRequest<T>(
-    val description: String?,
-    val content: Map<String, OpenApiSpecMediaType<T>>,
-    val required: Boolean = false
+  val description: String?,
+  val content: Map<String, OpenApiSpecMediaType<T>>,
+  val required: Boolean = false
 ) : OpenApiSpecReferencable

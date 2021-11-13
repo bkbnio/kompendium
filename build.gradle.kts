@@ -8,6 +8,16 @@ plugins {
   id("io.gitlab.arturbosch.detekt") version "1.18.1" apply false
   id("com.adarshr.test-logger") version "3.0.0" apply false
   id("io.github.gradle-nexus.publish-plugin") version "1.1.0" apply true
+  id("com.github.jakemarsden.git-hooks") version "0.0.2" apply true
+}
+
+gitHooks {
+  setHooks(
+    mapOf(
+      "pre-commit" to "detekt",
+      "pre-push" to "test"
+    )
+  )
 }
 
 allprojects {

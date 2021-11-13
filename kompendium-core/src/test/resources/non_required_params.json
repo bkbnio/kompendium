@@ -50,11 +50,6 @@
     }
   },
   "components" : {
-    "schemas" : {
-      "String" : {
-        "type" : "string"
-      }
-    },
     "securitySchemes" : { }
   },
   "security" : [ ],

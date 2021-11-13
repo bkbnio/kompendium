@@ -52,7 +52,15 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/List-TestResponse"
+                  "type" : "array",
+                  "items" : {
+                    "type" : "object",
+                    "properties" : {
+                      "c" : {
+                        "type" : "string"
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -63,29 +71,6 @@
     }
   },
   "components" : {
-    "schemas" : {
-      "String" : {
-        "type" : "string"
-      },
-      "TestResponse" : {
-        "type" : "object",
-        "properties" : {
-          "c" : {
-            "$ref" : "#/components/schemas/String"
-          }
-        }
-      },
-      "List-TestResponse" : {
-        "type" : "array",
-        "items" : {
-          "$ref" : "#/components/schemas/TestResponse"
-        }
-      },
-      "Int" : {
-        "type" : "integer",
-        "format" : "int32"
-      }
-    },
     "securitySchemes" : { }
   },
   "security" : [ ],

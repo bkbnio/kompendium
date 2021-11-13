@@ -36,9 +36,32 @@
               "application/json" : {
                 "schema" : {
                   "anyOf" : [ {
-                    "$ref" : "#/components/schemas/Gibbity-TestNested"
+                    "type" : "object",
+                    "properties" : {
+                      "a" : {
+                        "type" : "object",
+                        "properties" : {
+                          "nesty" : {
+                            "type" : "string"
+                          }
+                        }
+                      }
+                    }
                   }, {
-                    "$ref" : "#/components/schemas/Bibbity-TestNested"
+                    "type" : "object",
+                    "properties" : {
+                      "b" : {
+                        "type" : "string"
+                      },
+                      "f" : {
+                        "type" : "object",
+                        "properties" : {
+                          "nesty" : {
+                            "type" : "string"
+                          }
+                        }
+                      }
+                    }
                   } ]
                 }
               }
@@ -50,38 +73,6 @@
     }
   },
   "components" : {
-    "schemas" : {
-      "String" : {
-        "type" : "string"
-      },
-      "TestNested" : {
-        "type" : "object",
-        "properties" : {
-          "nesty" : {
-            "$ref" : "#/components/schemas/String"
-          }
-        }
-      },
-      "Gibbity-TestNested" : {
-        "type" : "object",
-        "properties" : {
-          "a" : {
-            "$ref" : "#/components/schemas/TestNested"
-          }
-        }
-      },
-      "Bibbity-TestNested" : {
-        "type" : "object",
-        "properties" : {
-          "b" : {
-            "$ref" : "#/components/schemas/String"
-          },
-          "f" : {
-            "$ref" : "#/components/schemas/TestNested"
-          }
-        }
-      }
-    },
     "securitySchemes" : { }
   },
   "security" : [ ],
