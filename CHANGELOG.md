@@ -5,6 +5,7 @@
 
 ### Changed
 - `$ref` types are no longer generated, instead all objects are defined explicitly
+- All OpenAPI domain models moved to a separate module `kompendium-oas`
 
 ### Removed
 
