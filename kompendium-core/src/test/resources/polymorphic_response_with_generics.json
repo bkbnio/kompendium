@@ -36,32 +36,32 @@
               "application/json" : {
                 "schema" : {
                   "anyOf" : [ {
-                    "type" : "object",
                     "properties" : {
                       "a" : {
-                        "type" : "object",
                         "properties" : {
                           "nesty" : {
                             "type" : "string"
                           }
-                        }
+                        },
+                        "type" : "object"
                       }
-                    }
+                    },
+                    "type" : "object"
                   }, {
-                    "type" : "object",
                     "properties" : {
                       "b" : {
                         "type" : "string"
                       },
                       "f" : {
-                        "type" : "object",
                         "properties" : {
                           "nesty" : {
                             "type" : "string"
                           }
-                        }
+                        },
+                        "type" : "object"
                       }
-                    }
+                    },
+                    "type" : "object"
                   } ]
                 }
               }

@@ -1,5 +1,6 @@
 package io.bkbn.kompendium.core.routes
 
+import io.bkbn.kompendium.oas.OpenApiSpec
 import io.ktor.application.call
 import io.ktor.html.respondHtml
 import io.ktor.routing.Routing
@@ -13,7 +14,6 @@ import kotlinx.html.script
 import kotlinx.html.style
 import kotlinx.html.title
 import kotlinx.html.unsafe
-import io.bkbn.kompendium.oas.old.OpenApiSpec
 
 /**
  * Provides an out-of-the-box route to view docs using ReDoc

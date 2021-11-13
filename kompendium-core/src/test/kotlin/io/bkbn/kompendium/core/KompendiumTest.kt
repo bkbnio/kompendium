@@ -10,10 +10,6 @@ import java.net.URI
 import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import io.bkbn.kompendium.oas.old.OpenApiSpecInfo
-import io.bkbn.kompendium.oas.old.OpenApiSpecInfoContact
-import io.bkbn.kompendium.oas.old.OpenApiSpecInfoLicense
-import io.bkbn.kompendium.oas.old.OpenApiSpecServer
 import io.bkbn.kompendium.core.routes.openApi
 import io.bkbn.kompendium.core.routes.redoc
 import io.bkbn.kompendium.core.util.TestHelpers.getFileSnapshot
@@ -46,6 +42,10 @@ import io.bkbn.kompendium.core.util.trailingSlash
 import io.bkbn.kompendium.core.util.undeclaredType
 import io.bkbn.kompendium.core.util.withDefaultParameter
 import io.bkbn.kompendium.core.util.withExamples
+import io.bkbn.kompendium.oas.info.Contact
+import io.bkbn.kompendium.oas.info.Info
+import io.bkbn.kompendium.oas.info.License
+import io.bkbn.kompendium.oas.server.Server
 
 internal class KompendiumTest {
 
@@ -574,27 +574,27 @@ internal class KompendiumTest {
   }
 
   private val oas = Kompendium.openApiSpec.copy(
-    info = OpenApiSpecInfo(
+    info = Info(
       title = "Test API",
       version = "1.33.7",
       description = "An amazing, fully-ish 😉 generated API spec",
       termsOfService = URI("https://example.com"),
-      contact = OpenApiSpecInfoContact(
+      contact = Contact(
         name = "Homer Simpson",
         email = "chunkylover53@aol.com",
         url = URI("https://gph.is/1NPUDiM")
       ),
-      license = OpenApiSpecInfoLicense(
+      license = License(
         name = "MIT",
         url = URI("https://github.com/bkbnio/kompendium/blob/main/LICENSE")
       )
     ),
     servers = mutableListOf(
-      OpenApiSpecServer(
+      Server(
         url = URI("https://myawesomeapi.com"),
         description = "Production instance of my API"
       ),
-      OpenApiSpecServer(
+      Server(
         url = URI("https://staging.myawesomeapi.com"),
         description = "Where the fun stuff happens"
       )

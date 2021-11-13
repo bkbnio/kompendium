@@ -4,12 +4,12 @@ import io.bkbn.kompendium.core.metadata.ErrorMap
 import io.bkbn.kompendium.core.metadata.SchemaMap
 import io.bkbn.kompendium.core.path.IPathCalculator
 import io.bkbn.kompendium.core.path.PathCalculator
+import io.bkbn.kompendium.oas.OpenApiSpec
+import io.bkbn.kompendium.oas.info.Info
+import io.bkbn.kompendium.oas.schema.TypedSchema
 import io.ktor.routing.Route
 import io.ktor.routing.RouteSelector
 import kotlin.reflect.KClass
-import io.bkbn.kompendium.oas.old.OpenApiSpec
-import io.bkbn.kompendium.oas.old.OpenApiSpecInfo
-import io.bkbn.kompendium.oas.old.TypedSchema
 
 /**
  * Maintains all state for the Kompendium library
@@ -20,7 +20,7 @@ object Kompendium {
   var cache: SchemaMap = emptyMap()
 
   var openApiSpec = OpenApiSpec(
-    info = OpenApiSpecInfo(),
+    info = Info(),
     servers = mutableListOf(),
     paths = mutableMapOf()
   )
@@ -29,7 +29,7 @@ object Kompendium {
 
   fun resetSchema() {
     openApiSpec = OpenApiSpec(
-      info = OpenApiSpecInfo(),
+      info = Info(),
       servers = mutableListOf(),
       paths = mutableMapOf()
     )

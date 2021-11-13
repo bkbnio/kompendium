@@ -5,17 +5,15 @@ import io.bkbn.kompendium.core.annotations.KompendiumParam
 import io.bkbn.kompendium.core.metadata.MethodInfo
 import io.bkbn.kompendium.core.metadata.RequestInfo
 import io.bkbn.kompendium.core.metadata.ResponseInfo
-import io.bkbn.kompendium.oas.old.ExampleWrapper
-import io.bkbn.kompendium.oas.old.OpenApiAnyOf
-import io.bkbn.kompendium.oas.old.OpenApiSpecMediaType
-import io.bkbn.kompendium.oas.old.OpenApiSpecParameter
-import io.bkbn.kompendium.oas.old.OpenApiSpecPathItemOperation
-import io.bkbn.kompendium.oas.old.OpenApiSpecReferencable
-import io.bkbn.kompendium.oas.old.OpenApiSpecRequest
-import io.bkbn.kompendium.oas.old.OpenApiSpecResponse
 import io.bkbn.kompendium.core.util.Helpers
 import io.bkbn.kompendium.core.util.Helpers.getSimpleSlug
-import java.util.*
+import io.bkbn.kompendium.oas.path.PathOperation
+import io.bkbn.kompendium.oas.payload.MediaType
+import io.bkbn.kompendium.oas.payload.Parameter
+import io.bkbn.kompendium.oas.payload.Payload
+import io.bkbn.kompendium.oas.payload.Request
+import io.bkbn.kompendium.oas.payload.Response
+import io.bkbn.kompendium.oas.schema.AnyOfSchema
 import kotlin.reflect.KClass
 import kotlin.reflect.KParameter
 import kotlin.reflect.KProperty
@@ -25,6 +23,7 @@ import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
 import kotlin.reflect.jvm.javaField
+import java.util.*
 
 /**
  * The MethodParser is responsible for converting route metadata and types into an OpenAPI compatible data class.
@@ -44,7 +43,7 @@ object MethodParser {
     paramType: KType,
     requestType: KType,
     responseType: KType
-  ) = OpenApiSpecPathItemOperation(
+  ) = PathOperation (
     summary = info.summary,
     description = info.description,
     tags = info.tags,
@@ -90,8 +89,8 @@ object MethodParser {
    * @param throwables Set of classes that can be thrown
    * @return Mapping of status codes to their corresponding error spec
    */
-  private fun parseThrowables(throwables: Set<KClass<*>>): Map<Int, OpenApiSpecReferencable> = throwables.mapNotNull {
-    Kompendium.errorMap[it.createType()]
+  private fun parseThrowables(throwables: Set<KClass<*>>): Map<Int, Payload> = throwables.mapNotNull {
+    errorMap[it.createType()]
   }.toMap()
 
   /**
@@ -100,11 +99,11 @@ object MethodParser {
    * @param requestInfo request metadata
    * @return Will return a generated [OpenApiSpecRequest] if requestInfo is not null
    */
-  private fun KType.toRequestSpec(requestInfo: RequestInfo<*>?): OpenApiSpecRequest<*>? =
+  private fun KType.toRequestSpec(requestInfo: RequestInfo<*>?): Request<*>? =
     when (requestInfo) {
       null -> null
       else -> {
-        OpenApiSpecRequest(
+        Request(
           description = requestInfo.description,
           content = resolveContent(this, requestInfo.mediaTypes, requestInfo.examples) ?: mapOf()
         )
@@ -117,11 +116,11 @@ object MethodParser {
    * @param responseInfo response metadata
    * @return Will return a generated [Pair] if responseInfo is not null
    */
-  private fun KType.toResponseSpec(responseInfo: ResponseInfo<*>?): Pair<Int, OpenApiSpecResponse<*>>? =
+  private fun KType.toResponseSpec(responseInfo: ResponseInfo<*>?): Pair<Int, Response<*>>? =
     when (responseInfo) {
       null -> null
       else -> {
-        val specResponse = OpenApiSpecResponse(
+        val specResponse = Response(
           description = responseInfo.description,
           content = resolveContent(this, responseInfo.mediaTypes, responseInfo.examples)
         )
@@ -140,7 +139,7 @@ object MethodParser {
     type: KType,
     mediaTypes: List<String>,
     examples: Map<String, F>
-  ): Map<String, OpenApiSpecMediaType<F>>? {
+  ): Map<String, MediaType<F>>? {
     val classifier = type.classifier as KClass<*>
     return if (type != Helpers.UNIT_TYPE && mediaTypes.isNotEmpty()) {
       mediaTypes.associateWith {
@@ -149,14 +148,14 @@ object MethodParser {
             .map { it.createType(type.arguments) }
             .map { it.getSimpleSlug() }
             .map { Kompendium.cache[it] ?: error("$it not available") }
-          OpenApiAnyOf(refs)
+          AnyOfSchema(refs)
         } else {
           val ref = type.getSimpleSlug()
           Kompendium.cache[ref] ?: error("$ref not available")
         }
-        OpenApiSpecMediaType(
+        MediaType(
           schema = schema,
-          examples = examples.mapValues { (_, v) -> ExampleWrapper(v) }.ifEmpty { null }
+          examples = examples.mapValues { (_, v) -> MediaType.Example(v) }.ifEmpty { null }
         )
       }
     } else null
@@ -169,7 +168,7 @@ object MethodParser {
    * @return list of valid parameter specs as detailed by the [KType] members
    * @throws [IllegalStateException] if the class could not be parsed properly
    */
-  private fun KType.toParameterSpec(): List<OpenApiSpecParameter> {
+  private fun KType.toParameterSpec(): List<Parameter> {
     val clazz = classifier as KClass<*>
     return clazz.memberProperties.map { prop ->
       val field = prop.javaField?.type?.kotlin
@@ -179,7 +178,7 @@ object MethodParser {
       val schema = Kompendium.cache[field.getSimpleSlug(prop)]
         ?: error("Could not find component type for $prop")
       val defaultValue = getDefaultParameterValue(clazz, prop)
-      OpenApiSpecParameter(
+      Parameter(
         name = prop.name,
         `in` = anny.type.name.lowercase(Locale.getDefault()),
         schema = schema.addDefault(defaultValue),

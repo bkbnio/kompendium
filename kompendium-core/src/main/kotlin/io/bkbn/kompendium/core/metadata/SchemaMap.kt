@@ -1,5 +1,5 @@
 package io.bkbn.kompendium.core.metadata
 
-import io.bkbn.kompendium.oas.old.OpenApiSpecComponentSchema
+import io.bkbn.kompendium.oas.schema.ComponentSchema
 
-typealias SchemaMap = Map<String, OpenApiSpecComponentSchema>
+typealias SchemaMap = Map<String, ComponentSchema>

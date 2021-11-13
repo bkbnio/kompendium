@@ -1,6 +1,6 @@
 package io.bkbn.kompendium.core.metadata
 
+import io.bkbn.kompendium.oas.payload.Response
 import kotlin.reflect.KType
-import io.bkbn.kompendium.oas.old.OpenApiSpecResponse
 
-typealias ErrorMap = Map<KType, Pair<Int, OpenApiSpecResponse<*>>?>
+typealias ErrorMap = Map<KType, Pair<Int, Response<*>>?>

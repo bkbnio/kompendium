@@ -20,9 +20,9 @@ import io.bkbn.kompendium.core.util.TestSimpleWithEnums
 import io.bkbn.kompendium.core.util.TestSimpleWithList
 import io.bkbn.kompendium.core.util.TestSimpleWithMap
 import io.bkbn.kompendium.core.util.TestWithUUID
-import io.bkbn.kompendium.oas.old.DictionarySchema
-import io.bkbn.kompendium.oas.old.FormatSchema
-import io.bkbn.kompendium.oas.old.ObjectSchema
+import io.bkbn.kompendium.oas.schema.DictionarySchema
+import io.bkbn.kompendium.oas.schema.FormattedSchema
+import io.bkbn.kompendium.oas.schema.ObjectSchema
 
 @ExperimentalStdlibApi
 internal class KontentTest {
@@ -43,7 +43,7 @@ internal class KontentTest {
 
     // expect
     assertEquals(1, result.count(), "Should have a single result")
-    assertEquals(FormatSchema("int64", "integer"), result["Long"])
+    assertEquals(FormattedSchema("int64", "integer"), result["Long"])
   }
 
   @Test
@@ -54,8 +54,8 @@ internal class KontentTest {
     // expect
     assertEquals(3, result.count())
     assertTrue { result.containsKey(TestBigNumberModel::class.simpleName) }
-    assertEquals(FormatSchema("double", "number"), result["BigDecimal"])
-    assertEquals(FormatSchema("int64", "integer"), result["BigInteger"])
+    assertEquals(FormattedSchema("double", "number"), result["BigDecimal"])
+    assertEquals(FormattedSchema("int64", "integer"), result["BigInteger"])
   }
 
   @Test
@@ -66,7 +66,7 @@ internal class KontentTest {
     // expect
     assertEquals(2, result.count())
     assertTrue { result.containsKey(TestByteArrayModel::class.simpleName) }
-    assertEquals(FormatSchema("byte", "string"), result["ByteArray"])
+    assertEquals(FormattedSchema("byte", "string"), result["ByteArray"])
   }
 
   @Test
@@ -171,8 +171,8 @@ internal class KontentTest {
     assertEquals(2, result.count())
     assertTrue { result.containsKey(UUID::class.simpleName) }
     assertTrue { result.containsKey(TestWithUUID::class.simpleName) }
-    val expectedSchema = result[UUID::class.simpleName] as FormatSchema
-    assertEquals(FormatSchema("uuid", "string"), expectedSchema)
+    val expectedSchema = result[UUID::class.simpleName] as FormattedSchema
+    assertEquals(FormattedSchema("uuid", "string"), expectedSchema)
   }
 
   @Test

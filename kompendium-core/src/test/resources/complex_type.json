@@ -34,7 +34,6 @@
           "content" : {
             "application/json" : {
               "schema" : {
-                "type" : "object",
                 "properties" : {
                   "amazingField" : {
                     "type" : "string"
@@ -43,29 +42,30 @@
                     "type" : "string"
                   },
                   "tables" : {
-                    "type" : "array",
                     "items" : {
-                      "type" : "object",
                       "properties" : {
                         "alias" : {
-                          "type" : "object",
                           "additionalProperties" : {
-                            "type" : "object",
                             "properties" : {
                               "enumeration" : {
-                                "type" : "string",
-                                "enum" : [ "ONE", "TWO" ]
+                                "enum" : [ "ONE", "TWO" ],
+                                "type" : "string"
                               }
-                            }
-                          }
+                            },
+                            "type" : "object"
+                          },
+                          "type" : "object"
                         },
                         "name" : {
                           "type" : "string"
                         }
-                      }
-                    }
+                      },
+                      "type" : "object"
+                    },
+                    "type" : "array"
                   }
-                }
+                },
+                "type" : "object"
               }
             }
           },
@@ -77,16 +77,16 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "type" : "object",
                   "properties" : {
                     "c" : {
                       "type" : "string"
                     },
                     "id" : {
-                      "type" : "integer",
-                      "format" : "int32"
+                      "format" : "int32",
+                      "type" : "integer"
                     }
-                  }
+                  },
+                  "type" : "object"
                 }
               }
             }

@@ -6,7 +6,7 @@ import io.ktor.auth.BasicAuthenticationProvider
 import io.ktor.auth.jwt.jwt
 import io.ktor.auth.jwt.JWTAuthenticationProvider
 import io.bkbn.kompendium.core.Kompendium
-import io.bkbn.kompendium.oas.old.OpenApiSpecSchemaSecurity
+import io.bkbn.kompendium.oas.schema.SecuritySchema
 import io.ktor.auth.AuthenticationRouteSelector
 
 object KompendiumAuth {
@@ -21,7 +21,7 @@ object KompendiumAuth {
     name: String? = null,
     configure: BasicAuthenticationProvider.Configuration.() -> Unit
   ) {
-    Kompendium.openApiSpec.components.securitySchemes[name ?: "default"] = OpenApiSpecSchemaSecurity(
+    Kompendium.openApiSpec.components.securitySchemes[name ?: "default"] = SecuritySchema(
       type = "http",
       scheme = "basic"
     )
@@ -35,12 +35,12 @@ object KompendiumAuth {
     configure: JWTAuthenticationProvider.Configuration.() -> Unit
   ) {
     if (header == null || header == "Authorization") {
-      Kompendium.openApiSpec.components.securitySchemes[name ?: "default"] = OpenApiSpecSchemaSecurity(
+      Kompendium.openApiSpec.components.securitySchemes[name ?: "default"] = SecuritySchema(
         type = "http",
         scheme = scheme ?: "bearer"
       )
     } else {
-      Kompendium.openApiSpec.components.securitySchemes[name ?: "default"] = OpenApiSpecSchemaSecurity(
+      Kompendium.openApiSpec.components.securitySchemes[name ?: "default"] = SecuritySchema(
         type = "apiKey",
         name = header,
         `in` = "header"

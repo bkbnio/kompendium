@@ -32,9 +32,9 @@
           "name" : "a",
           "in" : "query",
           "schema" : {
-            "default" : 100,
+            "format" : "int32",
             "type" : "integer",
-            "format" : "int32"
+            "default" : 100
           },
           "required" : true,
           "deprecated" : false

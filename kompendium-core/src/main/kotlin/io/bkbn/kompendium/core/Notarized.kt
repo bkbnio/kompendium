@@ -15,7 +15,7 @@ import io.bkbn.kompendium.core.metadata.MethodInfo.PostInfo
 import io.bkbn.kompendium.core.metadata.MethodInfo.PutInfo
 import io.bkbn.kompendium.core.metadata.MethodInfo.DeleteInfo
 import io.bkbn.kompendium.core.metadata.ResponseInfo
-import io.bkbn.kompendium.oas.old.OpenApiSpecPathItem
+import io.bkbn.kompendium.oas.path.Path
 
 /**
  * Notarization methods are the primary way that a Ktor API using Kompendium differentiates
@@ -37,7 +37,7 @@ object Notarized {
   ): Route =
     KompendiumPreFlight.methodNotarizationPreFlight<TParam, Unit, TResp>() { paramType, requestType, responseType ->
       val path = Kompendium.calculatePath(this)
-      Kompendium.openApiSpec.paths.getOrPut(path) { OpenApiSpecPathItem() }
+      Kompendium.openApiSpec.paths.getOrPut(path) { Path() }
       Kompendium.openApiSpec.paths[path]?.get = parseMethodInfo(info, paramType, requestType, responseType)
       return method(HttpMethod.Get) { handle(body) }
     }
@@ -56,7 +56,7 @@ object Notarized {
   ): Route =
     KompendiumPreFlight.methodNotarizationPreFlight<TParam, TReq, TResp>() { paramType, requestType, responseType ->
       val path = Kompendium.calculatePath(this)
-      Kompendium.openApiSpec.paths.getOrPut(path) { OpenApiSpecPathItem() }
+      Kompendium.openApiSpec.paths.getOrPut(path) { Path() }
       Kompendium.openApiSpec.paths[path]?.post = parseMethodInfo(info, paramType, requestType, responseType)
       return method(HttpMethod.Post) { handle(body) }
     }
@@ -75,7 +75,7 @@ object Notarized {
   ): Route =
     KompendiumPreFlight.methodNotarizationPreFlight<TParam, TReq, TResp>() { paramType, requestType, responseType ->
       val path = Kompendium.calculatePath(this)
-      Kompendium.openApiSpec.paths.getOrPut(path) { OpenApiSpecPathItem() }
+      Kompendium.openApiSpec.paths.getOrPut(path) { Path() }
       Kompendium.openApiSpec.paths[path]?.put =
         parseMethodInfo(info, paramType, requestType, responseType)
       return method(HttpMethod.Put) { handle(body) }
@@ -94,7 +94,7 @@ object Notarized {
   ): Route =
     KompendiumPreFlight.methodNotarizationPreFlight<TParam, Unit, TResp> { paramType, requestType, responseType ->
       val path = Kompendium.calculatePath(this)
-      Kompendium.openApiSpec.paths.getOrPut(path) { OpenApiSpecPathItem() }
+      Kompendium.openApiSpec.paths.getOrPut(path) { Path() }
       Kompendium.openApiSpec.paths[path]?.delete = parseMethodInfo(info, paramType, requestType, responseType)
       return method(HttpMethod.Delete) { handle(body) }
     }

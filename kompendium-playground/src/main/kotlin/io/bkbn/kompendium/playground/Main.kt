@@ -21,7 +21,7 @@ import io.bkbn.kompendium.playground.PlaygroundToC.testSinglePutInfo
 import io.bkbn.kompendium.playground.PlaygroundToC.testUndeclaredFields
 import io.bkbn.kompendium.core.routes.openApi
 import io.bkbn.kompendium.core.routes.redoc
-import io.bkbn.kompendium.oas.old.FormatSchema
+import io.bkbn.kompendium.oas.schema.FormattedSchema
 import io.bkbn.kompendium.swagger.swaggerUI
 import io.ktor.application.Application
 import io.ktor.application.call
@@ -43,7 +43,7 @@ import io.ktor.webjars.Webjars
 import org.joda.time.DateTime
 
 fun main() {
-  Kompendium.addCustomTypeSchema(DateTime::class, FormatSchema("date-time", "string"))
+  Kompendium.addCustomTypeSchema(DateTime::class, FormattedSchema("date-time", "string"))
 
   embeddedServer(
     Netty,

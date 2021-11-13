@@ -36,23 +36,23 @@
               "application/json" : {
                 "schema" : {
                   "anyOf" : [ {
-                    "type" : "object",
                     "properties" : {
                       "a" : {
                         "type" : "string"
                       }
-                    }
+                    },
+                    "type" : "object"
                   }, {
-                    "type" : "object",
                     "properties" : {
                       "b" : {
                         "type" : "string"
                       },
                       "c" : {
-                        "type" : "integer",
-                        "format" : "int32"
+                        "format" : "int32",
+                        "type" : "integer"
                       }
-                    }
+                    },
+                    "type" : "object"
                   } ]
                 }
               }

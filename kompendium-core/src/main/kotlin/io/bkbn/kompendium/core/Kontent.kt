@@ -2,20 +2,16 @@ package io.bkbn.kompendium.core
 
 import io.bkbn.kompendium.core.annotations.UndeclaredField
 import io.bkbn.kompendium.core.metadata.SchemaMap
-import io.bkbn.kompendium.oas.old.AnyOfReferencedSchema
-import io.bkbn.kompendium.oas.old.ArraySchema
-import io.bkbn.kompendium.oas.old.DictionarySchema
-import io.bkbn.kompendium.oas.old.EnumSchema
-import io.bkbn.kompendium.oas.old.FormatSchema
-import io.bkbn.kompendium.oas.old.ObjectSchema
-import io.bkbn.kompendium.oas.old.SimpleSchema
 import io.bkbn.kompendium.core.util.Helpers.genericNameAdapter
 import io.bkbn.kompendium.core.util.Helpers.getSimpleSlug
 import io.bkbn.kompendium.core.util.Helpers.logged
-import org.slf4j.LoggerFactory
-import java.math.BigDecimal
-import java.math.BigInteger
-import java.util.*
+import io.bkbn.kompendium.oas.schema.AnyOfSchema
+import io.bkbn.kompendium.oas.schema.ArraySchema
+import io.bkbn.kompendium.oas.schema.DictionarySchema
+import io.bkbn.kompendium.oas.schema.EnumSchema
+import io.bkbn.kompendium.oas.schema.FormattedSchema
+import io.bkbn.kompendium.oas.schema.ObjectSchema
+import io.bkbn.kompendium.oas.schema.SimpleSchema
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.full.createType
@@ -23,6 +19,10 @@ import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.jvm.javaField
 import kotlin.reflect.typeOf
+import org.slf4j.LoggerFactory
+import java.math.BigDecimal
+import java.math.BigInteger
+import java.util.*
 
 /**
  * Responsible for generating the schema map that is used to power all object references across the API Spec.
@@ -114,16 +114,16 @@ object Kontent {
     logger.debug("Parsing Kontent of $type")
     when (val clazz = type.classifier as KClass<*>) {
       Unit::class -> cache
-      Int::class -> cache.plus(clazz.simpleName!! to FormatSchema("int32", "integer"))
-      Long::class -> cache.plus(clazz.simpleName!! to FormatSchema("int64", "integer"))
-      Double::class -> cache.plus(clazz.simpleName!! to FormatSchema("double", "number"))
-      Float::class -> cache.plus(clazz.simpleName!! to FormatSchema("float", "number"))
+      Int::class -> cache.plus(clazz.simpleName!! to FormattedSchema("int32", "integer"))
+      Long::class -> cache.plus(clazz.simpleName!! to FormattedSchema("int64", "integer"))
+      Double::class -> cache.plus(clazz.simpleName!! to FormattedSchema("double", "number"))
+      Float::class -> cache.plus(clazz.simpleName!! to FormattedSchema("float", "number"))
       String::class -> cache.plus(clazz.simpleName!! to SimpleSchema("string"))
       Boolean::class -> cache.plus(clazz.simpleName!! to SimpleSchema("boolean"))
-      UUID::class -> cache.plus(clazz.simpleName!! to FormatSchema("uuid", "string"))
-      BigDecimal::class -> cache.plus(clazz.simpleName!! to FormatSchema("double", "number"))
-      BigInteger::class -> cache.plus(clazz.simpleName!! to FormatSchema("int64", "integer"))
-      ByteArray::class -> cache.plus(clazz.simpleName!! to FormatSchema("byte", "string"))
+      UUID::class -> cache.plus(clazz.simpleName!! to FormattedSchema("uuid", "string"))
+      BigDecimal::class -> cache.plus(clazz.simpleName!! to FormattedSchema("double", "number"))
+      BigInteger::class -> cache.plus(clazz.simpleName!! to FormattedSchema("int64", "integer"))
+      ByteArray::class -> cache.plus(clazz.simpleName!! to FormattedSchema("byte", "string"))
       else -> when {
         clazz.isSubclassOf(Collection::class) -> handleCollectionType(type, clazz, cache)
         clazz.isSubclassOf(Enum::class) -> handleEnumType(clazz, cache)
@@ -190,7 +190,7 @@ object Kontent {
                 .map { it.createType(yoinkBaseType.arguments) }
                 .map { it.getSimpleSlug() }
                 .map { newCache[it] ?: error("$it not available") }
-              AnyOfReferencedSchema(refs)
+              AnyOfSchema(refs)
             } else {
               newCache[typeMap[prop.returnType.classifier]?.type!!.getSimpleSlug()] ?: error("womp womp")
             }
@@ -199,7 +199,7 @@ object Kontent {
               val refs = yoinkedClassifier.sealedSubclasses
                 .map { it.createType(yoinkBaseType.arguments) }
                 .map { newCache[it.getSimpleSlug()] ?: error("womp womp $it") }
-              AnyOfReferencedSchema(refs)
+              AnyOfSchema(refs)
             } else {
               newCache[field.getSimpleSlug(prop)]!!
             }
@@ -250,7 +250,7 @@ object Kontent {
     val valueReference = when (valClass.isSealed) {
       true -> {
         val subTypes = gatherSubTypes(valType)
-        AnyOfReferencedSchema(subTypes.map {
+        AnyOfSchema(subTypes.map {
           updatedCache = generateKTypeKontent(it, updatedCache)
           updatedCache[it.getSimpleSlug()] ?: error("${it.getSimpleSlug()} not found")
         })
@@ -278,7 +278,7 @@ object Kontent {
     val valueReference = when (collectionClass.isSealed) {
       true -> {
         val subTypes = gatherSubTypes(collectionType)
-        AnyOfReferencedSchema(subTypes.map {
+        AnyOfSchema(subTypes.map {
           updatedCache = generateKTypeKontent(it, cache)
           updatedCache[it.getSimpleSlug()] ?: error("${it.getSimpleSlug()} not found")
         })

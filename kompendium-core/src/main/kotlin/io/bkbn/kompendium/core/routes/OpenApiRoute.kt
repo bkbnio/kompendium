@@ -3,7 +3,7 @@ package io.bkbn.kompendium.core.routes
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
-import io.bkbn.kompendium.oas.old.OpenApiSpec
+import io.bkbn.kompendium.oas.OpenApiSpec
 import io.ktor.application.call
 import io.ktor.response.respondText
 import io.ktor.routing.Routing
