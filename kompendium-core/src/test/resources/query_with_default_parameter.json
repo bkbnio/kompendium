@@ -32,9 +32,9 @@
           "name" : "a",
           "in" : "query",
           "schema" : {
-            "default" : 100,
+            "format" : "int32",
             "type" : "integer",
-            "format" : "int32"
+            "default" : 100
           },
           "required" : true,
           "deprecated" : false
@@ -60,26 +60,6 @@
     }
   },
   "components" : {
-    "schemas" : {
-      "String" : {
-        "type" : "string"
-      },
-      "TestResponse" : {
-        "type" : "object",
-        "properties" : {
-          "c" : {
-            "$ref" : "#/components/schemas/String"
-          }
-        }
-      },
-      "Int" : {
-        "type" : "integer",
-        "format" : "int32"
-      },
-      "Boolean" : {
-        "type" : "boolean"
-      }
-    },
     "securitySchemes" : { }
   },
   "security" : [ ],

@@ -2,19 +2,19 @@ package io.bkbn.kompendium.locations
 
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.databind.SerializationFeature
-import io.bkbn.kompendium.Kompendium
-import io.bkbn.kompendium.annotations.KompendiumParam
-import io.bkbn.kompendium.annotations.ParamType
+import io.bkbn.kompendium.core.Kompendium
+import io.bkbn.kompendium.core.annotations.KompendiumParam
+import io.bkbn.kompendium.core.annotations.ParamType
+import io.bkbn.kompendium.core.metadata.MethodInfo
+import io.bkbn.kompendium.core.metadata.RequestInfo
+import io.bkbn.kompendium.core.metadata.ResponseInfo
+import io.bkbn.kompendium.core.routes.openApi
+import io.bkbn.kompendium.core.routes.redoc
 import io.bkbn.kompendium.locations.NotarizedLocation.notarizedDelete
 import io.bkbn.kompendium.locations.NotarizedLocation.notarizedGet
 import io.bkbn.kompendium.locations.NotarizedLocation.notarizedPost
 import io.bkbn.kompendium.locations.NotarizedLocation.notarizedPut
 import io.bkbn.kompendium.locations.util.TestData
-import io.bkbn.kompendium.models.meta.MethodInfo
-import io.bkbn.kompendium.models.meta.RequestInfo
-import io.bkbn.kompendium.models.meta.ResponseInfo
-import io.bkbn.kompendium.routes.openApi
-import io.bkbn.kompendium.routes.redoc
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install

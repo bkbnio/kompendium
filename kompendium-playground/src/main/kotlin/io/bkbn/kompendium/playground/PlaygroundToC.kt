@@ -1,9 +1,9 @@
 package io.bkbn.kompendium.playground
 
 import io.ktor.http.HttpStatusCode
-import io.bkbn.kompendium.models.meta.MethodInfo
-import io.bkbn.kompendium.models.meta.RequestInfo
-import io.bkbn.kompendium.models.meta.ResponseInfo
+import io.bkbn.kompendium.core.metadata.MethodInfo
+import io.bkbn.kompendium.core.metadata.RequestInfo
+import io.bkbn.kompendium.core.metadata.ResponseInfo
 
 object PlaygroundToC {
   val testGetWithExamples = MethodInfo.GetInfo<Unit, ExampleResponse>(

@@ -35,7 +35,16 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/TestGeneric-Int"
+                  "properties" : {
+                    "messy" : {
+                      "type" : "string"
+                    },
+                    "potato" : {
+                      "format" : "int32",
+                      "type" : "integer"
+                    }
+                  },
+                  "type" : "object"
                 }
               }
             }
@@ -46,26 +55,6 @@
     }
   },
   "components" : {
-    "schemas" : {
-      "String" : {
-        "type" : "string"
-      },
-      "Int" : {
-        "type" : "integer",
-        "format" : "int32"
-      },
-      "TestGeneric-Int" : {
-        "type" : "object",
-        "properties" : {
-          "messy" : {
-            "$ref" : "#/components/schemas/String"
-          },
-          "potato" : {
-            "$ref" : "#/components/schemas/Int"
-          }
-        }
-      }
-    },
     "securitySchemes" : { }
   },
   "security" : [ ],

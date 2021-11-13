@@ -36,9 +36,21 @@
               "application/json" : {
                 "schema" : {
                   "anyOf" : [ {
-                    "$ref" : "#/components/schemas/OneJamma"
+                    "properties" : {
+                      "a" : {
+                        "format" : "int32",
+                        "type" : "integer"
+                      }
+                    },
+                    "type" : "object"
                   }, {
-                    "$ref" : "#/components/schemas/AnothaJamma"
+                    "properties" : {
+                      "b" : {
+                        "format" : "float",
+                        "type" : "number"
+                      }
+                    },
+                    "type" : "object"
                   } ]
                 }
               }
@@ -50,32 +62,6 @@
     }
   },
   "components" : {
-    "schemas" : {
-      "Int" : {
-        "type" : "integer",
-        "format" : "int32"
-      },
-      "OneJamma" : {
-        "type" : "object",
-        "properties" : {
-          "a" : {
-            "$ref" : "#/components/schemas/Int"
-          }
-        }
-      },
-      "Float" : {
-        "type" : "number",
-        "format" : "float"
-      },
-      "AnothaJamma" : {
-        "type" : "object",
-        "properties" : {
-          "b" : {
-            "$ref" : "#/components/schemas/Float"
-          }
-        }
-      }
-    },
     "securitySchemes" : { }
   },
   "security" : [ ],

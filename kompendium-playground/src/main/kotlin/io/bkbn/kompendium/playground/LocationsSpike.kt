@@ -1,15 +1,15 @@
 package io.bkbn.kompendium.playground
 
-import io.bkbn.kompendium.Kompendium
-import io.bkbn.kompendium.annotations.KompendiumParam
-import io.bkbn.kompendium.annotations.ParamType
+import io.bkbn.kompendium.core.Kompendium
+import io.bkbn.kompendium.core.annotations.KompendiumParam
+import io.bkbn.kompendium.core.annotations.ParamType
+import io.bkbn.kompendium.core.metadata.MethodInfo
+import io.bkbn.kompendium.core.metadata.ResponseInfo
+import io.bkbn.kompendium.core.routes.openApi
+import io.bkbn.kompendium.core.routes.redoc
 import io.bkbn.kompendium.locations.NotarizedLocation.notarizedGet
-import io.bkbn.kompendium.models.meta.MethodInfo
-import io.bkbn.kompendium.models.meta.ResponseInfo
-import io.bkbn.kompendium.models.oas.FormatSchema
+import io.bkbn.kompendium.oas.schema.FormattedSchema
 import io.bkbn.kompendium.playground.LocationsToC.testLocation
-import io.bkbn.kompendium.routes.openApi
-import io.bkbn.kompendium.routes.redoc
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
@@ -25,7 +25,7 @@ import io.ktor.server.netty.Netty
 import org.joda.time.DateTime
 
 fun main() {
-  Kompendium.addCustomTypeSchema(DateTime::class, FormatSchema("date-time", "string"))
+  Kompendium.addCustomTypeSchema(DateTime::class, FormattedSchema("date-time", "string"))
 
   embeddedServer(
     Netty,

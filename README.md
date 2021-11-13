@@ -23,9 +23,9 @@ repositories {
 }
 
 dependencies {
-  implementation("io.bkbn:kompendium-core:1.8.1")
-  implementation("io.bkbn:kompendium-auth:1.8.1")
-  implementation("io.bkbn:kompendium-swagger-ui:1.8.1")
+  implementation("io.bkbn:kompendium-core:latest.release")
+  implementation("io.bkbn:kompendium-auth:latest.release")
+  implementation("io.bkbn:kompendium-swagger-ui:latest.release")
 
   // Other dependencies...
 }
@@ -55,7 +55,7 @@ repositories {
 
 // 3 Add the package like any normal dependency
 dependencies {
-  implementation("io.bkbn:kompendium-core:1.8.1")
+  implementation("io.bkbn:kompendium-core:latest.release")
 }
 
 ```

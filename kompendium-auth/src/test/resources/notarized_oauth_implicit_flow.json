@@ -1,0 +1,83 @@
+{
+  "openapi" : "3.0.3",
+  "info" : { },
+  "servers" : [ ],
+  "paths" : {
+    "/test" : {
+      "get" : {
+        "tags" : [ ],
+        "summary" : "Another get test",
+        "description" : "testing more",
+        "parameters" : [ {
+          "name" : "a",
+          "in" : "path",
+          "schema" : {
+            "type" : "string"
+          },
+          "required" : true,
+          "deprecated" : false
+        }, {
+          "name" : "aa",
+          "in" : "query",
+          "schema" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "required" : true,
+          "deprecated" : false
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "A Successful Endeavor",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "properties" : {
+                    "c" : {
+                      "type" : "string"
+                    }
+                  },
+                  "type" : "object"
+                }
+              }
+            }
+          }
+        },
+        "deprecated" : false,
+        "security" : [ {
+          "oauth" : [ ]
+        } ]
+      }
+    }
+  },
+  "components" : {
+    "securitySchemes" : {
+      "oauth" : {
+        "flows" : {
+          "implicit" : {
+            "authorizationUrl" : "https://accounts.google.com/o/oauth2/auth",
+            "scopes" : {
+              "test" : "is a cool scope",
+              "this" : "is also cool"
+            }
+          },
+          "authorizationCode" : {
+            "authorizationUrl" : "https://accounts.google.com/o/oauth2/auth",
+            "scopes" : { }
+          },
+          "password" : {
+            "tokenUrl" : "https://accounts.google.com/o/oauth2/auth",
+            "scopes" : { }
+          },
+          "clientCredentials" : {
+            "tokenUrl" : "https://accounts.google.com/token",
+            "scopes" : { }
+          }
+        },
+        "type" : "oauth2"
+      }
+    }
+  },
+  "security" : [ ],
+  "tags" : [ ]
+}

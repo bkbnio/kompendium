@@ -22,7 +22,12 @@
           "content" : {
             "application/json" : {
               "schema" : {
-                "$ref" : "#/components/schemas/SimpleRequest"
+                "properties" : {
+                  "input" : {
+                    "type" : "string"
+                  }
+                },
+                "type" : "object"
               }
             }
           },
@@ -34,7 +39,12 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/SimpleResponse"
+                  "properties" : {
+                    "result" : {
+                      "type" : "boolean"
+                    }
+                  },
+                  "type" : "object"
                 }
               }
             }
@@ -45,38 +55,6 @@
     }
   },
   "components" : {
-    "schemas" : {
-      "String" : {
-        "type" : "string"
-      },
-      "SimpleRequest" : {
-        "type" : "object",
-        "properties" : {
-          "input" : {
-            "$ref" : "#/components/schemas/String"
-          }
-        }
-      },
-      "Boolean" : {
-        "type" : "boolean"
-      },
-      "SimpleResponse" : {
-        "type" : "object",
-        "properties" : {
-          "result" : {
-            "$ref" : "#/components/schemas/Boolean"
-          }
-        }
-      },
-      "SimpleLoc" : {
-        "type" : "object",
-        "properties" : {
-          "name" : {
-            "$ref" : "#/components/schemas/String"
-          }
-        }
-      }
-    },
     "securitySchemes" : { }
   },
   "security" : [ ],

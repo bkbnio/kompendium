@@ -36,9 +36,32 @@
               "application/json" : {
                 "schema" : {
                   "anyOf" : [ {
-                    "$ref" : "#/components/schemas/Gibbity-TestNested"
+                    "properties" : {
+                      "a" : {
+                        "properties" : {
+                          "nesty" : {
+                            "type" : "string"
+                          }
+                        },
+                        "type" : "object"
+                      }
+                    },
+                    "type" : "object"
                   }, {
-                    "$ref" : "#/components/schemas/Bibbity-TestNested"
+                    "properties" : {
+                      "b" : {
+                        "type" : "string"
+                      },
+                      "f" : {
+                        "properties" : {
+                          "nesty" : {
+                            "type" : "string"
+                          }
+                        },
+                        "type" : "object"
+                      }
+                    },
+                    "type" : "object"
                   } ]
                 }
               }
@@ -61,9 +84,58 @@
               "application/json" : {
                 "schema" : {
                   "anyOf" : [ {
-                    "$ref" : "#/components/schemas/Gibbity-FlibbityGibbit"
+                    "properties" : {
+                      "a" : {
+                        "anyOf" : [ {
+                          "properties" : {
+                            "a" : {
+                              "type" : "string"
+                            }
+                          },
+                          "type" : "object"
+                        }, {
+                          "properties" : {
+                            "b" : {
+                              "type" : "string"
+                            },
+                            "c" : {
+                              "format" : "int32",
+                              "type" : "integer"
+                            }
+                          },
+                          "type" : "object"
+                        } ]
+                      }
+                    },
+                    "type" : "object"
                   }, {
-                    "$ref" : "#/components/schemas/Bibbity-FlibbityGibbit"
+                    "properties" : {
+                      "b" : {
+                        "type" : "string"
+                      },
+                      "f" : {
+                        "anyOf" : [ {
+                          "properties" : {
+                            "a" : {
+                              "type" : "string"
+                            }
+                          },
+                          "type" : "object"
+                        }, {
+                          "properties" : {
+                            "b" : {
+                              "type" : "string"
+                            },
+                            "c" : {
+                              "format" : "int32",
+                              "type" : "integer"
+                            }
+                          },
+                          "type" : "object"
+                        } ]
+                      }
+                    },
+                    "type" : "object"
                   } ]
                 }
               }
@@ -75,88 +147,6 @@
     }
   },
   "components" : {
-    "schemas" : {
-      "String" : {
-        "type" : "string"
-      },
-      "TestNested" : {
-        "type" : "object",
-        "properties" : {
-          "nesty" : {
-            "$ref" : "#/components/schemas/String"
-          }
-        }
-      },
-      "Gibbity-TestNested" : {
-        "type" : "object",
-        "properties" : {
-          "a" : {
-            "$ref" : "#/components/schemas/TestNested"
-          }
-        }
-      },
-      "Bibbity-TestNested" : {
-        "type" : "object",
-        "properties" : {
-          "b" : {
-            "$ref" : "#/components/schemas/String"
-          },
-          "f" : {
-            "$ref" : "#/components/schemas/TestNested"
-          }
-        }
-      },
-      "SimpleGibbit" : {
-        "type" : "object",
-        "properties" : {
-          "a" : {
-            "$ref" : "#/components/schemas/String"
-          }
-        }
-      },
-      "Int" : {
-        "type" : "integer",
-        "format" : "int32"
-      },
-      "ComplexGibbit" : {
-        "type" : "object",
-        "properties" : {
-          "b" : {
-            "$ref" : "#/components/schemas/String"
-          },
-          "c" : {
-            "$ref" : "#/components/schemas/Int"
-          }
-        }
-      },
-      "Gibbity-FlibbityGibbit" : {
-        "type" : "object",
-        "properties" : {
-          "a" : {
-            "anyOf" : [ {
-              "$ref" : "#/components/schemas/SimpleGibbit"
-            }, {
-              "$ref" : "#/components/schemas/ComplexGibbit"
-            } ]
-          }
-        }
-      },
-      "Bibbity-FlibbityGibbit" : {
-        "type" : "object",
-        "properties" : {
-          "b" : {
-            "$ref" : "#/components/schemas/String"
-          },
-          "f" : {
-            "anyOf" : [ {
-              "$ref" : "#/components/schemas/SimpleGibbit"
-            }, {
-              "$ref" : "#/components/schemas/ComplexGibbit"
-            } ]
-          }
-        }
-      }
-    },
     "securitySchemes" : { }
   },
   "security" : [ ],

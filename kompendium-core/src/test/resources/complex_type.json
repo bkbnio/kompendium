@@ -34,7 +34,38 @@
           "content" : {
             "application/json" : {
               "schema" : {
-                "$ref" : "#/components/schemas/ComplexRequest"
+                "properties" : {
+                  "amazingField" : {
+                    "type" : "string"
+                  },
+                  "org" : {
+                    "type" : "string"
+                  },
+                  "tables" : {
+                    "items" : {
+                      "properties" : {
+                        "alias" : {
+                          "additionalProperties" : {
+                            "properties" : {
+                              "enumeration" : {
+                                "enum" : [ "ONE", "TWO" ],
+                                "type" : "string"
+                              }
+                            },
+                            "type" : "object"
+                          },
+                          "type" : "object"
+                        },
+                        "name" : {
+                          "type" : "string"
+                        }
+                      },
+                      "type" : "object"
+                    },
+                    "type" : "array"
+                  }
+                },
+                "type" : "object"
               }
             }
           },
@@ -46,7 +77,16 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/TestCreatedResponse"
+                  "properties" : {
+                    "c" : {
+                      "type" : "string"
+                    },
+                    "id" : {
+                      "format" : "int32",
+                      "type" : "integer"
+                    }
+                  },
+                  "type" : "object"
                 }
               }
             }
@@ -57,75 +97,6 @@
     }
   },
   "components" : {
-    "schemas" : {
-      "String" : {
-        "type" : "string"
-      },
-      "SimpleEnum" : {
-        "type" : "string",
-        "enum" : [ "ONE", "TWO" ]
-      },
-      "CrazyItem" : {
-        "type" : "object",
-        "properties" : {
-          "enumeration" : {
-            "$ref" : "#/components/schemas/SimpleEnum"
-          }
-        }
-      },
-      "Map-String-CrazyItem" : {
-        "type" : "object",
-        "additionalProperties" : {
-          "$ref" : "#/components/schemas/CrazyItem"
-        }
-      },
-      "NestedComplexItem" : {
-        "type" : "object",
-        "properties" : {
-          "alias" : {
-            "$ref" : "#/components/schemas/Map-String-CrazyItem"
-          },
-          "name" : {
-            "$ref" : "#/components/schemas/String"
-          }
-        }
-      },
-      "List-NestedComplexItem" : {
-        "type" : "array",
-        "items" : {
-          "$ref" : "#/components/schemas/NestedComplexItem"
-        }
-      },
-      "ComplexRequest" : {
-        "type" : "object",
-        "properties" : {
-          "amazingField" : {
-            "$ref" : "#/components/schemas/String"
-          },
-          "org" : {
-            "$ref" : "#/components/schemas/String"
-          },
-          "tables" : {
-            "$ref" : "#/components/schemas/List-NestedComplexItem"
-          }
-        }
-      },
-      "Int" : {
-        "type" : "integer",
-        "format" : "int32"
-      },
-      "TestCreatedResponse" : {
-        "type" : "object",
-        "properties" : {
-          "c" : {
-            "$ref" : "#/components/schemas/String"
-          },
-          "id" : {
-            "$ref" : "#/components/schemas/Int"
-          }
-        }
-      }
-    },
     "securitySchemes" : { }
   },
   "security" : [ ],

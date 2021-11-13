@@ -1,5 +1,22 @@
 # Changelog
 
+## Unreleased
+### Added
+- Support for OAuth authentication
+- Gradle Toolchain feature to ensure match between local JDK and compile target
+- Dokka integration
+
+### Changed
+- `$ref` types are no longer generated, instead all objects are defined explicitly
+- All OpenAPI domain models moved to a separate module `kompendium-oas`
+- Moved all files in `kompendium-core` into `io.bkbn.kompendium.core` package from `io.bkbn.kompendium`
+- Gradle bumped to 7.3
+- `buildSrc` introduced to handle a lot of build logic
+- Minimum supported Java version is now 11
+- Bumped Kotlin to 1.6
+
+### Remove
+
 ## [1.11.1] - November 25th, 2021
 ### Added
 - Documentation showing how to add header names using Kotlin backtick convention

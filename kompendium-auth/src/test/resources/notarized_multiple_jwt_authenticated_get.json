@@ -20,8 +20,8 @@
           "name" : "aa",
           "in" : "query",
           "schema" : {
-            "type" : "integer",
-            "format" : "int32"
+            "format" : "int32",
+            "type" : "integer"
           },
           "required" : true,
           "deprecated" : false
@@ -32,7 +32,12 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/TestResponse"
+                  "properties" : {
+                    "c" : {
+                      "type" : "string"
+                    }
+                  },
+                  "type" : "object"
                 }
               }
             }
@@ -47,33 +52,14 @@
     }
   },
   "components" : {
-    "schemas" : {
-      "String" : {
-        "type" : "string"
-      },
-      "TestResponse" : {
-        "type" : "object",
-        "properties" : {
-          "c" : {
-            "$ref" : "#/components/schemas/String"
-          }
-        }
-      },
-      "Int" : {
-        "type" : "integer",
-        "format" : "int32"
-      }
-    },
     "securitySchemes" : {
       "jwt1" : {
-        "type" : "apiKey",
-        "name" : "x-api-key-1",
-        "in" : "header"
+        "type" : "http",
+        "scheme" : "bearer"
       },
       "jwt2" : {
-        "type" : "apiKey",
-        "name" : "x-api-key-2",
-        "in" : "header"
+        "type" : "http",
+        "scheme" : "bearer"
       }
     }
   },

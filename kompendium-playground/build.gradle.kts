@@ -1,12 +1,8 @@
 plugins {
-  kotlin("plugin.serialization") version "1.5.0"
-  application
+  id("kotlin-application-conventions")
 }
 
 dependencies {
-  implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
-  implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-
   implementation(projects.kompendiumCore)
   implementation(projects.kompendiumAuth)
   implementation(projects.kompendiumLocations)
@@ -21,13 +17,4 @@ dependencies {
   implementation(libs.bundles.logging)
 
   implementation("joda-time:joda-time:2.10.13")
-
-  testImplementation("org.jetbrains.kotlin:kotlin-test")
-  testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
-}
-
-application {
-  @Suppress("DEPRECATION")
-  mainClassName = "io.bkbn.kompendium.playground.MainKt"
-  applicationDefaultJvmArgs = listOf("-Dio.ktor.development=true") // TODO I don't think this is working 😢
 }

@@ -23,7 +23,12 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/SimpleResponse"
+                  "properties" : {
+                    "result" : {
+                      "type" : "boolean"
+                    }
+                  },
+                  "type" : "object"
                 }
               }
             }
@@ -34,30 +39,6 @@
     }
   },
   "components" : {
-    "schemas" : {
-      "Boolean" : {
-        "type" : "boolean"
-      },
-      "SimpleResponse" : {
-        "type" : "object",
-        "properties" : {
-          "result" : {
-            "$ref" : "#/components/schemas/Boolean"
-          }
-        }
-      },
-      "String" : {
-        "type" : "string"
-      },
-      "SimpleLoc" : {
-        "type" : "object",
-        "properties" : {
-          "name" : {
-            "$ref" : "#/components/schemas/String"
-          }
-        }
-      }
-    },
     "securitySchemes" : { }
   },
   "security" : [ ],

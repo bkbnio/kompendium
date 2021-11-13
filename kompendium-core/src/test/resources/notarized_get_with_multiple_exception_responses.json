@@ -40,8 +40,8 @@
           "name" : "aa",
           "in" : "query",
           "schema" : {
-            "type" : "integer",
-            "format" : "int32"
+            "format" : "int32",
+            "type" : "integer"
           },
           "required" : true,
           "deprecated" : false
@@ -52,7 +52,12 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/TestResponse"
+                  "properties" : {
+                    "c" : {
+                      "type" : "string"
+                    }
+                  },
+                  "type" : "object"
                 }
               }
             }
@@ -65,7 +70,12 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/ExceptionResponse"
+                  "properties" : {
+                    "message" : {
+                      "type" : "string"
+                    }
+                  },
+                  "type" : "object"
                 }
               }
             }
@@ -76,31 +86,6 @@
     }
   },
   "components" : {
-    "schemas" : {
-      "String" : {
-        "type" : "string"
-      },
-      "ExceptionResponse" : {
-        "type" : "object",
-        "properties" : {
-          "message" : {
-            "$ref" : "#/components/schemas/String"
-          }
-        }
-      },
-      "TestResponse" : {
-        "type" : "object",
-        "properties" : {
-          "c" : {
-            "$ref" : "#/components/schemas/String"
-          }
-        }
-      },
-      "Int" : {
-        "type" : "integer",
-        "format" : "int32"
-      }
-    },
     "securitySchemes" : { }
   },
   "security" : [ ],
