@@ -40,8 +40,8 @@
           "name" : "aa",
           "in" : "query",
           "schema" : {
-            "type" : "integer",
-            "format" : "int32"
+            "format" : "int32",
+            "type" : "integer"
           },
           "required" : true,
           "deprecated" : false

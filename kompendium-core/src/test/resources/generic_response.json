@@ -35,16 +35,16 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "type" : "object",
                   "properties" : {
                     "messy" : {
                       "type" : "string"
                     },
                     "potato" : {
-                      "type" : "integer",
-                      "format" : "int32"
+                      "format" : "int32",
+                      "type" : "integer"
                     }
-                  }
+                  },
+                  "type" : "object"
                 }
               }
             }

@@ -1,20 +1,20 @@
 package io.bkbn.kompendium.playground
 
-import io.bkbn.kompendium.annotations.KompendiumField
-import io.bkbn.kompendium.annotations.KompendiumParam
-import io.bkbn.kompendium.annotations.ParamType
-import io.bkbn.kompendium.annotations.UndeclaredField
+import io.bkbn.kompendium.core.annotations.KompendiumField
+import io.bkbn.kompendium.core.annotations.KompendiumParam
+import io.bkbn.kompendium.core.annotations.ParamType
+import io.bkbn.kompendium.core.annotations.UndeclaredField
 import kotlinx.serialization.Serializable
 import org.joda.time.DateTime
 
 data class ExampleParams(
-  @KompendiumParam(ParamType.PATH) val id: Int,
-  @KompendiumParam(ParamType.QUERY) val name: String
+    @KompendiumParam(ParamType.PATH) val id: Int,
+    @KompendiumParam(ParamType.QUERY) val name: String
 )
 
 data class JustQuery(
-  @KompendiumParam(ParamType.QUERY) val potato: Boolean,
-  @KompendiumParam(ParamType.QUERY) val tomato: String
+    @KompendiumParam(ParamType.QUERY) val potato: Boolean,
+    @KompendiumParam(ParamType.QUERY) val tomato: String
 )
 
 data class ExampleNested(val nesty: String)

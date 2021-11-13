@@ -5,6 +5,8 @@
 
 ### Changed
 - `$ref` types are no longer generated, instead all objects are defined explicitly
+- All OpenAPI domain models moved to a separate module `kompendium-oas`
+- Moved all files in `kompendium-core` into `io.bkbn.kompendium.core` package from `io.bkbn.kompendium`
 
 ### Removed
 

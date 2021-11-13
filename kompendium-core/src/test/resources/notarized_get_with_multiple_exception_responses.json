@@ -40,8 +40,8 @@
           "name" : "aa",
           "in" : "query",
           "schema" : {
-            "type" : "integer",
-            "format" : "int32"
+            "format" : "int32",
+            "type" : "integer"
           },
           "required" : true,
           "deprecated" : false
@@ -52,12 +52,12 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "type" : "object",
                   "properties" : {
                     "c" : {
                       "type" : "string"
                     }
-                  }
+                  },
+                  "type" : "object"
                 }
               }
             }
@@ -70,12 +70,12 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "type" : "object",
                   "properties" : {
                     "message" : {
                       "type" : "string"
                     }
-                  }
+                  },
+                  "type" : "object"
                 }
               }
             }

@@ -35,16 +35,16 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "type" : "object",
                   "properties" : {
                     "nowYouSeeMe" : {
                       "type" : "string"
                     },
                     "nowYouDont" : {
-                      "type" : "string",
-                      "enum" : [ "HAHA", "HOHO" ]
+                      "enum" : [ "HAHA", "HOHO" ],
+                      "type" : "string"
                     }
-                  }
+                  },
+                  "type" : "object"
                 }
               }
             }
