@@ -5,8 +5,8 @@ import io.ktor.auth.basic
 import io.ktor.auth.BasicAuthenticationProvider
 import io.ktor.auth.jwt.jwt
 import io.ktor.auth.jwt.JWTAuthenticationProvider
-import io.bkbn.kompendium.Kompendium
-import io.bkbn.kompendium.models.oas.OpenApiSpecSchemaSecurity
+import io.bkbn.kompendium.core.Kompendium
+import io.bkbn.kompendium.oas.old.OpenApiSpecSchemaSecurity
 import io.ktor.auth.AuthenticationRouteSelector
 
 object KompendiumAuth {

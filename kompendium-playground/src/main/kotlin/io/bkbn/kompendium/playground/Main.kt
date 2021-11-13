@@ -1,14 +1,13 @@
 package io.bkbn.kompendium.playground
 
-import io.bkbn.kompendium.Kompendium
-import io.bkbn.kompendium.Notarized.notarizedDelete
-import io.bkbn.kompendium.Notarized.notarizedException
-import io.bkbn.kompendium.Notarized.notarizedGet
-import io.bkbn.kompendium.Notarized.notarizedPost
-import io.bkbn.kompendium.Notarized.notarizedPut
+import io.bkbn.kompendium.core.Kompendium
+import io.bkbn.kompendium.core.Notarized.notarizedDelete
+import io.bkbn.kompendium.core.Notarized.notarizedException
+import io.bkbn.kompendium.core.Notarized.notarizedGet
+import io.bkbn.kompendium.core.Notarized.notarizedPost
+import io.bkbn.kompendium.core.Notarized.notarizedPut
 import io.bkbn.kompendium.auth.KompendiumAuth.notarizedBasic
-import io.bkbn.kompendium.models.meta.ResponseInfo
-import io.bkbn.kompendium.models.oas.FormatSchema
+import io.bkbn.kompendium.core.metadata.ResponseInfo
 import io.bkbn.kompendium.playground.PlaygroundToC.testAuthenticatedSingleGetInfo
 import io.bkbn.kompendium.playground.PlaygroundToC.testCustomOverride
 import io.bkbn.kompendium.playground.PlaygroundToC.testGetWithExamples
@@ -20,8 +19,9 @@ import io.bkbn.kompendium.playground.PlaygroundToC.testSingleGetInfoWithThrowabl
 import io.bkbn.kompendium.playground.PlaygroundToC.testSinglePostInfo
 import io.bkbn.kompendium.playground.PlaygroundToC.testSinglePutInfo
 import io.bkbn.kompendium.playground.PlaygroundToC.testUndeclaredFields
-import io.bkbn.kompendium.routes.openApi
-import io.bkbn.kompendium.routes.redoc
+import io.bkbn.kompendium.core.routes.openApi
+import io.bkbn.kompendium.core.routes.redoc
+import io.bkbn.kompendium.oas.old.FormatSchema
 import io.bkbn.kompendium.swagger.swaggerUI
 import io.ktor.application.Application
 import io.ktor.application.call

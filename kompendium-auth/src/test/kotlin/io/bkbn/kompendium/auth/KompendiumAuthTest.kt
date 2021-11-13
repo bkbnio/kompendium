@@ -21,17 +21,17 @@ import io.ktor.server.testing.withTestApplication
 import kotlin.test.AfterTest
 import kotlin.test.assertEquals
 import org.junit.Test
-import io.bkbn.kompendium.Kompendium
-import io.bkbn.kompendium.Notarized.notarizedGet
+import io.bkbn.kompendium.core.Kompendium
+import io.bkbn.kompendium.core.Notarized.notarizedGet
 import io.bkbn.kompendium.auth.KompendiumAuth.notarizedBasic
 import io.bkbn.kompendium.auth.KompendiumAuth.notarizedJwt
 import io.bkbn.kompendium.auth.util.TestData
 import io.bkbn.kompendium.auth.util.TestParams
 import io.bkbn.kompendium.auth.util.TestResponse
-import io.bkbn.kompendium.models.meta.MethodInfo
-import io.bkbn.kompendium.models.meta.ResponseInfo
-import io.bkbn.kompendium.routes.openApi
-import io.bkbn.kompendium.routes.redoc
+import io.bkbn.kompendium.core.metadata.MethodInfo
+import io.bkbn.kompendium.core.metadata.ResponseInfo
+import io.bkbn.kompendium.core.routes.openApi
+import io.bkbn.kompendium.core.routes.redoc
 
 internal class KompendiumAuthTest {
 

@@ -1,11 +1,11 @@
 package io.bkbn.kompendium.playground
 
 import java.net.URI
-import io.bkbn.kompendium.Kompendium
-import io.bkbn.kompendium.models.oas.OpenApiSpecInfo
-import io.bkbn.kompendium.models.oas.OpenApiSpecInfoContact
-import io.bkbn.kompendium.models.oas.OpenApiSpecInfoLicense
-import io.bkbn.kompendium.models.oas.OpenApiSpecServer
+import io.bkbn.kompendium.core.Kompendium
+import io.bkbn.kompendium.oas.old.OpenApiSpecInfo
+import io.bkbn.kompendium.oas.old.OpenApiSpecInfoContact
+import io.bkbn.kompendium.oas.old.OpenApiSpecInfoLicense
+import io.bkbn.kompendium.oas.old.OpenApiSpecServer
 
 val oas = Kompendium.openApiSpec.copy(
   info = OpenApiSpecInfo(
