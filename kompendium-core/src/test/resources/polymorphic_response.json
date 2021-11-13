@@ -36,9 +36,23 @@
               "application/json" : {
                 "schema" : {
                   "anyOf" : [ {
-                    "$ref" : "#/components/schemas/SimpleGibbit"
+                    "type" : "object",
+                    "properties" : {
+                      "a" : {
+                        "type" : "string"
+                      }
+                    }
                   }, {
-                    "$ref" : "#/components/schemas/ComplexGibbit"
+                    "type" : "object",
+                    "properties" : {
+                      "b" : {
+                        "type" : "string"
+                      },
+                      "c" : {
+                        "type" : "integer",
+                        "format" : "int32"
+                      }
+                    }
                   } ]
                 }
               }
@@ -50,34 +64,6 @@
     }
   },
   "components" : {
-    "schemas" : {
-      "String" : {
-        "type" : "string"
-      },
-      "SimpleGibbit" : {
-        "type" : "object",
-        "properties" : {
-          "a" : {
-            "$ref" : "#/components/schemas/String"
-          }
-        }
-      },
-      "Int" : {
-        "type" : "integer",
-        "format" : "int32"
-      },
-      "ComplexGibbit" : {
-        "type" : "object",
-        "properties" : {
-          "b" : {
-            "$ref" : "#/components/schemas/String"
-          },
-          "c" : {
-            "$ref" : "#/components/schemas/Int"
-          }
-        }
-      }
-    },
     "securitySchemes" : { }
   },
   "security" : [ ],

@@ -34,7 +34,8 @@
           "content" : {
             "application/json" : {
               "schema" : {
-                "$ref" : "#/components/schemas/Int"
+                "type" : "integer",
+                "format" : "int32"
               }
             }
           },
@@ -46,7 +47,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/Boolean"
+                  "type" : "boolean"
                 }
               }
             }
@@ -57,15 +58,6 @@
     }
   },
   "components" : {
-    "schemas" : {
-      "Int" : {
-        "type" : "integer",
-        "format" : "int32"
-      },
-      "Boolean" : {
-        "type" : "boolean"
-      }
-    },
     "securitySchemes" : { }
   },
   "security" : [ ],

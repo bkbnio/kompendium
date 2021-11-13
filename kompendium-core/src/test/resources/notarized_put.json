@@ -51,7 +51,28 @@
           "content" : {
             "application/json" : {
               "schema" : {
-                "$ref" : "#/components/schemas/TestRequest"
+                "type" : "object",
+                "properties" : {
+                  "aaa" : {
+                    "type" : "array",
+                    "items" : {
+                      "type" : "integer",
+                      "format" : "int64"
+                    }
+                  },
+                  "b" : {
+                    "type" : "number",
+                    "format" : "double"
+                  },
+                  "fieldName" : {
+                    "type" : "object",
+                    "properties" : {
+                      "nesty" : {
+                        "type" : "string"
+                      }
+                    }
+                  }
+                }
               }
             }
           },
@@ -63,7 +84,16 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/TestCreatedResponse"
+                  "type" : "object",
+                  "properties" : {
+                    "c" : {
+                      "type" : "string"
+                    },
+                    "id" : {
+                      "type" : "integer",
+                      "format" : "int32"
+                    }
+                  }
                 }
               }
             }
@@ -74,62 +104,6 @@
     }
   },
   "components" : {
-    "schemas" : {
-      "Long" : {
-        "type" : "integer",
-        "format" : "int64"
-      },
-      "List-Long" : {
-        "type" : "array",
-        "items" : {
-          "$ref" : "#/components/schemas/Long"
-        }
-      },
-      "Double" : {
-        "type" : "number",
-        "format" : "double"
-      },
-      "String" : {
-        "type" : "string"
-      },
-      "TestNested" : {
-        "type" : "object",
-        "properties" : {
-          "nesty" : {
-            "$ref" : "#/components/schemas/String"
-          }
-        }
-      },
-      "TestRequest" : {
-        "type" : "object",
-        "properties" : {
-          "aaa" : {
-            "$ref" : "#/components/schemas/List-Long"
-          },
-          "b" : {
-            "$ref" : "#/components/schemas/Double"
-          },
-          "fieldName" : {
-            "$ref" : "#/components/schemas/TestNested"
-          }
-        }
-      },
-      "Int" : {
-        "type" : "integer",
-        "format" : "int32"
-      },
-      "TestCreatedResponse" : {
-        "type" : "object",
-        "properties" : {
-          "c" : {
-            "$ref" : "#/components/schemas/String"
-          },
-          "id" : {
-            "$ref" : "#/components/schemas/Int"
-          }
-        }
-      }
-    },
     "securitySchemes" : { }
   },
   "security" : [ ],

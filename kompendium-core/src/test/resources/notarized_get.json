@@ -52,7 +52,12 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/TestResponse"
+                  "type" : "object",
+                  "properties" : {
+                    "c" : {
+                      "type" : "string"
+                    }
+                  }
                 }
               }
             }
@@ -63,23 +68,6 @@
     }
   },
   "components" : {
-    "schemas" : {
-      "String" : {
-        "type" : "string"
-      },
-      "TestResponse" : {
-        "type" : "object",
-        "properties" : {
-          "c" : {
-            "$ref" : "#/components/schemas/String"
-          }
-        }
-      },
-      "Int" : {
-        "type" : "integer",
-        "format" : "int32"
-      }
-    },
     "securitySchemes" : { }
   },
   "security" : [ ],

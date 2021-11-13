@@ -2,23 +2,14 @@ package io.bkbn.kompendium
 
 import io.bkbn.kompendium.annotations.UndeclaredField
 import io.bkbn.kompendium.models.meta.SchemaMap
-import io.bkbn.kompendium.models.oas.AnyOfReferencedSchema
-import io.bkbn.kompendium.models.oas.ArraySchema
-import io.bkbn.kompendium.models.oas.DictionarySchema
-import io.bkbn.kompendium.models.oas.EnumSchema
-import io.bkbn.kompendium.models.oas.FormatSchema
-import io.bkbn.kompendium.models.oas.ObjectSchema
-import io.bkbn.kompendium.models.oas.ReferencedSchema
-import io.bkbn.kompendium.models.oas.SimpleSchema
-import io.bkbn.kompendium.util.Helpers.COMPONENT_SLUG
+import io.bkbn.kompendium.models.oas.*
 import io.bkbn.kompendium.util.Helpers.genericNameAdapter
-import io.bkbn.kompendium.util.Helpers.getReferenceSlug
 import io.bkbn.kompendium.util.Helpers.getSimpleSlug
 import io.bkbn.kompendium.util.Helpers.logged
 import org.slf4j.LoggerFactory
 import java.math.BigDecimal
 import java.math.BigInteger
-import java.util.UUID
+import java.util.*
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.full.createType
@@ -191,19 +182,20 @@ object Kontent {
             if (yoinkedClassifier.isSealed) {
               val refs = yoinkedClassifier.sealedSubclasses
                 .map { it.createType(yoinkBaseType.arguments) }
-                .map { ReferencedSchema(it.getReferenceSlug()) }
+                .map { it.getSimpleSlug() }
+                .map { newCache[it] ?: error("$it not available") }
               AnyOfReferencedSchema(refs)
             } else {
-              ReferencedSchema(typeMap[prop.returnType.classifier]?.type!!.getReferenceSlug())
+              newCache[typeMap[prop.returnType.classifier]?.type!!.getSimpleSlug()] ?: error("womp womp")
             }
           } else {
             if (yoinkedClassifier.isSealed) {
               val refs = yoinkedClassifier.sealedSubclasses
                 .map { it.createType(yoinkBaseType.arguments) }
-                .map { ReferencedSchema(it.getReferenceSlug()) }
+                .map { newCache[it.getSimpleSlug()] ?: error("womp womp $it") }
               AnyOfReferencedSchema(refs)
             } else {
-              ReferencedSchema(field.getReferenceSlug(prop))
+              newCache[field.getSimpleSlug(prop)]!!
             }
           }
           Pair(prop.name, propSchema)
@@ -212,7 +204,7 @@ object Kontent {
         val undeclaredFieldMap = clazz.annotations.filterIsInstance<UndeclaredField>().associate {
           val undeclaredType = it.clazz.createType()
           newCache = generateKontent(undeclaredType, newCache)
-          it.field to ReferencedSchema(undeclaredType.getReferenceSlug())
+          it.field to newCache[undeclaredType.getSimpleSlug()]!!
         }
         logger.debug("$slug contains $fieldMap")
         val schema = ObjectSchema(fieldMap.plus(undeclaredFieldMap))
@@ -245,20 +237,22 @@ object Kontent {
     if (keyType?.classifier != String::class) {
       error("Invalid Map $type: OpenAPI dictionaries must have keys of type String")
     }
-    val valClass = valType?.classifier as KClass<*>
+    var updatedCache = generateKTypeKontent(valType!!, cache)
+    val valClass = valType.classifier as KClass<*>
     val valClassName = valClass.simpleName
     val referenceName = genericNameAdapter(type, clazz)
     val valueReference = when (valClass.isSealed) {
       true -> {
         val subTypes = gatherSubTypes(valType)
         AnyOfReferencedSchema(subTypes.map {
-          ReferencedSchema(("$COMPONENT_SLUG/${it.getSimpleSlug()}"))
+          updatedCache = generateKTypeKontent(it, updatedCache)
+          updatedCache[it.getSimpleSlug()] ?: error("${it.getSimpleSlug()} not found")
         })
       }
-      false -> ReferencedSchema("$COMPONENT_SLUG/$valClassName")
+      false -> updatedCache[valClassName] ?: error("$valClassName not found")
     }
     val schema = DictionarySchema(additionalProperties = valueReference)
-    val updatedCache = generateKontent(valType, cache)
+    updatedCache = generateKontent(valType, updatedCache)
     return updatedCache.plus(referenceName to schema)
   }
 
@@ -274,17 +268,19 @@ object Kontent {
     val collectionClass = collectionType.classifier as KClass<*>
     logger.debug("Obtained collection class: $collectionClass")
     val referenceName = genericNameAdapter(type, clazz)
+    var updatedCache = generateKTypeKontent(collectionType, cache)
     val valueReference = when (collectionClass.isSealed) {
       true -> {
         val subTypes = gatherSubTypes(collectionType)
         AnyOfReferencedSchema(subTypes.map {
-          ReferencedSchema(("$COMPONENT_SLUG/${it.getSimpleSlug()}"))
+          updatedCache = generateKTypeKontent(it, cache)
+          updatedCache[it.getSimpleSlug()] ?: error("${it.getSimpleSlug()} not found")
         })
       }
-      false -> ReferencedSchema("$COMPONENT_SLUG/${collectionClass.simpleName}")
+      false -> updatedCache[collectionClass.simpleName] ?: error("${collectionClass.simpleName} not found")
     }
     val schema = ArraySchema(items = valueReference)
-    val updatedCache = generateKontent(collectionType, cache)
+    updatedCache = generateKontent(collectionType, cache)
     return updatedCache.plus(referenceName to schema)
   }
 }

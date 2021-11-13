@@ -25,7 +25,7 @@ object KompendiumPreFlight {
     val responseType = typeOf<TResp>()
     val paramType = typeOf<TParam>()
     addToCache(paramType, requestType, responseType)
-    Kompendium.openApiSpec.components.schemas.putAll(Kompendium.cache)
+//    Kompendium.openApiSpec.components.schemas.putAll(Kompendium.cache)
     return block.invoke(paramType, requestType, responseType)
   }
 
@@ -42,7 +42,7 @@ object KompendiumPreFlight {
     val errorType = typeOf<TErr>()
     val responseType = typeOf<TResp>()
     addToCache(typeOf<Unit>(), typeOf<Unit>(), responseType)
-    Kompendium.openApiSpec.components.schemas.putAll(Kompendium.cache)
+//    Kompendium.openApiSpec.components.schemas.putAll(Kompendium.cache)
     return block.invoke(errorType, responseType)
   }
 
