@@ -78,7 +78,7 @@ internal class KompendiumAuthTest {
   fun `Notarized Get with jwt authentication and custom scheme records all expected information`() {
     withTestApplication({
       configModule()
-      configJwtAuth(scheme = "oauth")
+      configJwtAuth(bearerFormat = "JWT")
       docs()
       notarizedAuthenticatedGetModule(TestData.AuthConfigName.JWT)
     }) {
@@ -92,31 +92,14 @@ internal class KompendiumAuthTest {
   }
 
   @Test
-  fun `Notarized Get with jwt authentication and custom header records all expected information`() {
-    withTestApplication({
-      configModule()
-      configJwtAuth(header = "x-api-key")
-      docs()
-      notarizedAuthenticatedGetModule(TestData.AuthConfigName.JWT)
-    }) {
-      // do
-      val json = handleRequest(HttpMethod.Get, "/openapi.json").response.content
-
-      // expect
-      val expected = TestData.getFileSnapshot("notarized_jwt_custom_header_authenticated_get.json").trim()
-      assertEquals(expected, json, "The received json spec should match the expected content")
-    }
-  }
-
-  @Test
   fun `Notarized Get with multiple jwt schemes records all expected information`() {
     withTestApplication({
       configModule()
       install(Authentication) {
-        notarizedJwt("jwt1", header = "x-api-key-1") {
+        notarizedJwt("jwt1") {
           realm = "Ktor server"
         }
-        notarizedJwt("jwt2", header = "x-api-key-2") {
+        notarizedJwt("jwt2") {
           realm = "Ktor server"
         }
       }
@@ -157,11 +140,10 @@ internal class KompendiumAuthTest {
   }
 
   private fun Application.configJwtAuth(
-    header: String? = null,
-    scheme: String? = null
+    bearerFormat: String? = null
   ) {
     install(Authentication) {
-      notarizedJwt(TestData.AuthConfigName.JWT, header, scheme) {
+      notarizedJwt(TestData.AuthConfigName.JWT, bearerFormat) {
         realm = "Ktor server"
       }
     }

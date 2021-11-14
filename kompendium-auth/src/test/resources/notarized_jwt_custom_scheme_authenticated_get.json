@@ -53,8 +53,9 @@
   "components" : {
     "securitySchemes" : {
       "jwt" : {
+        "bearerFormat" : "JWT",
         "type" : "http",
-        "scheme" : "oauth"
+        "scheme" : "bearer"
       }
     }
   },
