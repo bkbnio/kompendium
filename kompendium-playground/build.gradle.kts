@@ -1,6 +1,5 @@
 plugins {
   id("kotlin-application-conventions")
-  kotlin("plugin.serialization") version "1.5.31"
 }
 
 dependencies {
