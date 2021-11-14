@@ -3,8 +3,6 @@ plugins {
 }
 
 dependencies {
-  implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
-  implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
   implementation(libs.bundles.ktor)
   api(libs.ktor.webjars)
   implementation(libs.webjars.swagger.ui)

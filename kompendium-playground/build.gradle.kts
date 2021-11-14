@@ -1,12 +1,9 @@
 plugins {
-  kotlin("plugin.serialization") version "1.5.0"
-  application
+  id("kotlin-application-conventions")
+  kotlin("plugin.serialization") version "1.5.31"
 }
 
 dependencies {
-  implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
-  implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-
   implementation(projects.kompendiumCore)
   implementation(projects.kompendiumAuth)
   implementation(projects.kompendiumSwaggerUi)
