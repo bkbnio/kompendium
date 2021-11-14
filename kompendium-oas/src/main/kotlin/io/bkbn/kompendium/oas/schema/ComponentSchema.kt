@@ -12,6 +12,5 @@ sealed interface ComponentSchema {
     is FormattedSchema -> this.copy(default = default)
     is ObjectSchema -> this.copy(default = default)
     is SimpleSchema -> this.copy(default = default)
-    else -> error("what the heck?")
   }
 }

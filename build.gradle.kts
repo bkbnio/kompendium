@@ -95,6 +95,16 @@ allprojects {
   }
 }
 
+subprojects {
+  apply(plugin = "java")
+
+  configure<JavaPluginExtension> {
+    toolchain {
+      languageVersion.set(JavaLanguageVersion.of(8))
+    }
+  }
+}
+
 nexusPublishing {
   repositories {
     sonatype {
