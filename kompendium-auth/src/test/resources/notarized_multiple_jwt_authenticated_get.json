@@ -54,14 +54,12 @@
   "components" : {
     "securitySchemes" : {
       "jwt1" : {
-        "type" : "apiKey",
-        "name" : "x-api-key-1",
-        "in" : "header"
+        "type" : "http",
+        "scheme" : "bearer"
       },
       "jwt2" : {
-        "type" : "apiKey",
-        "name" : "x-api-key-2",
-        "in" : "header"
+        "type" : "http",
+        "scheme" : "bearer"
       }
     }
   },

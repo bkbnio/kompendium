@@ -25,6 +25,7 @@ import io.bkbn.kompendium.core.Kompendium
 import io.bkbn.kompendium.core.Notarized.notarizedGet
 import io.bkbn.kompendium.auth.KompendiumAuth.notarizedBasic
 import io.bkbn.kompendium.auth.KompendiumAuth.notarizedJwt
+import io.bkbn.kompendium.auth.KompendiumAuth.notarizedOAuth
 import io.bkbn.kompendium.auth.util.TestData
 import io.bkbn.kompendium.auth.util.TestParams
 import io.bkbn.kompendium.auth.util.TestResponse
@@ -32,6 +33,10 @@ import io.bkbn.kompendium.core.metadata.MethodInfo
 import io.bkbn.kompendium.core.metadata.ResponseInfo
 import io.bkbn.kompendium.core.routes.openApi
 import io.bkbn.kompendium.core.routes.redoc
+import io.bkbn.kompendium.oas.security.OAuth
+import io.ktor.auth.OAuthServerSettings
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.cio.CIO
 
 internal class KompendiumAuthTest {
 
@@ -78,7 +83,7 @@ internal class KompendiumAuthTest {
   fun `Notarized Get with jwt authentication and custom scheme records all expected information`() {
     withTestApplication({
       configModule()
-      configJwtAuth(scheme = "oauth")
+      configJwtAuth(bearerFormat = "JWT")
       docs()
       notarizedAuthenticatedGetModule(TestData.AuthConfigName.JWT)
     }) {
@@ -92,31 +97,14 @@ internal class KompendiumAuthTest {
   }
 
   @Test
-  fun `Notarized Get with jwt authentication and custom header records all expected information`() {
-    withTestApplication({
-      configModule()
-      configJwtAuth(header = "x-api-key")
-      docs()
-      notarizedAuthenticatedGetModule(TestData.AuthConfigName.JWT)
-    }) {
-      // do
-      val json = handleRequest(HttpMethod.Get, "/openapi.json").response.content
-
-      // expect
-      val expected = TestData.getFileSnapshot("notarized_jwt_custom_header_authenticated_get.json").trim()
-      assertEquals(expected, json, "The received json spec should match the expected content")
-    }
-  }
-
-  @Test
   fun `Notarized Get with multiple jwt schemes records all expected information`() {
     withTestApplication({
       configModule()
       install(Authentication) {
-        notarizedJwt("jwt1", header = "x-api-key-1") {
+        notarizedJwt("jwt1") {
           realm = "Ktor server"
         }
-        notarizedJwt("jwt2", header = "x-api-key-2") {
+        notarizedJwt("jwt2") {
           realm = "Ktor server"
         }
       }
@@ -128,6 +116,45 @@ internal class KompendiumAuthTest {
 
       // expect
       val expected = TestData.getFileSnapshot("notarized_multiple_jwt_authenticated_get.json").trim()
+      assertEquals(expected, json, "The received json spec should match the expected content")
+    }
+  }
+
+  @Test
+  fun `Notarized Oauth with all flows`() {
+    val flows = OAuth.Flows(
+      implicit = OAuth.Flows.Implicit("https://accounts.google.com/o/oauth2/auth", scopes = mapOf("test" to "is a cool scope", "this" to "is also cool")),
+      authorizationCode = OAuth.Flows.AuthorizationCode("https://accounts.google.com/o/oauth2/auth"),
+      password = OAuth.Flows.Password("https://accounts.google.com/o/oauth2/auth"),
+      clientCredentials = OAuth.Flows.ClientCredential("https://accounts.google.com/token")
+    )
+    withTestApplication({
+      configModule()
+      install(Authentication) {
+        notarizedOAuth(flows, "oauth") {
+          urlProvider = { "http://localhost:8080/callback" }
+          client = HttpClient(CIO)
+          providerLookup = {
+            OAuthServerSettings.OAuth2ServerSettings(
+              name = "google",
+              authorizeUrl = "https://accounts.google.com/o/oauth2/auth",
+              accessTokenUrl = "https://accounts.google.com/o/oauth2/token",
+              requestMethod = HttpMethod.Post,
+              clientId = System.getenv("GOOGLE_CLIENT_ID"),
+              clientSecret = System.getenv("GOOGLE_CLIENT_SECRET"),
+              defaultScopes = listOf("https://www.googleapis.com/auth/userinfo.profile")
+            )
+          }
+        }
+      }
+      docs()
+      notarizedAuthenticatedGetModule("oauth")
+    }) {
+      // do
+      val json = handleRequest(HttpMethod.Get, "/openapi.json").response.content
+
+      // expect
+      val expected = TestData.getFileSnapshot("notarized_oauth_implicit_flow.json").trim()
       assertEquals(expected, json, "The received json spec should match the expected content")
     }
   }
@@ -157,11 +184,10 @@ internal class KompendiumAuthTest {
   }
 
   private fun Application.configJwtAuth(
-    header: String? = null,
-    scheme: String? = null
+    bearerFormat: String? = null
   ) {
     install(Authentication) {
-      notarizedJwt(TestData.AuthConfigName.JWT, header, scheme) {
+      notarizedJwt(TestData.AuthConfigName.JWT, bearerFormat) {
         realm = "Ktor server"
       }
     }
