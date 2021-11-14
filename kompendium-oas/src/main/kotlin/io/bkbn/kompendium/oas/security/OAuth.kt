@@ -23,26 +23,26 @@ data class OAuth(val description: String? = null, val flows: Flows) : SecuritySc
 
     data class Implicit(
       override val authorizationUrl: String,
-      override val refreshUrl: String?,
+      override val refreshUrl: String? = null,
       override val scopes: Map<String, String> = emptyMap()
     ) : Flow
 
     data class AuthorizationCode(
-      override val tokenUrl: String?,
       override val authorizationUrl: String,
-      override val refreshUrl: String?,
+      override val tokenUrl: String? = null,
+      override val refreshUrl: String? = null,
       override val scopes: Map<String, String> = emptyMap()
     ) : Flow
 
     data class Password(
-      override val tokenUrl: String?,
-      override val refreshUrl: String?,
+      override val tokenUrl: String? = null,
+      override val refreshUrl: String? = null,
       override val scopes: Map<String, String> = emptyMap()
     ) : Flow
 
     data class ClientCredential(
-      override val tokenUrl: String?,
-      override val refreshUrl: String?,
+      override val tokenUrl: String? = null,
+      override val refreshUrl: String? = null,
       override val scopes: Map<String, String> = emptyMap()
     ) : Flow
   }

@@ -2,6 +2,7 @@
 
 ## Unreleased
 ### Added
+- Support for OAuth authentication
 
 ### Changed
 - `$ref` types are no longer generated, instead all objects are defined explicitly
