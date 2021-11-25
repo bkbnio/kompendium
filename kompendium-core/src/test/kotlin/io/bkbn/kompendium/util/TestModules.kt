@@ -362,6 +362,16 @@ fun Application.undeclaredType() {
   }
 }
 
+fun Application.headerParameter() {
+  routing {
+    route("/test/with_header") {
+      notarizedGet(TestResponseInfo.headerParam) {
+        call.respond(HttpStatusCode.OK, TestResponse("hi"))
+      }
+    }
+  }
+}
+
 fun Application.simpleGenericResponse() {
   routing {
     route("/test/polymorphic") {

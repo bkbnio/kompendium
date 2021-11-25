@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.11.1] - November 25th, 2021
+### Added
+- Documentation showing how to add header names using Kotlin backtick convention
+
 ## [1.11.0] - November 25th, 2021
 ### Added
 - Support for Ktor Location Plugin
