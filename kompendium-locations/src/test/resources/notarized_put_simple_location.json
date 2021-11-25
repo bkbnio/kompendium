@@ -1,0 +1,76 @@
+{
+  "openapi" : "3.0.3",
+  "info" : { },
+  "servers" : [ ],
+  "paths" : {
+    "/test/test/{name}" : {
+      "put" : {
+        "tags" : [ ],
+        "summary" : "Location Test",
+        "description" : "A cool test",
+        "parameters" : [ {
+          "name" : "name",
+          "in" : "path",
+          "schema" : {
+            "type" : "string"
+          },
+          "required" : true,
+          "deprecated" : false
+        } ],
+        "requestBody" : {
+          "description" : "Cool stuff",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/SimpleRequest"
+              }
+            }
+          },
+          "required" : false
+        },
+        "responses" : {
+          "200" : {
+            "description" : "A successful endeavor",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/SimpleResponse"
+                }
+              }
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "String" : {
+        "type" : "string"
+      },
+      "SimpleRequest" : {
+        "type" : "object",
+        "properties" : {
+          "input" : {
+            "$ref" : "#/components/schemas/String"
+          }
+        }
+      },
+      "Boolean" : {
+        "type" : "boolean"
+      },
+      "SimpleResponse" : {
+        "type" : "object",
+        "properties" : {
+          "result" : {
+            "$ref" : "#/components/schemas/Boolean"
+          }
+        }
+      }
+    },
+    "securitySchemes" : { }
+  },
+  "security" : [ ],
+  "tags" : [ ]
+}

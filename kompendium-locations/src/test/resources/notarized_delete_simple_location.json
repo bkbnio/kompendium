@@ -1,0 +1,57 @@
+{
+  "openapi" : "3.0.3",
+  "info" : { },
+  "servers" : [ ],
+  "paths" : {
+    "/test/test/{name}" : {
+      "delete" : {
+        "tags" : [ ],
+        "summary" : "Location Test",
+        "description" : "A cool test",
+        "parameters" : [ {
+          "name" : "name",
+          "in" : "path",
+          "schema" : {
+            "type" : "string"
+          },
+          "required" : true,
+          "deprecated" : false
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "A successful endeavor",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/SimpleResponse"
+                }
+              }
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "Boolean" : {
+        "type" : "boolean"
+      },
+      "SimpleResponse" : {
+        "type" : "object",
+        "properties" : {
+          "result" : {
+            "$ref" : "#/components/schemas/Boolean"
+          }
+        }
+      },
+      "String" : {
+        "type" : "string"
+      }
+    },
+    "securitySchemes" : { }
+  },
+  "security" : [ ],
+  "tags" : [ ]
+}
