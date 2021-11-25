@@ -26,7 +26,7 @@ dependencies {
   implementation("io.bkbn:kompendium-core:1.8.1")
   implementation("io.bkbn:kompendium-auth:1.8.1")
   implementation("io.bkbn:kompendium-swagger-ui:1.8.1")
-  
+
   // Other dependencies...
 }
 ```
@@ -39,23 +39,23 @@ from GitHub is slightly more involved, but such is the price you pay for bleedin
 ```kotlin
 // 1 Setup a helper function to import any Github Repository Package
 // This step is optional but I have a bunch of stuff stored on github so I find it useful 😄
-fun RepositoryHandler.github(packageUrl: String) = maven { 
+fun RepositoryHandler.github(packageUrl: String) = maven {
     name = "GithubPackages"
     url = uri(packageUrl)
     credentials {
       username = java.lang.System.getenv("GITHUB_USER")
       password = java.lang.System.getenv("GITHUB_TOKEN")
-    } 
-}
+    }
+  }
 
 // 2 Add the repo in question (in this case Kompendium)
 repositories {
-    github("https://maven.pkg.github.com/bkbnio/kompendium")
+  github("https://maven.pkg.github.com/bkbnio/kompendium")
 }
 
 // 3 Add the package like any normal dependency
-dependencies { 
-    implementation("io.bkbn:kompendium-core:1.8.1")
+dependencies {
+  implementation("io.bkbn:kompendium-core:1.8.1")
 }
 
 ```
@@ -257,9 +257,9 @@ routing {
 }
 
 val basicAuthGetInfo = MethodInfo<Unit, ExampleResponse>(
-  summary = "Another get test", 
-  description = "testing more", 
-  responseInfo = testGetResponse, 
+  summary = "Another get test",
+  description = "testing more",
+  responseInfo = testGetResponse,
   securitySchemes = setOf("basic")
 )
 val jwtAuthGetInfo = basicAuthGetInfo.copy(securitySchemes = setOf("jwt"))
@@ -271,10 +271,10 @@ This will also add the [ktor webjars feature](https://ktor.io/docs/webjars.html)
 Minimal Example:
 ```kotlin
   install(Webjars)
-  routing {
-    openApi(oas)
-    swaggerUI()
-  }
+routing {
+  openApi(oas)
+  swaggerUI()
+}
 ```
 
 ### Enabling ReDoc
