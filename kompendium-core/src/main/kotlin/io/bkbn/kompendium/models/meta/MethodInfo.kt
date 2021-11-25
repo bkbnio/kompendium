@@ -11,6 +11,7 @@ sealed class MethodInfo<TParam, TResp>(
   open val canThrow: Set<KClass<*>> = emptySet(),
   open val responseInfo: ResponseInfo<TResp>? = null,
   open val parameterExamples: Map<String, TParam> = emptyMap(),
+  open val operationId: String? = null
 ) {
 
   data class GetInfo<TParam, TResp>(
@@ -21,7 +22,8 @@ sealed class MethodInfo<TParam, TResp>(
     override val deprecated: Boolean = false,
     override val securitySchemes: Set<String> = emptySet(),
     override val canThrow: Set<KClass<*>> = emptySet(),
-    override val parameterExamples: Map<String, TParam> = emptyMap()
+    override val parameterExamples: Map<String, TParam> = emptyMap(),
+    override val operationId: String? = null
   ) : MethodInfo<TParam, TResp>(
     summary = summary,
     description = description,
@@ -30,7 +32,8 @@ sealed class MethodInfo<TParam, TResp>(
     securitySchemes = securitySchemes,
     canThrow = canThrow,
     responseInfo = responseInfo,
-    parameterExamples = parameterExamples
+    parameterExamples = parameterExamples,
+    operationId = operationId
   )
 
   data class PostInfo<TParam, TReq, TResp>(
@@ -42,7 +45,8 @@ sealed class MethodInfo<TParam, TResp>(
     override val deprecated: Boolean = false,
     override val securitySchemes: Set<String> = emptySet(),
     override val canThrow: Set<KClass<*>> = emptySet(),
-    override val parameterExamples: Map<String, TParam> = emptyMap()
+    override val parameterExamples: Map<String, TParam> = emptyMap(),
+    override val operationId: String? = null
   ) : MethodInfo<TParam, TResp>(
     summary = summary,
     description = description,
@@ -51,7 +55,8 @@ sealed class MethodInfo<TParam, TResp>(
     securitySchemes = securitySchemes,
     canThrow = canThrow,
     responseInfo = responseInfo,
-    parameterExamples = parameterExamples
+    parameterExamples = parameterExamples,
+    operationId = operationId
   )
 
   data class PutInfo<TParam, TReq, TResp>(
@@ -63,7 +68,8 @@ sealed class MethodInfo<TParam, TResp>(
     override val deprecated: Boolean = false,
     override val securitySchemes: Set<String> = emptySet(),
     override val canThrow: Set<KClass<*>> = emptySet(),
-    override val parameterExamples: Map<String, TParam> = emptyMap()
+    override val parameterExamples: Map<String, TParam> = emptyMap(),
+    override val operationId: String? = null
   ) : MethodInfo<TParam, TResp>(
     summary = summary,
     description = description,
@@ -71,7 +77,8 @@ sealed class MethodInfo<TParam, TResp>(
     deprecated = deprecated,
     securitySchemes = securitySchemes,
     canThrow = canThrow,
-    parameterExamples = parameterExamples
+    parameterExamples = parameterExamples,
+    operationId = operationId
   )
 
   data class DeleteInfo<TParam, TResp>(
@@ -82,7 +89,8 @@ sealed class MethodInfo<TParam, TResp>(
     override val deprecated: Boolean = false,
     override val securitySchemes: Set<String> = emptySet(),
     override val canThrow: Set<KClass<*>> = emptySet(),
-    override val parameterExamples: Map<String, TParam> = emptyMap()
+    override val parameterExamples: Map<String, TParam> = emptyMap(),
+    override val operationId: String? = null
   ) : MethodInfo<TParam, TResp>(
     summary = summary,
     description = description,
@@ -90,6 +98,7 @@ sealed class MethodInfo<TParam, TResp>(
     deprecated = deprecated,
     securitySchemes = securitySchemes,
     canThrow = canThrow,
-    parameterExamples = parameterExamples
+    parameterExamples = parameterExamples,
+    operationId = operationId
   )
 }

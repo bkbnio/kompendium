@@ -49,6 +49,7 @@ object MethodParser {
   ) = OpenApiSpecPathItemOperation(
     summary = info.summary,
     description = info.description,
+    operationId = info.operationId,
     tags = info.tags,
     deprecated = info.deprecated,
     parameters = paramType.toParameterSpec(),

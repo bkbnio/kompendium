@@ -46,6 +46,7 @@ import io.bkbn.kompendium.util.trailingSlash
 import io.bkbn.kompendium.util.undeclaredType
 import io.bkbn.kompendium.util.withDefaultParameter
 import io.bkbn.kompendium.util.withExamples
+import io.bkbn.kompendium.util.withOperationId
 
 internal class KompendiumTest {
 
@@ -138,7 +139,6 @@ internal class KompendiumTest {
       assertEquals(expected, json, "The received json spec should match the expected content")
     }
   }
-
 
   @Test
   fun `Notarized put does not interrupt the pipeline`() {
@@ -359,6 +359,22 @@ internal class KompendiumTest {
 
       // expect
       val expected = getFileSnapshot("non_required_params.json").trim()
+      assertEquals(expected, json, "The received json spec should match the expected content")
+    }
+  }
+
+  @Test
+  fun `Can add operationId`() {
+    withTestApplication({
+      jacksonConfigModule()
+      docs()
+      withOperationId()
+    }) {
+      // do
+      val json = handleRequest(HttpMethod.Get, "/openapi.json").response.content
+
+      // expect
+      val expected = getFileSnapshot("notarized_get_with_operation_id.json").trim()
       assertEquals(expected, json, "The received json spec should match the expected content")
     }
   }
@@ -607,5 +623,4 @@ internal class KompendiumTest {
       redoc(oas)
     }
   }
-
 }

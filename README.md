@@ -210,6 +210,7 @@ fun Application.mainModule() {
 val simpleGetInfo = GetInfo<Unit, ExampleResponse>(
   summary = "Example Parameters",
   description = "A test for setting parameter examples",
+  operationId = "getExamples",
   responseInfo = ResponseInfo(
     status = 200,
     description = "nice",
