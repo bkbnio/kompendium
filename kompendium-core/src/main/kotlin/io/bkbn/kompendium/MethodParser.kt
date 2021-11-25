@@ -174,7 +174,9 @@ object MethodParser {
    */
   private fun KType.toParameterSpec(): List<OpenApiSpecParameter> {
     val clazz = classifier as KClass<*>
-    return clazz.memberProperties.map { prop ->
+    return clazz.memberProperties.filter { prop ->
+      prop.findAnnotation<KompendiumParam>() != null
+    }.map { prop ->
       val field = prop.javaField?.type?.kotlin
         ?: error("Unable to parse field type from $prop")
       val anny = prop.findAnnotation<KompendiumParam>()

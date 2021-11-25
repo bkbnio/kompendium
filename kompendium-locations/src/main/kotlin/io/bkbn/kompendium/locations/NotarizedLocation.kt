@@ -17,6 +17,7 @@ import io.ktor.locations.location
 import io.ktor.routing.Route
 import io.ktor.routing.method
 import io.ktor.util.pipeline.PipelineContext
+import kotlin.reflect.KClass
 import kotlin.reflect.full.findAnnotation
 
 /**
@@ -42,7 +43,8 @@ object NotarizedLocation {
       val locationAnnotation = TParam::class.findAnnotation<Location>()
       require(locationAnnotation != null) { "Location annotation must be present to leverage notarized location api" }
       val path = Kompendium.calculatePath(this)
-      val pathWithLocation = path.plus(locationAnnotation.path)
+      val locationPath = TParam::class.calculatePath()
+      val pathWithLocation = path.plus(locationPath)
       Kompendium.openApiSpec.paths.getOrPut(pathWithLocation) { OpenApiSpecPathItem() }
       Kompendium.openApiSpec.paths[pathWithLocation]?.get = parseMethodInfo(info, paramType, requestType, responseType)
       return location(TParam::class) {
@@ -67,7 +69,8 @@ object NotarizedLocation {
       val locationAnnotation = TParam::class.findAnnotation<Location>()
       require(locationAnnotation != null) { "Location annotation must be present to leverage notarized location api" }
       val path = Kompendium.calculatePath(this)
-      val pathWithLocation = path.plus(locationAnnotation.path)
+      val locationPath = TParam::class.calculatePath()
+      val pathWithLocation = path.plus(locationPath)
       Kompendium.openApiSpec.paths.getOrPut(pathWithLocation) { OpenApiSpecPathItem() }
       Kompendium.openApiSpec.paths[pathWithLocation]?.post = parseMethodInfo(info, paramType, requestType, responseType)
       return location(TParam::class) {
@@ -92,7 +95,8 @@ object NotarizedLocation {
       val locationAnnotation = TParam::class.findAnnotation<Location>()
       require(locationAnnotation != null) { "Location annotation must be present to leverage notarized location api" }
       val path = Kompendium.calculatePath(this)
-      val pathWithLocation = path.plus(locationAnnotation.path)
+      val locationPath = TParam::class.calculatePath()
+      val pathWithLocation = path.plus(locationPath)
       Kompendium.openApiSpec.paths.getOrPut(pathWithLocation) { OpenApiSpecPathItem() }
       Kompendium.openApiSpec.paths[pathWithLocation]?.put =
         parseMethodInfo(info, paramType, requestType, responseType)
@@ -117,7 +121,8 @@ object NotarizedLocation {
       val locationAnnotation = TParam::class.findAnnotation<Location>()
       require(locationAnnotation != null) { "Location annotation must be present to leverage notarized location api" }
       val path = Kompendium.calculatePath(this)
-      val pathWithLocation = path.plus(locationAnnotation.path)
+      val locationPath = TParam::class.calculatePath()
+      val pathWithLocation = path.plus(locationPath)
       Kompendium.openApiSpec.paths.getOrPut(pathWithLocation) { OpenApiSpecPathItem() }
       Kompendium.openApiSpec.paths[pathWithLocation]?.delete =
         parseMethodInfo(info, paramType, requestType, responseType)
@@ -125,4 +130,15 @@ object NotarizedLocation {
         method(HttpMethod.Delete) { handle(body) }
       }
     }
+
+  fun KClass<*>.calculatePath(suffix: String = ""): String {
+    val locationAnnotation = this.findAnnotation<Location>()
+    require(locationAnnotation != null) { "Location annotation must be present to leverage notarized location api" }
+    val parent = this.java.declaringClass?.kotlin
+    val newSuffix = locationAnnotation.path.plus(suffix)
+    return when (parent) {
+      null -> newSuffix
+      else -> parent.calculatePath(newSuffix)
+    }
+  }
 }

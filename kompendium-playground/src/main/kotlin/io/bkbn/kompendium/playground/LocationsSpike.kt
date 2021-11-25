@@ -17,8 +17,6 @@ import io.ktor.features.ContentNegotiation
 import io.ktor.http.HttpStatusCode
 import io.ktor.locations.Location
 import io.ktor.locations.Locations
-import io.ktor.locations.get
-import io.ktor.response.respond
 import io.ktor.response.respondText
 import io.ktor.routing.routing
 import io.ktor.serialization.json
@@ -54,13 +52,13 @@ private fun Application.mainModule() {
     openApi(oas)
     redoc(oas)
     notarizedGet(testLocation) { tl ->
-      call.respondText { tl.name }
+      call.respondText { tl.parent.parent.name }
     }
   }
 }
 
 private object LocationsToC {
-  val testLocation = MethodInfo.GetInfo<TestLocations, ExampleResponse>(
+  val testLocation = MethodInfo.GetInfo<TestLocations.NestedTestLocations.OhBoiUCrazy, ExampleResponse>(
     summary = "Example Parameters",
     description = "A test for setting parameter examples",
     responseInfo = ResponseInfo(
@@ -76,4 +74,18 @@ private object LocationsToC {
 data class TestLocations(
   @KompendiumParam(ParamType.PATH)
   val name: String,
-)
+) {
+  @Location("/spaghetti")
+  data class NestedTestLocations(
+    @KompendiumParam(ParamType.QUERY)
+    val idk: Int,
+    val parent: TestLocations
+  ) {
+    @Location("/hehe/{madness}")
+    data class OhBoiUCrazy(
+      @KompendiumParam(ParamType.PATH)
+      val madness: Boolean,
+      val parent: NestedTestLocations
+    )
+  }
+}
