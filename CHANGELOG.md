@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.11.0] - November 25th, 2021
+### Added
+- Support for Ktor Location Plugin
+
 ## [1.10.0] - November 25th, 2021
 
 ### Changed
