@@ -2,26 +2,19 @@ package io.bkbn.kompendium.locations
 
 import io.bkbn.kompendium.Kompendium
 import io.bkbn.kompendium.KompendiumPreFlight
-import io.bkbn.kompendium.KompendiumPreFlight.errorNotarizationPreFlight
-import io.bkbn.kompendium.MethodParser.parseErrorInfo
 import io.bkbn.kompendium.MethodParser.parseMethodInfo
-import io.bkbn.kompendium.models.meta.MethodInfo
 import io.bkbn.kompendium.models.meta.MethodInfo.DeleteInfo
 import io.bkbn.kompendium.models.meta.MethodInfo.GetInfo
 import io.bkbn.kompendium.models.meta.MethodInfo.PostInfo
 import io.bkbn.kompendium.models.meta.MethodInfo.PutInfo
-import io.bkbn.kompendium.models.meta.ResponseInfo
 import io.bkbn.kompendium.models.oas.OpenApiSpecPathItem
 import io.ktor.application.ApplicationCall
-import io.ktor.features.StatusPages
 import io.ktor.http.HttpMethod
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.locations.Location
 import io.ktor.routing.Route
 import io.ktor.routing.method
-import io.ktor.util.pipeline.PipelineContext
 import io.ktor.util.pipeline.PipelineInterceptor
-import kotlin.reflect.KType
 import kotlin.reflect.full.findAnnotation
 
 /**
@@ -115,21 +108,8 @@ object NotarizedLocation {
       val path = Kompendium.calculatePath(this)
       val pathWithLocation = path.plus(locationAnnotation.path)
       Kompendium.openApiSpec.paths.getOrPut(pathWithLocation) { OpenApiSpecPathItem() }
-      Kompendium.openApiSpec.paths[pathWithLocation]?.delete = parseMethodInfo(info, paramType, requestType, responseType)
+      Kompendium.openApiSpec.paths[pathWithLocation]?.delete =
+        parseMethodInfo(info, paramType, requestType, responseType)
       return method(HttpMethod.Delete) { handle(body) }
     }
-
-  /**
-   * Notarization for a handled exception response
-   * @param TErr The [Throwable] that is being handled
-   * @param TResp Class detailing the expected API response when handled
-   * @param info Response metadata
-   */
-  inline fun <reified TErr : Throwable, reified TResp : Any> StatusPages.Configuration.notarizedException(
-    info: ResponseInfo<TResp>,
-    noinline handler: suspend PipelineContext<Unit, ApplicationCall>.(TErr) -> Unit
-  ) = errorNotarizationPreFlight<TErr, TResp>() { errorType, responseType ->
-    info.parseErrorInfo(errorType, responseType)
-    exception(handler)
-  }
 }
