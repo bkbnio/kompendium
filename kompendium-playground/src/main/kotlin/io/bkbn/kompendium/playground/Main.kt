@@ -52,9 +52,9 @@ fun main() {
   ).start(wait = true)
 }
 
-var featuresInstalled = false
+private var featuresInstalled = false
 
-fun Application.configModule() {
+private fun Application.configModule() {
   if (!featuresInstalled) {
     install(ContentNegotiation) {
       json()
@@ -87,7 +87,7 @@ fun Application.configModule() {
   }
 }
 
-fun Application.mainModule() {
+private fun Application.mainModule() {
   configModule()
   routing {
     openApi(oas)
