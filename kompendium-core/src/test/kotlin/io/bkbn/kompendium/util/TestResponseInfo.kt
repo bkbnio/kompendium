@@ -108,6 +108,11 @@ object TestResponseInfo {
     description = "break this glass in scenario of emergency",
     responseInfo = simpleOkResponse()
   )
+  val headerParam = GetInfo<HeaderNameTest, TestResponse>(
+    summary = "testing header stuffs",
+    description = "Good for many things",
+    responseInfo = simpleOkResponse()
+  )
   val genericResponse = GetInfo<Unit, TestGeneric<Int>>(
     summary = "Single Generic",
     description = "Simple generic data class",

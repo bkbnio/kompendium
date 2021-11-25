@@ -22,6 +22,7 @@ import io.bkbn.kompendium.util.jacksonConfigModule
 import io.bkbn.kompendium.util.emptyGet
 import io.bkbn.kompendium.util.genericPolymorphicResponse
 import io.bkbn.kompendium.util.genericPolymorphicResponseMultipleImpls
+import io.bkbn.kompendium.util.headerParameter
 import io.bkbn.kompendium.util.kotlinxConfigModule
 import io.bkbn.kompendium.util.nestedUnderRootModule
 import io.bkbn.kompendium.util.nonRequiredParamsGet
@@ -585,6 +586,22 @@ internal class KompendiumTest {
 
       // expect
       val expected = getFileSnapshot("undeclared_field.json").trim()
+      assertEquals(expected, json, "The received json spec should match the expected content")
+    }
+  }
+
+  @Test
+  fun `Can add a custom header parameter with a name override`() {
+    withTestApplication({
+      jacksonConfigModule()
+      docs()
+      headerParameter()
+    }) {
+      // do
+      val json = handleRequest(HttpMethod.Get, "/openapi.json").response.content
+
+      // expect
+      val expected = getFileSnapshot("override_parameter_name.json").trim()
       assertEquals(expected, json, "The received json spec should match the expected content")
     }
   }

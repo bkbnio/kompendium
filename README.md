@@ -109,6 +109,14 @@ of camel).
 The purpose of `KompendiumParam` is to provide supplemental information needed to properly assign the type of parameter
 (cookie, header, query, path) as well as other parameter-level metadata.
 
+Using backticks, users can use data classes to represent things like header names as follows
+
+```kotlin
+data class HeaderNameTest(
+  @KompendiumParam(type = ParamType.HEADER) val `X-UserEmail`: String
+)
+```
+
 ### Undeclared Field
 
 There is also a final `UndeclaredField` annotation. This should be used only in an absolutely emergency. This annotation

@@ -105,3 +105,7 @@ enum class Hehe {
 
 @UndeclaredField("nowYouDont", Hehe::class)
 data class Mysterious(val nowYouSeeMe: String)
+
+data class HeaderNameTest(
+  @KompendiumParam(type = ParamType.HEADER) val `X-UserEmail`: String
+)
