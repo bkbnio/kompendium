@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.10.0] - November 25th, 2021
+
+### Changed
+
+- Added `operationId` parameter to `MethodInfo`
+
 ## [1.9.2] - October 24th, 2021
 
 ### Changed

@@ -265,6 +265,18 @@ fun Application.withDefaultParameter() {
   }
 }
 
+fun Application.withOperationId(){
+  routing {
+    route("/test") {
+      notarizedGet(
+        info = TestResponseInfo.testGetInfo.copy(operationId = "getTest")
+      ){
+        call.respond(HttpStatusCode.OK)
+      }
+    }
+  }
+}
+
 fun Application.nonRequiredParamsGet() {
   routing {
     route("/test/optional") {
