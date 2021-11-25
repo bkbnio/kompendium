@@ -17,7 +17,9 @@ import io.ktor.features.ContentNegotiation
 import io.ktor.http.HttpStatusCode
 import io.ktor.locations.Location
 import io.ktor.locations.Locations
+import io.ktor.locations.get
 import io.ktor.response.respond
+import io.ktor.response.respondText
 import io.ktor.routing.routing
 import io.ktor.serialization.json
 import io.ktor.server.engine.embeddedServer
@@ -51,8 +53,8 @@ private fun Application.mainModule() {
   routing {
     openApi(oas)
     redoc(oas)
-    notarizedGet(testLocation) {
-      call.respond(HttpStatusCode.OK)
+    notarizedGet(testLocation) { tl ->
+      call.respondText { tl.name }
     }
   }
 }

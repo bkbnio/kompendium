@@ -12,8 +12,11 @@ import io.ktor.application.ApplicationCall
 import io.ktor.http.HttpMethod
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.locations.Location
+import io.ktor.locations.handle
+import io.ktor.locations.location
 import io.ktor.routing.Route
 import io.ktor.routing.method
+import io.ktor.util.pipeline.PipelineContext
 import io.ktor.util.pipeline.PipelineInterceptor
 import kotlin.reflect.full.findAnnotation
 
@@ -34,7 +37,7 @@ object NotarizedLocation {
    */
   inline fun <reified TParam : Any, reified TResp : Any> Route.notarizedGet(
     info: GetInfo<TParam, TResp>,
-    noinline body: PipelineInterceptor<Unit, ApplicationCall>
+    noinline body: suspend PipelineContext<Unit, ApplicationCall>.(TParam) -> Unit
   ): Route =
     KompendiumPreFlight.methodNotarizationPreFlight<TParam, Unit, TResp>() { paramType, requestType, responseType ->
       val locationAnnotation = TParam::class.findAnnotation<Location>()
@@ -43,7 +46,9 @@ object NotarizedLocation {
       val pathWithLocation = path.plus(locationAnnotation.path)
       Kompendium.openApiSpec.paths.getOrPut(pathWithLocation) { OpenApiSpecPathItem() }
       Kompendium.openApiSpec.paths[pathWithLocation]?.get = parseMethodInfo(info, paramType, requestType, responseType)
-      return method(HttpMethod.Get) { handle(body) }
+      return location(TParam::class) {
+        method(HttpMethod.Get) { handle(body) }
+      }
     }
 
   /**
@@ -56,7 +61,7 @@ object NotarizedLocation {
    */
   inline fun <reified TParam : Any, reified TReq : Any, reified TResp : Any> Route.notarizedPost(
     info: PostInfo<TParam, TReq, TResp>,
-    noinline body: PipelineInterceptor<Unit, ApplicationCall>
+    noinline body: suspend PipelineContext<Unit, ApplicationCall>.(TParam) -> Unit
   ): Route =
     KompendiumPreFlight.methodNotarizationPreFlight<TParam, TReq, TResp>() { paramType, requestType, responseType ->
       val locationAnnotation = TParam::class.findAnnotation<Location>()
@@ -65,7 +70,9 @@ object NotarizedLocation {
       val pathWithLocation = path.plus(locationAnnotation.path)
       Kompendium.openApiSpec.paths.getOrPut(pathWithLocation) { OpenApiSpecPathItem() }
       Kompendium.openApiSpec.paths[pathWithLocation]?.post = parseMethodInfo(info, paramType, requestType, responseType)
-      return method(HttpMethod.Post) { handle(body) }
+      return location(TParam::class) {
+        method(HttpMethod.Post) { handle(body) }
+      }
     }
 
   /**
@@ -78,7 +85,7 @@ object NotarizedLocation {
    */
   inline fun <reified TParam : Any, reified TReq : Any, reified TResp : Any> Route.notarizedPut(
     info: PutInfo<TParam, TReq, TResp>,
-    noinline body: PipelineInterceptor<Unit, ApplicationCall>,
+    noinline body: suspend PipelineContext<Unit, ApplicationCall>.(TParam) -> Unit
   ): Route =
     KompendiumPreFlight.methodNotarizationPreFlight<TParam, TReq, TResp>() { paramType, requestType, responseType ->
       val locationAnnotation = TParam::class.findAnnotation<Location>()
@@ -88,7 +95,9 @@ object NotarizedLocation {
       Kompendium.openApiSpec.paths.getOrPut(pathWithLocation) { OpenApiSpecPathItem() }
       Kompendium.openApiSpec.paths[pathWithLocation]?.put =
         parseMethodInfo(info, paramType, requestType, responseType)
-      return method(HttpMethod.Put) { handle(body) }
+      return location(TParam::class) {
+        method(HttpMethod.Put) { handle(body) }
+      }
     }
 
   /**
@@ -100,7 +109,7 @@ object NotarizedLocation {
    */
   inline fun <reified TParam : Any, reified TResp : Any> Route.notarizedDelete(
     info: DeleteInfo<TParam, TResp>,
-    noinline body: PipelineInterceptor<Unit, ApplicationCall>
+    noinline body: suspend PipelineContext<Unit, ApplicationCall>.(TParam) -> Unit
   ): Route =
     KompendiumPreFlight.methodNotarizationPreFlight<TParam, Unit, TResp> { paramType, requestType, responseType ->
       val locationAnnotation = TParam::class.findAnnotation<Location>()
@@ -110,6 +119,8 @@ object NotarizedLocation {
       Kompendium.openApiSpec.paths.getOrPut(pathWithLocation) { OpenApiSpecPathItem() }
       Kompendium.openApiSpec.paths[pathWithLocation]?.delete =
         parseMethodInfo(info, paramType, requestType, responseType)
-      return method(HttpMethod.Delete) { handle(body) }
+      return location(TParam::class) {
+        method(HttpMethod.Delete) { handle(body) }
+      }
     }
 }
