@@ -1,0 +1,84 @@
+{
+  "openapi" : "3.0.3",
+  "info" : { },
+  "servers" : [ ],
+  "paths" : {
+    "/test/test/{name}/nesty" : {
+      "put" : {
+        "tags" : [ ],
+        "summary" : "Location Test",
+        "description" : "A cool test",
+        "parameters" : [ {
+          "name" : "isCool",
+          "in" : "query",
+          "schema" : {
+            "type" : "boolean"
+          },
+          "required" : true,
+          "deprecated" : false
+        } ],
+        "requestBody" : {
+          "description" : "Cool stuff",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/SimpleRequest"
+              }
+            }
+          },
+          "required" : false
+        },
+        "responses" : {
+          "200" : {
+            "description" : "A successful endeavor",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/SimpleResponse"
+                }
+              }
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "String" : {
+        "type" : "string"
+      },
+      "SimpleRequest" : {
+        "type" : "object",
+        "properties" : {
+          "input" : {
+            "$ref" : "#/components/schemas/String"
+          }
+        }
+      },
+      "Boolean" : {
+        "type" : "boolean"
+      },
+      "SimpleResponse" : {
+        "type" : "object",
+        "properties" : {
+          "result" : {
+            "$ref" : "#/components/schemas/Boolean"
+          }
+        }
+      },
+      "SimpleLoc" : {
+        "type" : "object",
+        "properties" : {
+          "name" : {
+            "$ref" : "#/components/schemas/String"
+          }
+        }
+      }
+    },
+    "securitySchemes" : { }
+  },
+  "security" : [ ],
+  "tags" : [ ]
+}
