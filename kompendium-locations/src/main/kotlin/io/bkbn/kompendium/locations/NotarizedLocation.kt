@@ -46,7 +46,7 @@ object NotarizedLocation {
     KompendiumPreFlight.methodNotarizationPreFlight<TParam, Unit, TResp>() { paramType, requestType, responseType ->
       val locationAnnotation = TParam::class.findAnnotation<Location>()
       require(locationAnnotation != null) { "Location annotation must be present to leverage notarized location api" }
-      val path = Kompendium.calculatePath(this) // TODO Going to require custom path calculation
+      val path = Kompendium.calculatePath(this)
       val pathWithLocation = path.plus(locationAnnotation.path)
       Kompendium.openApiSpec.paths.getOrPut(pathWithLocation) { OpenApiSpecPathItem() }
       Kompendium.openApiSpec.paths[pathWithLocation]?.get = parseMethodInfo(info, paramType, requestType, responseType)
