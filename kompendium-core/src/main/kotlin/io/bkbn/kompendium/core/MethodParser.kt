@@ -95,10 +95,10 @@ object MethodParser {
   }.toMap()
 
   /**
-   * Converts a [KType] to an [OpenApiSpecRequest]
+   * Converts a [KType] to an [Request]
    * @receiver [KType] to convert
    * @param requestInfo request metadata
-   * @return Will return a generated [OpenApiSpecRequest] if requestInfo is not null
+   * @return Will return a generated [Request] if requestInfo is not null
    */
   private fun KType.toRequestSpec(requestInfo: RequestInfo<*>?): Request<*>? =
     when (requestInfo) {
@@ -112,7 +112,7 @@ object MethodParser {
     }
 
   /**
-   * Converts a [KType] to a pairing of http status code to [OpenApiSpecRequest]
+   * Converts a [KType] to a pairing of http status code to [Response]
    * @receiver [KType] to convert
    * @param responseInfo response metadata
    * @return Will return a generated [Pair] if responseInfo is not null
@@ -164,7 +164,7 @@ object MethodParser {
 
   /**
    * Parses a type for all parameter information.  All fields in the receiver
-   * must be annotated with [io.bkbn.kompendium.annotations.KompendiumParam].
+   * must be annotated with [io.bkbn.kompendium.core.annotations.KompendiumParam].
    * @receiver type
    * @return list of valid parameter specs as detailed by the [KType] members
    * @throws [IllegalStateException] if the class could not be parsed properly

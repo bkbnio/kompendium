@@ -1,5 +1,3 @@
-import org.jetbrains.dokka.gradle.DokkaTaskPartial
-
 plugins {
   id("kotlin-common-conventions")
   id("org.jetbrains.dokka")
