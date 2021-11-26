@@ -12,10 +12,10 @@ dependencies {
   testImplementation(libs.ktor.server.test.host)
 }
 
-//tasks.dokkaHtmlPartial.configure {
-//  dokkaSourceSets {
-//    configureEach {
-//      includes.from("Module.md")
-//    }
-//  }
-//}
+tasks.dokkaHtmlPartial.configure {
+  dokkaSourceSets {
+    configureEach {
+      includes.from("Module.md")
+    }
+  }
+}
