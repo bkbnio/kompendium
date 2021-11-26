@@ -4,6 +4,7 @@ plugins {
 
 dependencies {
   api(projects.kompendiumOas)
+  api(projects.kompendiumAnnotations)
   implementation(libs.jackson.module.kotlin)
   implementation(libs.bundles.ktor)
   testImplementation(libs.ktor.serialization)

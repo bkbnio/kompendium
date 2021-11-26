@@ -1,7 +1,7 @@
 package io.bkbn.kompendium.core
 
 import io.bkbn.kompendium.core.Kompendium.errorMap
-import io.bkbn.kompendium.core.annotations.KompendiumParam
+import io.bkbn.kompendium.annotations.KompendiumParam
 import io.bkbn.kompendium.core.metadata.MethodInfo
 import io.bkbn.kompendium.core.metadata.RequestInfo
 import io.bkbn.kompendium.core.metadata.ResponseInfo
@@ -164,7 +164,7 @@ object MethodParser {
 
   /**
    * Parses a type for all parameter information.  All fields in the receiver
-   * must be annotated with [io.bkbn.kompendium.core.annotations.KompendiumParam].
+   * must be annotated with [io.bkbn.kompendium.annotations.KompendiumParam].
    * @receiver type
    * @return list of valid parameter specs as detailed by the [KType] members
    * @throws [IllegalStateException] if the class could not be parsed properly

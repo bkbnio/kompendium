@@ -1,6 +1,6 @@
 package io.bkbn.kompendium.core
 
-import io.bkbn.kompendium.core.annotations.UndeclaredField
+import io.bkbn.kompendium.annotations.UndeclaredField
 import io.bkbn.kompendium.core.metadata.SchemaMap
 import io.bkbn.kompendium.core.util.Helpers.genericNameAdapter
 import io.bkbn.kompendium.core.util.Helpers.getSimpleSlug

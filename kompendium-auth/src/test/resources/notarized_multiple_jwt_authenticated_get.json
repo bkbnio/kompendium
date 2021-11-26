@@ -54,10 +54,12 @@
   "components" : {
     "securitySchemes" : {
       "jwt1" : {
+        "bearerFormat" : "JWT",
         "type" : "http",
         "scheme" : "bearer"
       },
       "jwt2" : {
+        "bearerFormat" : "JWT",
         "type" : "http",
         "scheme" : "bearer"
       }
