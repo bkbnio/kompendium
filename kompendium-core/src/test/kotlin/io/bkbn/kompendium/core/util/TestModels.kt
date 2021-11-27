@@ -1,10 +1,10 @@
 package io.bkbn.kompendium.core.util
 
 import java.util.UUID
-import io.bkbn.kompendium.core.annotations.KompendiumField
-import io.bkbn.kompendium.core.annotations.KompendiumParam
-import io.bkbn.kompendium.core.annotations.ParamType
-import io.bkbn.kompendium.core.annotations.UndeclaredField
+import io.bkbn.kompendium.annotations.KompendiumField
+import io.bkbn.kompendium.annotations.KompendiumParam
+import io.bkbn.kompendium.annotations.ParamType
+import io.bkbn.kompendium.annotations.UndeclaredField
 import java.math.BigDecimal
 import java.math.BigInteger
 

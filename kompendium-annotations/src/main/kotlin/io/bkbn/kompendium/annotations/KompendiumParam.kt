@@ -1,4 +1,4 @@
-package io.bkbn.kompendium.core.annotations
+package io.bkbn.kompendium.annotations
 
 /**
  * Used to indicate that a field in a data class represents an OpenAPI parameter
@@ -8,10 +8,3 @@ package io.bkbn.kompendium.core.annotations
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.PROPERTY)
 annotation class KompendiumParam(val type: ParamType, val description: String = "")
-
-enum class ParamType {
-  COOKIE,
-  HEADER,
-  PATH,
-  QUERY
-}

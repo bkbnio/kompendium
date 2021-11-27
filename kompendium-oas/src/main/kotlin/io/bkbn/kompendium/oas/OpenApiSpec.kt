@@ -10,7 +10,6 @@ import io.bkbn.kompendium.oas.server.Server
 data class OpenApiSpec(
   val openapi: String = "3.0.3",
   val info: Info,
-  // TODO Needs to default to server object with url of `/`
   val servers: MutableList<Server> = mutableListOf(),
   val paths: MutableMap<String, Path> = mutableMapOf(),
   val components: Components = Components(),

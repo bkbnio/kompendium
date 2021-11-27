@@ -3,8 +3,8 @@ package io.bkbn.kompendium.locations
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.databind.SerializationFeature
 import io.bkbn.kompendium.core.Kompendium
-import io.bkbn.kompendium.core.annotations.KompendiumParam
-import io.bkbn.kompendium.core.annotations.ParamType
+import io.bkbn.kompendium.annotations.KompendiumParam
+import io.bkbn.kompendium.annotations.ParamType
 import io.bkbn.kompendium.core.metadata.MethodInfo
 import io.bkbn.kompendium.core.metadata.RequestInfo
 import io.bkbn.kompendium.core.metadata.ResponseInfo

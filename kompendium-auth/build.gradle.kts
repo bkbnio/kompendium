@@ -11,3 +11,11 @@ dependencies {
   testImplementation(libs.jackson.module.kotlin)
   testImplementation(libs.ktor.server.test.host)
 }
+
+tasks.dokkaHtmlPartial.configure {
+  dokkaSourceSets {
+    configureEach {
+      includes.from("Module.md")
+    }
+  }
+}

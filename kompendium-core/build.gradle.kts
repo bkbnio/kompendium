@@ -4,10 +4,19 @@ plugins {
 
 dependencies {
   api(projects.kompendiumOas)
+  api(projects.kompendiumAnnotations)
   implementation(libs.jackson.module.kotlin)
   implementation(libs.bundles.ktor)
   testImplementation(libs.ktor.serialization)
   testImplementation(libs.kotlinx.serialization.json)
   testImplementation(libs.ktor.jackson)
   testImplementation(libs.ktor.server.test.host)
+}
+
+tasks.dokkaHtmlPartial.configure {
+  dokkaSourceSets {
+    configureEach {
+      includes.from("Module.md")
+    }
+  }
 }

@@ -51,6 +51,7 @@ tasks.withType<KotlinCompile>().configureEach {
   sourceCompatibility = "11"
   kotlinOptions {
     jvmTarget = "11"
+    freeCompilerArgs = freeCompilerArgs + listOf("-opt-in=kotlin.RequiresOptIn")
   }
 }
 

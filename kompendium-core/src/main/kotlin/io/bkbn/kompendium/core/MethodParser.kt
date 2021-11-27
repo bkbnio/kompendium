@@ -1,7 +1,7 @@
 package io.bkbn.kompendium.core
 
 import io.bkbn.kompendium.core.Kompendium.errorMap
-import io.bkbn.kompendium.core.annotations.KompendiumParam
+import io.bkbn.kompendium.annotations.KompendiumParam
 import io.bkbn.kompendium.core.metadata.MethodInfo
 import io.bkbn.kompendium.core.metadata.RequestInfo
 import io.bkbn.kompendium.core.metadata.ResponseInfo
@@ -95,10 +95,10 @@ object MethodParser {
   }.toMap()
 
   /**
-   * Converts a [KType] to an [OpenApiSpecRequest]
+   * Converts a [KType] to an [Request]
    * @receiver [KType] to convert
    * @param requestInfo request metadata
-   * @return Will return a generated [OpenApiSpecRequest] if requestInfo is not null
+   * @return Will return a generated [Request] if requestInfo is not null
    */
   private fun KType.toRequestSpec(requestInfo: RequestInfo<*>?): Request<*>? =
     when (requestInfo) {
@@ -112,7 +112,7 @@ object MethodParser {
     }
 
   /**
-   * Converts a [KType] to a pairing of http status code to [OpenApiSpecRequest]
+   * Converts a [KType] to a pairing of http status code to [Response]
    * @receiver [KType] to convert
    * @param responseInfo response metadata
    * @return Will return a generated [Pair] if responseInfo is not null

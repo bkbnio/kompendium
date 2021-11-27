@@ -1,5 +1,6 @@
 rootProject.name = "kompendium"
 
+include("kompendium-annotations")
 include("kompendium-core")
 include("kompendium-oas")
 include("kompendium-auth")
