@@ -14,6 +14,7 @@
 - `buildSrc` introduced to handle a lot of build logic
 - Minimum supported Java version is now 11
 - Bumped Kotlin to 1.6
+- Annotations now live in a separate module.  (Should not impact end users as module is imported as api dependency by core).
 
 ### Remove
 

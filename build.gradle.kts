@@ -41,6 +41,10 @@ tasks.dokkaHtmlMultiModule.configure {
   val version = project.version.toString()
   outputDirectory.set(rootDir.resolve("dokka/$version"))
 
+  dependencies {
+    dokkaPlugin("org.jetbrains.dokka:versioning-plugin:1.6.0")
+  }
+
   pluginConfiguration<org.jetbrains.dokka.versioning.VersioningPlugin, org.jetbrains.dokka.versioning.VersioningConfiguration> {
     setVersion(version)
     olderVersionsDir = rootDir.resolve("dokka")
