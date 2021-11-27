@@ -22,6 +22,7 @@ nexusPublishing {
   }
 }
 
+// Here down is exclusively to support Dokka... hope they streamline this in future -__-
 version = run {
   val baseVersion =
     project.findProperty("project.version") ?: error("project.version needs to be set in gradle.properties")
