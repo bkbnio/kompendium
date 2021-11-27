@@ -49,6 +49,14 @@ tasks.dokkaHtmlMultiModule.configure {
     setVersion(version)
     olderVersionsDir = rootDir.resolve("dokka")
   }
+
+  finalizedBy(generateDokkaHomePage)
+}
+
+val generateDokkaHomePage by tasks.register("generateDokkaHomePage") {
+  val version = project.version.toString()
+  val path = rootDir.resolve("dokka/index.html")
+  path.writeText("<meta http-equiv=\"refresh\" content=\"0; url=./$version\" />\n")
 }
 
 repositories {
