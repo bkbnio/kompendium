@@ -1,6 +1,7 @@
 plugins {
   id("io.github.gradle-nexus.publish-plugin") version "1.1.0"
   id("com.github.jakemarsden.git-hooks") version "0.0.2"
+  id("org.jetbrains.kotlinx.kover") version "0.4.2"
   id("org.jetbrains.dokka")
 }
 
@@ -20,6 +21,17 @@ nexusPublishing {
       snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
     }
   }
+}
+
+kover {
+  isEnabled = true
+  coverageEngine.set(kotlinx.kover.api.CoverageEngine.JACOCO)
+  jacocoEngineVersion.set("0.8.7")
+  generateReportOnCheck.set(true)
+}
+
+tasks.koverCollectReports {
+  outputDir.set(layout.buildDirectory.dir("my-reports-dir") )
 }
 
 // Here down is exclusively to support Dokka... hope they streamline this in future -__-

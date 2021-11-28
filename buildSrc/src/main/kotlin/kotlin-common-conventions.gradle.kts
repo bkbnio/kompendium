@@ -6,7 +6,6 @@ plugins {
   id("io.gitlab.arturbosch.detekt")
   id("com.adarshr.test-logger")
   idea
-  jacoco
 }
 
 group = "io.bkbn"
@@ -37,21 +36,6 @@ testing {
         implementation("io.kotest:kotest-assertions-json-jvm:$kotestVersion")
       }
     }
-  }
-}
-
-jacoco {
-  toolVersion = "0.8.7"
-}
-
-tasks.withType<Test>() {
-  finalizedBy(tasks.withType(JacocoReport::class))
-}
-
-tasks.withType<JacocoReport>() {
-  reports {
-    html.required.set(true)
-    xml.required.set(true)
   }
 }
 
