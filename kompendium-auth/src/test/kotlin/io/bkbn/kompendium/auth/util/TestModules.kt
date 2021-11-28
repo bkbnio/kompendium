@@ -1,39 +1,51 @@
 package io.bkbn.kompendium.auth.util
 
-import com.fasterxml.jackson.annotation.JsonInclude
-import com.fasterxml.jackson.databind.SerializationFeature
 import io.bkbn.kompendium.auth.KompendiumAuth.notarizedBasic
 import io.bkbn.kompendium.auth.KompendiumAuth.notarizedJwt
-import io.bkbn.kompendium.auth.util.TestData.testGetInfo
-import io.bkbn.kompendium.core.Kompendium
+import io.bkbn.kompendium.auth.KompendiumAuth.notarizedOAuth
 import io.bkbn.kompendium.core.Notarized.notarizedGet
-import io.bkbn.kompendium.core.routes.openApi
-import io.bkbn.kompendium.core.routes.redoc
+import io.bkbn.kompendium.core.TestParams
+import io.bkbn.kompendium.core.TestResponse
+import io.bkbn.kompendium.core.TestResponseInfo
+import io.bkbn.kompendium.core.metadata.MethodInfo
+import io.bkbn.kompendium.oas.security.OAuth
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.auth.Authentication
+import io.ktor.auth.OAuthServerSettings
 import io.ktor.auth.UserIdPrincipal
 import io.ktor.auth.authenticate
-import io.ktor.features.ContentNegotiation
-import io.ktor.http.ContentType
-import io.ktor.jackson.jackson
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.cio.CIO
+import io.ktor.http.HttpMethod
 import io.ktor.response.respondText
 import io.ktor.routing.route
 import io.ktor.routing.routing
 
-fun Application.configModule() {
-  install(ContentNegotiation) {
-    jackson(ContentType.Application.Json) {
-      enable(SerializationFeature.INDENT_OUTPUT)
-      setSerializationInclusion(JsonInclude.Include.NON_NULL)
+fun Application.setupOauth(flows: OAuth.Flows) {
+  install(Authentication) {
+    notarizedOAuth(flows, "oauth") {
+      urlProvider = { "http://localhost:8080/callback" }
+      client = HttpClient(CIO)
+      providerLookup = {
+        OAuthServerSettings.OAuth2ServerSettings(
+          name = "google",
+          authorizeUrl = "https://accounts.google.com/o/oauth2/auth",
+          accessTokenUrl = "https://accounts.google.com/o/oauth2/token",
+          requestMethod = HttpMethod.Post,
+          clientId = System.getenv("GOOGLE_CLIENT_ID"),
+          clientSecret = System.getenv("GOOGLE_CLIENT_SECRET"),
+          defaultScopes = listOf("https://www.googleapis.com/auth/userinfo.profile")
+        )
+      }
     }
   }
 }
 
 fun Application.configBasicAuth() {
   install(Authentication) {
-    notarizedBasic(TestData.AuthConfigName.Basic) {
+    notarizedBasic(AuthConfigName.Basic) {
       realm = "Ktor Server"
       validate { credentials ->
         if (credentials.name == credentials.password) {
@@ -50,7 +62,7 @@ fun Application.configJwtAuth(
   bearerFormat: String? = null
 ) {
   install(Authentication) {
-    notarizedJwt(TestData.AuthConfigName.JWT, bearerFormat) {
+    notarizedJwt(AuthConfigName.JWT, bearerFormat) {
       realm = "Ktor server"
     }
   }
@@ -59,7 +71,7 @@ fun Application.configJwtAuth(
 fun Application.notarizedAuthenticatedGetModule(vararg authenticationConfigName: String) {
   routing {
     authenticate(*authenticationConfigName) {
-      route(TestData.getRoutePath) {
+      route("/test") {
         notarizedGet(testGetInfo(*authenticationConfigName)) {
           call.respondText { "hey dude ‼️ congratz on the get request" }
         }
@@ -68,10 +80,15 @@ fun Application.notarizedAuthenticatedGetModule(vararg authenticationConfigName:
   }
 }
 
-fun Application.docs() {
-  routing {
-    val oas = Kompendium.openApiSpec.copy()
-    openApi(oas)
-    redoc(oas)
-  }
+fun testGetInfo(vararg security: String) =
+  MethodInfo.GetInfo<TestParams, TestResponse>(
+    summary = "Another get test",
+    description = "testing more",
+    responseInfo = TestResponseInfo.testGetResponse,
+    securitySchemes = security.toSet()
+  )
+
+object AuthConfigName {
+  const val Basic = "basic"
+  const val JWT = "jwt"
 }

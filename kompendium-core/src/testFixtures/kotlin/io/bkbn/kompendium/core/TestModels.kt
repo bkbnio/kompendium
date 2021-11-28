@@ -1,4 +1,4 @@
-package io.bkbn.kompendium.core.util
+package io.bkbn.kompendium.core
 
 import java.util.UUID
 import io.bkbn.kompendium.annotations.KompendiumField
@@ -27,8 +27,8 @@ data class TestSimpleWithEnumList(val a: Double, val b: List<SimpleEnum>)
 data class TestInvalidMap(val a: Map<Int, TestSimpleModel>)
 
 data class TestParams(
-    @KompendiumParam(ParamType.PATH) val a: String,
-    @KompendiumParam(ParamType.QUERY) val aa: Int
+  @KompendiumParam(ParamType.PATH) val a: String,
+  @KompendiumParam(ParamType.QUERY) val aa: Int
 )
 
 data class TestNested(val nesty: String)
@@ -70,16 +70,16 @@ enum class SimpleEnum {
 }
 
 data class DefaultParameter(
-    @KompendiumParam(ParamType.QUERY) val a: Int = 100,
-    @KompendiumParam(ParamType.PATH) val b: String?,
-    @KompendiumParam(ParamType.PATH) val c: Boolean
+  @KompendiumParam(ParamType.QUERY) val a: Int = 100,
+  @KompendiumParam(ParamType.PATH) val b: String?,
+  @KompendiumParam(ParamType.PATH) val c: Boolean
 )
 
 data class ExceptionResponse(val message: String)
 
 data class OptionalParams(
-    @KompendiumParam(ParamType.QUERY) val required: String,
-    @KompendiumParam(ParamType.QUERY) val notRequired: String?
+  @KompendiumParam(ParamType.QUERY) val required: String,
+  @KompendiumParam(ParamType.QUERY) val notRequired: String?
 )
 
 sealed class FlibbityGibbit

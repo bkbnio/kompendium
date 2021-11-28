@@ -1,40 +1,19 @@
 package io.bkbn.kompendium.locations.util
 
-import com.fasterxml.jackson.annotation.JsonInclude
-import com.fasterxml.jackson.databind.SerializationFeature
-import io.bkbn.kompendium.core.routes.openApi
-import io.bkbn.kompendium.core.routes.redoc
 import io.bkbn.kompendium.locations.NotarizedLocation.notarizedDelete
 import io.bkbn.kompendium.locations.NotarizedLocation.notarizedGet
 import io.bkbn.kompendium.locations.NotarizedLocation.notarizedPost
 import io.bkbn.kompendium.locations.NotarizedLocation.notarizedPut
-import io.bkbn.kompendium.locations.util.TestData.oas
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
-import io.ktor.features.ContentNegotiation
-import io.ktor.http.ContentType
-import io.ktor.jackson.jackson
 import io.ktor.locations.Locations
 import io.ktor.response.respondText
 import io.ktor.routing.route
 import io.ktor.routing.routing
 
-fun Application.configModule() {
-  install(ContentNegotiation) {
-    jackson(ContentType.Application.Json) {
-      enable(SerializationFeature.INDENT_OUTPUT)
-      setSerializationInclusion(JsonInclude.Include.NON_NULL)
-    }
-  }
+fun Application.locationsConfig() {
   install(Locations)
-}
-
-fun Application.docs() {
-  routing {
-    openApi(oas())
-    redoc(oas())
-  }
 }
 
 fun Application.notarizedGetSimpleLocation() {
