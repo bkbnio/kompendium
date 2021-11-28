@@ -7,10 +7,21 @@ dependencies {
   api(projects.kompendiumAnnotations)
   implementation(libs.jackson.module.kotlin)
   implementation(libs.bundles.ktor)
-  testImplementation(libs.ktor.serialization)
-  testImplementation(libs.kotlinx.serialization.json)
-  testImplementation(libs.ktor.jackson)
-  testImplementation(libs.ktor.server.test.host)
+
+}
+
+testing {
+  suites {
+    val test by getting(JvmTestSuite::class) {
+      dependencies {
+        implementation("io.kotest:kotest-assertions-ktor-jvm:4.4.3")
+        implementation(libs.ktor.serialization)
+        implementation(libs.kotlinx.serialization.json)
+        implementation(libs.ktor.jackson)
+        implementation(libs.ktor.server.test.host)
+      }
+    }
+  }
 }
 
 buildscript {
