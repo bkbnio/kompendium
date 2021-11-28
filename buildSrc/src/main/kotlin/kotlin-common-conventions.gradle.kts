@@ -6,7 +6,7 @@ plugins {
   id("io.gitlab.arturbosch.detekt")
   id("com.adarshr.test-logger")
   idea
-  jacoco
+//  jacoco
 }
 
 group = "io.bkbn"
@@ -40,20 +40,20 @@ testing {
   }
 }
 
-jacoco {
-  toolVersion = "0.8.7"
-}
-
-tasks.withType<Test>() {
-  finalizedBy(tasks.withType(JacocoReport::class))
-}
-
-tasks.withType<JacocoReport>() {
-  reports {
-    html.required.set(true)
-    xml.required.set(true)
-  }
-}
+//jacoco {
+//  toolVersion = "0.8.7"
+//}
+//
+//tasks.withType<Test>() {
+//  finalizedBy(tasks.withType(JacocoReport::class))
+//}
+//
+//tasks.withType<JacocoReport>() {
+//  reports {
+//    html.required.set(true)
+//    xml.required.set(true)
+//  }
+//}
 
 tasks.withType<KotlinCompile>().configureEach {
   sourceCompatibility = "11"
