@@ -10,6 +10,9 @@ import io.bkbn.kompendium.core.Notarized.notarizedPut
 import io.bkbn.kompendium.core.metadata.MethodInfo
 import io.bkbn.kompendium.core.metadata.RequestInfo
 import io.bkbn.kompendium.core.metadata.ResponseInfo
+import io.bkbn.kompendium.core.routes.openApi
+import io.bkbn.kompendium.core.routes.redoc
+import io.bkbn.kompendium.core.util.TestHelpers.oas
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
@@ -379,5 +382,12 @@ fun Application.simpleGenericResponse() {
         call.respond(HttpStatusCode.OK, Gibbity("hey"))
       }
     }
+  }
+}
+
+fun Application.docs() {
+  routing {
+    openApi(oas())
+    redoc(oas())
   }
 }

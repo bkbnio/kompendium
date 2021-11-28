@@ -5,8 +5,8 @@ import io.bkbn.kompendium.annotations.KompendiumParam
 import io.bkbn.kompendium.annotations.ParamType
 
 data class TestParams(
-    @KompendiumParam(ParamType.PATH) val a: String,
-    @KompendiumParam(ParamType.QUERY) val aa: Int
+  @KompendiumParam(ParamType.PATH) val a: String,
+  @KompendiumParam(ParamType.QUERY) val aa: Int
 )
 
 data class TestRequest(

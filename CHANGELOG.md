@@ -15,6 +15,7 @@
 - Minimum supported Java version is now 11
 - Bumped Kotlin to 1.6
 - Annotations now live in a separate module.  (Should not impact end users as module is imported as api dependency by core).
+- Kotest as the testing framework of choice
 
 ### Remove
 
