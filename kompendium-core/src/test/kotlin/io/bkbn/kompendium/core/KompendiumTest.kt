@@ -1,18 +1,13 @@
 package io.bkbn.kompendium.core
 
-import io.ktor.http.HttpMethod
-import io.ktor.http.HttpStatusCode
-import io.ktor.server.testing.handleRequest
-import io.ktor.server.testing.withTestApplication
-import io.bkbn.kompendium.core.TestHelpers.OPEN_API_ENDPOINT
-import io.bkbn.kompendium.core.TestHelpers.compareOpenAPISpec
+import io.bkbn.kompendium.core.TestHelpers.apiFunctionalityTest
 import io.bkbn.kompendium.core.TestHelpers.getFileSnapshot
+import io.bkbn.kompendium.core.TestHelpers.openApiTest
 import io.bkbn.kompendium.core.util.complexType
 import io.bkbn.kompendium.core.util.emptyGet
 import io.bkbn.kompendium.core.util.genericPolymorphicResponse
 import io.bkbn.kompendium.core.util.genericPolymorphicResponseMultipleImpls
 import io.bkbn.kompendium.core.util.headerParameter
-import io.bkbn.kompendium.core.util.kotlinxConfigModule
 import io.bkbn.kompendium.core.util.nestedUnderRootModule
 import io.bkbn.kompendium.core.util.nonRequiredParamsGet
 import io.bkbn.kompendium.core.util.notarizedDeleteModule
@@ -37,448 +32,168 @@ import io.bkbn.kompendium.core.util.undeclaredType
 import io.bkbn.kompendium.core.util.withDefaultParameter
 import io.bkbn.kompendium.core.util.withExamples
 import io.bkbn.kompendium.core.util.withOperationId
-import io.kotest.assertions.json.shouldEqualJson
-import io.kotest.assertions.ktor.shouldHaveStatus
 import io.kotest.core.spec.style.DescribeSpec
-import io.kotest.matchers.shouldBe
-import io.kotest.matchers.shouldNotBe
+import io.ktor.http.HttpMethod
+import io.ktor.http.HttpStatusCode
 
 class KompendiumTest : DescribeSpec({
   afterEach { Kompendium.resetSchema() }
   describe("Notarized Open API Metadata Tests") {
     it("Can notarize a get request") {
-      // arrange
-      withTestApplication({
-        kotlinxConfigModule()
-        docs()
-        notarizedGetModule()
-      }) {
-        // act
-        compareOpenAPISpec("notarized_get.json")
-      }
+      // act
+      openApiTest("notarized_get.json") { notarizedGetModule() }
     }
     it("Can notarize a post request") {
-      // arrange
-      withTestApplication({
-        jacksonConfigModule()
-        docs()
-        notarizedPostModule()
-      }) {
-        // act
-        compareOpenAPISpec("notarized_post.json")
-      }
+      // act
+      openApiTest("notarized_post.json") { notarizedPostModule() }
     }
     it("Can notarize a put request") {
-      // arrange
-      withTestApplication({
-        jacksonConfigModule()
-        docs()
-        notarizedPutModule()
-      }) {
-        // act
-        compareOpenAPISpec("notarized_put.json")
-      }
+      // act
+      openApiTest("notarized_put.json") { notarizedPutModule() }
     }
     it("Can notarize a delete request") {
-      // arrange
-      withTestApplication({
-        jacksonConfigModule()
-        docs()
-        notarizedDeleteModule()
-      }) {
-        // act
-        compareOpenAPISpec("notarized_delete.json")
-      }
+      // act
+      openApiTest("notarized_delete.json") { notarizedDeleteModule() }
     }
     it("Can notarize a complex type") {
-      // arrange
-      withTestApplication({
-        jacksonConfigModule()
-        docs()
-        complexType()
-      }) {
-        // act
-        compareOpenAPISpec("complex_type.json")
-      }
+      // act
+      openApiTest("complex_type.json") { complexType() }
     }
     it("Can notarize primitives") {
-      // arrange
-      withTestApplication({
-        jacksonConfigModule()
-        docs()
-        primitives()
-      }) {
-        // act
-        compareOpenAPISpec("notarized_primitives.json")
-      }
+      // act
+      openApiTest("notarized_primitives.json") { primitives() }
     }
     it("Can notarize a top level list response") {
-      // arrange
-      withTestApplication({
-        jacksonConfigModule()
-        docs()
-        returnsList()
-      }) {
-        // act
-        compareOpenAPISpec("response_list.json")
-      }
+      // act
+      openApiTest("response_list.json") { returnsList() }
     }
     it("Can notarize a route with no request params and no response body") {
-      // arrange
-      withTestApplication({
-        kotlinxConfigModule()
-        docs()
-        emptyGet()
-      }) {
-        // act
-        compareOpenAPISpec("no_request_params_and_no_response_body.json")
-      }
+      // act
+      openApiTest("no_request_params_and_no_response_body.json") { emptyGet() }
     }
     it("Can notarize a route with non-required params") {
-      // arrange
-      withTestApplication({
-        jacksonConfigModule()
-        docs()
-        nonRequiredParamsGet()
-      }) {
-        // act
-        compareOpenAPISpec("non_required_params.json")
-      }
+      // act
+      openApiTest("non_required_params.json") { nonRequiredParamsGet() }
     }
   }
   describe("Notarized Ktor Functionality Tests") {
     it("Can notarized a get request and return the expected result") {
-      withTestApplication({
-        jacksonConfigModule()
-        docs()
-        notarizedGetModule()
-      }) {
-        // arrange
-        val expected = "hey dude ‼️ congratz on the get request"
-
-        // act
-        handleRequest(HttpMethod.Get, "/test").apply {
-          // assert
-          response shouldHaveStatus HttpStatusCode.OK
-          response.content shouldNotBe null
-          response.content shouldBe expected
-        }
-      }
+      // act
+      apiFunctionalityTest("hey dude ‼️ congratz on the get request") { notarizedGetModule() }
     }
     it("Can notarize a post request and return the expected result") {
-      withTestApplication({
-        kotlinxConfigModule()
-        docs()
-        notarizedPostModule()
-      }) {
-        // arrange
-        val expected = "hey dude ✌️ congratz on the post request"
-
-        // act
-        handleRequest(HttpMethod.Post, "/test").apply {
-          // assert
-          response shouldHaveStatus HttpStatusCode.OK
-          response.content shouldNotBe null
-          response.content shouldBe expected
-        }
-      }
+      // act
+      apiFunctionalityTest("hey dude ✌️ congratz on the post request", httpMethod = HttpMethod.Post) { notarizedPostModule() }
     }
     it("Can notarize a put request and return the expected result") {
-      withTestApplication({
-        kotlinxConfigModule()
-        docs()
-        notarizedPutModule()
-      }) {
-        // arrange
-        val expected = "hey pal 🌝 whatcha doin' here?"
-
-        // act
-        handleRequest(HttpMethod.Put, "/test").apply {
-          // assert
-          response shouldHaveStatus HttpStatusCode.OK
-          response.content shouldNotBe null
-          response.content shouldBe expected
-        }
-      }
+      // act
+      apiFunctionalityTest("hey pal 🌝 whatcha doin' here?", httpMethod = HttpMethod.Put) { notarizedPutModule() }
     }
-    it("Can notarize a put request and return the expected result") {
-      withTestApplication({
-        kotlinxConfigModule()
-        docs()
-        notarizedDeleteModule()
-      }) {
-        // act
-        handleRequest(HttpMethod.Delete, "/test").apply {
-          // assert
-          response shouldHaveStatus HttpStatusCode.NoContent
-          response.content shouldBe null
-        }
-      }
+    it("Can notarize a delete request and return the expected result") {
+      // act
+      apiFunctionalityTest(null, httpMethod = HttpMethod.Delete, expectedStatusCode = HttpStatusCode.NoContent) { notarizedDeleteModule() }
     }
     it("Can notarize the root route and return the expected result") {
-      withTestApplication({
-        kotlinxConfigModule()
-        docs()
-        rootModule()
-      }) {
-        // arrange
-        val expected = "☎️🏠🌲"
-
-        // act
-        handleRequest(HttpMethod.Get, "/").apply {
-          // assert
-          response shouldHaveStatus HttpStatusCode.OK
-          response.content shouldNotBe null
-          response.content shouldBe expected
-        }
-      }
+      // act
+      apiFunctionalityTest("☎️🏠🌲", "/") { rootModule() }
     }
     it("Can notarize a trailing slash route and return the expected result") {
-      withTestApplication({
-        jacksonConfigModule()
-        docs()
-        trailingSlash()
-      }) {
-        // arrange
-        val expected = "🙀👾"
-
-        // act
-        handleRequest(HttpMethod.Get, "/test/").apply {
-          // assert
-          response shouldHaveStatus HttpStatusCode.OK
-          response.content shouldNotBe null
-          response.content shouldBe expected
-        }
-      }
+      // act
+      apiFunctionalityTest("🙀👾", "/test/") { trailingSlash() }
     }
   }
   describe("Route Parsing") {
     it("Can parse a simple path and store it under the expected route") {
-      // arrange
-      withTestApplication({
-        jacksonConfigModule()
-        docs()
-        pathParsingTestModule()
-      }) {
-        // act
-        compareOpenAPISpec("path_parser.json")
-      }
+      // act
+      openApiTest("path_parser.json") { pathParsingTestModule() }
     }
     it("Can notarize the root route") {
-      // arrange
-      withTestApplication({
-        jacksonConfigModule()
-        docs()
-        rootModule()
-      }) {
-        // act
-        compareOpenAPISpec("root_route.json")
-      }
+      // act
+      openApiTest("root_route.json") { rootModule() }
     }
     it("Can notarize a route under the root module without appending trailing slash") {
-      // arrange
-      withTestApplication({
-        jacksonConfigModule()
-        docs()
-        nestedUnderRootModule()
-      }) {
-        // act
-        compareOpenAPISpec("nested_under_root.json")
-      }
+      // act
+      openApiTest("nested_under_root.json") { nestedUnderRootModule() }
     }
     it("Can notarize a route with a trailing slash") {
-      // arrange
-      withTestApplication({
-        jacksonConfigModule()
-        docs()
-        trailingSlash()
-      }) {
-        // act
-        compareOpenAPISpec("trailing_slash.json")
-      }
+      // act
+      openApiTest("trailing_slash.json") { trailingSlash() }
     }
   }
   describe("Exceptions") {
     it("Can notarize a throwable") {
-      // arrange
-      withTestApplication({
+      // act
+      openApiTest("notarized_get_with_exception_response.json") {
         statusPageModule()
-        jacksonConfigModule()
-        docs()
         notarizedGetWithNotarizedException()
-      }) {
-        // act
-        compareOpenAPISpec("notarized_get_with_exception_response.json")
       }
     }
     it("Can notarize multiple throwables") {
-      // arrange
-      withTestApplication({
+      // act
+      openApiTest("notarized_get_with_multiple_exception_responses.json") {
         statusPageMultiExceptions()
-        jacksonConfigModule()
-        docs()
         notarizedGetWithMultipleThrowables()
-      }) {
-        // act
-        compareOpenAPISpec("notarized_get_with_multiple_exception_responses.json")
       }
     }
   }
   describe("Examples") {
     it("Can generate example response and request bodies") {
-      // arrange
-      withTestApplication({
-        kotlinxConfigModule()
-        docs()
-        withExamples()
-      }) {
-        // act
-        compareOpenAPISpec("example_req_and_resp.json")
-      }
+      // act
+      openApiTest("example_req_and_resp.json") { withExamples() }
     }
   }
   describe("Defaults") {
     it("Can generate a default parameter values") {
-      withTestApplication({
-        jacksonConfigModule()
-        docs()
-        withDefaultParameter()
-      }) {
-        // act
-        compareOpenAPISpec("query_with_default_parameter.json")
-      }
+      // act
+      openApiTest("query_with_default_parameter.json") { withDefaultParameter() }
     }
   }
   describe("Polymorphism and Generics") {
     it("can generate a polymorphic response type") {
-      // arrange
-      withTestApplication({
-        jacksonConfigModule()
-        docs()
-        polymorphicResponse()
-      }) {
-        // act
-        compareOpenAPISpec("polymorphic_response.json")
-      }
+      // act
+      openApiTest("polymorphic_response.json") { polymorphicResponse() }
     }
     it("Can generate a collection with polymorphic response type") {
-      // arrange
-      withTestApplication({
-        jacksonConfigModule()
-        docs()
-        polymorphicCollectionResponse()
-      }) {
-        // act
-        compareOpenAPISpec("polymorphic_list_response.json")
-      }
+      // act
+      openApiTest("polymorphic_list_response.json") { polymorphicCollectionResponse() }
     }
     it("Can generate a map with a polymorphic response type") {
-      // arrange
-      withTestApplication({
-        jacksonConfigModule()
-        docs()
-        polymorphicMapResponse()
-      }) {
-        // act
-        compareOpenAPISpec("polymorphic_map_response.json")
-      }
+      // act
+      openApiTest("polymorphic_map_response.json") { polymorphicMapResponse() }
     }
     it("Can generate a polymorphic response from a sealed interface") {
-      // arrange
-      withTestApplication({
-        jacksonConfigModule()
-        docs()
-        polymorphicInterfaceResponse()
-      }) {
-        // act
-        compareOpenAPISpec("sealed_interface_response.json")
-      }
+      // act
+      openApiTest("sealed_interface_response.json") { polymorphicInterfaceResponse() }
     }
     it("Can generate a response type with a generic type") {
-      // arrange
-      withTestApplication({
-        jacksonConfigModule()
-        docs()
-        simpleGenericResponse()
-      }) {
-        // act
-        compareOpenAPISpec("generic_response.json")
-      }
+      // act
+      openApiTest("generic_response.json") { simpleGenericResponse() }
     }
     it("Can generate a polymorphic response type with generics") {
-      // arrange
-      withTestApplication({
-        jacksonConfigModule()
-        docs()
-        genericPolymorphicResponse()
-      }) {
-        // act
-        compareOpenAPISpec("polymorphic_response_with_generics.json")
-      }
+      // act
+      openApiTest("polymorphic_response_with_generics.json") { genericPolymorphicResponse() }
     }
     it("Can handle an absolutely psycho inheritance test") {
-      // arrange
-      withTestApplication({
-        kotlinxConfigModule()
-        docs()
-        genericPolymorphicResponseMultipleImpls()
-      }) {
-        // act
-        compareOpenAPISpec("crazy_polymorphic_example.json")
-      }
+      // act
+      openApiTest("crazy_polymorphic_example.json") { genericPolymorphicResponseMultipleImpls() }
     }
   }
   describe("Miscellaneous") {
     it("Can generate the necessary ReDoc home page") {
-      withTestApplication({
-        jacksonConfigModule()
-        docs()
-        returnsList()
-      }) {
-        // arrange
-        val expected = getFileSnapshot("redoc.html")
-
-        // act
-        handleRequest(HttpMethod.Get, "/docs").apply {
-          // assert
-          response shouldHaveStatus HttpStatusCode.OK
-          response.content shouldNotBe null
-          response.content shouldBe expected
-        }
-      }
+      // act
+      apiFunctionalityTest(getFileSnapshot("redoc.html"), "/docs") { returnsList() }
     }
     it("Can add an operation id to a notarized route") {
-      // arrange
-      withTestApplication({
-        jacksonConfigModule()
-        docs()
-        withOperationId()
-      }) {
-        // act
-        compareOpenAPISpec("notarized_get_with_operation_id.json")
-      }
+      // act
+      openApiTest("notarized_get_with_operation_id.json") { withOperationId() }
     }
     it("Can add an undeclared field") {
-      // arrange
-      withTestApplication({
-        kotlinxConfigModule()
-        docs()
-        undeclaredType()
-      }) {
-        // act
-        compareOpenAPISpec("undeclared_field.json")
-      }
+      // act
+      openApiTest("undeclared_field.json") { undeclaredType() }
     }
     it("Can add a custom header parameter with a name override") {
-      // arrange
-      withTestApplication({
-        jacksonConfigModule()
-        docs()
-        headerParameter()
-      }) {
-        // act
-        compareOpenAPISpec("override_parameter_name.json")
-      }
+      // act
+      openApiTest("override_parameter_name.json") { headerParameter() }
     }
   }
 })
