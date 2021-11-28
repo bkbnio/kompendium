@@ -3,6 +3,7 @@ package io.bkbn.kompendium.locations
 import io.bkbn.kompendium.core.Kompendium
 import io.bkbn.kompendium.core.KompendiumPreFlight
 import io.bkbn.kompendium.core.MethodParser.parseMethodInfo
+import io.bkbn.kompendium.core.Notarized.calculatePath
 import io.bkbn.kompendium.core.metadata.MethodInfo
 import io.bkbn.kompendium.oas.path.Path
 import io.ktor.application.ApplicationCall
@@ -39,7 +40,7 @@ object NotarizedLocation {
     KompendiumPreFlight.methodNotarizationPreFlight<TParam, Unit, TResp>() { paramType, requestType, responseType ->
       val locationAnnotation = TParam::class.findAnnotation<Location>()
       require(locationAnnotation != null) { "Location annotation must be present to leverage notarized location api" }
-      val path = Kompendium.calculatePath(this)
+      val path = calculatePath()
       val locationPath = TParam::class.calculatePath()
       val pathWithLocation = path.plus(locationPath)
       Kompendium.openApiSpec.paths.getOrPut(pathWithLocation) { Path() }
@@ -65,7 +66,7 @@ object NotarizedLocation {
     KompendiumPreFlight.methodNotarizationPreFlight<TParam, TReq, TResp>() { paramType, requestType, responseType ->
       val locationAnnotation = TParam::class.findAnnotation<Location>()
       require(locationAnnotation != null) { "Location annotation must be present to leverage notarized location api" }
-      val path = Kompendium.calculatePath(this)
+      val path = calculatePath()
       val locationPath = TParam::class.calculatePath()
       val pathWithLocation = path.plus(locationPath)
       Kompendium.openApiSpec.paths.getOrPut(pathWithLocation) { Path() }
@@ -91,7 +92,7 @@ object NotarizedLocation {
     KompendiumPreFlight.methodNotarizationPreFlight<TParam, TReq, TResp>() { paramType, requestType, responseType ->
       val locationAnnotation = TParam::class.findAnnotation<Location>()
       require(locationAnnotation != null) { "Location annotation must be present to leverage notarized location api" }
-      val path = Kompendium.calculatePath(this)
+      val path = calculatePath()
       val locationPath = TParam::class.calculatePath()
       val pathWithLocation = path.plus(locationPath)
       Kompendium.openApiSpec.paths.getOrPut(pathWithLocation) { Path() }
@@ -117,7 +118,7 @@ object NotarizedLocation {
     KompendiumPreFlight.methodNotarizationPreFlight<TParam, Unit, TResp> { paramType, requestType, responseType ->
       val locationAnnotation = TParam::class.findAnnotation<Location>()
       require(locationAnnotation != null) { "Location annotation must be present to leverage notarized location api" }
-      val path = Kompendium.calculatePath(this)
+      val path = calculatePath()
       val locationPath = TParam::class.calculatePath()
       val pathWithLocation = path.plus(locationPath)
       Kompendium.openApiSpec.paths.getOrPut(pathWithLocation) { Path() }

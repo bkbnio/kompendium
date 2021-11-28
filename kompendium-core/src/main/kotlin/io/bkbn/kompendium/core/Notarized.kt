@@ -36,7 +36,7 @@ object Notarized {
     noinline body: PipelineInterceptor<Unit, ApplicationCall>
   ): Route =
     KompendiumPreFlight.methodNotarizationPreFlight<TParam, Unit, TResp>() { paramType, requestType, responseType ->
-      val path = Kompendium.calculatePath(this)
+      val path = calculatePath()
       Kompendium.openApiSpec.paths.getOrPut(path) { Path() }
       Kompendium.openApiSpec.paths[path]?.get = parseMethodInfo(info, paramType, requestType, responseType)
       return method(HttpMethod.Get) { handle(body) }
@@ -55,7 +55,7 @@ object Notarized {
     noinline body: PipelineInterceptor<Unit, ApplicationCall>
   ): Route =
     KompendiumPreFlight.methodNotarizationPreFlight<TParam, TReq, TResp>() { paramType, requestType, responseType ->
-      val path = Kompendium.calculatePath(this)
+      val path = calculatePath()
       Kompendium.openApiSpec.paths.getOrPut(path) { Path() }
       Kompendium.openApiSpec.paths[path]?.post = parseMethodInfo(info, paramType, requestType, responseType)
       return method(HttpMethod.Post) { handle(body) }
@@ -74,7 +74,7 @@ object Notarized {
     noinline body: PipelineInterceptor<Unit, ApplicationCall>,
   ): Route =
     KompendiumPreFlight.methodNotarizationPreFlight<TParam, TReq, TResp>() { paramType, requestType, responseType ->
-      val path = Kompendium.calculatePath(this)
+      val path = calculatePath()
       Kompendium.openApiSpec.paths.getOrPut(path) { Path() }
       Kompendium.openApiSpec.paths[path]?.put =
         parseMethodInfo(info, paramType, requestType, responseType)
@@ -93,7 +93,7 @@ object Notarized {
     noinline body: PipelineInterceptor<Unit, ApplicationCall>
   ): Route =
     KompendiumPreFlight.methodNotarizationPreFlight<TParam, Unit, TResp> { paramType, requestType, responseType ->
-      val path = Kompendium.calculatePath(this)
+      val path = calculatePath()
       Kompendium.openApiSpec.paths.getOrPut(path) { Path() }
       Kompendium.openApiSpec.paths[path]?.delete = parseMethodInfo(info, paramType, requestType, responseType)
       return method(HttpMethod.Delete) { handle(body) }
@@ -112,4 +112,10 @@ object Notarized {
     info.parseErrorInfo(errorType, responseType)
     exception(handler)
   }
+
+  /**
+   * Uses the built-in Ktor route path [Route.toString] but cuts out any meta route such as authentication... anything
+   * that matches the RegEx pattern `/\\(.+\\)`
+   */
+  fun Route.calculatePath() = toString().replace(Regex("/\\(.+\\)"), "")
 }

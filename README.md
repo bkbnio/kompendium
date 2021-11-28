@@ -158,34 +158,6 @@ routing {
 }
 ```
 
-### Route Handling
-
-> ⚠️ Warning: Custom route handling is almost definitely an indication that either a new selector should be added to kompendium-core or that kompendium is in need of another module to handle a new ktor companion module. If you have encountered a route selector that is not already handled, please consider opening an [issue](https://github.com/bkbnio/kompendium/issues/new)
-
-Kompendium does its best to handle all Ktor routes out of the gate. However, in keeping with the modular approach of
-Ktor and Kompendium, this is not always possible.
-
-Should you need to, custom route handlers can be registered via the
-`Kompendium.addCustomRouteHandler` function.
-
-The handler signature is as follows
-
-```kotlin
-fun <T : RouteSelector> addCustomRouteHandler(
-  selector: KClass<T>,
-  handler: PathCalculator.(Route, String) -> String
-)
-```
-
-This function takes a selector, which _must_ be a KClass of the Ktor `RouteSelector` type. The handler is a function
-that extends the Kompendium `PathCalculator`. This is necessary because it gives you access
-to `PathCalculator.calculate`, which you are going to want in order to recursively calculate the remainder of the
-route :)
-
-Its parameters are the `Route` itself, along with the "tail" of the Path (the path that has been calculated thus far).
-
-Working examples `init` blocks of the `PathCalculator` and `KompendiumAuth` object.
-
 ### Ktor Locations Plugin
 
 Kompendium offers integration with the Ktor [Locations](https://ktor.io/docs/locations.html) plugin via an optional
