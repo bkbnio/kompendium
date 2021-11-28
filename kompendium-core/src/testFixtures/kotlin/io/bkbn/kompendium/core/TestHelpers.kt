@@ -1,10 +1,16 @@
-package io.bkbn.kompendium.core.util
+package io.bkbn.kompendium.core
 
-import io.bkbn.kompendium.core.Kompendium
 import io.bkbn.kompendium.oas.info.Contact
 import io.bkbn.kompendium.oas.info.Info
 import io.bkbn.kompendium.oas.info.License
 import io.bkbn.kompendium.oas.server.Server
+import io.kotest.assertions.json.shouldEqualJson
+import io.kotest.assertions.ktor.shouldHaveStatus
+import io.kotest.matchers.shouldNotBe
+import io.ktor.http.HttpMethod
+import io.ktor.http.HttpStatusCode
+import io.ktor.server.testing.TestApplicationEngine
+import io.ktor.server.testing.handleRequest
 import java.io.File
 import java.net.URI
 
@@ -45,4 +51,14 @@ object TestHelpers {
       )
     )
   )
+
+  fun TestApplicationEngine.compareOpenAPISpec(snapshotName: String) {
+    // act
+    handleRequest(HttpMethod.Get, OPEN_API_ENDPOINT).apply {
+      // assert
+      response shouldHaveStatus HttpStatusCode.OK
+      response.content shouldNotBe null
+      response.content!! shouldEqualJson getFileSnapshot(snapshotName)
+    }
+  }
 }

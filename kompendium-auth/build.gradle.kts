@@ -3,17 +3,17 @@ plugins {
 }
 
 dependencies {
+  implementation(projects.kompendiumCore)
   implementation(libs.bundles.ktor)
   implementation(libs.bundles.ktorAuth)
-  implementation(projects.kompendiumCore)
+
+  testImplementation(testFixtures(projects.kompendiumCore))
 }
 
 testing {
   suites {
     val test by getting(JvmTestSuite::class) {
       dependencies {
-        implementation(libs.ktor.jackson)
-        implementation(libs.jackson.module.kotlin)
         implementation("io.kotest:kotest-assertions-ktor-jvm:4.4.3")
         implementation("io.ktor:ktor-server-test-host:1.6.5")
       }

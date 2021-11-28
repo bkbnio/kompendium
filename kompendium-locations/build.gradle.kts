@@ -3,9 +3,11 @@ plugins {
 }
 
 dependencies {
+  implementation(projects.kompendiumCore)
   implementation(libs.bundles.ktor)
   implementation(libs.ktor.locations)
-  implementation(projects.kompendiumCore)
+
+  testImplementation(testFixtures(projects.kompendiumCore))
 }
 
 testing {
@@ -15,7 +17,6 @@ testing {
         implementation("io.kotest:kotest-assertions-ktor-jvm:4.4.3")
         implementation(libs.ktor.serialization)
         implementation(libs.kotlinx.serialization.json)
-        implementation(libs.ktor.jackson)
         implementation(libs.ktor.server.test.host)
       }
     }

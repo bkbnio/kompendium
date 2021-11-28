@@ -1,39 +1,35 @@
 package io.bkbn.kompendium.core.util
 
-import com.fasterxml.jackson.annotation.JsonInclude
-import com.fasterxml.jackson.databind.SerializationFeature
+import io.bkbn.kompendium.core.Bibbity
+import io.bkbn.kompendium.core.ComplexGibbit
+import io.bkbn.kompendium.core.DefaultParameter
+import io.bkbn.kompendium.core.ExceptionResponse
+import io.bkbn.kompendium.core.Gibbity
+import io.bkbn.kompendium.core.Mysterious
 import io.bkbn.kompendium.core.Notarized.notarizedDelete
 import io.bkbn.kompendium.core.Notarized.notarizedException
 import io.bkbn.kompendium.core.Notarized.notarizedGet
 import io.bkbn.kompendium.core.Notarized.notarizedPost
 import io.bkbn.kompendium.core.Notarized.notarizedPut
+import io.bkbn.kompendium.core.SimpleGibbit
+import io.bkbn.kompendium.core.TestNested
+import io.bkbn.kompendium.core.TestRequest
+import io.bkbn.kompendium.core.TestResponse
+import io.bkbn.kompendium.core.TestResponseInfo
 import io.bkbn.kompendium.core.metadata.MethodInfo
 import io.bkbn.kompendium.core.metadata.RequestInfo
 import io.bkbn.kompendium.core.metadata.ResponseInfo
-import io.bkbn.kompendium.core.routes.openApi
-import io.bkbn.kompendium.core.routes.redoc
-import io.bkbn.kompendium.core.util.TestHelpers.oas
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.features.ContentNegotiation
 import io.ktor.features.StatusPages
 import io.ktor.http.HttpStatusCode
-import io.ktor.jackson.jackson
 import io.ktor.response.respond
 import io.ktor.response.respondText
 import io.ktor.routing.route
 import io.ktor.routing.routing
 import io.ktor.serialization.json
-
-fun Application.jacksonConfigModule() {
-  install(ContentNegotiation) {
-    jackson {
-      enable(SerializationFeature.INDENT_OUTPUT)
-      setSerializationInclusion(JsonInclude.Include.NON_NULL)
-    }
-  }
-}
 
 fun Application.kotlinxConfigModule() {
   install(ContentNegotiation) {
@@ -382,12 +378,5 @@ fun Application.simpleGenericResponse() {
         call.respond(HttpStatusCode.OK, Gibbity("hey"))
       }
     }
-  }
-}
-
-fun Application.docs() {
-  routing {
-    openApi(oas())
-    redoc(oas())
   }
 }

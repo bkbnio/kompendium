@@ -1,4 +1,4 @@
-package io.bkbn.kompendium.core.util
+package io.bkbn.kompendium.core
 
 import io.bkbn.kompendium.core.metadata.MethodInfo.DeleteInfo
 import io.bkbn.kompendium.core.metadata.MethodInfo.GetInfo
@@ -9,7 +9,7 @@ import io.bkbn.kompendium.core.metadata.ResponseInfo
 import io.ktor.http.HttpStatusCode
 
 object TestResponseInfo {
-  private val testGetResponse = ResponseInfo<TestResponse>(HttpStatusCode.OK, "A Successful Endeavor")
+  val testGetResponse = ResponseInfo<TestResponse>(HttpStatusCode.OK, "A Successful Endeavor")
   private val testGetListResponse =
     ResponseInfo<List<TestResponse>>(HttpStatusCode.OK, "A Successful List-y Endeavor")
   private val testPostResponse = ResponseInfo<TestCreatedResponse>(HttpStatusCode.Created, "A Successful Endeavor")

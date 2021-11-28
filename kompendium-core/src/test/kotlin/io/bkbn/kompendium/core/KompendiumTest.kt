@@ -1,19 +1,13 @@
 package io.bkbn.kompendium.core
 
-import io.ktor.application.Application
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
-import io.ktor.routing.routing
 import io.ktor.server.testing.handleRequest
 import io.ktor.server.testing.withTestApplication
-import java.net.URI
-import io.bkbn.kompendium.core.routes.openApi
-import io.bkbn.kompendium.core.routes.redoc
-import io.bkbn.kompendium.core.util.TestHelpers.OPEN_API_ENDPOINT
-import io.bkbn.kompendium.core.util.TestHelpers.getFileSnapshot
+import io.bkbn.kompendium.core.TestHelpers.OPEN_API_ENDPOINT
+import io.bkbn.kompendium.core.TestHelpers.compareOpenAPISpec
+import io.bkbn.kompendium.core.TestHelpers.getFileSnapshot
 import io.bkbn.kompendium.core.util.complexType
-import io.bkbn.kompendium.core.util.docs
-import io.bkbn.kompendium.core.util.jacksonConfigModule
 import io.bkbn.kompendium.core.util.emptyGet
 import io.bkbn.kompendium.core.util.genericPolymorphicResponse
 import io.bkbn.kompendium.core.util.genericPolymorphicResponseMultipleImpls
@@ -43,10 +37,6 @@ import io.bkbn.kompendium.core.util.undeclaredType
 import io.bkbn.kompendium.core.util.withDefaultParameter
 import io.bkbn.kompendium.core.util.withExamples
 import io.bkbn.kompendium.core.util.withOperationId
-import io.bkbn.kompendium.oas.info.Contact
-import io.bkbn.kompendium.oas.info.Info
-import io.bkbn.kompendium.oas.info.License
-import io.bkbn.kompendium.oas.server.Server
 import io.kotest.assertions.json.shouldEqualJson
 import io.kotest.assertions.ktor.shouldHaveStatus
 import io.kotest.core.spec.style.DescribeSpec
@@ -57,165 +47,102 @@ class KompendiumTest : DescribeSpec({
   afterEach { Kompendium.resetSchema() }
   describe("Notarized Open API Metadata Tests") {
     it("Can notarize a get request") {
+      // arrange
       withTestApplication({
         kotlinxConfigModule()
         docs()
         notarizedGetModule()
       }) {
-        // arrange
-        val expected = getFileSnapshot("notarized_get.json").trim()
-
         // act
-        handleRequest(HttpMethod.Get, OPEN_API_ENDPOINT).apply {
-          // assert
-          response shouldHaveStatus HttpStatusCode.OK
-          response.content shouldNotBe null
-          response.content!! shouldEqualJson expected
-        }
+        compareOpenAPISpec("notarized_get.json")
       }
     }
     it("Can notarize a post request") {
+      // arrange
       withTestApplication({
         jacksonConfigModule()
         docs()
         notarizedPostModule()
       }) {
-        // arrange
-        val expected = getFileSnapshot("notarized_post.json").trim()
-
         // act
-        handleRequest(HttpMethod.Get, OPEN_API_ENDPOINT).apply {
-          // assert
-          response shouldHaveStatus HttpStatusCode.OK
-          response.content shouldNotBe null
-          response.content!! shouldEqualJson expected
-        }
+        compareOpenAPISpec("notarized_post.json")
       }
     }
     it("Can notarize a put request") {
+      // arrange
       withTestApplication({
         jacksonConfigModule()
         docs()
         notarizedPutModule()
       }) {
-        // arrange
-        val expected = getFileSnapshot("notarized_put.json").trim()
-
         // act
-        handleRequest(HttpMethod.Get, OPEN_API_ENDPOINT).apply {
-          // assert
-          response shouldHaveStatus HttpStatusCode.OK
-          response.content shouldNotBe null
-          response.content!! shouldEqualJson expected
-        }
+        compareOpenAPISpec("notarized_put.json")
       }
     }
     it("Can notarize a delete request") {
+      // arrange
       withTestApplication({
         jacksonConfigModule()
         docs()
         notarizedDeleteModule()
       }) {
-        // arrange
-        val expected = getFileSnapshot("notarized_delete.json").trim()
-
         // act
-        handleRequest(HttpMethod.Get, OPEN_API_ENDPOINT).apply {
-          // assert
-          response shouldHaveStatus HttpStatusCode.OK
-          response.content shouldNotBe null
-          response.content!! shouldEqualJson expected
-        }
+        compareOpenAPISpec("notarized_delete.json")
       }
     }
     it("Can notarize a complex type") {
+      // arrange
       withTestApplication({
         jacksonConfigModule()
         docs()
         complexType()
       }) {
-        // arrange
-        val expected = getFileSnapshot("complex_type.json").trim()
-
         // act
-        handleRequest(HttpMethod.Get, OPEN_API_ENDPOINT).apply {
-          // assert
-          response shouldHaveStatus HttpStatusCode.OK
-          response.content shouldNotBe null
-          response.content!! shouldEqualJson expected
-        }
+        compareOpenAPISpec("complex_type.json")
       }
     }
     it("Can notarize primitives") {
+      // arrange
       withTestApplication({
         jacksonConfigModule()
         docs()
         primitives()
       }) {
-        // arrange
-        val expected = getFileSnapshot("notarized_primitives.json").trim()
-
         // act
-        handleRequest(HttpMethod.Get, OPEN_API_ENDPOINT).apply {
-          // assert
-          response shouldHaveStatus HttpStatusCode.OK
-          response.content shouldNotBe null
-          response.content!! shouldEqualJson expected
-        }
+        compareOpenAPISpec("notarized_primitives.json")
       }
     }
     it("Can notarize a top level list response") {
+      // arrange
       withTestApplication({
         jacksonConfigModule()
         docs()
         returnsList()
       }) {
-        // arrange
-        val expected = getFileSnapshot("response_list.json").trim()
-
         // act
-        handleRequest(HttpMethod.Get, OPEN_API_ENDPOINT).apply {
-          // assert
-          response shouldHaveStatus HttpStatusCode.OK
-          response.content shouldNotBe null
-          response.content!! shouldEqualJson expected
-        }
+        compareOpenAPISpec("response_list.json")
       }
     }
     it("Can notarize a route with no request params and no response body") {
+      // arrange
       withTestApplication({
         kotlinxConfigModule()
         docs()
         emptyGet()
       }) {
-        // arrange
-        val expected = getFileSnapshot("no_request_params_and_no_response_body.json").trim()
-
         // act
-        handleRequest(HttpMethod.Get, OPEN_API_ENDPOINT).apply {
-          // assert
-          response shouldHaveStatus HttpStatusCode.OK
-          response.content shouldNotBe null
-          response.content!! shouldEqualJson expected
-        }
+        compareOpenAPISpec("no_request_params_and_no_response_body.json")
       }
     }
     it("Can notarize a route with non-required params") {
+      // arrange
       withTestApplication({
         jacksonConfigModule()
         docs()
         nonRequiredParamsGet()
       }) {
-        // arrange
-        val expected = getFileSnapshot("non_required_params.json").trim()
-
         // act
-        handleRequest(HttpMethod.Get, OPEN_API_ENDPOINT).apply {
-          // assert
-          response shouldHaveStatus HttpStatusCode.OK
-          response.content shouldNotBe null
-          response.content!! shouldEqualJson expected
-        }
+        compareOpenAPISpec("non_required_params.json")
       }
     }
   }
@@ -327,135 +254,86 @@ class KompendiumTest : DescribeSpec({
   }
   describe("Route Parsing") {
     it("Can parse a simple path and store it under the expected route") {
+      // arrange
       withTestApplication({
         jacksonConfigModule()
         docs()
         pathParsingTestModule()
       }) {
-        // arrange
-        val expected = getFileSnapshot("path_parser.json").trim()
-
         // act
-        handleRequest(HttpMethod.Get, OPEN_API_ENDPOINT).apply {
-          // assert
-          response shouldHaveStatus HttpStatusCode.OK
-          response.content shouldNotBe null
-          response.content shouldBe expected
-        }
+        compareOpenAPISpec("path_parser.json")
       }
     }
     it("Can notarize the root route") {
+      // arrange
       withTestApplication({
         jacksonConfigModule()
         docs()
         rootModule()
       }) {
-        // arrange
-        val expected = getFileSnapshot("root_route.json").trim()
-
         // act
-        handleRequest(HttpMethod.Get, OPEN_API_ENDPOINT).apply {
-          // assert
-          response shouldHaveStatus HttpStatusCode.OK
-          response.content shouldNotBe null
-          response.content shouldBe expected
-        }
+        compareOpenAPISpec("root_route.json")
       }
     }
     it("Can notarize a route under the root module without appending trailing slash") {
+      // arrange
       withTestApplication({
         jacksonConfigModule()
         docs()
         nestedUnderRootModule()
       }) {
-        // arrange
-        val expected = getFileSnapshot("nested_under_root.json").trim()
-
         // act
-        handleRequest(HttpMethod.Get, OPEN_API_ENDPOINT).apply {
-          // assert
-          response shouldHaveStatus HttpStatusCode.OK
-          response.content shouldNotBe null
-          response.content shouldBe expected
-        }
+        compareOpenAPISpec("nested_under_root.json")
       }
     }
     it("Can notarize a route with a trailing slash") {
+      // arrange
       withTestApplication({
         jacksonConfigModule()
         docs()
         trailingSlash()
       }) {
-        // arrange
-        val expected = getFileSnapshot("trailing_slash.json").trim()
-
         // act
-        handleRequest(HttpMethod.Get, OPEN_API_ENDPOINT).apply {
-          // assert
-          response shouldHaveStatus HttpStatusCode.OK
-          response.content shouldNotBe null
-          response.content shouldBe expected
-        }
+        compareOpenAPISpec("trailing_slash.json")
       }
     }
   }
   describe("Exceptions") {
     it("Can notarize a throwable") {
+      // arrange
       withTestApplication({
         statusPageModule()
         jacksonConfigModule()
         docs()
         notarizedGetWithNotarizedException()
       }) {
-        // arrange
-        val expected = getFileSnapshot("notarized_get_with_exception_response.json").trim()
-
         // act
-        handleRequest(HttpMethod.Get, OPEN_API_ENDPOINT).apply {
-          // assert
-          response shouldHaveStatus HttpStatusCode.OK
-          response.content shouldNotBe null
-          response.content shouldBe expected
-        }
+        compareOpenAPISpec("notarized_get_with_exception_response.json")
       }
     }
     it("Can notarize multiple throwables") {
+      // arrange
       withTestApplication({
         statusPageMultiExceptions()
         jacksonConfigModule()
         docs()
         notarizedGetWithMultipleThrowables()
       }) {
-        // arrange
-        val expected = getFileSnapshot("notarized_get_with_multiple_exception_responses.json").trim()
-
         // act
-        handleRequest(HttpMethod.Get, OPEN_API_ENDPOINT).apply {
-          // assert
-          response shouldHaveStatus HttpStatusCode.OK
-          response.content shouldNotBe null
-          response.content shouldBe expected
-        }
+        compareOpenAPISpec("notarized_get_with_multiple_exception_responses.json")
       }
     }
   }
   describe("Examples") {
     it("Can generate example response and request bodies") {
+      // arrange
       withTestApplication({
         kotlinxConfigModule()
         docs()
         withExamples()
       }) {
-        // arrange
-        val expected = getFileSnapshot("example_req_and_resp.json").trim()
-
         // act
-        handleRequest(HttpMethod.Get, OPEN_API_ENDPOINT).apply {
-          // assert
-          response shouldHaveStatus HttpStatusCode.OK
-          response.content shouldNotBe null
-          response.content shouldBe expected
-        }
+        compareOpenAPISpec("example_req_and_resp.json")
       }
     }
   }
@@ -466,144 +344,87 @@ class KompendiumTest : DescribeSpec({
         docs()
         withDefaultParameter()
       }) {
-        // arrange
-        val expected = getFileSnapshot("query_with_default_parameter.json").trim()
-
         // act
-        handleRequest(HttpMethod.Get, OPEN_API_ENDPOINT).apply {
-          // assert
-          response shouldHaveStatus HttpStatusCode.OK
-          response.content shouldNotBe null
-          response.content shouldBe expected
-        }
+        compareOpenAPISpec("query_with_default_parameter.json")
       }
     }
   }
   describe("Polymorphism and Generics") {
     it("can generate a polymorphic response type") {
+      // arrange
       withTestApplication({
         jacksonConfigModule()
         docs()
         polymorphicResponse()
       }) {
-        // arrange
-        val expected = getFileSnapshot("polymorphic_response.json").trim()
-
         // act
-        handleRequest(HttpMethod.Get, OPEN_API_ENDPOINT).apply {
-          // assert
-          response shouldHaveStatus HttpStatusCode.OK
-          response.content shouldNotBe null
-          response.content shouldBe expected
-        }
+        compareOpenAPISpec("polymorphic_response.json")
       }
     }
     it("Can generate a collection with polymorphic response type") {
+      // arrange
       withTestApplication({
         jacksonConfigModule()
         docs()
         polymorphicCollectionResponse()
       }) {
-        // arrange
-        val expected = getFileSnapshot("polymorphic_list_response.json").trim()
-
         // act
-        handleRequest(HttpMethod.Get, OPEN_API_ENDPOINT).apply {
-          // assert
-          response shouldHaveStatus HttpStatusCode.OK
-          response.content shouldNotBe null
-          response.content shouldBe expected
-        }
+        compareOpenAPISpec("polymorphic_list_response.json")
       }
     }
     it("Can generate a map with a polymorphic response type") {
+      // arrange
       withTestApplication({
         jacksonConfigModule()
         docs()
         polymorphicMapResponse()
       }) {
-        // arrange
-        val expected = getFileSnapshot("polymorphic_map_response.json").trim()
-
         // act
-        handleRequest(HttpMethod.Get, OPEN_API_ENDPOINT).apply {
-          // assert
-          response shouldHaveStatus HttpStatusCode.OK
-          response.content shouldNotBe null
-          response.content shouldBe expected
-        }
+        compareOpenAPISpec("polymorphic_map_response.json")
       }
     }
     it("Can generate a polymorphic response from a sealed interface") {
+      // arrange
       withTestApplication({
         jacksonConfigModule()
         docs()
         polymorphicInterfaceResponse()
       }) {
-        // arrange
-        val expected = getFileSnapshot("sealed_interface_response.json").trim()
-
         // act
-        handleRequest(HttpMethod.Get, OPEN_API_ENDPOINT).apply {
-          // assert
-          response shouldHaveStatus HttpStatusCode.OK
-          response.content shouldNotBe null
-          response.content shouldBe expected
-        }
+        compareOpenAPISpec("sealed_interface_response.json")
       }
     }
     it("Can generate a response type with a generic type") {
+      // arrange
       withTestApplication({
         jacksonConfigModule()
         docs()
         simpleGenericResponse()
       }) {
-        // arrange
-        val expected = getFileSnapshot("generic_response.json").trim()
-
         // act
-        handleRequest(HttpMethod.Get, OPEN_API_ENDPOINT).apply {
-          // assert
-          response shouldHaveStatus HttpStatusCode.OK
-          response.content shouldNotBe null
-          response.content shouldBe expected
-        }
+        compareOpenAPISpec("generic_response.json")
       }
     }
     it("Can generate a polymorphic response type with generics") {
+      // arrange
       withTestApplication({
         jacksonConfigModule()
         docs()
         genericPolymorphicResponse()
       }) {
-        // arrange
-        val expected = getFileSnapshot("polymorphic_response_with_generics.json").trim()
-
         // act
-        handleRequest(HttpMethod.Get, OPEN_API_ENDPOINT).apply {
-          // assert
-          response shouldHaveStatus HttpStatusCode.OK
-          response.content shouldNotBe null
-          response.content shouldBe expected
-        }
+        compareOpenAPISpec("polymorphic_response_with_generics.json")
       }
     }
     it("Can handle an absolutely psycho inheritance test") {
+      // arrange
       withTestApplication({
         kotlinxConfigModule()
         docs()
         genericPolymorphicResponseMultipleImpls()
       }) {
-        // arrange
-        val expected = getFileSnapshot("crazy_polymorphic_example.json").trim()
-
         // act
-        handleRequest(HttpMethod.Get, OPEN_API_ENDPOINT).apply {
-          // assert
-          response shouldHaveStatus HttpStatusCode.OK
-          response.content shouldNotBe null
-          response.content shouldBe expected
-        }
+        compareOpenAPISpec("crazy_polymorphic_example.json")
       }
     }
   }
@@ -627,57 +448,36 @@ class KompendiumTest : DescribeSpec({
       }
     }
     it("Can add an operation id to a notarized route") {
+      // arrange
       withTestApplication({
         jacksonConfigModule()
         docs()
         withOperationId()
       }) {
-        // arrange
-        val expected = getFileSnapshot("notarized_get_with_operation_id.json").trim()
-
         // act
-        handleRequest(HttpMethod.Get, OPEN_API_ENDPOINT).apply {
-          // assert
-          response shouldHaveStatus HttpStatusCode.OK
-          response.content shouldNotBe null
-          response.content!! shouldEqualJson expected
-        }
+        compareOpenAPISpec("notarized_get_with_operation_id.json")
       }
     }
     it("Can add an undeclared field") {
+      // arrange
       withTestApplication({
         kotlinxConfigModule()
         docs()
         undeclaredType()
       }) {
-        // arrange
-        val expected = getFileSnapshot("undeclared_field.json").trim()
-
         // act
-        handleRequest(HttpMethod.Get, OPEN_API_ENDPOINT).apply {
-          // assert
-          response shouldHaveStatus HttpStatusCode.OK
-          response.content shouldNotBe null
-          response.content shouldBe expected
-        }
+        compareOpenAPISpec("undeclared_field.json")
       }
     }
     it("Can add a custom header parameter with a name override") {
+      // arrange
       withTestApplication({
         jacksonConfigModule()
         docs()
         headerParameter()
       }) {
-        // arrange
-        val expected = getFileSnapshot("override_parameter_name.json").trim()
-
         // act
-        handleRequest(HttpMethod.Get, OPEN_API_ENDPOINT).apply {
-          // assert
-          response shouldHaveStatus HttpStatusCode.OK
-          response.content shouldNotBe null
-          response.content shouldBe expected
-        }
+        compareOpenAPISpec("override_parameter_name.json")
       }
     }
   }
