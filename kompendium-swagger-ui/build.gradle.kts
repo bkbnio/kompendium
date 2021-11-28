@@ -6,8 +6,6 @@ dependencies {
   api(libs.ktor.webjars)
   implementation(libs.bundles.ktor)
   implementation(libs.webjars.swagger.ui)
-  testImplementation(libs.jackson.module.kotlin)
-  testImplementation(libs.ktor.server.test.host)
 }
 
 buildscript {

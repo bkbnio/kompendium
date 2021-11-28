@@ -22,6 +22,7 @@ nexusPublishing {
   }
 }
 
+// Here down is exclusively to support Dokka... hope they streamline this in future -__-
 version = run {
   val baseVersion =
     project.findProperty("project.version") ?: error("project.version needs to be set in gradle.properties")
@@ -55,8 +56,8 @@ tasks.dokkaHtmlMultiModule.configure {
 
 val generateDokkaHomePage by tasks.register("generateDokkaHomePage") {
   val version = project.version.toString()
-  val path = rootDir.resolve("dokka/index.html")
-  path.writeText("<meta http-equiv=\"refresh\" content=\"0; url=./$version\" />\n")
+  val index = rootDir.resolve("dokka/index.html")
+  index.writeText("<meta http-equiv=\"refresh\" content=\"0; url=./$version\" />\n")
 }
 
 repositories {

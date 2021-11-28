@@ -6,10 +6,19 @@ dependencies {
   implementation(libs.bundles.ktor)
   implementation(libs.bundles.ktorAuth)
   implementation(projects.kompendiumCore)
+}
 
-  testImplementation(libs.ktor.jackson)
-  testImplementation(libs.jackson.module.kotlin)
-  testImplementation(libs.ktor.server.test.host)
+testing {
+  suites {
+    val test by getting(JvmTestSuite::class) {
+      dependencies {
+        implementation(libs.ktor.jackson)
+        implementation(libs.jackson.module.kotlin)
+        implementation("io.kotest:kotest-assertions-ktor-jvm:4.4.3")
+        implementation("io.ktor:ktor-server-test-host:1.6.5")
+      }
+    }
+  }
 }
 
 buildscript {
