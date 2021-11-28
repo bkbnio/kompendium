@@ -40,5 +40,5 @@ jobs:
       - name: Cache Coverage Results
         uses: actions/cache@v2
         with:
-          path: ./**/build/reports/jacoco
+          path: ./**/build/reports/kover
           key: ${{ runner.os }}-unit-${{ env.GITHUB_SHA }}
