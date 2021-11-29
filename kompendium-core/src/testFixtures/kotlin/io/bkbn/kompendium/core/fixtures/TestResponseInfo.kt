@@ -1,11 +1,11 @@
 package io.bkbn.kompendium.core.fixtures
 
-import io.bkbn.kompendium.core.metadata.MethodInfo.DeleteInfo
-import io.bkbn.kompendium.core.metadata.MethodInfo.GetInfo
-import io.bkbn.kompendium.core.metadata.MethodInfo.PostInfo
-import io.bkbn.kompendium.core.metadata.MethodInfo.PutInfo
+import io.bkbn.kompendium.core.metadata.method.PostInfo
+import io.bkbn.kompendium.core.metadata.method.PutInfo
 import io.bkbn.kompendium.core.metadata.RequestInfo
 import io.bkbn.kompendium.core.metadata.ResponseInfo
+import io.bkbn.kompendium.core.metadata.method.DeleteInfo
+import io.bkbn.kompendium.core.metadata.method.GetInfo
 import io.ktor.http.HttpStatusCode
 
 object TestResponseInfo {

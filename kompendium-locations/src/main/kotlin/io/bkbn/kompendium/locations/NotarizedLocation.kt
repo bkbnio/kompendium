@@ -4,7 +4,10 @@ import io.bkbn.kompendium.core.Kompendium
 import io.bkbn.kompendium.core.KompendiumPreFlight.methodNotarizationPreFlight
 import io.bkbn.kompendium.core.MethodParser.parseMethodInfo
 import io.bkbn.kompendium.core.Notarized.calculateRoutePath
-import io.bkbn.kompendium.core.metadata.MethodInfo
+import io.bkbn.kompendium.core.metadata.method.DeleteInfo
+import io.bkbn.kompendium.core.metadata.method.GetInfo
+import io.bkbn.kompendium.core.metadata.method.PostInfo
+import io.bkbn.kompendium.core.metadata.method.PutInfo
 import io.bkbn.kompendium.oas.path.Path
 import io.ktor.application.ApplicationCall
 import io.ktor.application.feature
@@ -36,7 +39,7 @@ object NotarizedLocation {
    * @param info Route metadata
    */
   inline fun <reified TParam : Any, reified TResp : Any> Route.notarizedGet(
-    info: MethodInfo.GetInfo<TParam, TResp>,
+    info: GetInfo<TParam, TResp>,
     noinline body: suspend PipelineContext<Unit, ApplicationCall>.(TParam) -> Unit
   ): Route = methodNotarizationPreFlight<TParam, Unit, TResp>() { paramType, requestType, responseType ->
     val locationAnnotation = TParam::class.findAnnotation<Location>()
@@ -63,7 +66,7 @@ object NotarizedLocation {
    * @param info Route metadata
    */
   inline fun <reified TParam : Any, reified TReq : Any, reified TResp : Any> Route.notarizedPost(
-    info: MethodInfo.PostInfo<TParam, TReq, TResp>,
+    info: PostInfo<TParam, TReq, TResp>,
     noinline body: suspend PipelineContext<Unit, ApplicationCall>.(TParam) -> Unit
   ): Route = methodNotarizationPreFlight<TParam, TReq, TResp>() { paramType, requestType, responseType ->
     val locationAnnotation = TParam::class.findAnnotation<Location>()
@@ -90,7 +93,7 @@ object NotarizedLocation {
    * @param info Route metadata
    */
   inline fun <reified TParam : Any, reified TReq : Any, reified TResp : Any> Route.notarizedPut(
-    info: MethodInfo.PutInfo<TParam, TReq, TResp>,
+    info: PutInfo<TParam, TReq, TResp>,
     noinline body: suspend PipelineContext<Unit, ApplicationCall>.(TParam) -> Unit
   ): Route = methodNotarizationPreFlight<TParam, TReq, TResp>() { paramType, requestType, responseType ->
     val locationAnnotation = TParam::class.findAnnotation<Location>()
@@ -116,7 +119,7 @@ object NotarizedLocation {
    * @param info Route metadata
    */
   inline fun <reified TParam : Any, reified TResp : Any> Route.notarizedDelete(
-    info: MethodInfo.DeleteInfo<TParam, TResp>,
+    info: DeleteInfo<TParam, TResp>,
     noinline body: suspend PipelineContext<Unit, ApplicationCall>.(TParam) -> Unit
   ): Route = methodNotarizationPreFlight<TParam, Unit, TResp> { paramType, requestType, responseType ->
     val locationAnnotation = TParam::class.findAnnotation<Location>()

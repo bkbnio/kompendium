@@ -16,9 +16,11 @@ import io.bkbn.kompendium.core.fixtures.TestNested
 import io.bkbn.kompendium.core.fixtures.TestRequest
 import io.bkbn.kompendium.core.fixtures.TestResponse
 import io.bkbn.kompendium.core.fixtures.TestResponseInfo
-import io.bkbn.kompendium.core.metadata.MethodInfo
+import io.bkbn.kompendium.core.metadata.method.MethodInfo
 import io.bkbn.kompendium.core.metadata.RequestInfo
 import io.bkbn.kompendium.core.metadata.ResponseInfo
+import io.bkbn.kompendium.core.metadata.method.GetInfo
+import io.bkbn.kompendium.core.metadata.method.PostInfo
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
@@ -226,7 +228,7 @@ fun Application.withExamples() {
   routing {
     route("/test/examples") {
       notarizedPost(
-        info = MethodInfo.PostInfo<Unit, TestRequest, TestResponse>(
+        info = PostInfo<Unit, TestRequest, TestResponse>(
           summary = "Example Parameters",
           description = "A test for setting parameter examples",
           requestInfo = RequestInfo(
@@ -253,7 +255,7 @@ fun Application.withDefaultParameter() {
   routing {
     route("/test") {
       notarizedGet(
-        info = MethodInfo.GetInfo<DefaultParameter, TestResponse>(
+        info = GetInfo<DefaultParameter, TestResponse>(
           summary = "Testing Default Params",
           description = "Should have a default parameter value"
         )

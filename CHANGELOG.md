@@ -19,6 +19,7 @@
 - Path calculation removed in favor of built-in route toString
 - Ktor to 1.6.6
 - Completely reworked authentication and exceptions
+- MethodInfo now exists in a separate package as a sealed interface, each implementation also has its own file
 
 ### Remove
 

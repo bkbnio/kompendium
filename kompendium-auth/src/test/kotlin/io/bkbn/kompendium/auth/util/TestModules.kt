@@ -6,7 +6,7 @@ import io.bkbn.kompendium.core.Notarized.notarizedGet
 import io.bkbn.kompendium.core.fixtures.TestParams
 import io.bkbn.kompendium.core.fixtures.TestResponse
 import io.bkbn.kompendium.core.fixtures.TestResponseInfo
-import io.bkbn.kompendium.core.metadata.MethodInfo
+import io.bkbn.kompendium.core.metadata.method.GetInfo
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
@@ -61,8 +61,7 @@ fun Application.configBasicAuth() {
 fun Application.notarizedAuthRoute(authConfig: SecurityConfiguration) {
   routing {
     notarizedAuthenticate(authConfig) {
-      route("/test") {
-        notarizedGet(testGetInfo(authConfig.name)) {
+      route("/test") { notarizedGet(testGetInfo(authConfig.name)) {
           call.respondText { "hey dude ‼️ congratz on the get request" }
         }
       }
@@ -79,7 +78,7 @@ fun Application.configJwtAuth() {
 }
 
 fun testGetInfo(vararg security: String) =
-  MethodInfo.GetInfo<TestParams, TestResponse>(
+  GetInfo<TestParams, TestResponse>(
     summary = "Another get test",
     description = "testing more",
     responseInfo = TestResponseInfo.testGetResponse,

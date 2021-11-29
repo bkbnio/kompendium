@@ -11,11 +11,11 @@ import io.bkbn.kompendium.core.KompendiumPreFlight.errorNotarizationPreFlight
 import io.bkbn.kompendium.core.KompendiumPreFlight.methodNotarizationPreFlight
 import io.bkbn.kompendium.core.MethodParser.parseErrorInfo
 import io.bkbn.kompendium.core.MethodParser.parseMethodInfo
-import io.bkbn.kompendium.core.metadata.MethodInfo.GetInfo
-import io.bkbn.kompendium.core.metadata.MethodInfo.PostInfo
-import io.bkbn.kompendium.core.metadata.MethodInfo.PutInfo
-import io.bkbn.kompendium.core.metadata.MethodInfo.DeleteInfo
+import io.bkbn.kompendium.core.metadata.method.PostInfo
+import io.bkbn.kompendium.core.metadata.method.PutInfo
 import io.bkbn.kompendium.core.metadata.ResponseInfo
+import io.bkbn.kompendium.core.metadata.method.DeleteInfo
+import io.bkbn.kompendium.core.metadata.method.GetInfo
 import io.bkbn.kompendium.oas.path.Path
 import io.ktor.application.feature
 import io.ktor.routing.application

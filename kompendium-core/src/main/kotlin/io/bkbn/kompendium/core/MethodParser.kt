@@ -1,9 +1,11 @@
 package io.bkbn.kompendium.core
 
 import io.bkbn.kompendium.annotations.KompendiumParam
-import io.bkbn.kompendium.core.metadata.MethodInfo
+import io.bkbn.kompendium.core.metadata.method.MethodInfo
 import io.bkbn.kompendium.core.metadata.RequestInfo
 import io.bkbn.kompendium.core.metadata.ResponseInfo
+import io.bkbn.kompendium.core.metadata.method.PostInfo
+import io.bkbn.kompendium.core.metadata.method.PutInfo
 import io.bkbn.kompendium.core.util.Helpers
 import io.bkbn.kompendium.core.util.Helpers.getSimpleSlug
 import io.bkbn.kompendium.oas.path.PathOperation
@@ -63,8 +65,8 @@ object MethodParser {
       }
     },
     requestBody = when (info) {
-      is MethodInfo.PutInfo<*, *, *> -> requestType.toRequestSpec(info.requestInfo, feature)
-      is MethodInfo.PostInfo<*, *, *> -> requestType.toRequestSpec(info.requestInfo, feature)
+      is PutInfo<*, *, *> -> requestType.toRequestSpec(info.requestInfo, feature)
+      is PostInfo<*, *, *> -> requestType.toRequestSpec(info.requestInfo, feature)
       else -> null
     },
     security = if (info.securitySchemes.isNotEmpty()) listOf(

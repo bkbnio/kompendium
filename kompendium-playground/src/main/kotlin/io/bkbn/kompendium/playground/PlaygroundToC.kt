@@ -1,12 +1,15 @@
 package io.bkbn.kompendium.playground
 
-import io.ktor.http.HttpStatusCode
-import io.bkbn.kompendium.core.metadata.MethodInfo
 import io.bkbn.kompendium.core.metadata.RequestInfo
 import io.bkbn.kompendium.core.metadata.ResponseInfo
+import io.bkbn.kompendium.core.metadata.method.DeleteInfo
+import io.bkbn.kompendium.core.metadata.method.GetInfo
+import io.bkbn.kompendium.core.metadata.method.PostInfo
+import io.bkbn.kompendium.core.metadata.method.PutInfo
+import io.ktor.http.HttpStatusCode
 
 object PlaygroundToC {
-  val testGetWithExamples = MethodInfo.GetInfo<Unit, ExampleResponse>(
+  val testGetWithExamples = GetInfo<Unit, ExampleResponse>(
     summary = "Example Parameters",
     description = "A test for setting parameter examples",
     responseInfo = ResponseInfo(
@@ -17,7 +20,7 @@ object PlaygroundToC {
     canThrow = setOf(Exception::class)
   )
   @Suppress("MagicNumber")
-  val testPostWithExamples = MethodInfo.PostInfo<ExampleParams, ExampleRequest, ExampleResponse>(
+  val testPostWithExamples = PostInfo<ExampleParams, ExampleRequest, ExampleResponse>(
     summary = "Full Example",
     description = "Throws just about all Kompendium has to offer into one endpoint",
     requestInfo = RequestInfo(
@@ -37,7 +40,7 @@ object PlaygroundToC {
     canThrow = setOf(Exception::class)
   )
 
-  val testIdGetInfo = MethodInfo.GetInfo<ExampleParams, ExampleGeneric<Int>>(
+  val testIdGetInfo = GetInfo<ExampleParams, ExampleGeneric<Int>>(
     summary = "Get Test",
     description = "Test for the getting",
     tags = setOf("test", "sample", "get"),
@@ -46,7 +49,7 @@ object PlaygroundToC {
       description = "Returns sample info"
     )
   )
-  val testSingleGetInfo = MethodInfo.GetInfo<Unit, ExampleResponse>(
+  val testSingleGetInfo = GetInfo<Unit, ExampleResponse>(
     summary = "Another get test",
     description = "testing more",
     tags = setOf("anotherTest", "sample"),
@@ -55,7 +58,7 @@ object PlaygroundToC {
       description = "Returns a different sample"
     )
   )
-  val testCustomOverride = MethodInfo.GetInfo<Unit, DateTimeWrapper>(
+  val testCustomOverride = GetInfo<Unit, DateTimeWrapper>(
     summary = "custom schema test",
     description = "testing",
     tags = setOf("custom"),
@@ -68,7 +71,7 @@ object PlaygroundToC {
     summary = "Show me the error baby 🙏",
     canThrow = setOf(Exception::class)
   )
-  val testSinglePostInfo = MethodInfo.PostInfo<Unit, ExampleRequest, ExampleCreatedResponse>(
+  val testSinglePostInfo = PostInfo<Unit, ExampleRequest, ExampleCreatedResponse>(
     summary = "Test post endpoint",
     description = "Post your tests here!",
     requestInfo = RequestInfo(
@@ -79,7 +82,7 @@ object PlaygroundToC {
       description = "Worlds most complex response"
     )
   )
-  val testSinglePutInfo = MethodInfo.PutInfo<JustQuery, ExampleRequest, ExampleCreatedResponse>(
+  val testSinglePutInfo = PutInfo<JustQuery, ExampleRequest, ExampleCreatedResponse>(
     summary = "Test put endpoint",
     description = "Put your tests here!",
     requestInfo = RequestInfo(
@@ -90,7 +93,7 @@ object PlaygroundToC {
       description = "What we give you when u do the puts"
     )
   )
-  val testSingleDeleteInfo = MethodInfo.DeleteInfo<Unit, Unit>(
+  val testSingleDeleteInfo = DeleteInfo<Unit, Unit>(
     summary = "Test delete endpoint",
     description = "testing my deletes",
     responseInfo = ResponseInfo(
@@ -99,7 +102,7 @@ object PlaygroundToC {
       mediaTypes = emptyList()
     )
   )
-  val testAuthenticatedSingleGetInfo = MethodInfo.GetInfo<Unit, Unit>(
+  val testAuthenticatedSingleGetInfo = GetInfo<Unit, Unit>(
     summary = "Another get test",
     description = "testing more",
     tags = setOf("anotherTest", "sample"),
@@ -109,7 +112,7 @@ object PlaygroundToC {
     ),
     securitySchemes = setOf("basic")
   )
-  val testUndeclaredFields = MethodInfo.GetInfo<Unit, SimpleYetMysterious>(
+  val testUndeclaredFields = GetInfo<Unit, SimpleYetMysterious>(
     summary = "Tests adding undeclared fields",
     description = "vvv mysterious",
     tags = setOf("mysterious"),
