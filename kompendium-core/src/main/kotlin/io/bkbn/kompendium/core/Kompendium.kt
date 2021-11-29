@@ -3,36 +3,29 @@ package io.bkbn.kompendium.core
 import io.bkbn.kompendium.core.metadata.ErrorMap
 import io.bkbn.kompendium.core.metadata.SchemaMap
 import io.bkbn.kompendium.oas.OpenApiSpec
-import io.bkbn.kompendium.oas.info.Info
 import io.bkbn.kompendium.oas.schema.TypedSchema
-import io.ktor.routing.Route
-import io.ktor.routing.RouteSelector
+import io.ktor.application.Application
+import io.ktor.application.ApplicationFeature
+import io.ktor.util.AttributeKey
 import kotlin.reflect.KClass
 
-/**
- * Maintains all state for the Kompendium library
- */
-object Kompendium {
+class Kompendium(val config: Configuration) {
 
-  var errorMap: ErrorMap = emptyMap()
-  var cache: SchemaMap = emptyMap()
+  class Configuration {
+    lateinit var spec: OpenApiSpec
+    var errorMap: ErrorMap = emptyMap()
+    var cache: SchemaMap = emptyMap()
 
-  var openApiSpec = OpenApiSpec(
-    info = Info(),
-    servers = mutableListOf(),
-    paths = mutableMapOf()
-  )
-
-  fun resetSchema() {
-    openApiSpec = OpenApiSpec(
-      info = Info(),
-      servers = mutableListOf(),
-      paths = mutableMapOf()
-    )
-    cache = emptyMap()
+    fun addCustomTypeSchema(clazz: KClass<*>, schema: TypedSchema) {
+      cache = cache.plus(clazz.simpleName!! to schema)
+    }
   }
 
-  fun addCustomTypeSchema(clazz: KClass<*>, schema: TypedSchema) {
-    cache = cache.plus(clazz.simpleName!! to schema)
+  companion object Feature : ApplicationFeature<Application, Configuration, Kompendium> {
+    override val key: AttributeKey<Kompendium> = AttributeKey("Kompendium")
+    override fun install(pipeline: Application, configure: Configuration.() -> Unit): Kompendium {
+      val configuration = Configuration().apply(configure)
+      return Kompendium(configuration)
+    }
   }
 }

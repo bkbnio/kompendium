@@ -17,6 +17,7 @@ import io.ktor.auth.oauth
  * This object is responsible for initializing all necessary auth route handlers, as well as providing wrapper methods
  * that can be used in place of the standard ktor-auth configuration blocks.
  */
+@Suppress("UnusedPrivateMember") // TODO Remove before merge
 object KompendiumAuth {
 
   private const val DEFAULT_NAME = "default"
@@ -30,7 +31,7 @@ object KompendiumAuth {
     name: String? = null,
     configure: BasicAuthenticationProvider.Configuration.() -> Unit
   ) {
-    Kompendium.openApiSpec.components.securitySchemes[name ?: DEFAULT_NAME] = BasicAuth()
+//    Kompendium.openApiSpec.components.securitySchemes[name ?: DEFAULT_NAME] = BasicAuth()
     basic(name, configure)
   }
 
@@ -41,12 +42,13 @@ object KompendiumAuth {
    * the expected format of the bearer token.  Defaults to "JWT"
    * @param configure Configuration block that will be passed to Ktor.
    */
+  @Suppress("UnusedPrivateMember") // TODO Remove before merge
   fun Authentication.Configuration.notarizedJwt(
     name: String? = null,
     bearerFormat: String? = "JWT",
     configure: JWTAuthenticationProvider.Configuration.() -> Unit
   ) {
-    Kompendium.openApiSpec.components.securitySchemes[name ?: DEFAULT_NAME] = BearerAuth(bearerFormat)
+//    Kompendium.openApiSpec.components.securitySchemes[name ?: DEFAULT_NAME] = BearerAuth(bearerFormat)
     jwt(name, configure)
   }
 
@@ -57,12 +59,13 @@ object KompendiumAuth {
    * @param authName Optional name to be assigned to this security schema.
    * If not provided, will be labelled as "default"
    */
+  @Suppress("UnusedPrivateMember") // TODO Remove before merge
   fun Authentication.Configuration.notarizedApiKey(
     location: ApiKeyAuth.ApiKeyLocation,
     keyName: String,
     authName: String? = null,
   ) {
-    Kompendium.openApiSpec.components.securitySchemes[authName ?: DEFAULT_NAME] = ApiKeyAuth(location, keyName)
+//    Kompendium.openApiSpec.components.securitySchemes[authName ?: DEFAULT_NAME] = ApiKeyAuth(location, keyName)
   }
 
   /**
@@ -72,13 +75,14 @@ object KompendiumAuth {
    * @param description Optional description to be used to provide more insight into the OAuth mechanism
    * @param configure Configuration block that will be passed to Ktor.
    */
+  @Suppress("UnusedPrivateMember") // TODO Remove before merge
   fun Authentication.Configuration.notarizedOAuth(
     flows: OAuth.Flows,
     name: String? = null,
     description: String? = null,
     configure: OAuthAuthenticationProvider.Configuration.() -> Unit
   ) {
-    Kompendium.openApiSpec.components.securitySchemes[name ?: DEFAULT_NAME] = OAuth(description, flows)
+//    Kompendium.openApiSpec.components.securitySchemes[name ?: DEFAULT_NAME] = OAuth(description, flows)
     oauth(name, configure)
   }
 }

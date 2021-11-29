@@ -6,15 +6,13 @@ import io.bkbn.kompendium.auth.util.configBasicAuth
 import io.bkbn.kompendium.auth.util.configJwtAuth
 import io.bkbn.kompendium.auth.util.notarizedAuthenticatedGetModule
 import io.bkbn.kompendium.auth.util.setupOauth
-import io.bkbn.kompendium.core.Kompendium
-import io.bkbn.kompendium.core.TestHelpers.openApiTest
+import io.bkbn.kompendium.core.fixtures.TestHelpers.openApiTest
 import io.bkbn.kompendium.oas.security.OAuth
 import io.kotest.core.spec.style.DescribeSpec
 import io.ktor.application.install
 import io.ktor.auth.Authentication
 
 class KompendiumAuthTest : DescribeSpec({
-  afterEach { Kompendium.resetSchema() }
   describe("Basic Authentication") {
     it("Can create a notarized basic authentication record with all expected information") {
       // act

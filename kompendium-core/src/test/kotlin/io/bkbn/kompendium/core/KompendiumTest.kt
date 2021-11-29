@@ -1,8 +1,8 @@
 package io.bkbn.kompendium.core
 
-import io.bkbn.kompendium.core.TestHelpers.apiFunctionalityTest
-import io.bkbn.kompendium.core.TestHelpers.getFileSnapshot
-import io.bkbn.kompendium.core.TestHelpers.openApiTest
+import io.bkbn.kompendium.core.fixtures.TestHelpers.apiFunctionalityTest
+import io.bkbn.kompendium.core.fixtures.TestHelpers.getFileSnapshot
+import io.bkbn.kompendium.core.fixtures.TestHelpers.openApiTest
 import io.bkbn.kompendium.core.util.complexType
 import io.bkbn.kompendium.core.util.emptyGet
 import io.bkbn.kompendium.core.util.genericPolymorphicResponse
@@ -37,7 +37,6 @@ import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
 
 class KompendiumTest : DescribeSpec({
-  afterEach { Kompendium.resetSchema() }
   describe("Notarized Open API Metadata Tests") {
     it("Can notarize a get request") {
       // act

@@ -1,13 +1,13 @@
 package io.bkbn.kompendium.playground
 
-import java.net.URI
-import io.bkbn.kompendium.core.Kompendium
+import io.bkbn.kompendium.oas.OpenApiSpec
 import io.bkbn.kompendium.oas.info.Contact
 import io.bkbn.kompendium.oas.info.Info
 import io.bkbn.kompendium.oas.info.License
 import io.bkbn.kompendium.oas.server.Server
+import java.net.URI
 
-val oas = Kompendium.openApiSpec.copy(
+val oas = OpenApiSpec(
   info = Info(
     title = "Test API",
     version = "1.33.7",

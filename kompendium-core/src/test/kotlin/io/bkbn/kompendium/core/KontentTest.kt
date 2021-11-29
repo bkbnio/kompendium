@@ -2,6 +2,17 @@ package io.bkbn.kompendium.core
 
 import io.bkbn.kompendium.core.Kontent.generateKontent
 import io.bkbn.kompendium.core.Kontent.generateParameterKontent
+import io.bkbn.kompendium.core.fixtures.ComplexRequest
+import io.bkbn.kompendium.core.fixtures.TestBigNumberModel
+import io.bkbn.kompendium.core.fixtures.TestByteArrayModel
+import io.bkbn.kompendium.core.fixtures.TestInvalidMap
+import io.bkbn.kompendium.core.fixtures.TestNestedModel
+import io.bkbn.kompendium.core.fixtures.TestSimpleModel
+import io.bkbn.kompendium.core.fixtures.TestSimpleWithEnumList
+import io.bkbn.kompendium.core.fixtures.TestSimpleWithEnums
+import io.bkbn.kompendium.core.fixtures.TestSimpleWithList
+import io.bkbn.kompendium.core.fixtures.TestSimpleWithMap
+import io.bkbn.kompendium.core.fixtures.TestWithUUID
 import io.bkbn.kompendium.oas.schema.DictionarySchema
 import io.bkbn.kompendium.oas.schema.FormattedSchema
 import io.bkbn.kompendium.oas.schema.ObjectSchema

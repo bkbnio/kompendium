@@ -4,9 +4,9 @@ import io.bkbn.kompendium.auth.KompendiumAuth.notarizedBasic
 import io.bkbn.kompendium.auth.KompendiumAuth.notarizedJwt
 import io.bkbn.kompendium.auth.KompendiumAuth.notarizedOAuth
 import io.bkbn.kompendium.core.Notarized.notarizedGet
-import io.bkbn.kompendium.core.TestParams
-import io.bkbn.kompendium.core.TestResponse
-import io.bkbn.kompendium.core.TestResponseInfo
+import io.bkbn.kompendium.core.fixtures.TestParams
+import io.bkbn.kompendium.core.fixtures.TestResponse
+import io.bkbn.kompendium.core.fixtures.TestResponseInfo
 import io.bkbn.kompendium.core.metadata.MethodInfo
 import io.bkbn.kompendium.oas.security.OAuth
 import io.ktor.application.Application

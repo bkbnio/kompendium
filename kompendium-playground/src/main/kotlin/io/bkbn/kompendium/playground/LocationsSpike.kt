@@ -25,8 +25,6 @@ import io.ktor.server.netty.Netty
 import org.joda.time.DateTime
 
 fun main() {
-  Kompendium.addCustomTypeSchema(DateTime::class, FormattedSchema("date-time", "string"))
-
   embeddedServer(
     Netty,
     port = 8081,

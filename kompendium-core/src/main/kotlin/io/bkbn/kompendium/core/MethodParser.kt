@@ -1,6 +1,5 @@
 package io.bkbn.kompendium.core
 
-import io.bkbn.kompendium.core.Kompendium.errorMap
 import io.bkbn.kompendium.annotations.KompendiumParam
 import io.bkbn.kompendium.core.metadata.MethodInfo
 import io.bkbn.kompendium.core.metadata.RequestInfo
@@ -42,29 +41,30 @@ object MethodParser {
     info: MethodInfo<*, *>,
     paramType: KType,
     requestType: KType,
-    responseType: KType
-  ) = PathOperation (
+    responseType: KType,
+    feature: Kompendium
+  ) = PathOperation(
     summary = info.summary,
     description = info.description,
     operationId = info.operationId,
     tags = info.tags,
     deprecated = info.deprecated,
-    parameters = paramType.toParameterSpec(),
-    responses = responseType.toResponseSpec(info.responseInfo)?.let { mapOf(it) }.let {
+    parameters = paramType.toParameterSpec(feature),
+    responses = responseType.toResponseSpec(info.responseInfo, feature)?.let { mapOf(it) }.let {
       when (it) {
         null -> {
-          val throwables = parseThrowables(info.canThrow)
+          val throwables = feature.parseThrowables(info.canThrow)
           when (throwables.isEmpty()) {
             true -> null
             false -> throwables
           }
         }
-        else -> it.plus(parseThrowables(info.canThrow))
+        else -> it.plus(feature.parseThrowables(info.canThrow))
       }
     },
     requestBody = when (info) {
-      is MethodInfo.PutInfo<*, *, *> -> requestType.toRequestSpec(info.requestInfo)
-      is MethodInfo.PostInfo<*, *, *> -> requestType.toRequestSpec(info.requestInfo)
+      is MethodInfo.PutInfo<*, *, *> -> requestType.toRequestSpec(info.requestInfo, feature)
+      is MethodInfo.PostInfo<*, *, *> -> requestType.toRequestSpec(info.requestInfo, feature)
       else -> null
     },
     security = if (info.securitySchemes.isNotEmpty()) listOf(
@@ -78,11 +78,12 @@ object MethodParser {
    * @param errorType [KType] of the throwable being handled
    * @param responseType [KType] the type of the response sent in event of error
    */
+  @Suppress("UnusedPrivateMember") // TODO Remove before merge
   fun ResponseInfo<*>.parseErrorInfo(
     errorType: KType,
     responseType: KType
   ) {
-    errorMap = errorMap.plus(errorType to responseType.toResponseSpec(this))
+//    errorMap = errorMap.plus(errorType to responseType.toResponseSpec(this))
   }
 
   /**
@@ -90,8 +91,8 @@ object MethodParser {
    * @param throwables Set of classes that can be thrown
    * @return Mapping of status codes to their corresponding error spec
    */
-  private fun parseThrowables(throwables: Set<KClass<*>>): Map<Int, Payload> = throwables.mapNotNull {
-    errorMap[it.createType()]
+  private fun Kompendium.parseThrowables(throwables: Set<KClass<*>>): Map<Int, Payload> = throwables.mapNotNull {
+    config.errorMap[it.createType()]
   }.toMap()
 
   /**
@@ -100,13 +101,13 @@ object MethodParser {
    * @param requestInfo request metadata
    * @return Will return a generated [Request] if requestInfo is not null
    */
-  private fun KType.toRequestSpec(requestInfo: RequestInfo<*>?): Request<*>? =
+  private fun KType.toRequestSpec(requestInfo: RequestInfo<*>?, feature: Kompendium): Request<*>? =
     when (requestInfo) {
       null -> null
       else -> {
         Request(
           description = requestInfo.description,
-          content = resolveContent(this, requestInfo.mediaTypes, requestInfo.examples) ?: mapOf()
+          content = feature.resolveContent(this, requestInfo.mediaTypes, requestInfo.examples) ?: mapOf()
         )
       }
     }
@@ -117,13 +118,13 @@ object MethodParser {
    * @param responseInfo response metadata
    * @return Will return a generated [Pair] if responseInfo is not null
    */
-  private fun KType.toResponseSpec(responseInfo: ResponseInfo<*>?): Pair<Int, Response<*>>? =
+  private fun KType.toResponseSpec(responseInfo: ResponseInfo<*>?, feature: Kompendium): Pair<Int, Response<*>>? =
     when (responseInfo) {
       null -> null
       else -> {
         val specResponse = Response(
           description = responseInfo.description,
-          content = resolveContent(this, responseInfo.mediaTypes, responseInfo.examples)
+          content = feature.resolveContent(this, responseInfo.mediaTypes, responseInfo.examples)
         )
         Pair(responseInfo.status.value, specResponse)
       }
@@ -136,7 +137,7 @@ object MethodParser {
    * @param examples Mapping of named examples of valid bodies.
    * @return Named mapping of media types.
    */
-  private fun <F> resolveContent(
+  private fun <F> Kompendium.resolveContent(
     type: KType,
     mediaTypes: List<String>,
     examples: Map<String, F>
@@ -148,11 +149,11 @@ object MethodParser {
           val refs = classifier.sealedSubclasses
             .map { it.createType(type.arguments) }
             .map { it.getSimpleSlug() }
-            .map { Kompendium.cache[it] ?: error("$it not available") }
+            .map { config.cache[it] ?: error("$it not available") }
           AnyOfSchema(refs)
         } else {
           val ref = type.getSimpleSlug()
-          Kompendium.cache[ref] ?: error("$ref not available")
+          config.cache[ref] ?: error("$ref not available")
         }
         MediaType(
           schema = schema,
@@ -169,7 +170,7 @@ object MethodParser {
    * @return list of valid parameter specs as detailed by the [KType] members
    * @throws [IllegalStateException] if the class could not be parsed properly
    */
-  private fun KType.toParameterSpec(): List<Parameter> {
+  private fun KType.toParameterSpec(feature: Kompendium): List<Parameter> {
     val clazz = classifier as KClass<*>
     return clazz.memberProperties.filter { prop ->
       prop.findAnnotation<KompendiumParam>() != null
@@ -178,7 +179,7 @@ object MethodParser {
         ?: error("Unable to parse field type from $prop")
       val anny = prop.findAnnotation<KompendiumParam>()
         ?: error("Field ${prop.name} is not annotated with KompendiumParam")
-      val schema = Kompendium.cache[field.getSimpleSlug(prop)]
+      val schema = feature.config.cache[field.getSimpleSlug(prop)]
         ?: error("Could not find component type for $prop")
       val defaultValue = getDefaultParameterValue(clazz, prop)
       Parameter(

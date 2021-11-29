@@ -1,4 +1,4 @@
-package io.bkbn.kompendium.core
+package io.bkbn.kompendium.core.fixtures
 
 import io.bkbn.kompendium.core.metadata.MethodInfo.DeleteInfo
 import io.bkbn.kompendium.core.metadata.MethodInfo.GetInfo
