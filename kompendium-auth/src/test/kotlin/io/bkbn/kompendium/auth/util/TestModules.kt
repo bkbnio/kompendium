@@ -1,5 +1,7 @@
 package io.bkbn.kompendium.auth.util
 
+import io.bkbn.kompendium.auth.Notarized.notarizedAuthenticate
+import io.bkbn.kompendium.auth.configuration.SecurityConfiguration
 import io.bkbn.kompendium.core.Notarized.notarizedGet
 import io.bkbn.kompendium.core.fixtures.TestParams
 import io.bkbn.kompendium.core.fixtures.TestResponse
@@ -11,7 +13,6 @@ import io.ktor.application.install
 import io.ktor.auth.Authentication
 import io.ktor.auth.OAuthServerSettings
 import io.ktor.auth.UserIdPrincipal
-import io.ktor.auth.authenticate
 import io.ktor.auth.basic
 import io.ktor.auth.jwt.jwt
 import io.ktor.auth.oauth
@@ -57,22 +58,22 @@ fun Application.configBasicAuth() {
   }
 }
 
-fun Application.configJwtAuth() {
-  install(Authentication) {
-    jwt(AuthConfigName.JWT) {
-      realm = "Ktor server"
+fun Application.notarizedAuthRoute(authConfig: SecurityConfiguration) {
+  routing {
+    notarizedAuthenticate(authConfig) {
+      route("/test") {
+        notarizedGet(testGetInfo(authConfig.name)) {
+          call.respondText { "hey dude ‼️ congratz on the get request" }
+        }
+      }
     }
   }
 }
 
-fun Application.notarizedAuthenticatedGetModule(vararg authenticationConfigName: String) {
-  routing {
-    authenticate(*authenticationConfigName) {
-      route("/test") {
-        notarizedGet(testGetInfo(*authenticationConfigName)) {
-          call.respondText { "hey dude ‼️ congratz on the get request" }
-        }
-      }
+fun Application.configJwtAuth() {
+  install(Authentication) {
+    jwt(AuthConfigName.JWT) {
+      realm = "Ktor server"
     }
   }
 }

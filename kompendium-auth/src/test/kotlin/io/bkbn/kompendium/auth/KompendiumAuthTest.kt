@@ -1,22 +1,16 @@
 package io.bkbn.kompendium.auth
 
-import io.bkbn.kompendium.auth.Notarized.notarizedAuthenticate
 import io.bkbn.kompendium.auth.configuration.BasicAuthConfiguration
 import io.bkbn.kompendium.auth.configuration.JwtAuthConfiguration
 import io.bkbn.kompendium.auth.configuration.OAuthConfiguration
 import io.bkbn.kompendium.auth.util.AuthConfigName
 import io.bkbn.kompendium.auth.util.configBasicAuth
 import io.bkbn.kompendium.auth.util.configJwtAuth
+import io.bkbn.kompendium.auth.util.notarizedAuthRoute
 import io.bkbn.kompendium.auth.util.setupOauth
-import io.bkbn.kompendium.auth.util.testGetInfo
-import io.bkbn.kompendium.core.Notarized.notarizedGet
 import io.bkbn.kompendium.core.fixtures.TestHelpers.openApiTest
 import io.bkbn.kompendium.oas.security.OAuth
 import io.kotest.core.spec.style.DescribeSpec
-import io.ktor.application.call
-import io.ktor.response.respondText
-import io.ktor.routing.route
-import io.ktor.routing.routing
 
 class KompendiumAuthTest : DescribeSpec({
   describe("Basic Authentication") {
@@ -29,15 +23,7 @@ class KompendiumAuthTest : DescribeSpec({
       // act
       openApiTest("notarized_basic_authenticated_get.json") {
         configBasicAuth()
-        routing {
-          notarizedAuthenticate(authConfig) {
-            route("/test") {
-              notarizedGet(testGetInfo(AuthConfigName.Basic)) {
-                call.respondText { "hey dude ‼️ congratz on the get request" }
-              }
-            }
-          }
-        }
+        notarizedAuthRoute(authConfig)
       }
     }
   }
@@ -51,15 +37,7 @@ class KompendiumAuthTest : DescribeSpec({
       // act
       openApiTest("notarized_jwt_authenticated_get.json") {
         configJwtAuth()
-        routing {
-          notarizedAuthenticate(authConfig) {
-            route("/test") {
-              notarizedGet(testGetInfo(authConfig.name)) {
-                call.respondText { "hey dude ‼️ congratz on the get request" }
-              }
-            }
-          }
-        }
+        notarizedAuthRoute(authConfig)
       }
     }
   }
@@ -84,15 +62,7 @@ class KompendiumAuthTest : DescribeSpec({
       // act
       openApiTest("notarized_oauth_all_flows.json") {
         setupOauth()
-        routing {
-          notarizedAuthenticate(authConfig) {
-            route("/test") {
-              notarizedGet(testGetInfo(authConfig.name)) {
-                call.respondText { "hey dude ‼️ congratz on the get request" }
-              }
-            }
-          }
-        }
+        notarizedAuthRoute(authConfig)
       }
     }
   }
