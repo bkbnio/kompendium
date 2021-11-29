@@ -25,6 +25,7 @@ class Kompendium(val config: Configuration) {
     override val key: AttributeKey<Kompendium> = AttributeKey("Kompendium")
     override fun install(pipeline: Application, configure: Configuration.() -> Unit): Kompendium {
       val configuration = Configuration().apply(configure)
+
       return Kompendium(configuration)
     }
   }

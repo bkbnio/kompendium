@@ -15,7 +15,7 @@ testing {
     val test by getting(JvmTestSuite::class) {
       dependencies {
         implementation("io.kotest:kotest-assertions-ktor-jvm:4.4.3")
-        implementation("io.ktor:ktor-server-test-host:1.6.5")
+        implementation("io.ktor:ktor-server-test-host:1.6.6")
       }
     }
   }

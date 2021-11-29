@@ -1,14 +1,10 @@
 package io.bkbn.kompendium.auth.util
 
-import io.bkbn.kompendium.auth.KompendiumAuth.notarizedBasic
-import io.bkbn.kompendium.auth.KompendiumAuth.notarizedJwt
-import io.bkbn.kompendium.auth.KompendiumAuth.notarizedOAuth
 import io.bkbn.kompendium.core.Notarized.notarizedGet
 import io.bkbn.kompendium.core.fixtures.TestParams
 import io.bkbn.kompendium.core.fixtures.TestResponse
 import io.bkbn.kompendium.core.fixtures.TestResponseInfo
 import io.bkbn.kompendium.core.metadata.MethodInfo
-import io.bkbn.kompendium.oas.security.OAuth
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
@@ -16,6 +12,9 @@ import io.ktor.auth.Authentication
 import io.ktor.auth.OAuthServerSettings
 import io.ktor.auth.UserIdPrincipal
 import io.ktor.auth.authenticate
+import io.ktor.auth.basic
+import io.ktor.auth.jwt.jwt
+import io.ktor.auth.oauth
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.http.HttpMethod
@@ -23,9 +22,9 @@ import io.ktor.response.respondText
 import io.ktor.routing.route
 import io.ktor.routing.routing
 
-fun Application.setupOauth(flows: OAuth.Flows) {
+fun Application.setupOauth() {
   install(Authentication) {
-    notarizedOAuth(flows, "oauth") {
+    oauth("oauth") {
       urlProvider = { "http://localhost:8080/callback" }
       client = HttpClient(CIO)
       providerLookup = {
@@ -45,7 +44,7 @@ fun Application.setupOauth(flows: OAuth.Flows) {
 
 fun Application.configBasicAuth() {
   install(Authentication) {
-    notarizedBasic(AuthConfigName.Basic) {
+    basic(AuthConfigName.Basic) {
       realm = "Ktor Server"
       validate { credentials ->
         if (credentials.name == credentials.password) {
@@ -58,11 +57,9 @@ fun Application.configBasicAuth() {
   }
 }
 
-fun Application.configJwtAuth(
-  bearerFormat: String? = null
-) {
+fun Application.configJwtAuth() {
   install(Authentication) {
-    notarizedJwt(AuthConfigName.JWT, bearerFormat) {
+    jwt(AuthConfigName.JWT) {
       realm = "Ktor server"
     }
   }
@@ -91,4 +88,5 @@ fun testGetInfo(vararg security: String) =
 object AuthConfigName {
   const val Basic = "basic"
   const val JWT = "jwt"
+  const val OAuth = "oauth"
 }

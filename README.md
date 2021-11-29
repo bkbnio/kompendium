@@ -320,13 +320,3 @@ specified schema.
 So how do you know a type can and cannot be inferred? The safe bet is that it can be. So go ahead and give it a shot.
 However, in the very odd scenario (almost always having to do with date/time libraries 😤) where it can't, you can rest
 safely knowing that you have the option to inject a custom override should you need to.
-
-## Limitations
-
-### Kompendium as a singleton
-
-Currently, Kompendium exists as a Kotlin object. This comes with a couple perks, but a couple downsides. Primarily, it
-offers a seriously clean UX where the implementer doesn't need to worry about what instance to send data to. The main
-drawback, however, is that you are limited to a single API per classpath.
-
-If this is a blocker, please open a GitHub issue, and we can start to think out solutions!

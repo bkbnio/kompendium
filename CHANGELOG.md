@@ -17,6 +17,8 @@
 - Annotations now live in a separate module.  (Should not impact end users as module is imported as api dependency by core).
 - Kotest as the testing framework of choice
 - Path calculation removed in favor of built-in route toString
+- Ktor to 1.6.6
+- Completely reworked authentication and exceptions
 
 ### Remove
 

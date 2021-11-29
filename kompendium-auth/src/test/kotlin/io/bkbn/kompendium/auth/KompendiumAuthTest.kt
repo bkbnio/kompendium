@@ -1,54 +1,65 @@
 package io.bkbn.kompendium.auth
 
-import io.bkbn.kompendium.auth.KompendiumAuth.notarizedJwt
+import io.bkbn.kompendium.auth.Notarized.notarizedAuthenticate
+import io.bkbn.kompendium.auth.configuration.BasicAuthConfiguration
+import io.bkbn.kompendium.auth.configuration.JwtAuthConfiguration
+import io.bkbn.kompendium.auth.configuration.OAuthConfiguration
 import io.bkbn.kompendium.auth.util.AuthConfigName
 import io.bkbn.kompendium.auth.util.configBasicAuth
 import io.bkbn.kompendium.auth.util.configJwtAuth
-import io.bkbn.kompendium.auth.util.notarizedAuthenticatedGetModule
 import io.bkbn.kompendium.auth.util.setupOauth
+import io.bkbn.kompendium.auth.util.testGetInfo
+import io.bkbn.kompendium.core.Notarized.notarizedGet
 import io.bkbn.kompendium.core.fixtures.TestHelpers.openApiTest
 import io.bkbn.kompendium.oas.security.OAuth
 import io.kotest.core.spec.style.DescribeSpec
-import io.ktor.application.install
-import io.ktor.auth.Authentication
+import io.ktor.application.call
+import io.ktor.response.respondText
+import io.ktor.routing.route
+import io.ktor.routing.routing
 
 class KompendiumAuthTest : DescribeSpec({
   describe("Basic Authentication") {
     it("Can create a notarized basic authentication record with all expected information") {
+      // arrange
+      val authConfig = object : BasicAuthConfiguration {
+        override val name: String = AuthConfigName.Basic
+      }
+
       // act
       openApiTest("notarized_basic_authenticated_get.json") {
         configBasicAuth()
-        notarizedAuthenticatedGetModule(AuthConfigName.Basic)
+        routing {
+          notarizedAuthenticate(authConfig) {
+            route("/test") {
+              notarizedGet(testGetInfo(AuthConfigName.Basic)) {
+                call.respondText { "hey dude ‼️ congratz on the get request" }
+              }
+            }
+          }
+        }
       }
     }
   }
   describe("JWT Authentication") {
-    it("Can create a notarized jwt authentication record with all expected information") {
+    it("Can create a simple notarized JWT route") {
+      // arrange
+      val authConfig = object : JwtAuthConfiguration {
+        override val name: String = AuthConfigName.JWT
+      }
+
       // act
       openApiTest("notarized_jwt_authenticated_get.json") {
         configJwtAuth()
-        notarizedAuthenticatedGetModule(AuthConfigName.JWT)
-      }
-    }
-    it("Can create a JWT authentication record with a custom scheme") {
-      // act
-      openApiTest("notarized_jwt_custom_scheme_authenticated_get.json") {
-        configJwtAuth(bearerFormat = "JWT")
-        notarizedAuthenticatedGetModule(AuthConfigName.JWT)
-      }
-    }
-    it("Can create a JWT authentication record with multiple schemas") {
-      // act
-      openApiTest("notarized_multiple_jwt_authenticated_get.json") {
-        install(Authentication) {
-          notarizedJwt("jwt1") {
-            realm = "Ktor server"
-          }
-          notarizedJwt("jwt2") {
-            realm = "Ktor server"
+        routing {
+          notarizedAuthenticate(authConfig) {
+            route("/test") {
+              notarizedGet(testGetInfo(authConfig.name)) {
+                call.respondText { "hey dude ‼️ congratz on the get request" }
+              }
+            }
           }
         }
-        notarizedAuthenticatedGetModule("jwt1", "jwt2")
       }
     }
   }
@@ -65,10 +76,23 @@ class KompendiumAuthTest : DescribeSpec({
         clientCredentials = OAuth.Flows.ClientCredential("https://accounts.google.com/token")
       )
 
+      val authConfig = object : OAuthConfiguration {
+        override val flows: OAuth.Flows = flows
+        override val name: String = AuthConfigName.OAuth
+      }
+
       // act
-      openApiTest("notarized_oauth_implicit_flow.json") {
-        setupOauth(flows)
-        notarizedAuthenticatedGetModule("oauth")
+      openApiTest("notarized_oauth_all_flows.json") {
+        setupOauth()
+        routing {
+          notarizedAuthenticate(authConfig) {
+            route("/test") {
+              notarizedGet(testGetInfo(authConfig.name)) {
+                call.respondText { "hey dude ‼️ congratz on the get request" }
+              }
+            }
+          }
+        }
       }
     }
   }

@@ -1,13 +1,13 @@
 package io.bkbn.kompendium.playground
 
-import io.bkbn.kompendium.core.Kompendium
 import io.bkbn.kompendium.core.Notarized.notarizedDelete
 import io.bkbn.kompendium.core.Notarized.notarizedException
 import io.bkbn.kompendium.core.Notarized.notarizedGet
 import io.bkbn.kompendium.core.Notarized.notarizedPost
 import io.bkbn.kompendium.core.Notarized.notarizedPut
-import io.bkbn.kompendium.auth.KompendiumAuth.notarizedBasic
 import io.bkbn.kompendium.core.metadata.ResponseInfo
+import io.bkbn.kompendium.core.routes.openApi
+import io.bkbn.kompendium.core.routes.redoc
 import io.bkbn.kompendium.playground.PlaygroundToC.testAuthenticatedSingleGetInfo
 import io.bkbn.kompendium.playground.PlaygroundToC.testCustomOverride
 import io.bkbn.kompendium.playground.PlaygroundToC.testGetWithExamples
@@ -19,9 +19,6 @@ import io.bkbn.kompendium.playground.PlaygroundToC.testSingleGetInfoWithThrowabl
 import io.bkbn.kompendium.playground.PlaygroundToC.testSinglePostInfo
 import io.bkbn.kompendium.playground.PlaygroundToC.testSinglePutInfo
 import io.bkbn.kompendium.playground.PlaygroundToC.testUndeclaredFields
-import io.bkbn.kompendium.core.routes.openApi
-import io.bkbn.kompendium.core.routes.redoc
-import io.bkbn.kompendium.oas.schema.FormattedSchema
 import io.bkbn.kompendium.swagger.swaggerUI
 import io.ktor.application.Application
 import io.ktor.application.call
@@ -29,6 +26,7 @@ import io.ktor.application.install
 import io.ktor.auth.Authentication
 import io.ktor.auth.UserIdPrincipal
 import io.ktor.auth.authenticate
+import io.ktor.auth.basic
 import io.ktor.features.ContentNegotiation
 import io.ktor.features.StatusPages
 import io.ktor.http.HttpStatusCode
@@ -58,7 +56,7 @@ private fun Application.configModule() {
       json()
     }
     install(Authentication) {
-      notarizedBasic("basic") {
+      basic("basic") {
         realm = "Ktor Server"
         validate { credentials ->
           if (credentials.name == credentials.password) {
