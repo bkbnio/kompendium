@@ -1,6 +1,8 @@
 package io.bkbn.kompendium.core
 
+import io.ktor.application.feature
 import io.ktor.routing.Route
+import io.ktor.routing.application
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
@@ -18,13 +20,14 @@ object KompendiumPreFlight {
    * @return [Route]
    */
   @OptIn(ExperimentalStdlibApi::class)
-  inline fun <reified TParam : Any, reified TReq : Any, reified TResp : Any> methodNotarizationPreFlight(
+  inline fun <reified TParam : Any, reified TReq : Any, reified TResp : Any> Route.methodNotarizationPreFlight(
     block: (KType, KType, KType) -> Route
   ): Route {
+    val feature = this.application.feature(Kompendium)
     val requestType = typeOf<TReq>()
     val responseType = typeOf<TResp>()
     val paramType = typeOf<TParam>()
-    addToCache(paramType, requestType, responseType)
+    addToCache(paramType, requestType, responseType, feature)
 //    Kompendium.openApiSpec.components.schemas.putAll(Kompendium.cache)
     return block.invoke(paramType, requestType, responseType)
   }
@@ -41,14 +44,13 @@ object KompendiumPreFlight {
   ) {
     val errorType = typeOf<TErr>()
     val responseType = typeOf<TResp>()
-    addToCache(typeOf<Unit>(), typeOf<Unit>(), responseType)
-//    Kompendium.openApiSpec.components.schemas.putAll(Kompendium.cache)
+//    addToCache(typeOf<Unit>(), typeOf<Unit>(), responseType)
     return block.invoke(errorType, responseType)
   }
 
-  fun addToCache(paramType: KType, requestType: KType, responseType: KType) {
-    Kompendium.cache = Kontent.generateKontent(requestType, Kompendium.cache)
-    Kompendium.cache = Kontent.generateKontent(responseType, Kompendium.cache)
-    Kompendium.cache = Kontent.generateParameterKontent(paramType, Kompendium.cache)
+  fun addToCache(paramType: KType, requestType: KType, responseType: KType, feature: Kompendium) {
+    feature.config.cache = Kontent.generateKontent(requestType, feature.config.cache)
+    feature.config.cache = Kontent.generateKontent(responseType, feature.config.cache)
+    feature.config.cache = Kontent.generateParameterKontent(paramType, feature.config.cache)
   }
 }

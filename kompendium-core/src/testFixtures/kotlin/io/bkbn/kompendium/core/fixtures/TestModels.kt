@@ -1,4 +1,4 @@
-package io.bkbn.kompendium.core
+package io.bkbn.kompendium.core.fixtures
 
 import java.util.UUID
 import io.bkbn.kompendium.annotations.KompendiumField

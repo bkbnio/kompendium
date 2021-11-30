@@ -1,10 +1,6 @@
 package io.bkbn.kompendium.locations
 
-import io.bkbn.kompendium.core.Kompendium
-import io.bkbn.kompendium.core.TestHelpers.compareOpenAPISpec
-import io.bkbn.kompendium.core.TestHelpers.openApiTest
-import io.bkbn.kompendium.core.docs
-import io.bkbn.kompendium.core.jacksonConfigModule
+import io.bkbn.kompendium.core.fixtures.TestHelpers.openApiTest
 import io.bkbn.kompendium.locations.util.locationsConfig
 import io.bkbn.kompendium.locations.util.notarizedDeleteNestedLocation
 import io.bkbn.kompendium.locations.util.notarizedDeleteSimpleLocation
@@ -15,10 +11,8 @@ import io.bkbn.kompendium.locations.util.notarizedPostSimpleLocation
 import io.bkbn.kompendium.locations.util.notarizedPutNestedLocation
 import io.bkbn.kompendium.locations.util.notarizedPutSimpleLocation
 import io.kotest.core.spec.style.DescribeSpec
-import io.ktor.server.testing.withTestApplication
 
 class KompendiumLocationsTest : DescribeSpec({
-  afterEach { Kompendium.resetSchema() }
   describe("Locations") {
     it("Can notarize a get request with a simple location") {
       // act

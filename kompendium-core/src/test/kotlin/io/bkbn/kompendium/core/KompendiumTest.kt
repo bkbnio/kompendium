@@ -1,10 +1,9 @@
 package io.bkbn.kompendium.core
 
-import io.bkbn.kompendium.core.TestHelpers.apiFunctionalityTest
-import io.bkbn.kompendium.core.TestHelpers.getFileSnapshot
-import io.bkbn.kompendium.core.TestHelpers.openApiTest
+import io.bkbn.kompendium.core.fixtures.TestHelpers.apiFunctionalityTest
+import io.bkbn.kompendium.core.fixtures.TestHelpers.getFileSnapshot
+import io.bkbn.kompendium.core.fixtures.TestHelpers.openApiTest
 import io.bkbn.kompendium.core.util.complexType
-import io.bkbn.kompendium.core.util.emptyGet
 import io.bkbn.kompendium.core.util.genericPolymorphicResponse
 import io.bkbn.kompendium.core.util.genericPolymorphicResponseMultipleImpls
 import io.bkbn.kompendium.core.util.headerParameter
@@ -12,8 +11,10 @@ import io.bkbn.kompendium.core.util.nestedUnderRootModule
 import io.bkbn.kompendium.core.util.nonRequiredParamsGet
 import io.bkbn.kompendium.core.util.notarizedDeleteModule
 import io.bkbn.kompendium.core.util.notarizedGetModule
+import io.bkbn.kompendium.core.util.notarizedGetWithGenericErrorResponse
 import io.bkbn.kompendium.core.util.notarizedGetWithMultipleThrowables
 import io.bkbn.kompendium.core.util.notarizedGetWithNotarizedException
+import io.bkbn.kompendium.core.util.notarizedGetWithPolymorphicErrorResponse
 import io.bkbn.kompendium.core.util.notarizedPostModule
 import io.bkbn.kompendium.core.util.notarizedPutModule
 import io.bkbn.kompendium.core.util.pathParsingTestModule
@@ -25,8 +26,6 @@ import io.bkbn.kompendium.core.util.primitives
 import io.bkbn.kompendium.core.util.returnsList
 import io.bkbn.kompendium.core.util.rootModule
 import io.bkbn.kompendium.core.util.simpleGenericResponse
-import io.bkbn.kompendium.core.util.statusPageModule
-import io.bkbn.kompendium.core.util.statusPageMultiExceptions
 import io.bkbn.kompendium.core.util.trailingSlash
 import io.bkbn.kompendium.core.util.undeclaredType
 import io.bkbn.kompendium.core.util.withDefaultParameter
@@ -37,7 +36,6 @@ import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
 
 class KompendiumTest : DescribeSpec({
-  afterEach { Kompendium.resetSchema() }
   describe("Notarized Open API Metadata Tests") {
     it("Can notarize a get request") {
       // act
@@ -67,10 +65,6 @@ class KompendiumTest : DescribeSpec({
       // act
       openApiTest("response_list.json") { returnsList() }
     }
-    it("Can notarize a route with no request params and no response body") {
-      // act
-      openApiTest("no_request_params_and_no_response_body.json") { emptyGet() }
-    }
     it("Can notarize a route with non-required params") {
       // act
       openApiTest("non_required_params.json") { nonRequiredParamsGet() }
@@ -83,7 +77,10 @@ class KompendiumTest : DescribeSpec({
     }
     it("Can notarize a post request and return the expected result") {
       // act
-      apiFunctionalityTest("hey dude ✌️ congratz on the post request", httpMethod = HttpMethod.Post) { notarizedPostModule() }
+      apiFunctionalityTest(
+        "hey dude ✌️ congratz on the post request",
+        httpMethod = HttpMethod.Post
+      ) { notarizedPostModule() }
     }
     it("Can notarize a put request and return the expected result") {
       // act
@@ -91,7 +88,11 @@ class KompendiumTest : DescribeSpec({
     }
     it("Can notarize a delete request and return the expected result") {
       // act
-      apiFunctionalityTest(null, httpMethod = HttpMethod.Delete, expectedStatusCode = HttpStatusCode.NoContent) { notarizedDeleteModule() }
+      apiFunctionalityTest(
+        null,
+        httpMethod = HttpMethod.Delete,
+        expectedStatusCode = HttpStatusCode.NoContent
+      ) { notarizedDeleteModule() }
     }
     it("Can notarize the root route and return the expected result") {
       // act
@@ -121,19 +122,21 @@ class KompendiumTest : DescribeSpec({
     }
   }
   describe("Exceptions") {
-    it("Can notarize a throwable") {
+    it("Can add an exception status code to a response") {
       // act
-      openApiTest("notarized_get_with_exception_response.json") {
-        statusPageModule()
-        notarizedGetWithNotarizedException()
-      }
+      openApiTest("notarized_get_with_exception_response.json") { notarizedGetWithNotarizedException() }
     }
-    it("Can notarize multiple throwables") {
+    it("Can support multiple response codes") {
       // act
-      openApiTest("notarized_get_with_multiple_exception_responses.json") {
-        statusPageMultiExceptions()
-        notarizedGetWithMultipleThrowables()
-      }
+      openApiTest("notarized_get_with_multiple_exception_responses.json") { notarizedGetWithMultipleThrowables() }
+    }
+    it("Can add a polymorphic exception response") {
+      // act
+      openApiTest("polymorphic_error_status_codes.json") { notarizedGetWithPolymorphicErrorResponse() }
+    }
+    it("Can add a generic exception response") {
+      // act
+      openApiTest("generic_exception.json") { notarizedGetWithGenericErrorResponse() }
     }
   }
   describe("Examples") {

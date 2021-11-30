@@ -7,12 +7,13 @@ import kotlin.reflect.KType
 import kotlin.reflect.full.createType
 import kotlin.reflect.jvm.javaField
 import org.slf4j.LoggerFactory
+import java.util.Locale
 
 object Helpers {
 
   private val logger = LoggerFactory.getLogger(javaClass)
 
-  const val COMPONENT_SLUG = "#/components/schemas"
+  private const val COMPONENT_SLUG = "#/components/schemas"
 
   val UNIT_TYPE by lazy { Unit::class.createType() }
 
@@ -68,5 +69,9 @@ object Helpers {
       .map { it.type?.classifier as KClass<*> }
       .map { it.simpleName }
     return classNames.joinToString(separator = "-", prefix = "${clazz.simpleName}-")
+  }
+
+  fun String.capitalized() = replaceFirstChar {
+    if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
   }
 }

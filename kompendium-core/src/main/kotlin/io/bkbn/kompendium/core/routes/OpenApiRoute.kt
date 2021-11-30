@@ -15,6 +15,7 @@ import io.ktor.routing.route
  * @param oas spec that is returned
  * @param om provider for Jackson
  */
+// TODO Inline this into feature???
 fun Routing.openApi(
   oas: OpenApiSpec,
   om: ObjectMapper = objectMapper

@@ -1,72 +1,31 @@
 package io.bkbn.kompendium.core.util
 
-import io.bkbn.kompendium.core.Bibbity
-import io.bkbn.kompendium.core.ComplexGibbit
-import io.bkbn.kompendium.core.DefaultParameter
-import io.bkbn.kompendium.core.ExceptionResponse
-import io.bkbn.kompendium.core.Gibbity
-import io.bkbn.kompendium.core.Mysterious
 import io.bkbn.kompendium.core.Notarized.notarizedDelete
-import io.bkbn.kompendium.core.Notarized.notarizedException
 import io.bkbn.kompendium.core.Notarized.notarizedGet
 import io.bkbn.kompendium.core.Notarized.notarizedPost
 import io.bkbn.kompendium.core.Notarized.notarizedPut
-import io.bkbn.kompendium.core.SimpleGibbit
-import io.bkbn.kompendium.core.TestNested
-import io.bkbn.kompendium.core.TestRequest
-import io.bkbn.kompendium.core.TestResponse
-import io.bkbn.kompendium.core.TestResponseInfo
-import io.bkbn.kompendium.core.metadata.MethodInfo
+import io.bkbn.kompendium.core.fixtures.Bibbity
+import io.bkbn.kompendium.core.fixtures.ComplexGibbit
+import io.bkbn.kompendium.core.fixtures.DefaultParameter
+import io.bkbn.kompendium.core.fixtures.Gibbity
+import io.bkbn.kompendium.core.fixtures.Mysterious
+import io.bkbn.kompendium.core.fixtures.SimpleGibbit
+import io.bkbn.kompendium.core.fixtures.TestHelpers.DEFAULT_TEST_ENDPOINT
+import io.bkbn.kompendium.core.fixtures.TestNested
+import io.bkbn.kompendium.core.fixtures.TestRequest
+import io.bkbn.kompendium.core.fixtures.TestResponse
+import io.bkbn.kompendium.core.fixtures.TestResponseInfo
 import io.bkbn.kompendium.core.metadata.RequestInfo
 import io.bkbn.kompendium.core.metadata.ResponseInfo
+import io.bkbn.kompendium.core.metadata.method.GetInfo
+import io.bkbn.kompendium.core.metadata.method.PostInfo
 import io.ktor.application.Application
 import io.ktor.application.call
-import io.ktor.application.install
-import io.ktor.features.ContentNegotiation
-import io.ktor.features.StatusPages
 import io.ktor.http.HttpStatusCode
 import io.ktor.response.respond
 import io.ktor.response.respondText
 import io.ktor.routing.route
 import io.ktor.routing.routing
-import io.ktor.serialization.json
-
-fun Application.kotlinxConfigModule() {
-  install(ContentNegotiation) {
-    json()
-  }
-}
-
-fun Application.statusPageModule() {
-  install(StatusPages) {
-    notarizedException<Exception, ExceptionResponse>(
-      info = ResponseInfo(
-        HttpStatusCode.BadRequest,
-        "Bad Things Happened"
-      )
-    ) {
-      call.respond(HttpStatusCode.BadRequest, ExceptionResponse("Why you do dis?"))
-    }
-  }
-}
-
-fun Application.statusPageMultiExceptions() {
-  install(StatusPages) {
-    notarizedException<AccessDeniedException, Unit>(
-      info = ResponseInfo(HttpStatusCode.Forbidden, "New API who dis?")
-    ) {
-      call.respond(HttpStatusCode.Forbidden)
-    }
-    notarizedException<Exception, ExceptionResponse>(
-      info = ResponseInfo(
-        HttpStatusCode.BadRequest,
-        "Bad Things Happened"
-      )
-    ) {
-      call.respond(HttpStatusCode.BadRequest, ExceptionResponse("Why you do dis?"))
-    }
-  }
-}
 
 fun Application.notarizedGetWithNotarizedException() {
   routing {
@@ -82,6 +41,26 @@ fun Application.notarizedGetWithMultipleThrowables() {
   routing {
     route("/test") {
       notarizedGet(TestResponseInfo.testGetWithMultipleExceptions) {
+        error("something terrible has happened!")
+      }
+    }
+  }
+}
+
+fun Application.notarizedGetWithPolymorphicErrorResponse() {
+  routing {
+    route(DEFAULT_TEST_ENDPOINT) {
+      notarizedGet(TestResponseInfo.testGetWithPolymorphicException) {
+        error("something terrible has happened!")
+      }
+    }
+  }
+}
+
+fun Application.notarizedGetWithGenericErrorResponse() {
+  routing {
+    route(DEFAULT_TEST_ENDPOINT) {
+      notarizedGet(TestResponseInfo.testGetWithGenericException) {
         error("something terrible has happened!")
       }
     }
@@ -212,21 +191,11 @@ fun Application.primitives() {
   }
 }
 
-fun Application.emptyGet() {
-  routing {
-    route("/test/empty") {
-      notarizedGet(TestResponseInfo.trulyEmptyTestGetInfo) {
-        call.respond(HttpStatusCode.OK)
-      }
-    }
-  }
-}
-
 fun Application.withExamples() {
   routing {
     route("/test/examples") {
       notarizedPost(
-        info = MethodInfo.PostInfo<Unit, TestRequest, TestResponse>(
+        info = PostInfo<Unit, TestRequest, TestResponse>(
           summary = "Example Parameters",
           description = "A test for setting parameter examples",
           requestInfo = RequestInfo(
@@ -253,9 +222,13 @@ fun Application.withDefaultParameter() {
   routing {
     route("/test") {
       notarizedGet(
-        info = MethodInfo.GetInfo<DefaultParameter, TestResponse>(
+        info = GetInfo<DefaultParameter, TestResponse>(
           summary = "Testing Default Params",
-          description = "Should have a default parameter value"
+          description = "Should have a default parameter value",
+          responseInfo = ResponseInfo(
+            HttpStatusCode.OK,
+            "A good response"
+          )
         )
       ) {
         call.respond(TestResponse("hey"))
@@ -279,7 +252,7 @@ fun Application.withOperationId(){
 fun Application.nonRequiredParamsGet() {
   routing {
     route("/test/optional") {
-      notarizedGet(TestResponseInfo.emptyTestGetInfo) {
+      notarizedGet(TestResponseInfo.testOptionalParams) {
         call.respond(HttpStatusCode.OK)
       }
     }

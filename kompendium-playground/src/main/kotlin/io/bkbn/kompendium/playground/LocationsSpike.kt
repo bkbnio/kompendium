@@ -1,14 +1,13 @@
 package io.bkbn.kompendium.playground
 
-import io.bkbn.kompendium.core.Kompendium
 import io.bkbn.kompendium.annotations.KompendiumParam
 import io.bkbn.kompendium.annotations.ParamType
-import io.bkbn.kompendium.core.metadata.MethodInfo
+import io.bkbn.kompendium.core.metadata.method.MethodInfo
 import io.bkbn.kompendium.core.metadata.ResponseInfo
+import io.bkbn.kompendium.core.metadata.method.GetInfo
 import io.bkbn.kompendium.core.routes.openApi
 import io.bkbn.kompendium.core.routes.redoc
 import io.bkbn.kompendium.locations.NotarizedLocation.notarizedGet
-import io.bkbn.kompendium.oas.schema.FormattedSchema
 import io.bkbn.kompendium.playground.LocationsToC.testLocation
 import io.ktor.application.Application
 import io.ktor.application.call
@@ -22,11 +21,8 @@ import io.ktor.routing.routing
 import io.ktor.serialization.json
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
-import org.joda.time.DateTime
 
 fun main() {
-  Kompendium.addCustomTypeSchema(DateTime::class, FormattedSchema("date-time", "string"))
-
   embeddedServer(
     Netty,
     port = 8081,
@@ -58,7 +54,7 @@ private fun Application.mainModule() {
 }
 
 private object LocationsToC {
-  val testLocation = MethodInfo.GetInfo<TestLocations.NestedTestLocations.OhBoiUCrazy, ExampleResponse>(
+  val testLocation = GetInfo<TestLocations.NestedTestLocations.OhBoiUCrazy, ExampleResponse>(
     summary = "Example Parameters",
     description = "A test for setting parameter examples",
     responseInfo = ResponseInfo(
@@ -66,7 +62,6 @@ private object LocationsToC {
       description = "nice",
       examples = mapOf("test" to ExampleResponse(c = "spud"))
     ),
-    canThrow = setOf(Exception::class)
   )
 }
 

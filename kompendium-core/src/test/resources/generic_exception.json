@@ -67,25 +67,44 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Wow serious things went wrong",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "properties": {
+                        "a": {
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    {
+                      "properties": {
+                        "b": {
+                          "type": "string"
+                        },
+                        "f": {
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  ]
+                }
+              }
+            }
           }
         },
-        "deprecated": false,
-        "security": [
-          {
-            "jwt": []
-          }
-        ]
+        "deprecated": false
       }
     }
   },
   "components": {
-    "securitySchemes": {
-      "jwt": {
-        "bearerFormat": "JWT",
-        "type": "http",
-        "scheme": "bearer"
-      }
-    }
+    "securitySchemes": {}
   },
   "security": [],
   "tags": []
