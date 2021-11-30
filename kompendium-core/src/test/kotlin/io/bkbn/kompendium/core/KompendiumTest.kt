@@ -129,6 +129,13 @@ class KompendiumTest : DescribeSpec({
       // act
       openApiTest("notarized_get_with_exception_response.json") { notarizedGetWithNotarizedException() }
     }
+    it("Can support multiple response codes") {
+      // act
+      openApiTest("notarized_get_with_multiple_exception_responses.json") { notarizedGetWithMultipleThrowables() }
+    }
+    it("Can support multiple response types for a single status code") {
+      TODO()
+    }
   }
   describe("Examples") {
     it("Can generate example response and request bodies") {

@@ -33,7 +33,7 @@ object TestResponseInfo {
   private val accessDeniedResponse = ExceptionInfo(
     responseClass = ExceptionResponse::class,
     description = "Access Denied",
-    status = HttpStatusCode.Unauthorized
+    status = HttpStatusCode.Forbidden
   )
   private val exceptionResponseInfo = ExceptionInfo(
     responseClass = ExceptionResponse::class,
