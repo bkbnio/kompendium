@@ -1,7 +1,7 @@
 package io.bkbn.kompendium.core.metadata.method
 
+import io.bkbn.kompendium.core.metadata.ExceptionInfo
 import io.bkbn.kompendium.core.metadata.ResponseInfo
-import kotlin.reflect.KClass
 
 sealed interface MethodInfo<TParam, TResp> {
   val summary: String
@@ -13,7 +13,7 @@ sealed interface MethodInfo<TParam, TResp> {
     get() = false
   val securitySchemes: Set<String>
     get() = emptySet()
-  val canThrow: Set<KClass<*>>
+  val canThrow: Set<ExceptionInfo<*>>
     get() = emptySet()
   val responseInfo: ResponseInfo<TResp>?
     get() = null

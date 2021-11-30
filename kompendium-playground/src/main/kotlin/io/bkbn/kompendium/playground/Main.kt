@@ -1,7 +1,6 @@
 package io.bkbn.kompendium.playground
 
 import io.bkbn.kompendium.core.Notarized.notarizedDelete
-import io.bkbn.kompendium.core.Notarized.notarizedException
 import io.bkbn.kompendium.core.Notarized.notarizedGet
 import io.bkbn.kompendium.core.Notarized.notarizedPost
 import io.bkbn.kompendium.core.Notarized.notarizedPut
@@ -69,13 +68,7 @@ private fun Application.configModule() {
     }
     install(Webjars)
     install(StatusPages) {
-      notarizedException<Exception, ExceptionResponse>(
-        info = ResponseInfo(
-          HttpStatusCode.BadRequest,
-          "Bad Things Happened",
-          examples = mapOf("example" to ExceptionResponse("hey bad things happened sorry"))
-        )
-      ) {
+      exception<Exception> { _ ->
         call.respond(HttpStatusCode.BadRequest, ExceptionResponse("Why you do dis?"))
       }
     }

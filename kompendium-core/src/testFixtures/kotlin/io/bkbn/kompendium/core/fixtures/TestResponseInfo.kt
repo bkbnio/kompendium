@@ -1,5 +1,6 @@
 package io.bkbn.kompendium.core.fixtures
 
+import io.bkbn.kompendium.core.metadata.ExceptionInfo
 import io.bkbn.kompendium.core.metadata.method.PostInfo
 import io.bkbn.kompendium.core.metadata.method.PutInfo
 import io.bkbn.kompendium.core.metadata.RequestInfo
@@ -29,11 +30,21 @@ object TestResponseInfo {
     description = "testing more",
     responseInfo = testGetListResponse
   )
+  private val accessDeniedResponse = ExceptionInfo(
+    responseClass = ExceptionResponse::class,
+    description = "Access Denied",
+    status = HttpStatusCode.Unauthorized
+  )
+  private val exceptionResponseInfo = ExceptionInfo(
+    responseClass = ExceptionResponse::class,
+    description = "Bad Things Happened",
+    status = HttpStatusCode.BadRequest
+  )
   val testGetWithException = testGetInfo.copy(
-    canThrow = setOf(Exception::class)
+    canThrow = setOf(exceptionResponseInfo)
   )
   val testGetWithMultipleExceptions = testGetInfo.copy(
-    canThrow = setOf(AccessDeniedException::class, Exception::class)
+    canThrow = setOf(accessDeniedResponse, exceptionResponseInfo)
   )
   val testPostInfo = PostInfo<TestParams, TestRequest, TestCreatedResponse>(
     summary = "Test post endpoint",

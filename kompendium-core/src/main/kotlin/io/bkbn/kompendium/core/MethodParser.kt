@@ -1,12 +1,15 @@
 package io.bkbn.kompendium.core
 
 import io.bkbn.kompendium.annotations.KompendiumParam
+import io.bkbn.kompendium.core.Kontent.generateKontent
+import io.bkbn.kompendium.core.metadata.ExceptionInfo
 import io.bkbn.kompendium.core.metadata.method.MethodInfo
 import io.bkbn.kompendium.core.metadata.RequestInfo
 import io.bkbn.kompendium.core.metadata.ResponseInfo
 import io.bkbn.kompendium.core.metadata.method.PostInfo
 import io.bkbn.kompendium.core.metadata.method.PutInfo
 import io.bkbn.kompendium.core.util.Helpers
+import io.bkbn.kompendium.core.util.Helpers.capitalized
 import io.bkbn.kompendium.core.util.Helpers.getSimpleSlug
 import io.bkbn.kompendium.oas.path.PathOperation
 import io.bkbn.kompendium.oas.payload.MediaType
@@ -52,18 +55,7 @@ object MethodParser {
     tags = info.tags,
     deprecated = info.deprecated,
     parameters = paramType.toParameterSpec(feature),
-    responses = responseType.toResponseSpec(info.responseInfo, feature)?.let { mapOf(it) }.let {
-      when (it) {
-        null -> {
-          val throwables = feature.parseThrowables(info.canThrow)
-          when (throwables.isEmpty()) {
-            true -> null
-            false -> throwables
-          }
-        }
-        else -> it.plus(feature.parseThrowables(info.canThrow))
-      }
-    },
+    responses = parseResponse(responseType, info.responseInfo, feature).plus(parseExceptions(info.canThrow, feature)),
     requestBody = when (info) {
       is PutInfo<*, *, *> -> requestType.toRequestSpec(info.requestInfo, feature)
       is PostInfo<*, *, *> -> requestType.toRequestSpec(info.requestInfo, feature)
@@ -75,27 +67,24 @@ object MethodParser {
     ) else null
   )
 
-  /**
-   * Adds the error to the [Kompendium.errorMap] for reference in notarized routes.
-   * @param errorType [KType] of the throwable being handled
-   * @param responseType [KType] the type of the response sent in event of error
-   */
-  @Suppress("UnusedPrivateMember") // TODO Remove before merge
-  fun ResponseInfo<*>.parseErrorInfo(
-    errorType: KType,
-    responseType: KType
-  ) {
-//    errorMap = errorMap.plus(errorType to responseType.toResponseSpec(this))
-  }
+  private fun parseResponse(
+    responseType: KType,
+    responseInfo: ResponseInfo<*>?,
+    feature: Kompendium
+  ): Map<Int, Payload> = responseType.toResponseSpec(responseInfo, feature)?.let { mapOf(it) }.orEmpty()
 
-  /**
-   * Parses possible errors thrown by a route
-   * @param throwables Set of classes that can be thrown
-   * @return Mapping of status codes to their corresponding error spec
-   */
-  private fun Kompendium.parseThrowables(throwables: Set<KClass<*>>): Map<Int, Payload> = throwables.mapNotNull {
-    config.errorMap[it.createType()]
-  }.toMap()
+  private fun parseExceptions(
+    exceptionInfo: Set<ExceptionInfo<*>>,
+    feature: Kompendium,
+  ): Map<Int, Payload> = exceptionInfo.associate { info ->
+    val type = info.responseClass.createType()
+    feature.config.cache = generateKontent(type, feature.config.cache)
+    val response = Response(
+      description = info.description,
+      content = feature.resolveContent(type, info.mediaTypes, info.examples)
+    )
+    Pair(info.status.value, response)
+  }
 
   /**
    * Converts a [KType] to an [Request]
@@ -215,7 +204,7 @@ object MethodParser {
       .associateWith { defaultValueInjector(it) }
     val instance = constructor.callBy(values)
     val methods = clazz.java.methods
-    val getterName = "get${prop.name.capitalize()}"
+    val getterName = "get${prop.name.capitalized()}"
     val getterFunction = methods.find { it.name == getterName }
       ?: error("Could not associate ${prop.name} with a getter")
     return getterFunction.invoke(instance)

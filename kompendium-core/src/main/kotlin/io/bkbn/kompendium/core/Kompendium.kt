@@ -1,6 +1,5 @@
 package io.bkbn.kompendium.core
 
-import io.bkbn.kompendium.core.metadata.ErrorMap
 import io.bkbn.kompendium.core.metadata.SchemaMap
 import io.bkbn.kompendium.oas.OpenApiSpec
 import io.bkbn.kompendium.oas.schema.TypedSchema
@@ -13,7 +12,6 @@ class Kompendium(val config: Configuration) {
 
   class Configuration {
     lateinit var spec: OpenApiSpec
-    var errorMap: ErrorMap = emptyMap()
     var cache: SchemaMap = emptyMap()
 
     fun addCustomTypeSchema(clazz: KClass<*>, schema: TypedSchema) {

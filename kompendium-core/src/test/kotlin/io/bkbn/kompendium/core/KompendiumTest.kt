@@ -25,8 +25,6 @@ import io.bkbn.kompendium.core.util.primitives
 import io.bkbn.kompendium.core.util.returnsList
 import io.bkbn.kompendium.core.util.rootModule
 import io.bkbn.kompendium.core.util.simpleGenericResponse
-import io.bkbn.kompendium.core.util.statusPageModule
-import io.bkbn.kompendium.core.util.statusPageMultiExceptions
 import io.bkbn.kompendium.core.util.trailingSlash
 import io.bkbn.kompendium.core.util.undeclaredType
 import io.bkbn.kompendium.core.util.withDefaultParameter
@@ -82,7 +80,10 @@ class KompendiumTest : DescribeSpec({
     }
     it("Can notarize a post request and return the expected result") {
       // act
-      apiFunctionalityTest("hey dude ✌️ congratz on the post request", httpMethod = HttpMethod.Post) { notarizedPostModule() }
+      apiFunctionalityTest(
+        "hey dude ✌️ congratz on the post request",
+        httpMethod = HttpMethod.Post
+      ) { notarizedPostModule() }
     }
     it("Can notarize a put request and return the expected result") {
       // act
@@ -90,7 +91,11 @@ class KompendiumTest : DescribeSpec({
     }
     it("Can notarize a delete request and return the expected result") {
       // act
-      apiFunctionalityTest(null, httpMethod = HttpMethod.Delete, expectedStatusCode = HttpStatusCode.NoContent) { notarizedDeleteModule() }
+      apiFunctionalityTest(
+        null,
+        httpMethod = HttpMethod.Delete,
+        expectedStatusCode = HttpStatusCode.NoContent
+      ) { notarizedDeleteModule() }
     }
     it("Can notarize the root route and return the expected result") {
       // act
@@ -120,19 +125,9 @@ class KompendiumTest : DescribeSpec({
     }
   }
   describe("Exceptions") {
-    it("Can notarize a throwable") {
+    it("Can add an exception status code to a response") {
       // act
-      openApiTest("notarized_get_with_exception_response.json") {
-        statusPageModule()
-        notarizedGetWithNotarizedException()
-      }
-    }
-    it("Can notarize multiple throwables") {
-      // act
-      openApiTest("notarized_get_with_multiple_exception_responses.json") {
-        statusPageMultiExceptions()
-        notarizedGetWithMultipleThrowables()
-      }
+      openApiTest("notarized_get_with_exception_response.json") { notarizedGetWithNotarizedException() }
     }
   }
   describe("Examples") {

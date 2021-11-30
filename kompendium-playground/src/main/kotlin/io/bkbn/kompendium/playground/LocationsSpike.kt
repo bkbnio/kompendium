@@ -62,7 +62,6 @@ private object LocationsToC {
       description = "nice",
       examples = mapOf("test" to ExampleResponse(c = "spud"))
     ),
-    canThrow = setOf(Exception::class)
   )
 }
 

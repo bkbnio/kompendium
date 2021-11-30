@@ -1,74 +1,30 @@
 package io.bkbn.kompendium.core.util
 
-import io.bkbn.kompendium.core.fixtures.Bibbity
-import io.bkbn.kompendium.core.fixtures.ComplexGibbit
-import io.bkbn.kompendium.core.fixtures.DefaultParameter
-import io.bkbn.kompendium.core.fixtures.ExceptionResponse
-import io.bkbn.kompendium.core.fixtures.Gibbity
-import io.bkbn.kompendium.core.fixtures.Mysterious
 import io.bkbn.kompendium.core.Notarized.notarizedDelete
-import io.bkbn.kompendium.core.Notarized.notarizedException
 import io.bkbn.kompendium.core.Notarized.notarizedGet
 import io.bkbn.kompendium.core.Notarized.notarizedPost
 import io.bkbn.kompendium.core.Notarized.notarizedPut
+import io.bkbn.kompendium.core.fixtures.Bibbity
+import io.bkbn.kompendium.core.fixtures.ComplexGibbit
+import io.bkbn.kompendium.core.fixtures.DefaultParameter
+import io.bkbn.kompendium.core.fixtures.Gibbity
+import io.bkbn.kompendium.core.fixtures.Mysterious
 import io.bkbn.kompendium.core.fixtures.SimpleGibbit
 import io.bkbn.kompendium.core.fixtures.TestNested
 import io.bkbn.kompendium.core.fixtures.TestRequest
 import io.bkbn.kompendium.core.fixtures.TestResponse
 import io.bkbn.kompendium.core.fixtures.TestResponseInfo
-import io.bkbn.kompendium.core.metadata.method.MethodInfo
 import io.bkbn.kompendium.core.metadata.RequestInfo
 import io.bkbn.kompendium.core.metadata.ResponseInfo
 import io.bkbn.kompendium.core.metadata.method.GetInfo
 import io.bkbn.kompendium.core.metadata.method.PostInfo
 import io.ktor.application.Application
 import io.ktor.application.call
-import io.ktor.application.install
-import io.ktor.features.ContentNegotiation
-import io.ktor.features.StatusPages
 import io.ktor.http.HttpStatusCode
 import io.ktor.response.respond
 import io.ktor.response.respondText
 import io.ktor.routing.route
 import io.ktor.routing.routing
-import io.ktor.serialization.json
-
-fun Application.kotlinxConfigModule() {
-  install(ContentNegotiation) {
-    json()
-  }
-}
-
-fun Application.statusPageModule() {
-  install(StatusPages) {
-    notarizedException<Exception, ExceptionResponse>(
-      info = ResponseInfo(
-        HttpStatusCode.BadRequest,
-        "Bad Things Happened"
-      )
-    ) {
-      call.respond(HttpStatusCode.BadRequest, ExceptionResponse("Why you do dis?"))
-    }
-  }
-}
-
-fun Application.statusPageMultiExceptions() {
-  install(StatusPages) {
-    notarizedException<AccessDeniedException, Unit>(
-      info = ResponseInfo(HttpStatusCode.Forbidden, "New API who dis?")
-    ) {
-      call.respond(HttpStatusCode.Forbidden)
-    }
-    notarizedException<Exception, ExceptionResponse>(
-      info = ResponseInfo(
-        HttpStatusCode.BadRequest,
-        "Bad Things Happened"
-      )
-    ) {
-      call.respond(HttpStatusCode.BadRequest, ExceptionResponse("Why you do dis?"))
-    }
-  }
-}
 
 fun Application.notarizedGetWithNotarizedException() {
   routing {

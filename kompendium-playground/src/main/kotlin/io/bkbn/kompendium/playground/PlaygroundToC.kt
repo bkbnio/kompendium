@@ -17,8 +17,8 @@ object PlaygroundToC {
       description = "nice",
       examples = mapOf("test" to ExampleResponse(c = "spud"))
     ),
-    canThrow = setOf(Exception::class)
   )
+
   @Suppress("MagicNumber")
   val testPostWithExamples = PostInfo<ExampleParams, ExampleRequest, ExampleResponse>(
     summary = "Full Example",
@@ -37,7 +37,6 @@ object PlaygroundToC {
         "Or This" to ExampleResponse(c = "Hey")
       )
     ),
-    canThrow = setOf(Exception::class)
   )
 
   val testIdGetInfo = GetInfo<ExampleParams, ExampleGeneric<Int>>(
@@ -69,7 +68,6 @@ object PlaygroundToC {
   )
   val testSingleGetInfoWithThrowable = testSingleGetInfo.copy(
     summary = "Show me the error baby 🙏",
-    canThrow = setOf(Exception::class)
   )
   val testSinglePostInfo = PostInfo<Unit, ExampleRequest, ExampleCreatedResponse>(
     summary = "Test post endpoint",
