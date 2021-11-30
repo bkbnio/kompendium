@@ -2,10 +2,8 @@ package io.bkbn.kompendium.playground
 
 import io.bkbn.kompendium.annotations.KompendiumParam
 import io.bkbn.kompendium.annotations.ParamType
-import io.bkbn.kompendium.core.metadata.method.MethodInfo
 import io.bkbn.kompendium.core.metadata.ResponseInfo
 import io.bkbn.kompendium.core.metadata.method.GetInfo
-import io.bkbn.kompendium.core.routes.openApi
 import io.bkbn.kompendium.core.routes.redoc
 import io.bkbn.kompendium.locations.NotarizedLocation.notarizedGet
 import io.bkbn.kompendium.playground.LocationsToC.testLocation
@@ -45,8 +43,7 @@ private fun Application.configModule() {
 private fun Application.mainModule() {
   configModule()
   routing {
-    openApi(oas)
-    redoc(oas)
+    redoc()
     notarizedGet(testLocation) { tl ->
       call.respondText { tl.parent.parent.name }
     }

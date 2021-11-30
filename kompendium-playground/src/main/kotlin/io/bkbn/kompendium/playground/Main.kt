@@ -4,8 +4,6 @@ import io.bkbn.kompendium.core.Notarized.notarizedDelete
 import io.bkbn.kompendium.core.Notarized.notarizedGet
 import io.bkbn.kompendium.core.Notarized.notarizedPost
 import io.bkbn.kompendium.core.Notarized.notarizedPut
-import io.bkbn.kompendium.core.metadata.ResponseInfo
-import io.bkbn.kompendium.core.routes.openApi
 import io.bkbn.kompendium.core.routes.redoc
 import io.bkbn.kompendium.playground.PlaygroundToC.testAuthenticatedSingleGetInfo
 import io.bkbn.kompendium.playground.PlaygroundToC.testCustomOverride
@@ -79,8 +77,7 @@ private fun Application.configModule() {
 private fun Application.mainModule() {
   configModule()
   routing {
-    openApi(oas)
-    redoc(oas)
+    redoc()
     swaggerUI()
     route("/potato/spud") {
       notarizedGet(testGetWithExamples) {

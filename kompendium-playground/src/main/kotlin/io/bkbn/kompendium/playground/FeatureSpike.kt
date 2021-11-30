@@ -2,7 +2,6 @@ package io.bkbn.kompendium.playground
 
 import io.bkbn.kompendium.core.Kompendium
 import io.bkbn.kompendium.core.Notarized.notarizedGet
-import io.bkbn.kompendium.core.routes.openApi
 import io.bkbn.kompendium.core.routes.redoc
 import io.ktor.application.Application
 import io.ktor.application.call
@@ -42,8 +41,7 @@ private fun Application.configModule() {
 private fun Application.mainModule() {
   configModule()
   routing {
-    openApi(oas)
-    redoc(oas)
+    redoc()
     notarizedGet(PlaygroundToC.testGetWithExamples) {
       call.respond(HttpStatusCode.OK)
     }

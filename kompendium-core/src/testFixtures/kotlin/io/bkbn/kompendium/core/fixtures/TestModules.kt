@@ -3,7 +3,6 @@ package io.bkbn.kompendium.core.fixtures
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.databind.SerializationFeature
 import io.bkbn.kompendium.core.Kompendium
-import io.bkbn.kompendium.core.routes.openApi
 import io.bkbn.kompendium.core.routes.redoc
 import io.bkbn.kompendium.oas.OpenApiSpec
 import io.bkbn.kompendium.oas.info.Contact
@@ -11,7 +10,6 @@ import io.bkbn.kompendium.oas.info.Info
 import io.bkbn.kompendium.oas.info.License
 import io.bkbn.kompendium.oas.server.Server
 import io.ktor.application.Application
-import io.ktor.application.feature
 import io.ktor.application.install
 import io.ktor.features.ContentNegotiation
 import io.ktor.http.ContentType
@@ -21,8 +19,7 @@ import java.net.URI
 
 fun Application.docs() {
   routing {
-    openApi(application.feature(Kompendium).config.spec)
-    redoc(application.feature(Kompendium).config.spec)
+    redoc()
   }
 }
 

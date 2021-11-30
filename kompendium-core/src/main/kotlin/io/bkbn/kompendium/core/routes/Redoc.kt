@@ -1,6 +1,5 @@
 package io.bkbn.kompendium.core.routes
 
-import io.bkbn.kompendium.oas.OpenApiSpec
 import io.ktor.application.call
 import io.ktor.html.respondHtml
 import io.ktor.routing.Routing
@@ -17,16 +16,16 @@ import kotlinx.html.unsafe
 
 /**
  * Provides an out-of-the-box route to view docs using ReDoc
- * @param oas spec to reference
+ * @param pageTitle Webpage title you wish to be displayed on your docs
  * @param specUrl url to point ReDoc to the OpenAPI json document
  */
-fun Routing.redoc(oas: OpenApiSpec, specUrl: String = "/openapi.json") {
+fun Routing.redoc(pageTitle: String = "Docs", specUrl: String = "/openapi.json") {
   route("/docs") {
     get {
       call.respondHtml {
         head {
           title {
-            +"${oas.info.title}"
+            +"$pageTitle"
           }
           meta {
             charset = "utf-8"
