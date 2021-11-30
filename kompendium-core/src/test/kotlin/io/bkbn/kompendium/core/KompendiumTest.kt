@@ -13,6 +13,7 @@ import io.bkbn.kompendium.core.util.notarizedDeleteModule
 import io.bkbn.kompendium.core.util.notarizedGetModule
 import io.bkbn.kompendium.core.util.notarizedGetWithMultipleThrowables
 import io.bkbn.kompendium.core.util.notarizedGetWithNotarizedException
+import io.bkbn.kompendium.core.util.notarizedGetWithPolymorphicErrorResponse
 import io.bkbn.kompendium.core.util.notarizedPostModule
 import io.bkbn.kompendium.core.util.notarizedPutModule
 import io.bkbn.kompendium.core.util.pathParsingTestModule
@@ -129,7 +130,8 @@ class KompendiumTest : DescribeSpec({
       openApiTest("notarized_get_with_multiple_exception_responses.json") { notarizedGetWithMultipleThrowables() }
     }
     it("Can add a polymorphic exception response") {
-      TODO()
+      // act
+      openApiTest("polymorphic_error_status_codes.json") { notarizedGetWithPolymorphicErrorResponse() }
     }
     it("Can add a generic exception response") {
       TODO()

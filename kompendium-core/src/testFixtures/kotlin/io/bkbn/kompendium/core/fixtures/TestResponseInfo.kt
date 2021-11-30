@@ -35,6 +35,11 @@ object TestResponseInfo {
     description = "Access Denied",
     status = HttpStatusCode.Forbidden
   )
+  private val polymorphicException = ExceptionInfo(
+    responseClass = FlibbityGibbit::class,
+    description = "The Gibbits are ANGRY",
+    status = HttpStatusCode.NotImplemented
+  )
   private val exceptionResponseInfo = ExceptionInfo(
     responseClass = ExceptionResponse::class,
     description = "Bad Things Happened",
@@ -45,6 +50,12 @@ object TestResponseInfo {
   )
   val testGetWithMultipleExceptions = testGetInfo.copy(
     canThrow = setOf(accessDeniedResponse, exceptionResponseInfo)
+  )
+  val testGetWithPolymorphicException = testGetInfo.copy(
+    canThrow = setOf(polymorphicException)
+  )
+  val testGetWithGenericException = testGetInfo.copy(
+    canThrow = setOf()
   )
   val testPostInfo = PostInfo<TestParams, TestRequest, TestCreatedResponse>(
     summary = "Test post endpoint",

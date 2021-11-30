@@ -10,6 +10,7 @@ import io.bkbn.kompendium.core.fixtures.DefaultParameter
 import io.bkbn.kompendium.core.fixtures.Gibbity
 import io.bkbn.kompendium.core.fixtures.Mysterious
 import io.bkbn.kompendium.core.fixtures.SimpleGibbit
+import io.bkbn.kompendium.core.fixtures.TestHelpers.DEFAULT_TEST_ENDPOINT
 import io.bkbn.kompendium.core.fixtures.TestNested
 import io.bkbn.kompendium.core.fixtures.TestRequest
 import io.bkbn.kompendium.core.fixtures.TestResponse
@@ -42,6 +43,24 @@ fun Application.notarizedGetWithMultipleThrowables() {
       notarizedGet(TestResponseInfo.testGetWithMultipleExceptions) {
         error("something terrible has happened!")
       }
+    }
+  }
+}
+
+fun Application.notarizedGetWithPolymorphicErrorResponse() {
+  routing {
+    route(DEFAULT_TEST_ENDPOINT) {
+      notarizedGet(TestResponseInfo.testGetWithPolymorphicException) {
+        error("something terrible has happened!")
+      }
+    }
+  }
+}
+
+fun Application.notarizedGetWithGenericErrorResponse() {
+  routing {
+    route(DEFAULT_TEST_ENDPOINT) {
+      notarizedGet()
     }
   }
 }

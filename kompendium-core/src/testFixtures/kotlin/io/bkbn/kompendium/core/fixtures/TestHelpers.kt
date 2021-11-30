@@ -16,7 +16,7 @@ import java.io.File
 object TestHelpers {
 
   private const val OPEN_API_ENDPOINT = "/openapi.json"
-  private const val DEFAULT_TEST_ENDPOINT = "/test"
+  const val DEFAULT_TEST_ENDPOINT = "/test"
 
   fun getFileSnapshot(fileName: String): String {
     val snapshotPath = "src/test/resources"
@@ -29,7 +29,7 @@ object TestHelpers {
    * exists as expected, and that the content matches the expected blob found in the specified file
    * @param snapshotName The snapshot file to retrieve from the resources folder
    */
-  fun TestApplicationEngine.compareOpenAPISpec(snapshotName: String) {
+  private fun TestApplicationEngine.compareOpenAPISpec(snapshotName: String) {
     // act
     handleRequest(HttpMethod.Get, OPEN_API_ENDPOINT).apply {
       // assert
