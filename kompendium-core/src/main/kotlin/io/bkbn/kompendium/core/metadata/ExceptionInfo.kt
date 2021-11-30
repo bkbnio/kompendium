@@ -1,10 +1,10 @@
 package io.bkbn.kompendium.core.metadata
 
 import io.ktor.http.HttpStatusCode
-import kotlin.reflect.KClass
+import kotlin.reflect.KType
 
 data class ExceptionInfo<TResp : Any>(
-  val responseClass: KClass<TResp>,
+  val responseType: KType,
   val status: HttpStatusCode,
   val description: String,
   val mediaTypes: List<String> = listOf("application/json"),

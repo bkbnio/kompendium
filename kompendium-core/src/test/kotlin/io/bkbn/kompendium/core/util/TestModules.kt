@@ -60,7 +60,9 @@ fun Application.notarizedGetWithPolymorphicErrorResponse() {
 fun Application.notarizedGetWithGenericErrorResponse() {
   routing {
     route(DEFAULT_TEST_ENDPOINT) {
-      notarizedGet()
+      notarizedGet(TestResponseInfo.testGetWithGenericException) {
+        error("something terrible has happened!")
+      }
     }
   }
 }

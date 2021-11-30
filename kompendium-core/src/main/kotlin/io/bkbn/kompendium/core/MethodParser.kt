@@ -79,11 +79,10 @@ object MethodParser {
     exceptionInfo: Set<ExceptionInfo<*>>,
     feature: Kompendium,
   ): Map<Int, Payload> = exceptionInfo.associate { info ->
-    val type = info.responseClass.createType()
-    feature.config.cache = generateKontent(type, feature.config.cache)
+    feature.config.cache = generateKontent(info.responseType, feature.config.cache)
     val response = Response(
       description = info.description,
-      content = feature.resolveContent(type, info.mediaTypes, info.examples)
+      content = feature.resolveContent(info.responseType, info.mediaTypes, info.examples)
     )
     Pair(info.status.value, response)
   }

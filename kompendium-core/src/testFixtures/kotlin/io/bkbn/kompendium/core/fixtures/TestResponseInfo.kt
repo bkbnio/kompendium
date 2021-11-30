@@ -8,6 +8,7 @@ import io.bkbn.kompendium.core.metadata.ResponseInfo
 import io.bkbn.kompendium.core.metadata.method.DeleteInfo
 import io.bkbn.kompendium.core.metadata.method.GetInfo
 import io.ktor.http.HttpStatusCode
+import kotlin.reflect.typeOf
 
 object TestResponseInfo {
   val testGetResponse = ResponseInfo<TestResponse>(HttpStatusCode.OK, "A Successful Endeavor")
@@ -30,18 +31,23 @@ object TestResponseInfo {
     description = "testing more",
     responseInfo = testGetListResponse
   )
-  private val accessDeniedResponse = ExceptionInfo(
-    responseClass = ExceptionResponse::class,
+  private val accessDeniedResponse = ExceptionInfo<ExceptionResponse>(
+    responseType = typeOf<ExceptionResponse>(),
     description = "Access Denied",
     status = HttpStatusCode.Forbidden
   )
-  private val polymorphicException = ExceptionInfo(
-    responseClass = FlibbityGibbit::class,
+  private val polymorphicException = ExceptionInfo<FlibbityGibbit>(
+    responseType = typeOf<FlibbityGibbit>(),
     description = "The Gibbits are ANGRY",
     status = HttpStatusCode.NotImplemented
   )
-  private val exceptionResponseInfo = ExceptionInfo(
-    responseClass = ExceptionResponse::class,
+  private val genericException = ExceptionInfo<Flibbity<String>>(
+    responseType = typeOf<Flibbity<String>>(),
+    description = "Wow serious things went wrong",
+    status = HttpStatusCode.BadRequest
+  )
+  private val exceptionResponseInfo = ExceptionInfo<ExceptionResponse>(
+    responseType = typeOf<ExceptionResponse>(),
     description = "Bad Things Happened",
     status = HttpStatusCode.BadRequest
   )
@@ -55,7 +61,7 @@ object TestResponseInfo {
     canThrow = setOf(polymorphicException)
   )
   val testGetWithGenericException = testGetInfo.copy(
-    canThrow = setOf()
+    canThrow = setOf(genericException)
   )
   val testPostInfo = PostInfo<TestParams, TestRequest, TestCreatedResponse>(
     summary = "Test post endpoint",

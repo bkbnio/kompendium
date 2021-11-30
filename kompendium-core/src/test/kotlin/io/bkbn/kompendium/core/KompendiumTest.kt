@@ -11,6 +11,7 @@ import io.bkbn.kompendium.core.util.nestedUnderRootModule
 import io.bkbn.kompendium.core.util.nonRequiredParamsGet
 import io.bkbn.kompendium.core.util.notarizedDeleteModule
 import io.bkbn.kompendium.core.util.notarizedGetModule
+import io.bkbn.kompendium.core.util.notarizedGetWithGenericErrorResponse
 import io.bkbn.kompendium.core.util.notarizedGetWithMultipleThrowables
 import io.bkbn.kompendium.core.util.notarizedGetWithNotarizedException
 import io.bkbn.kompendium.core.util.notarizedGetWithPolymorphicErrorResponse
@@ -134,7 +135,8 @@ class KompendiumTest : DescribeSpec({
       openApiTest("polymorphic_error_status_codes.json") { notarizedGetWithPolymorphicErrorResponse() }
     }
     it("Can add a generic exception response") {
-      TODO()
+      // act
+      openApiTest("generic_exception.json") { notarizedGetWithGenericErrorResponse() }
     }
   }
   describe("Examples") {
