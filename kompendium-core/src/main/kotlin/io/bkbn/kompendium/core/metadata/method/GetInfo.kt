@@ -4,7 +4,7 @@ import io.bkbn.kompendium.core.metadata.ExceptionInfo
 import io.bkbn.kompendium.core.metadata.ResponseInfo
 
 data class GetInfo<TParam, TResp>(
-  override val responseInfo: ResponseInfo<TResp>? = null,
+  override val responseInfo: ResponseInfo<TResp>,
   override val summary: String,
   override val description: String? = null,
   override val tags: Set<String> = emptySet(),

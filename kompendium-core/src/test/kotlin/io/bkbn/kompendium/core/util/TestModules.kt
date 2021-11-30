@@ -170,16 +170,6 @@ fun Application.primitives() {
   }
 }
 
-fun Application.emptyGet() {
-  routing {
-    route("/test/empty") {
-      notarizedGet(TestResponseInfo.trulyEmptyTestGetInfo) {
-        call.respond(HttpStatusCode.OK)
-      }
-    }
-  }
-}
-
 fun Application.withExamples() {
   routing {
     route("/test/examples") {
@@ -213,7 +203,11 @@ fun Application.withDefaultParameter() {
       notarizedGet(
         info = GetInfo<DefaultParameter, TestResponse>(
           summary = "Testing Default Params",
-          description = "Should have a default parameter value"
+          description = "Should have a default parameter value",
+          responseInfo = ResponseInfo(
+            HttpStatusCode.OK,
+            "A good response"
+          )
         )
       ) {
         call.respond(TestResponse("hey"))
@@ -237,7 +231,7 @@ fun Application.withOperationId(){
 fun Application.nonRequiredParamsGet() {
   routing {
     route("/test/optional") {
-      notarizedGet(TestResponseInfo.emptyTestGetInfo) {
+      notarizedGet(TestResponseInfo.testOptionalParams) {
         call.respond(HttpStatusCode.OK)
       }
     }

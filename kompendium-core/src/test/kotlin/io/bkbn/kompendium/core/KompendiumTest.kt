@@ -4,7 +4,6 @@ import io.bkbn.kompendium.core.fixtures.TestHelpers.apiFunctionalityTest
 import io.bkbn.kompendium.core.fixtures.TestHelpers.getFileSnapshot
 import io.bkbn.kompendium.core.fixtures.TestHelpers.openApiTest
 import io.bkbn.kompendium.core.util.complexType
-import io.bkbn.kompendium.core.util.emptyGet
 import io.bkbn.kompendium.core.util.genericPolymorphicResponse
 import io.bkbn.kompendium.core.util.genericPolymorphicResponseMultipleImpls
 import io.bkbn.kompendium.core.util.headerParameter
@@ -63,10 +62,6 @@ class KompendiumTest : DescribeSpec({
     it("Can notarize a top level list response") {
       // act
       openApiTest("response_list.json") { returnsList() }
-    }
-    it("Can notarize a route with no request params and no response body") {
-      // act
-      openApiTest("no_request_params_and_no_response_body.json") { emptyGet() }
     }
     it("Can notarize a route with non-required params") {
       // act
@@ -133,7 +128,10 @@ class KompendiumTest : DescribeSpec({
       // act
       openApiTest("notarized_get_with_multiple_exception_responses.json") { notarizedGetWithMultipleThrowables() }
     }
-    it("Can support multiple response types for a single status code") {
+    it("Can add a polymorphic exception response") {
+      TODO()
+    }
+    it("Can add a generic exception response") {
       TODO()
     }
   }

@@ -6,7 +6,7 @@ import io.bkbn.kompendium.core.metadata.ResponseInfo
 
 data class PostInfo<TParam, TReq, TResp>(
   val requestInfo: RequestInfo<TReq>? = null,
-  override val responseInfo: ResponseInfo<TResp>? = null,
+  override val responseInfo: ResponseInfo<TResp>,
   override val summary: String,
   override val description: String? = null,
   override val tags: Set<String> = emptySet(),

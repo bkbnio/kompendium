@@ -75,14 +75,10 @@ object TestResponseInfo {
     description = "testing my deletes",
     responseInfo = testDeleteResponse
   )
-  val emptyTestGetInfo =
-    GetInfo<OptionalParams, Unit>(
-      summary = "No request params and response body",
-      description = "testing more"
-    )
-  val trulyEmptyTestGetInfo = GetInfo<Unit, Unit>(
+  val testOptionalParams = GetInfo<OptionalParams, Unit>(
     summary = "No request params and response body",
-    description = "testing more"
+    description = "testing more",
+    responseInfo = ResponseInfo(HttpStatusCode.NoContent, "Empty")
   )
   val polymorphicResponse = GetInfo<Unit, FlibbityGibbit>(
     summary = "All the gibbits",

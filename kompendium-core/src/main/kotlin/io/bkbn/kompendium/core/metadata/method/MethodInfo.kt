@@ -15,8 +15,7 @@ sealed interface MethodInfo<TParam, TResp> {
     get() = emptySet()
   val canThrow: Set<ExceptionInfo<*>>
     get() = emptySet()
-  val responseInfo: ResponseInfo<TResp>?
-    get() = null
+  val responseInfo: ResponseInfo<TResp>
   val parameterExamples: Map<String, TParam>
     get() = emptyMap()
   val operationId: String?
