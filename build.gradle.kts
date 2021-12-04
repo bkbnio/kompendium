@@ -1,8 +1,8 @@
 plugins {
+  id("io.bkbn.sourdough.root") version "0.0.1-SNAPSHOT"
   id("io.github.gradle-nexus.publish-plugin") version "1.1.0"
   id("com.github.jakemarsden.git-hooks") version "0.0.2"
   id("org.jetbrains.kotlinx.kover") version "0.4.2"
-  id("org.jetbrains.dokka")
 }
 
 gitHooks {
@@ -12,6 +12,19 @@ gitHooks {
       "pre-push" to "test"
     )
   )
+}
+
+allprojects {
+  group = "io.bkbn"
+  version = run {
+    val baseVersion =
+      project.findProperty("project.version") ?: error("project.version needs to be set in gradle.properties")
+    when ((project.findProperty("release") as? String)?.toBoolean()) {
+      true -> baseVersion
+      else -> "$baseVersion-SNAPSHOT"
+    }
+  }
+
 }
 
 nexusPublishing {
@@ -34,7 +47,6 @@ tasks.koverCollectReports {
   outputDir.set(layout.buildDirectory.dir("my-reports-dir") )
 }
 
-// Here down is exclusively to support Dokka... hope they streamline this in future -__-
 version = run {
   val baseVersion =
     project.findProperty("project.version") ?: error("project.version needs to be set in gradle.properties")
@@ -42,36 +54,4 @@ version = run {
     true -> baseVersion
     else -> "$baseVersion-SNAPSHOT"
   }
-}
-
-buildscript {
-  dependencies {
-    classpath("org.jetbrains.dokka:versioning-plugin:1.6.0")
-  }
-}
-
-tasks.dokkaHtmlMultiModule.configure {
-  val version = project.version.toString()
-  outputDirectory.set(rootDir.resolve("dokka/$version"))
-
-  dependencies {
-    dokkaPlugin("org.jetbrains.dokka:versioning-plugin:1.6.0")
-  }
-
-  pluginConfiguration<org.jetbrains.dokka.versioning.VersioningPlugin, org.jetbrains.dokka.versioning.VersioningConfiguration> {
-    setVersion(version)
-    olderVersionsDir = rootDir.resolve("dokka")
-  }
-
-  finalizedBy(generateDokkaHomePage)
-}
-
-val generateDokkaHomePage by tasks.register("generateDokkaHomePage") {
-  val version = project.version.toString()
-  val index = rootDir.resolve("dokka/index.html")
-  index.writeText("<meta http-equiv=\"refresh\" content=\"0; url=./$version\" />\n")
-}
-
-repositories {
-  mavenCentral()
 }
