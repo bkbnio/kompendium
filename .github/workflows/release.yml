@@ -16,7 +16,7 @@ jobs:
         with:
           distribution: 'adopt'
           java-version: '17'
-      - name: Unit Tests
+      - name: Publish to GitHub Packages
         uses: burrunan/gradle-cache-action@v1
         with:
           gradle-version: wrapper
@@ -35,11 +35,11 @@ jobs:
         with:
           distribution: 'adopt'
           java-version: '17'
-      - name: Unit Tests
+      - name: Publlish to GithubPackages
         uses: burrunan/gradle-cache-action@v1
         with:
           gradle-version: wrapper
-          arguments: publishAllPublicationsToGithubPackagesRepository
+          arguments: publishToSonatype closeAndReleaseSonatypeStagingRepository
           properties: |
             release=true
             org.gradle.vfs.watch=false
