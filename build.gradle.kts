@@ -1,8 +1,14 @@
+import io.bkbn.sourdough.gradle.core.extension.SourdoughLibraryExtension
+
 plugins {
-  id("io.github.gradle-nexus.publish-plugin") version "1.1.0"
+  id("io.bkbn.sourdough.root") version "0.1.1"
   id("com.github.jakemarsden.git-hooks") version "0.0.2"
-  id("org.jetbrains.kotlinx.kover") version "0.4.2"
-  id("org.jetbrains.dokka")
+}
+
+sourdough {
+  toolChainJavaVersion = JavaVersion.VERSION_17
+  jvmTarget = JavaVersion.VERSION_11.majorVersion
+  compilerArgs = listOf("-opt-in=kotlin.RequiresOptIn")
 }
 
 gitHooks {
@@ -14,64 +20,32 @@ gitHooks {
   )
 }
 
-nexusPublishing {
-  repositories {
-    sonatype {
-      nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
-      snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
+allprojects {
+  group = "io.bkbn"
+  version = run {
+    val baseVersion =
+      project.findProperty("project.version") ?: error("project.version needs to be set in gradle.properties")
+    when ((project.findProperty("release") as? String)?.toBoolean()) {
+      true -> baseVersion
+      else -> "$baseVersion-SNAPSHOT"
     }
   }
 }
 
-kover {
-  isEnabled = true
-  coverageEngine.set(kotlinx.kover.api.CoverageEngine.JACOCO)
-  jacocoEngineVersion.set("0.8.7")
-  generateReportOnCheck.set(true)
-}
+subprojects {
+  apply(plugin = "io.bkbn.sourdough.library")
 
-tasks.koverCollectReports {
-  outputDir.set(layout.buildDirectory.dir("my-reports-dir") )
-}
-
-// Here down is exclusively to support Dokka... hope they streamline this in future -__-
-version = run {
-  val baseVersion =
-    project.findProperty("project.version") ?: error("project.version needs to be set in gradle.properties")
-  when ((project.findProperty("release") as? String)?.toBoolean()) {
-    true -> baseVersion
-    else -> "$baseVersion-SNAPSHOT"
+  configure<SourdoughLibraryExtension> {
+    githubOrg = "bkbnio"
+    githubRepo = "kompendium"
+    githubUsername = System.getenv("GITHUB_ACTOR")
+    githubToken = System.getenv("GITHUB_TOKEN")
+    libraryName = "Kompendium" // TODO Set on a per-module basis?
+    libraryDescription = "A minimally invasive OpenAPI spec generator for Ktor"
+    licenseName = "MIT License"
+    licenseUrl = "https://mit-license.org/"
+    developerId = "bkbnio"
+    developerName = "Ryan Brink"
+    developerEmail = "admin@bkbn.io"
   }
-}
-
-buildscript {
-  dependencies {
-    classpath("org.jetbrains.dokka:versioning-plugin:1.6.0")
-  }
-}
-
-tasks.dokkaHtmlMultiModule.configure {
-  val version = project.version.toString()
-  outputDirectory.set(rootDir.resolve("dokka/$version"))
-
-  dependencies {
-    dokkaPlugin("org.jetbrains.dokka:versioning-plugin:1.6.0")
-  }
-
-  pluginConfiguration<org.jetbrains.dokka.versioning.VersioningPlugin, org.jetbrains.dokka.versioning.VersioningConfiguration> {
-    setVersion(version)
-    olderVersionsDir = rootDir.resolve("dokka")
-  }
-
-  finalizedBy(generateDokkaHomePage)
-}
-
-val generateDokkaHomePage by tasks.register("generateDokkaHomePage") {
-  val version = project.version.toString()
-  val index = rootDir.resolve("dokka/index.html")
-  index.writeText("<meta http-equiv=\"refresh\" content=\"0; url=./$version\" />\n")
-}
-
-repositories {
-  mavenCentral()
 }
