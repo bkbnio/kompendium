@@ -10,7 +10,7 @@ jobs:
         with:
           distribution: 'adopt'
           java-version: '17'
-      - name: Unit Tests
+      - name: Lint
         uses: burrunan/gradle-cache-action@v1
         with:
           gradle-version: wrapper
