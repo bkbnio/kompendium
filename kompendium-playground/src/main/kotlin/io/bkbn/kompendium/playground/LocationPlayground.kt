@@ -19,6 +19,7 @@ import io.ktor.routing.routing
 import io.ktor.serialization.json
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
+import kotlinx.serialization.Serializable
 
 fun main() {
   embeddedServer(
@@ -51,13 +52,13 @@ private fun Application.mainModule() {
 }
 
 private object LocationsToC {
-  val testLocation = GetInfo<TestLocations.NestedTestLocations.OhBoiUCrazy, ExampleResponse>(
+  val testLocation = GetInfo<TestLocations.NestedTestLocations.OhBoiUCrazy, LocationModels.ExampleResponse>(
     summary = "Example Parameters",
     description = "A test for setting parameter examples",
     responseInfo = ResponseInfo(
       status = HttpStatusCode.OK,
       description = "nice",
-      examples = mapOf("test" to ExampleResponse(c = "spud"))
+      examples = mapOf("test" to LocationModels.ExampleResponse(c = "spud"))
     ),
   )
 }
@@ -80,4 +81,9 @@ data class TestLocations(
       val parent: NestedTestLocations
     )
   }
+}
+
+object LocationModels {
+  @Serializable
+  data class ExampleResponse(val c: String)
 }
