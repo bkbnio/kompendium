@@ -2,17 +2,19 @@
 
 [![version](https://img.shields.io/maven-central/v/io.bkbn/kompendium-core?style=flat-square)](https://search.maven.org/search?q=io.bkbn%20kompendium)
 
-## ⚠️ Attention ⚠️
+## Table of Contents
 
-Kompendium V2 is approaching 🚀 The V2 alpha is now live, and should be considered the de-facto implementation going
-forward. It includes a near complete rewrite of the Kompendium codebase. As such, there will likely be bugs. If you
-would like to remain on V1, you can find the code and docs on the `v1` branch.
-
-Additionally, all V1 code can still be downloaded as packages from Maven Central.
-
-More information on the extensive changes between V1 and V2 can be found in the [`CHANGELOG.md`](./CHANGELOG.md)
+- [What Is Kompendium](#what-is-kompendium)
+- [How to Install](#how-to-install)
+- [Getting Started](#getting-started)
+- [Local Development](#local-development)
+- [The Playground](#the-playground)
 
 ## What is Kompendium
+
+Kompendium is intended to be a minimally invasive OpenApi Specification generator for Ktor. Minimally invasive meaning
+that users will use only Ktor native functions when implementing their API, and will supplement with Kompendium code in
+order to generate the appropriate spec.
 
 ## How to install
 
@@ -26,41 +28,18 @@ repositories {
 
 dependencies {
   implementation("io.bkbn:kompendium-core:latest.release")
-  implementation("io.bkbn:kompendium-auth:latest.release")
-  implementation("io.bkbn:kompendium-swagger-ui:latest.release")
-
-  // Other dependencies...
 }
 ```
 
 The last two dependencies are optional.
 
-If you want to get a little spicy 🤠 every merge of Kompendium is published to the GitHub package registry. Pulling from
-GitHub is slightly more involved, but such is the price you pay for bleeding edge fake data generation.
+In addition to publishing releases to Maven Central, a snapshot version gets published to GitHub Packages on every merge
+to `main`. These can be consumed by adding the repository to your gradle build file. Instructions can be
+found [here](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-gradle-registry#using-a-published-package)
 
-```kotlin
-// 1 Setup a helper function to import any Github Repository Package
-// This step is optional but I have a bunch of stuff stored on github so I find it useful 😄
-fun RepositoryHandler.github(packageUrl: String) = maven {
-    name = "GithubPackages"
-    url = uri(packageUrl)
-    credentials {
-      username = java.lang.System.getenv("GITHUB_USER")
-      password = java.lang.System.getenv("GITHUB_TOKEN")
-    }
-  }
+## Getting Started
 
-// 2 Add the repo in question (in this case Kompendium)
-repositories {
-  github("https://maven.pkg.github.com/bkbnio/kompendium")
-}
-
-// 3 Add the package like any normal dependency
-dependencies {
-  implementation("io.bkbn:kompendium-core:latest.release")
-}
-
-```
+TODO
 
 ## Local Development
 
@@ -68,3 +47,9 @@ Kompendium should run locally right out of the box, no configuration necessary (
 New features can be built locally and published to your local maven repository with the `./gradlew publishToMavenLocal`
 command!
 
+## The Playground
+
+This repo contains a `playground` module that contains a number of working examples showcasing the capabilities of
+Kompendium.
+
+Feel free to check it out, or even create your own example!

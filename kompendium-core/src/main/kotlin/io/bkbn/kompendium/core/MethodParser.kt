@@ -3,23 +3,23 @@ package io.bkbn.kompendium.core
 import io.bkbn.kompendium.annotations.KompendiumParam
 import io.bkbn.kompendium.core.Kontent.generateKontent
 import io.bkbn.kompendium.core.metadata.ExceptionInfo
-import io.bkbn.kompendium.core.metadata.method.MethodInfo
 import io.bkbn.kompendium.core.metadata.RequestInfo
 import io.bkbn.kompendium.core.metadata.ResponseInfo
+import io.bkbn.kompendium.core.metadata.method.MethodInfo
 import io.bkbn.kompendium.core.metadata.method.PostInfo
 import io.bkbn.kompendium.core.metadata.method.PutInfo
 import io.bkbn.kompendium.core.util.Helpers
 import io.bkbn.kompendium.core.util.Helpers.capitalized
 import io.bkbn.kompendium.core.util.Helpers.getSimpleSlug
 import io.bkbn.kompendium.oas.path.PathOperation
-import io.bkbn.kompendium.oas.payload.AnyOfPayload
 import io.bkbn.kompendium.oas.payload.MediaType
 import io.bkbn.kompendium.oas.payload.Parameter
 import io.bkbn.kompendium.oas.payload.Payload
 import io.bkbn.kompendium.oas.payload.Request
 import io.bkbn.kompendium.oas.payload.Response
 import io.bkbn.kompendium.oas.schema.AnyOfSchema
-import java.awt.SystemColor.info
+import java.util.Locale
+import java.util.UUID
 import kotlin.reflect.KClass
 import kotlin.reflect.KParameter
 import kotlin.reflect.KProperty
@@ -29,7 +29,6 @@ import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
 import kotlin.reflect.jvm.javaField
-import java.util.*
 
 /**
  * The MethodParser is responsible for converting route metadata and types into an OpenAPI compatible data class.

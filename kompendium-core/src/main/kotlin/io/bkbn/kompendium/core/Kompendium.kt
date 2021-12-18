@@ -22,6 +22,7 @@ class Kompendium(val config: Configuration) {
     lateinit var spec: OpenApiSpec
     var cache: SchemaMap = emptyMap()
 
+    // TODO Document this better!!
     var specRoute = "/openapi.json"
 
     // TODO Add tests for this!!
@@ -29,6 +30,7 @@ class Kompendium(val config: Configuration) {
       cache = cache.plus(clazz.simpleName!! to schema)
     }
 
+    // TODO Add tests for this!!
     var om: ObjectMapper = ObjectMapper()
       .setSerializationInclusion(JsonInclude.Include.NON_NULL)
       .enable(SerializationFeature.INDENT_OUTPUT)

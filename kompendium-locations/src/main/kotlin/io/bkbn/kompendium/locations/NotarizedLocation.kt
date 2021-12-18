@@ -33,7 +33,7 @@ object NotarizedLocation {
   /**
    * Notarization for an HTTP GET request leveraging the Ktor [io.ktor.locations.Locations] plugin
    * @param TParam The class containing all parameter fields.
-   * Each field must be annotated with @[io.bkbn.kompendium.annotations.KompendiumField].
+   * Each field must be annotated with @[io.bkbn.kompendium.annotations.KompendiumParam].
    * Additionally, the class must be annotated with @[io.ktor.locations.Location].
    * @param TResp Class detailing the expected API response
    * @param info Route metadata
@@ -59,7 +59,7 @@ object NotarizedLocation {
   /**
    * Notarization for an HTTP POST request leveraging the Ktor [io.ktor.locations.Locations] plugin
    * @param TParam The class containing all parameter fields.
-   * Each field must be annotated with @[io.bkbn.kompendium.annotations.KompendiumField]
+   * Each field must be annotated with @[io.bkbn.kompendium.annotations.KompendiumParam]
    * Additionally, the class must be annotated with @[io.ktor.locations.Location].
    * @param TReq Class detailing the expected API request body
    * @param TResp Class detailing the expected API response
@@ -86,7 +86,7 @@ object NotarizedLocation {
   /**
    * Notarization for an HTTP Delete request leveraging the Ktor [io.ktor.locations.Locations] plugin
    * @param TParam The class containing all parameter fields.
-   * Each field must be annotated with @[io.bkbn.kompendium.annotations.KompendiumField]
+   * Each field must be annotated with @[io.bkbn.kompendium.annotations.KompendiumParam]
    * Additionally, the class must be annotated with @[io.ktor.locations.Location].
    * @param TReq Class detailing the expected API request body
    * @param TResp Class detailing the expected API response
@@ -113,7 +113,7 @@ object NotarizedLocation {
   /**
    * Notarization for an HTTP POST request leveraging the Ktor [io.ktor.locations.Locations] plugin
    * @param TParam The class containing all parameter fields.
-   * Each field must be annotated with @[io.bkbn.kompendium.annotations.KompendiumField]
+   * Each field must be annotated with @[io.bkbn.kompendium.annotations.KompendiumParam]
    * Additionally, the class must be annotated with @[io.ktor.locations.Location].
    * @param TResp Class detailing the expected API response
    * @param info Route metadata

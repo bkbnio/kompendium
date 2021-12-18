@@ -22,7 +22,7 @@ import kotlin.reflect.typeOf
 import org.slf4j.LoggerFactory
 import java.math.BigDecimal
 import java.math.BigInteger
-import java.util.*
+import java.util.UUID
 
 /**
  * Responsible for generating the schema map that is used to power all object references across the API Spec.
@@ -204,6 +204,7 @@ object Kontent {
               newCache[field.getSimpleSlug(prop)]!!
             }
           }
+          // todo handle KompendiumField stuff!!!
           Pair(prop.name, propSchema)
         }
         logger.debug("Looking for undeclared fields")

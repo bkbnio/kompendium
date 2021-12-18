@@ -14,6 +14,7 @@ import io.ktor.routing.Route
 import io.ktor.routing.application
 import io.ktor.routing.method
 import io.ktor.util.pipeline.PipelineInterceptor
+import io.bkbn.kompendium.annotations.KompendiumParam
 
 /**
  * Notarization methods are the primary way that a Ktor API using Kompendium differentiates
@@ -24,8 +25,7 @@ object Notarized {
 
   /**
    * Notarization for an HTTP GET request
-   * @param TParam The class containing all parameter fields.
-   * Each field must be annotated with @[io.bkbn.kompendium.annotations.KompendiumField]
+   * @param TParam The class containing all parameter fields. Each field must be annotated with @[KompendiumParam]
    * @param TResp Class detailing the expected API response
    * @param info Route metadata
    */
@@ -42,8 +42,7 @@ object Notarized {
 
   /**
    * Notarization for an HTTP POST request
-   * @param TParam The class containing all parameter fields.
-   * Each field must be annotated with @[io.bkbn.kompendium.annotations.KompendiumField]
+   * @param TParam The class containing all parameter fields. Each field must be annotated with @[KompendiumParam]
    * @param TReq Class detailing the expected API request body
    * @param TResp Class detailing the expected API response
    * @param info Route metadata
@@ -61,8 +60,7 @@ object Notarized {
 
   /**
    * Notarization for an HTTP Delete request
-   * @param TParam The class containing all parameter fields.
-   * Each field must be annotated with @[io.bkbn.kompendium.annotations.KompendiumField]
+   * @param TParam The class containing all parameter fields. Each field must be annotated with @[KompendiumParam]
    * @param TReq Class detailing the expected API request body
    * @param TResp Class detailing the expected API response
    * @param info Route metadata
@@ -80,8 +78,7 @@ object Notarized {
 
   /**
    * Notarization for an HTTP POST request
-   * @param TParam The class containing all parameter fields.
-   * Each field must be annotated with @[io.bkbn.kompendium.annotations.KompendiumField]
+   * @param TParam The class containing all parameter fields. Each field must be annotated with @[KompendiumParam]
    * @param TResp Class detailing the expected API response
    * @param info Route metadata
    */

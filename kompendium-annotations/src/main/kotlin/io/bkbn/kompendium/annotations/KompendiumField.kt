@@ -6,4 +6,4 @@ package io.bkbn.kompendium.annotations
  */
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.PROPERTY)
-annotation class KompendiumField(val name: String)
+annotation class KompendiumField(val name: String = "", val description: String = "")
