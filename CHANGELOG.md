@@ -34,6 +34,12 @@
 - Kompendium is now a Ktor Plugin!
 - GitHub Actions now leverage Gradle Wrapper
 - Dropped Codacy support b/c codacy kinda sucks
+- Fixed bug where KompendiumField was being completely ignored
+- Added `description` key to KompendiumField
+- Redid playground to serve as a showcase for various functionality
+- README updates
+- Refactored `handleComplexType` 🎉
+- Enabled field descriptions
 
 ## [1.11.1] - November 25th, 2021
 ### Added
