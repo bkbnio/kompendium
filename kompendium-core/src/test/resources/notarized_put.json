@@ -63,7 +63,7 @@
                     "format" : "double",
                     "type" : "number"
                   },
-                  "fieldName" : {
+                  "field_name" : {
                     "properties" : {
                       "nesty" : {
                         "type" : "string"

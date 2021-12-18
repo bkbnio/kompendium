@@ -168,7 +168,7 @@ object Kontent {
           val baseClazz = baseType.classifier as KClass<*>
           val allTypes = scanForSealed(baseClazz, baseType)
           newCache = updateCache(newCache, field, allTypes)
-          val propSchema = constructComponentSchema(
+          var propSchema = constructComponentSchema(
             typeMap = typeMap,
             prop = prop,
             fieldClazz = field,
@@ -176,7 +176,17 @@ object Kontent {
             type = baseType,
             cache = newCache
           )
-          Pair(prop.name, propSchema)
+          // todo move to helper
+          var name = prop.name
+          prop.findAnnotation<KompendiumField>()?.let { fieldOverrides ->
+            if (fieldOverrides.description.isNotBlank()) {
+              propSchema = propSchema.setDescription(fieldOverrides.description)
+            }
+            if (fieldOverrides.name.isNotBlank()) {
+              name = fieldOverrides.name
+            }
+          }
+          Pair(name, propSchema)
         }
         logger.debug("Looking for undeclared fields")
         val undeclaredFieldMap = clazz.annotations.filterIsInstance<UndeclaredField>().associate {

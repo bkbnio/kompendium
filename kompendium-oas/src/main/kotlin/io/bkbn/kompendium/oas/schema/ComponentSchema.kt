@@ -18,7 +18,7 @@ sealed interface ComponentSchema {
     else -> error("Compiler bug??")
   }
 
-  fun setDescription(description: String) = when (this) {
+  fun setDescription(description: String): ComponentSchema = when (this) {
     is AnyOfSchema -> this.copy(description = description)
     is ArraySchema -> this.copy(description = description)
     is DictionarySchema -> this.copy(description = description)

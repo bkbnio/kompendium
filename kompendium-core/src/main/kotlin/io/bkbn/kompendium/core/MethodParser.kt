@@ -1,6 +1,5 @@
 package io.bkbn.kompendium.core
 
-import io.bkbn.kompendium.annotations.KompendiumField
 import io.bkbn.kompendium.annotations.KompendiumParam
 import io.bkbn.kompendium.core.Kontent.generateKontent
 import io.bkbn.kompendium.core.metadata.ExceptionInfo
@@ -19,8 +18,6 @@ import io.bkbn.kompendium.oas.payload.Payload
 import io.bkbn.kompendium.oas.payload.Request
 import io.bkbn.kompendium.oas.payload.Response
 import io.bkbn.kompendium.oas.schema.AnyOfSchema
-import java.util.Locale
-import java.util.UUID
 import kotlin.reflect.KClass
 import kotlin.reflect.KParameter
 import kotlin.reflect.KProperty
@@ -30,6 +27,8 @@ import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
 import kotlin.reflect.jvm.javaField
+import java.util.Locale
+import java.util.UUID
 
 /**
  * The MethodParser is responsible for converting route metadata and types into an OpenAPI compatible data class.
