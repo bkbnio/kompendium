@@ -24,19 +24,3 @@ jobs:
             org.gradle.vfs.verbose=false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  code-coverage:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-java@v2
-        with:
-          distribution: 'adopt'
-          java-version: '17'
-      - name: Unit Tests
-        uses: burrunan/gradle-cache-action@v1
-        with:
-          gradle-version: wrapper
-          arguments: test
-          properties: |
-            org.gradle.vfs.watch=false
-            org.gradle.vfs.verbose=false
