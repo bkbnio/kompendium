@@ -1,5 +1,6 @@
 package io.bkbn.kompendium.core
 
+import io.bkbn.kompendium.annotations.KompendiumField
 import io.bkbn.kompendium.annotations.KompendiumParam
 import io.bkbn.kompendium.core.Kontent.generateKontent
 import io.bkbn.kompendium.core.metadata.ExceptionInfo

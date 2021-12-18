@@ -17,6 +17,7 @@ import io.bkbn.kompendium.core.util.notarizedGetWithNotarizedException
 import io.bkbn.kompendium.core.util.notarizedGetWithPolymorphicErrorResponse
 import io.bkbn.kompendium.core.util.notarizedPostModule
 import io.bkbn.kompendium.core.util.notarizedPutModule
+import io.bkbn.kompendium.core.util.overrideFieldInfo
 import io.bkbn.kompendium.core.util.pathParsingTestModule
 import io.bkbn.kompendium.core.util.polymorphicCollectionResponse
 import io.bkbn.kompendium.core.util.polymorphicInterfaceResponse
@@ -197,6 +198,9 @@ class KompendiumTest : DescribeSpec({
     it("Can add a custom header parameter with a name override") {
       // act
       openApiTest("override_parameter_name.json") { headerParameter() }
+    }
+    it("Can override field values via annotation") {
+      openApiTest("field_override.json") { overrideFieldInfo() }
     }
   }
 })
