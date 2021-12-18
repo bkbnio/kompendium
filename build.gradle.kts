@@ -1,14 +1,14 @@
 import io.bkbn.sourdough.gradle.core.extension.SourdoughLibraryExtension
 
 plugins {
-  id("io.bkbn.sourdough.root") version "0.1.1"
+  id("io.bkbn.sourdough.root") version "0.2.0"
   id("com.github.jakemarsden.git-hooks") version "0.0.2"
 }
 
 sourdough {
-  toolChainJavaVersion = JavaVersion.VERSION_17
-  jvmTarget = JavaVersion.VERSION_11.majorVersion
-  compilerArgs = listOf("-opt-in=kotlin.RequiresOptIn")
+  toolChainJavaVersion.set(JavaLanguageVersion.of(JavaVersion.VERSION_17.majorVersion))
+  jvmTarget.set(JavaVersion.VERSION_11.majorVersion)
+  compilerArgs.set(listOf("-opt-in=kotlin.RequiresOptIn"))
 }
 
 gitHooks {
@@ -36,16 +36,14 @@ subprojects {
   apply(plugin = "io.bkbn.sourdough.library")
 
   configure<SourdoughLibraryExtension> {
-    githubOrg = "bkbnio"
-    githubRepo = "kompendium"
-    githubUsername = System.getenv("GITHUB_ACTOR")
-    githubToken = System.getenv("GITHUB_TOKEN")
-    libraryName = "Kompendium" // TODO Set on a per-module basis?
-    libraryDescription = "A minimally invasive OpenAPI spec generator for Ktor"
-    licenseName = "MIT License"
-    licenseUrl = "https://mit-license.org/"
-    developerId = "bkbnio"
-    developerName = "Ryan Brink"
-    developerEmail = "admin@bkbn.io"
+    githubOrg.set("bkbnio")
+    githubRepo.set("kompendium")
+    libraryName.set("Kompendium")
+    libraryDescription.set("A minimally invasive OpenAPI spec generator for Ktor")
+    licenseName.set("MIT License")
+    licenseUrl.set("https://mit-license.org")
+    developerId.set("bkbnio")
+    developerName.set("Ryan Brink")
+    developerEmail.set("admin@bkbn.io")
   }
 }
