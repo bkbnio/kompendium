@@ -35,9 +35,3 @@ jobs:
           properties: |
             org.gradle.vfs.watch=false
             org.gradle.vfs.verbose=false
-      # TODO Is this even used? Looks like I just run tests again on merge to main
-      - name: Cache Coverage Results
-        uses: actions/cache@v2
-        with:
-          path: ./build/kover-report/**/*
-          key: ${{ runner.os }}-unit-${{ env.GITHUB_SHA }}

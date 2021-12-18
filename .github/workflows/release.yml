@@ -44,6 +44,3 @@ jobs:
             release=true
             org.gradle.vfs.watch=false
             org.gradle.vfs.verbose=false
-        env:
-          ORG_GRADLE_PROJECT_sonatypeUsername: ${{ secrets.SONATYPE_USER }}
-          ORG_GRADLE_PROJECT_sonatypePassword: ${{ secrets.SONATYPE_PASSWORD }}
