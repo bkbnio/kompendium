@@ -10,6 +10,7 @@ import io.bkbn.kompendium.core.fixtures.DefaultParameter
 import io.bkbn.kompendium.core.fixtures.Gibbity
 import io.bkbn.kompendium.core.fixtures.Mysterious
 import io.bkbn.kompendium.core.fixtures.SimpleGibbit
+import io.bkbn.kompendium.core.fixtures.TestFieldOverride
 import io.bkbn.kompendium.core.fixtures.TestHelpers.DEFAULT_TEST_ENDPOINT
 import io.bkbn.kompendium.core.fixtures.TestNested
 import io.bkbn.kompendium.core.fixtures.TestRequest
@@ -349,6 +350,16 @@ fun Application.simpleGenericResponse() {
     route("/test/polymorphic") {
       notarizedGet(TestResponseInfo.genericResponse) {
         call.respond(HttpStatusCode.OK, Gibbity("hey"))
+      }
+    }
+  }
+}
+
+fun Application.overrideFieldInfo() {
+  routing {
+    route("/test/field_override") {
+      notarizedGet(TestResponseInfo.fieldOverride) {
+        call.respond(HttpStatusCode.OK, TestFieldOverride(true))
       }
     }
   }

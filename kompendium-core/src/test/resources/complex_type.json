@@ -35,7 +35,7 @@
             "application/json" : {
               "schema" : {
                 "properties" : {
-                  "amazingField" : {
+                  "amazing_field" : {
                     "type" : "string"
                   },
                   "org" : {

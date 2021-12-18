@@ -142,6 +142,11 @@ object TestResponseInfo {
     description = "Simple generic data class",
     responseInfo = simpleOkResponse()
   )
+  val fieldOverride = GetInfo<Unit, TestFieldOverride>(
+    summary = "A Response with a spicy field",
+    description = "Important info within!",
+    responseInfo = simpleOkResponse()
+  )
 
   private fun <T> simpleOkResponse() = ResponseInfo<T>(HttpStatusCode.OK, "A successful endeavor")
 }

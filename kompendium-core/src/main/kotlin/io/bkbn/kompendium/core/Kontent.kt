@@ -1,20 +1,26 @@
 package io.bkbn.kompendium.core
 
+import io.bkbn.kompendium.annotations.KompendiumField
 import io.bkbn.kompendium.annotations.UndeclaredField
 import io.bkbn.kompendium.core.metadata.SchemaMap
+import io.bkbn.kompendium.core.metadata.TypeMap
 import io.bkbn.kompendium.core.util.Helpers.genericNameAdapter
 import io.bkbn.kompendium.core.util.Helpers.getSimpleSlug
 import io.bkbn.kompendium.core.util.Helpers.logged
 import io.bkbn.kompendium.oas.schema.AnyOfSchema
 import io.bkbn.kompendium.oas.schema.ArraySchema
+import io.bkbn.kompendium.oas.schema.ComponentSchema
 import io.bkbn.kompendium.oas.schema.DictionarySchema
 import io.bkbn.kompendium.oas.schema.EnumSchema
 import io.bkbn.kompendium.oas.schema.FormattedSchema
 import io.bkbn.kompendium.oas.schema.ObjectSchema
 import io.bkbn.kompendium.oas.schema.SimpleSchema
 import kotlin.reflect.KClass
+import kotlin.reflect.KClassifier
+import kotlin.reflect.KProperty1
 import kotlin.reflect.KType
 import kotlin.reflect.full.createType
+import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.jvm.javaField
@@ -22,7 +28,7 @@ import kotlin.reflect.typeOf
 import org.slf4j.LoggerFactory
 import java.math.BigDecimal
 import java.math.BigInteger
-import java.util.*
+import java.util.UUID
 
 /**
  * Responsible for generating the schema map that is used to power all object references across the API Spec.
@@ -92,7 +98,7 @@ object Kontent {
    * Analyze a type but filters out the top-level type
    * @param type to analyze
    * @param cache Existing schema map to append to
-   * @return an updated schema map containing all type information for [T]
+   * @return an updated schema map containing all type information for type [KType]
    */
   fun generateParameterKontent(
     type: KType,
@@ -138,10 +144,9 @@ object Kontent {
    * @param clazz Class of the object to analyze
    * @param cache Existing schema map to append to
    */
-  // TODO Fix as part of this issue https://github.com/bkbnio/kompendium/issues/80
   @Suppress("LongMethod", "ComplexMethod")
   private fun handleComplexType(type: KType, clazz: KClass<*>, cache: SchemaMap): SchemaMap {
-    // This needs to be simple because it will be stored under it's appropriate reference component implicitly
+    // This needs to be simple because it will be stored under its appropriate reference component implicitly
     val slug = type.getSimpleSlug()
     // Only analyze if component has not already been stored in the cache
     return when (cache.containsKey(slug)) {
@@ -152,59 +157,36 @@ object Kontent {
       false -> {
         logger.debug("$slug was not found in cache, generating now")
         var newCache = cache
-        // Grabs any type parameters as a zip with the corresponding type argument
-        val typeMap = clazz.typeParameters.zip(type.arguments).toMap()
+        // Grabs any type parameters mapped to the corresponding type argument(s)
+        val typeMap: TypeMap = clazz.typeParameters.zip(type.arguments).toMap()
         // associates each member with a Pair of prop name to property schema
         val fieldMap = clazz.memberProperties.associate { prop ->
           logger.debug("Analyzing $prop in class $clazz")
           // Grab the field of the current property
           val field = prop.javaField?.type?.kotlin ?: error("Unable to parse field type from $prop")
-          logger.debug("Detected field $field")
-          // Yoinks any generic types from the type map should the field be a generic
-          val yoinkBaseType = if (typeMap.containsKey(prop.returnType.classifier)) {
-            logger.debug("Generic type detected")
-            typeMap[prop.returnType.classifier]?.type!!
-          } else {
-            prop.returnType
-          }
-          // converts the base type to a class
-          val yoinkedClassifier = yoinkBaseType.classifier as KClass<*>
-          // in the event of a sealed class, grab all sealed subclasses and create a type from the base args
-          val yoinkedTypes = if (yoinkedClassifier.isSealed) {
-            yoinkedClassifier.sealedSubclasses.map { it.createType(yoinkBaseType.arguments) }
-          } else {
-            listOf(yoinkBaseType)
-          }
-          // if the most up-to-date cache does not contain the content for this field, generate it and add to cache
-          if (!newCache.containsKey(field.simpleName)) {
-            logger.debug("Cache was missing ${field.simpleName}, adding now")
-            yoinkedTypes.forEach {
-              newCache = generateKTypeKontent(it, newCache)
+          val baseType = scanForGeneric(typeMap, prop)
+          val baseClazz = baseType.classifier as KClass<*>
+          val allTypes = scanForSealed(baseClazz, baseType)
+          newCache = updateCache(newCache, field, allTypes)
+          var propSchema = constructComponentSchema(
+            typeMap = typeMap,
+            prop = prop,
+            fieldClazz = field,
+            clazz = baseClazz,
+            type = baseType,
+            cache = newCache
+          )
+          // todo move to helper
+          var name = prop.name
+          prop.findAnnotation<KompendiumField>()?.let { fieldOverrides ->
+            if (fieldOverrides.description.isNotBlank()) {
+              propSchema = propSchema.setDescription(fieldOverrides.description)
+            }
+            if (fieldOverrides.name.isNotBlank()) {
+              name = fieldOverrides.name
             }
           }
-          // TODO This in particular is worthy of a refactor... just not very well written
-          // builds the appropriate property schema based on the property return type
-          val propSchema = if (typeMap.containsKey(prop.returnType.classifier)) {
-            if (yoinkedClassifier.isSealed) {
-              val refs = yoinkedClassifier.sealedSubclasses
-                .map { it.createType(yoinkBaseType.arguments) }
-                .map { it.getSimpleSlug() }
-                .map { newCache[it] ?: error("$it not available") }
-              AnyOfSchema(refs)
-            } else {
-              newCache[typeMap[prop.returnType.classifier]?.type!!.getSimpleSlug()] ?: error("womp womp")
-            }
-          } else {
-            if (yoinkedClassifier.isSealed) {
-              val refs = yoinkedClassifier.sealedSubclasses
-                .map { it.createType(yoinkBaseType.arguments) }
-                .map { newCache[it.getSimpleSlug()] ?: error("womp womp $it") }
-              AnyOfSchema(refs)
-            } else {
-              newCache[field.getSimpleSlug(prop)]!!
-            }
-          }
-          Pair(prop.name, propSchema)
+          Pair(name, propSchema)
         }
         logger.debug("Looking for undeclared fields")
         val undeclaredFieldMap = clazz.annotations.filterIsInstance<UndeclaredField>().associate {
@@ -218,6 +200,96 @@ object Kontent {
         newCache.plus(slug to schema)
       }
     }
+  }
+
+  /**
+   * Takes the type information provided and adds any missing data to the schema map
+   */
+  private fun updateCache(cache: SchemaMap, clazz: KClass<*>, types: List<KType>): SchemaMap {
+    var newCache = cache
+    if (!cache.containsKey(clazz.simpleName)) {
+      logger.debug("Cache was missing ${clazz.simpleName}, adding now")
+      types.forEach {
+        newCache = generateKTypeKontent(it, newCache)
+      }
+    }
+    return newCache
+  }
+
+  /**
+   * Scans a class for sealed subclasses.  If found, returns a list with all children.  Otherwise, returns
+   * the base type
+   */
+  private fun scanForSealed(clazz: KClass<*>, type: KType): List<KType> = if (clazz.isSealed) {
+    clazz.sealedSubclasses.map { it.createType(type.arguments) }
+  } else {
+    listOf(type)
+  }
+
+  /**
+   * Yoinks any generic types from the type map should the field be a generic
+   */
+  private fun scanForGeneric(typeMap: TypeMap, prop: KProperty1<*, *>): KType =
+    if (typeMap.containsKey(prop.returnType.classifier)) {
+      logger.debug("Generic type detected")
+      typeMap[prop.returnType.classifier]?.type!!
+    } else {
+      prop.returnType
+    }
+
+  /**
+   * Constructs a [ComponentSchema]
+   */
+  private fun constructComponentSchema(
+    typeMap: TypeMap,
+    clazz: KClass<*>,
+    fieldClazz: KClass<*>,
+    prop: KProperty1<*, *>,
+    type: KType,
+    cache: SchemaMap
+  ): ComponentSchema =
+    when (typeMap.containsKey(prop.returnType.classifier)) {
+      true -> handleGenericProperty(typeMap, clazz, type, prop.returnType.classifier, cache)
+      false -> handleStandardProperty(clazz, fieldClazz, prop, type, cache)
+    }
+
+  /**
+   * If a field has no type parameters, build its [ComponentSchema] without referencing the [TypeMap]
+   */
+  private fun handleStandardProperty(
+    clazz: KClass<*>,
+    fieldClazz: KClass<*>,
+    prop: KProperty1<*, *>,
+    type: KType,
+    cache: SchemaMap
+  ): ComponentSchema = if (clazz.isSealed) {
+    val refs = clazz.sealedSubclasses
+      .map { it.createType(type.arguments) }
+      .map { cache[it.getSimpleSlug()] ?: error("$it not found in cache") }
+    AnyOfSchema(refs)
+  } else {
+    val slug = fieldClazz.getSimpleSlug(prop)
+    cache[slug] ?: error("$slug not found in cache")
+  }
+
+  /**
+   * If a field has type parameters, leverage the constructed [TypeMap] to construct the [ComponentSchema]
+   */
+  private fun handleGenericProperty(
+    typeMap: TypeMap,
+    clazz: KClass<*>,
+    type: KType,
+    classifier: KClassifier?,
+    cache: SchemaMap
+  ): ComponentSchema = if (clazz.isSealed) {
+    val refs = clazz.sealedSubclasses
+      .map { it.createType(type.arguments) }
+      .map { it.getSimpleSlug() }
+      .map { cache[it] ?: error("$it not available in cache") }
+    AnyOfSchema(refs)
+  } else {
+    val slug = typeMap[classifier]?.type!!.getSimpleSlug()
+    cache[slug] ?: error("$slug not found in cache")
   }
 
   /**

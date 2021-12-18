@@ -48,6 +48,11 @@ data class TestGeneric<T>(val messy: String, val potato: T)
 
 data class TestCreatedResponse(val id: Int, val c: String)
 
+data class TestFieldOverride(
+  @KompendiumField(name = "real_name", description = "A Field that is super important!")
+  val b: Boolean
+)
+
 data class ComplexRequest(
   val org: String,
   @KompendiumField("amazing_field")

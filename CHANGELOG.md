@@ -2,6 +2,17 @@
 
 ## Unreleased
 ### Added
+
+### Changed
+
+### Remove
+
+---
+
+## Released
+
+## [2.0.0-alpha] - December 18th, 2021
+### Added
 - Support for OAuth authentication
 - Gradle Toolchain feature to ensure match between local JDK and compile target
 - Dokka integration
@@ -21,10 +32,8 @@
 - Completely reworked authentication and exceptions
 - MethodInfo now exists in a separate package as a sealed interface, each implementation also has its own file
 - Kompendium is now a Ktor Plugin!
-- Github Actions now leverage Gradle Wrapper
+- GitHub Actions now leverage Gradle Wrapper
 - Dropped Codacy support b/c codacy kinda sucks
-
-### Remove
 
 ## [1.11.1] - November 25th, 2021
 ### Added
