@@ -163,29 +163,11 @@ object Kontent {
           // Grab the field of the current property
           val field = prop.javaField?.type?.kotlin ?: error("Unable to parse field type from $prop")
           logger.debug("Detected field $field")
-          // Yoinks any generic types from the type map should the field be a generic
-          val yoinkBaseType = if (typeMap.containsKey(prop.returnType.classifier)) {
-            logger.debug("Generic type detected")
-            typeMap[prop.returnType.classifier]?.type!!
-          } else {
-            prop.returnType
-          }
-          // converts the base type to a class
+          val yoinkBaseType = scanForGeneric(typeMap, prop)
           val yoinkedClass = yoinkBaseType.classifier as KClass<*>
-          // in the event of a sealed class, grab all sealed subclasses and create a type from the base args
-          val yoinkedTypes = if (yoinkedClass.isSealed) {
-            yoinkedClass.sealedSubclasses.map { it.createType(yoinkBaseType.arguments) }
-          } else {
-            listOf(yoinkBaseType)
-          }
-          // if the most up-to-date cache does not contain the content for this field, generate it and add to cache
-          if (!newCache.containsKey(field.simpleName)) {
-            logger.debug("Cache was missing ${field.simpleName}, adding now")
-            yoinkedTypes.forEach {
-              newCache = generateKTypeKontent(it, newCache)
-            }
-          }
-          val propSchema = buildPropertySchema(
+          val yoinkedTypes = scanForSealed(yoinkedClass, yoinkBaseType)
+          newCache = updateCache(newCache, field, yoinkedTypes)
+          val propSchema = constructComponentSchema(
             typeMap = typeMap,
             prop = prop,
             fieldClazz = field,
@@ -210,7 +192,45 @@ object Kontent {
     }
   }
 
-  private fun buildPropertySchema(
+  /**
+   * Takes the type information provided and adds any missing data to the schema map
+   */
+  private fun updateCache(cache: SchemaMap, clazz: KClass<*>, types: List<KType>): SchemaMap {
+    var newCache = cache
+    if (!cache.containsKey(clazz.simpleName)) {
+      logger.debug("Cache was missing ${clazz.simpleName}, adding now")
+      types.forEach {
+        newCache = generateKTypeKontent(it, newCache)
+      }
+    }
+    return newCache
+  }
+
+  /**
+   * Scans a class for sealed subclasses.  If found, returns a list with all children.  Otherwise, returns
+   * the base type
+   */
+  private fun scanForSealed(clazz: KClass<*>, type: KType): List<KType> = if (clazz.isSealed) {
+    clazz.sealedSubclasses.map { it.createType(type.arguments) }
+  } else {
+    listOf(type)
+  }
+
+  /**
+   * Yoinks any generic types from the type map should the field be a generic
+   */
+  private fun scanForGeneric(typeMap: TypeMap, prop: KProperty1<*, *>): KType =
+    if (typeMap.containsKey(prop.returnType.classifier)) {
+      logger.debug("Generic type detected")
+      typeMap[prop.returnType.classifier]?.type!!
+    } else {
+      prop.returnType
+    }
+
+  /**
+   * Constructs a [ComponentSchema]
+   */
+  private fun constructComponentSchema(
     typeMap: TypeMap,
     clazz: KClass<*>,
     fieldClazz: KClass<*>,
@@ -223,6 +243,9 @@ object Kontent {
       false -> handleStandardProperty(clazz, fieldClazz, prop, type, cache)
     }
 
+  /**
+   * If a field has no type parameters, build its [ComponentSchema] without referencing the [TypeMap]
+   */
   private fun handleStandardProperty(
     clazz: KClass<*>,
     fieldClazz: KClass<*>,
@@ -239,6 +262,9 @@ object Kontent {
     cache[slug] ?: error("$slug not found in cache")
   }
 
+  /**
+   * If a field has type parameters, leverage the constructed [TypeMap] to construct the [ComponentSchema]
+   */
   private fun handleGenericProperty(
     typeMap: TypeMap,
     clazz: KClass<*>,
