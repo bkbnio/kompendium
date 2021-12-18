@@ -1,5 +1,6 @@
 package io.bkbn.kompendium.core
 
+import io.bkbn.kompendium.annotations.KompendiumField
 import io.bkbn.kompendium.annotations.UndeclaredField
 import io.bkbn.kompendium.core.metadata.SchemaMap
 import io.bkbn.kompendium.core.metadata.TypeMap
@@ -19,6 +20,7 @@ import kotlin.reflect.KClassifier
 import kotlin.reflect.KProperty1
 import kotlin.reflect.KType
 import kotlin.reflect.full.createType
+import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.jvm.javaField
@@ -96,7 +98,7 @@ object Kontent {
    * Analyze a type but filters out the top-level type
    * @param type to analyze
    * @param cache Existing schema map to append to
-   * @return an updated schema map containing all type information for [T]
+   * @return an updated schema map containing all type information for type [KType]
    */
   fun generateParameterKontent(
     type: KType,
@@ -162,20 +164,18 @@ object Kontent {
           logger.debug("Analyzing $prop in class $clazz")
           // Grab the field of the current property
           val field = prop.javaField?.type?.kotlin ?: error("Unable to parse field type from $prop")
-          logger.debug("Detected field $field")
-          val yoinkBaseType = scanForGeneric(typeMap, prop)
-          val yoinkedClass = yoinkBaseType.classifier as KClass<*>
-          val yoinkedTypes = scanForSealed(yoinkedClass, yoinkBaseType)
-          newCache = updateCache(newCache, field, yoinkedTypes)
+          val baseType = scanForGeneric(typeMap, prop)
+          val baseClazz = baseType.classifier as KClass<*>
+          val allTypes = scanForSealed(baseClazz, baseType)
+          newCache = updateCache(newCache, field, allTypes)
           val propSchema = constructComponentSchema(
             typeMap = typeMap,
             prop = prop,
             fieldClazz = field,
-            clazz = yoinkedClass,
-            type = yoinkBaseType,
+            clazz = baseClazz,
+            type = baseType,
             cache = newCache
           )
-          // todo handle KompendiumField stuff!!!
           Pair(prop.name, propSchema)
         }
         logger.debug("Looking for undeclared fields")
