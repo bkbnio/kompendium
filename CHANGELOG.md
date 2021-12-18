@@ -22,6 +22,7 @@
 - MethodInfo now exists in a separate package as a sealed interface, each implementation also has its own file
 - Kompendium is now a Ktor Plugin!
 - Github Actions now leverage Gradle Wrapper
+- Dropped Codacy support b/c codacy kinda sucks
 
 ### Remove
 

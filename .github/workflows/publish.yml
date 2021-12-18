@@ -40,7 +40,3 @@ jobs:
           properties: |
             org.gradle.vfs.watch=false
             org.gradle.vfs.verbose=false
-      - name: Publish code coverage to Codacy
-        uses: codacy/codacy-coverage-reporter-action@v1
-        with:
-          project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}

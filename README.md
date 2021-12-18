@@ -1,7 +1,5 @@
 # Kompendium
 
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/a9bfd6c77d22497b907b3221849a3ba9)](https://www.codacy.com/gh/bkbnio/kompendium/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=bkbnio/kompendium&amp;utm_campaign=Badge_Grade)
-[![Codacy Badge](https://app.codacy.com/project/badge/Coverage/a9bfd6c77d22497b907b3221849a3ba9)](https://www.codacy.com/gh/bkbnio/kompendium/dashboard?utm_source=github.com&utm_medium=referral&utm_content=bkbnio/kompendium&utm_campaign=Badge_Coverage)
 [![version](https://img.shields.io/maven-central/v/io.bkbn/kompendium-core?style=flat-square)](https://search.maven.org/search?q=io.bkbn%20kompendium)
 
 ## What is Kompendium
