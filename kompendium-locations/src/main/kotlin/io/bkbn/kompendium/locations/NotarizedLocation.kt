@@ -9,6 +9,7 @@ import io.bkbn.kompendium.core.metadata.method.GetInfo
 import io.bkbn.kompendium.core.metadata.method.PostInfo
 import io.bkbn.kompendium.core.metadata.method.PutInfo
 import io.bkbn.kompendium.oas.path.Path
+import io.bkbn.kompendium.oas.path.PathOperation
 import io.ktor.application.ApplicationCall
 import io.ktor.application.feature
 import io.ktor.http.HttpMethod
@@ -37,9 +38,11 @@ object NotarizedLocation {
    * Additionally, the class must be annotated with @[io.ktor.locations.Location].
    * @param TResp Class detailing the expected API response
    * @param info Route metadata
+   * @param postProcess Adds an optional callback hook to perform manual overrides on the generated [PathOperation]
    */
   inline fun <reified TParam : Any, reified TResp : Any> Route.notarizedGet(
     info: GetInfo<TParam, TResp>,
+    postProcess: (PathOperation) -> PathOperation = { p -> p },
     noinline body: suspend PipelineContext<Unit, ApplicationCall>.(TParam) -> Unit
   ): Route = methodNotarizationPreFlight<TParam, Unit, TResp>() { paramType, requestType, responseType ->
     val locationAnnotation = TParam::class.findAnnotation<Location>()
@@ -49,8 +52,8 @@ object NotarizedLocation {
     val locationPath = TParam::class.calculateLocationPath()
     val pathWithLocation = path.plus(locationPath)
     feature.config.spec.paths.getOrPut(pathWithLocation) { Path() }
-    feature.config.spec.paths[pathWithLocation]?.get =
-      parseMethodInfo(info, paramType, requestType, responseType, feature)
+    val baseInfo = parseMethodInfo(info, paramType, requestType, responseType, feature)
+    feature.config.spec.paths[pathWithLocation]?.get = postProcess(baseInfo)
     return location(TParam::class) {
       method(HttpMethod.Get) { handle(body) }
     }
@@ -64,9 +67,11 @@ object NotarizedLocation {
    * @param TReq Class detailing the expected API request body
    * @param TResp Class detailing the expected API response
    * @param info Route metadata
+   * @param postProcess Adds an optional callback hook to perform manual overrides on the generated [PathOperation]
    */
   inline fun <reified TParam : Any, reified TReq : Any, reified TResp : Any> Route.notarizedPost(
     info: PostInfo<TParam, TReq, TResp>,
+    postProcess: (PathOperation) -> PathOperation = { p -> p },
     noinline body: suspend PipelineContext<Unit, ApplicationCall>.(TParam) -> Unit
   ): Route = methodNotarizationPreFlight<TParam, TReq, TResp>() { paramType, requestType, responseType ->
     val locationAnnotation = TParam::class.findAnnotation<Location>()
@@ -76,8 +81,8 @@ object NotarizedLocation {
     val locationPath = TParam::class.calculateLocationPath()
     val pathWithLocation = path.plus(locationPath)
     feature.config.spec.paths.getOrPut(pathWithLocation) { Path() }
-    feature.config.spec.paths[pathWithLocation]?.post =
-      parseMethodInfo(info, paramType, requestType, responseType, feature)
+    val baseInfo = parseMethodInfo(info, paramType, requestType, responseType, feature)
+    feature.config.spec.paths[pathWithLocation]?.post = postProcess(baseInfo)
     return location(TParam::class) {
       method(HttpMethod.Post) { handle(body) }
     }
@@ -91,9 +96,11 @@ object NotarizedLocation {
    * @param TReq Class detailing the expected API request body
    * @param TResp Class detailing the expected API response
    * @param info Route metadata
+   * @param postProcess Adds an optional callback hook to perform manual overrides on the generated [PathOperation]
    */
   inline fun <reified TParam : Any, reified TReq : Any, reified TResp : Any> Route.notarizedPut(
     info: PutInfo<TParam, TReq, TResp>,
+    postProcess: (PathOperation) -> PathOperation = { p -> p },
     noinline body: suspend PipelineContext<Unit, ApplicationCall>.(TParam) -> Unit
   ): Route = methodNotarizationPreFlight<TParam, TReq, TResp>() { paramType, requestType, responseType ->
     val locationAnnotation = TParam::class.findAnnotation<Location>()
@@ -103,8 +110,8 @@ object NotarizedLocation {
     val locationPath = TParam::class.calculateLocationPath()
     val pathWithLocation = path.plus(locationPath)
     feature.config.spec.paths.getOrPut(pathWithLocation) { Path() }
-    feature.config.spec.paths[pathWithLocation]?.put =
-      parseMethodInfo(info, paramType, requestType, responseType, feature)
+    val baseInfo = parseMethodInfo(info, paramType, requestType, responseType, feature)
+    feature.config.spec.paths[pathWithLocation]?.put = postProcess(baseInfo)
     return location(TParam::class) {
       method(HttpMethod.Put) { handle(body) }
     }
@@ -117,9 +124,11 @@ object NotarizedLocation {
    * Additionally, the class must be annotated with @[io.ktor.locations.Location].
    * @param TResp Class detailing the expected API response
    * @param info Route metadata
+   * @param postProcess Adds an optional callback hook to perform manual overrides on the generated [PathOperation]
    */
   inline fun <reified TParam : Any, reified TResp : Any> Route.notarizedDelete(
     info: DeleteInfo<TParam, TResp>,
+    postProcess: (PathOperation) -> PathOperation = { p -> p },
     noinline body: suspend PipelineContext<Unit, ApplicationCall>.(TParam) -> Unit
   ): Route = methodNotarizationPreFlight<TParam, Unit, TResp> { paramType, requestType, responseType ->
     val locationAnnotation = TParam::class.findAnnotation<Location>()
@@ -129,8 +138,8 @@ object NotarizedLocation {
     val locationPath = TParam::class.calculateLocationPath()
     val pathWithLocation = path.plus(locationPath)
     feature.config.spec.paths.getOrPut(pathWithLocation) { Path() }
-    feature.config.spec.paths[pathWithLocation]?.delete =
-      parseMethodInfo(info, paramType, requestType, responseType, feature)
+    val baseInfo = parseMethodInfo(info, paramType, requestType, responseType, feature)
+    feature.config.spec.paths[pathWithLocation]?.delete = postProcess(baseInfo)
     return location(TParam::class) {
       method(HttpMethod.Delete) { handle(body) }
     }
