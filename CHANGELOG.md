@@ -11,7 +11,7 @@
 
 ## Released
 
-## [2.0.0-alpha] - December 18th, 2021
+## [2.0.0-RC1] - December 18th, 2021
 ### Added
 - Support for OAuth authentication
 - Gradle Toolchain feature to ensure match between local JDK and compile target
