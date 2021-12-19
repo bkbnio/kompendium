@@ -40,6 +40,7 @@
 - README updates
 - Refactored `handleComplexType` 🎉
 - Enabled field descriptions
+- Dropped Version Catalog
 
 ## [1.11.1] - November 25th, 2021
 ### Added

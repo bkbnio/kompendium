@@ -3,22 +3,14 @@ plugins {
 }
 
 dependencies {
+  // IMPLEMENTATION
+
+  val ktorVersion: String by project
   implementation(projects.kompendiumCore)
-  implementation(libs.bundles.ktor)
-  implementation(libs.ktor.locations)
+  implementation(group = "io.ktor", name = "ktor-server-core", version = ktorVersion)
+  implementation(group = "io.ktor", name = "ktor-locations", version = ktorVersion)
+
+  // TESTING
 
   testImplementation(testFixtures(projects.kompendiumCore))
-}
-
-testing {
-  suites {
-    val test by getting(JvmTestSuite::class) {
-      useJUnitJupiter()
-      dependencies {
-        implementation(libs.ktor.serialization)
-        implementation(libs.kotlinx.serialization.json)
-        implementation(libs.ktor.server.test.host)
-      }
-    }
-  }
 }

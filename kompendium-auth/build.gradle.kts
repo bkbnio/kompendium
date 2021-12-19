@@ -4,9 +4,15 @@ plugins {
 
 
 dependencies {
+  // IMPLEMENTATION
+
+  val ktorVersion: String by project
   implementation(projects.kompendiumCore)
-  implementation(libs.bundles.ktor)
-  implementation(libs.bundles.ktorAuth)
+  implementation(group = "io.ktor", name = "ktor-server-core", version = ktorVersion)
+  implementation(group = "io.ktor", name = "ktor-auth", version = ktorVersion)
+  implementation(group = "io.ktor", name = "ktor-auth-jwt", version = ktorVersion)
+
+  // TESTING
 
   testImplementation(testFixtures(projects.kompendiumCore))
 }

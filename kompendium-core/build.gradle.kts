@@ -4,34 +4,30 @@ plugins {
 }
 
 dependencies {
+  // IMPLEMENTATION
+
   api(projects.kompendiumOas)
   api(projects.kompendiumAnnotations)
 
-  implementation(libs.jackson.module.kotlin)
-  implementation(libs.bundles.ktor)
+  val ktorVersion: String by project
+  val kotestVersion: String by project
+  implementation(group = "io.ktor", name = "ktor-server-core", version = ktorVersion)
+  implementation(group = "io.ktor", name = "ktor-html-builder", version = ktorVersion)
 
-  testFixturesApi(libs.bundles.ktor)
-  testFixturesApi(libs.ktor.server.test.host)
-  val kotestVersion = "5.0.0"
-  testFixturesApi("io.kotest:kotest-runner-junit5-jvm:$kotestVersion")
-  testFixturesApi("io.kotest:kotest-assertions-core-jvm:$kotestVersion")
-  testFixturesApi("io.kotest:kotest-property-jvm:$kotestVersion")
-  testFixturesApi("io.kotest:kotest-assertions-json-jvm:$kotestVersion")
-  testFixturesApi("io.kotest:kotest-assertions-ktor-jvm:4.4.3")
-  testFixturesApi("io.ktor:ktor-server-test-host:1.6.6")
-  testFixturesApi(libs.ktor.jackson)
-}
+  implementation(group = "com.fasterxml.jackson.module", name = "jackson-module-kotlin", version = "2.13.0")
 
-testing {
-  suites {
-    val test by getting(JvmTestSuite::class) {
-      useJUnitJupiter()
+  // TEST FIXTURES
 
-      dependencies {
-        implementation(libs.ktor.serialization)
-        implementation(libs.kotlinx.serialization.json)
-        implementation(libs.ktor.server.test.host)
-      }
-    }
-  }
+  testFixturesApi(group = "io.kotest", name = "kotest-runner-junit5-jvm", version = kotestVersion)
+  testFixturesApi(group = "io.kotest", name = "kotest-assertions-core-jvm", version = kotestVersion)
+  testFixturesApi(group = "io.kotest", name = "kotest-property-jvm", version = kotestVersion)
+  testFixturesApi(group = "io.kotest", name = "kotest-assertions-json-jvm", version = kotestVersion)
+  testFixturesApi(group = "io.kotest", name = "kotest-assertions-ktor-jvm", version = "4.4.3")
+
+  testFixturesApi(group = "io.ktor", name = "ktor-server-core", version = ktorVersion)
+  testFixturesApi(group = "io.ktor", name = "ktor-server-test-host", version = ktorVersion)
+  testFixturesApi(group = "io.ktor", name = "ktor-jackson", version = ktorVersion)
+  testFixturesApi(group = "io.ktor", name = "ktor-serialization", version = ktorVersion)
+
+  testFixturesApi(group = "org.jetbrains.kotlinx", "kotlinx-serialization-json", version = "1.3.1")
 }
