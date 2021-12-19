@@ -23,14 +23,14 @@
 - `$ref` types are no longer generated, instead all objects are defined explicitly
 - All OpenAPI domain models moved to a separate module `kompendium-oas`
 - Moved all files in `kompendium-core` into `io.bkbn.kompendium.core` package from `io.bkbn.kompendium`
-- Gradle bumped to 7.3
-- `buildSrc` introduced to handle a lot of build logic
+- Gradle bumped to 7.3.2
+- Gradle build logic offloaded to Sourdough Plugin
 - Minimum supported Java version is now 11
 - Bumped Kotlin to 1.6
 - Annotations now live in a separate module.  (Should not impact end users as module is imported as api dependency by core).
 - Kotest as the testing framework of choice
 - Path calculation removed in favor of built-in route toString
-- Ktor to 1.6.6
+- Ktor to 1.6.7
 - Completely reworked authentication and exceptions
 - MethodInfo now exists in a separate package as a sealed interface, each implementation also has its own file
 - Kompendium is now a Ktor Plugin!
