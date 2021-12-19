@@ -11,7 +11,7 @@
 
 ## Released
 
-## [2.0.0-alpha] - December 18th, 2021
+## [2.0.0-RC1] - December 18th, 2021
 ### Added
 - Support for OAuth authentication
 - Gradle Toolchain feature to ensure match between local JDK and compile target
@@ -34,6 +34,12 @@
 - Kompendium is now a Ktor Plugin!
 - GitHub Actions now leverage Gradle Wrapper
 - Dropped Codacy support b/c codacy kinda sucks
+- Fixed bug where KompendiumField was being completely ignored
+- Added `description` key to KompendiumField
+- Redid playground to serve as a showcase for various functionality
+- README updates
+- Refactored `handleComplexType` 🎉
+- Enabled field descriptions
 
 ## [1.11.1] - November 25th, 2021
 ### Added

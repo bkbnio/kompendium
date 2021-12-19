@@ -4,10 +4,12 @@ import io.bkbn.kompendium.annotations.KompendiumField
 import io.bkbn.kompendium.annotations.KompendiumParam
 import io.bkbn.kompendium.annotations.ParamType
 import io.bkbn.kompendium.core.Kompendium
+import io.bkbn.kompendium.core.Notarized.notarizedDelete
 import io.bkbn.kompendium.core.Notarized.notarizedGet
 import io.bkbn.kompendium.core.Notarized.notarizedPost
 import io.bkbn.kompendium.core.metadata.RequestInfo
 import io.bkbn.kompendium.core.metadata.ResponseInfo
+import io.bkbn.kompendium.core.metadata.method.DeleteInfo
 import io.bkbn.kompendium.core.metadata.method.GetInfo
 import io.bkbn.kompendium.core.metadata.method.PostInfo
 import io.bkbn.kompendium.core.routes.redoc
@@ -19,6 +21,7 @@ import io.bkbn.kompendium.oas.server.Server
 import io.bkbn.kompendium.playground.BasicModels.BasicParameters
 import io.bkbn.kompendium.playground.BasicModels.BasicResponse
 import io.bkbn.kompendium.playground.BasicModels.BasicRequest
+import io.bkbn.kompendium.playground.BasicPlaygroundToC.simpleDeleteRequest
 import io.bkbn.kompendium.playground.BasicPlaygroundToC.simpleGetExample
 import io.bkbn.kompendium.playground.BasicPlaygroundToC.simpleGetExampleWithParameters
 import io.bkbn.kompendium.playground.BasicPlaygroundToC.simplePostRequest
@@ -68,6 +71,9 @@ private fun Application.mainModule() {
     // Kompendium infers the route path from the Ktor Route.  This will show up as the root path `/`
     notarizedGet(simpleGetExample) {
       call.respond(HttpStatusCode.OK, BasicResponse(c = UUID.randomUUID().toString()))
+    }
+    notarizedDelete(simpleDeleteRequest) {
+      call.respond(HttpStatusCode.NoContent)
     }
     // It can also infer path parameters
     route("/{a}") {
@@ -140,6 +146,19 @@ object BasicPlaygroundToC {
     ),
     tags = setOf("Simple")
   )
+
+  /**
+   * This showcases a DELETE request
+   */
+  val simpleDeleteRequest = DeleteInfo<Unit, Unit>(
+    summary = "Simple, documented DELETE Request",
+    description = "Cleanin' house",
+    responseInfo = ResponseInfo(
+      status = HttpStatusCode.NoContent,
+      description = "We wiped the files boss"
+    ),
+    tags = setOf("Simple")
+  )
 }
 
 // Contains the root metadata for our server.  This is all the stuff that is defined once
@@ -188,7 +207,7 @@ object BasicModels {
 
   @Serializable
   data class BasicRequest(
-    @KompendiumField(description = "This is a super important field!!")
+    @KompendiumField(description = "This is a super important field!!", name = "best_field")
     val d: Boolean
   )
 }

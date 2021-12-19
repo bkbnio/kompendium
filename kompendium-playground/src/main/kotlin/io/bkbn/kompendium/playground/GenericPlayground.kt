@@ -1,7 +1,5 @@
 package io.bkbn.kompendium.playground
 
-import io.bkbn.kompendium.auth.Notarized.notarizedAuthenticate
-import io.bkbn.kompendium.auth.configuration.BasicAuthConfiguration
 import io.bkbn.kompendium.core.Kompendium
 import io.bkbn.kompendium.core.Notarized.notarizedGet
 import io.bkbn.kompendium.core.metadata.ResponseInfo
@@ -12,13 +10,10 @@ import io.bkbn.kompendium.oas.info.Contact
 import io.bkbn.kompendium.oas.info.Info
 import io.bkbn.kompendium.oas.info.License
 import io.bkbn.kompendium.oas.server.Server
-import io.bkbn.kompendium.playground.AuthPlaygroundToC.simpleAuthenticatedGet
+import io.bkbn.kompendium.playground.GenericPlaygroundToC.simpleGenericGet
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
-import io.ktor.auth.Authentication
-import io.ktor.auth.UserIdPrincipal
-import io.ktor.auth.basic
 import io.ktor.features.ContentNegotiation
 import io.ktor.http.HttpStatusCode
 import io.ktor.response.respond
@@ -31,7 +26,7 @@ import java.net.URI
 
 /**
  * Application entrypoint.  Run this and head on over to `localhost:8081/docs`
- * to see some documented, authenticated routes.
+ * to see a very simple yet beautifully documented API
  */
 fun main() {
   embeddedServer(
@@ -43,40 +38,44 @@ fun main() {
 
 // Application Module
 private fun Application.mainModule() {
+  // Installs Simple JSON Content Negotiation
   install(ContentNegotiation) {
     json()
   }
+  // Installs the Kompendium Plugin and sets up baseline server metadata
   install(Kompendium) {
-    spec = AuthMetadata.spec
-  }
-  install(Authentication) {
-    // We can leverage the security config name to prevent typos
-    basic(SecurityConfigurations.basic.name) {
-      realm = "Access to the '/' path"
-      validate { credentials ->
-        if (credentials.name == "admin" && credentials.password == "foobar") {
-          UserIdPrincipal(credentials.name)
-        } else {
-          null
-        }
-      }
-
-    }
+    spec = GenericMetadata.spec
   }
   routing {
-    redoc(pageTitle = "Authenticated API")
-    notarizedAuthenticate(SecurityConfigurations.basic) {
-      notarizedGet(simpleAuthenticatedGet) {
-        call.respond(HttpStatusCode.OK, AuthModels.SimpleAuthResponse(true))
-      }
+    redoc(pageTitle = "Simple API Docs")
+    notarizedGet(simpleGenericGet) {
+      call.respond(
+        HttpStatusCode.OK,
+        GenericModels.Foosy(GenericModels.Barzo(5), listOf("hey", "now", "you're", "an", "all-start"))
+      )
     }
   }
 }
 
-object AuthMetadata {
+
+// This is a table of contents to hold all the metadata for our various API endpoints
+object GenericPlaygroundToC {
+  val simpleGenericGet = GetInfo<Unit, GenericModels.SimpleG<String>>(
+    summary = "Lots 'o Generics",
+    description = "Pretty funky huh",
+    responseInfo = ResponseInfo(
+      status = HttpStatusCode.OK,
+      description = "Enjoy all this data, pal"
+    )
+  )
+}
+
+// Contains the root metadata for our server.  This is all the stuff that is defined once
+// and cannot be inferred from the Ktor application
+object GenericMetadata {
   val spec = OpenApiSpec(
     info = Info(
-      title = "Simple API with documented Authentication",
+      title = "Simple Demo API with Generic Data",
       version = "1.33.7",
       description = "Wow isn't this cool?",
       termsOfService = URI("https://example.com"),
@@ -103,28 +102,13 @@ object AuthMetadata {
   )
 }
 
-// This is where we define the available security configurations for our app
-object SecurityConfigurations {
-  val basic = object : BasicAuthConfiguration {
-    override val name: String = "basic"
-  }
-}
-
-// This is a table of contents to hold all the metadata for our various API endpoints
-object AuthPlaygroundToC {
-  val simpleAuthenticatedGet = GetInfo<Unit, AuthModels.SimpleAuthResponse>(
-    summary = "Simple GET Request behind authentication",
-    description = "Can only make this request if you are a true OG",
-    responseInfo = ResponseInfo(
-      status = HttpStatusCode.OK,
-      description = "Proves that you are in fact an OG"
-    ),
-    tags = setOf("Authenticated"),
-    securitySchemes = setOf(SecurityConfigurations.basic.name)
-  )
-}
-
-object AuthModels {
+object GenericModels {
   @Serializable
-  data class SimpleAuthResponse(val isOG: Boolean)
+  data class Foosy<T, K>(val test: T, val otherThing: List<K>)
+
+  @Serializable
+  data class Barzo<G>(val result: G)
+
+  @Serializable
+  data class SimpleG<G>(val result: G)
 }
