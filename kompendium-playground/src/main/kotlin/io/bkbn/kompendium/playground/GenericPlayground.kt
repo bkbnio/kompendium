@@ -10,7 +10,7 @@ import io.bkbn.kompendium.oas.info.Contact
 import io.bkbn.kompendium.oas.info.Info
 import io.bkbn.kompendium.oas.info.License
 import io.bkbn.kompendium.oas.server.Server
-import io.bkbn.kompendium.playground.PolymorphicPlaygroundToC.polymorphicExample
+import io.bkbn.kompendium.playground.GenericPlaygroundToC.simpleGenericGet
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
@@ -36,6 +36,7 @@ fun main() {
   ).start(wait = true)
 }
 
+// Application Module
 private fun Application.mainModule() {
   // Installs Simple JSON Content Negotiation
   install(ContentNegotiation) {
@@ -43,37 +44,38 @@ private fun Application.mainModule() {
   }
   // Installs the Kompendium Plugin and sets up baseline server metadata
   install(Kompendium) {
-    spec = PolymorphicMetadata.spec
+    spec = GenericMetadata.spec
   }
-  // Configures the routes for our API
   routing {
-    redoc(pageTitle = "Polymorphic API Examples")
-    notarizedGet(polymorphicExample) {
-      call.respond(HttpStatusCode.OK, PolymorphicModels.OneJamma(1337))
+    redoc(pageTitle = "Simple API Docs")
+    notarizedGet(simpleGenericGet) {
+      call.respond(
+        HttpStatusCode.OK,
+        GenericModels.Foosy(GenericModels.Barzo(5), listOf("hey", "now", "you're", "an", "all-start"))
+      )
     }
   }
 }
 
+
 // This is a table of contents to hold all the metadata for our various API endpoints
-object PolymorphicPlaygroundToC {
-  val polymorphicExample = GetInfo<Unit, PolymorphicModels.SlammaJamma>(
-    summary = "C'mon and Slam",
-    description = "And welcome to the jam",
+object GenericPlaygroundToC {
+  val simpleGenericGet = GetInfo<Unit, GenericModels.SimpleG<String>>(
+    summary = "Lots 'o Generics",
+    description = "Pretty funky huh",
     responseInfo = ResponseInfo(
       status = HttpStatusCode.OK,
-      description = "You have successfully slammed and/or jammed",
-      examples = mapOf(
-        "one" to PolymorphicModels.OneJamma(42),
-        "two" to PolymorphicModels.AnothaJamma(4.2)
-      )
+      description = "Enjoy all this data, pal"
     )
   )
 }
 
-object PolymorphicMetadata {
+// Contains the root metadata for our server.  This is all the stuff that is defined once
+// and cannot be inferred from the Ktor application
+object GenericMetadata {
   val spec = OpenApiSpec(
     info = Info(
-      title = "Simple Demo API with Polymorphic Models",
+      title = "Simple Demo API with Generic Data",
       version = "1.33.7",
       description = "Wow isn't this cool?",
       termsOfService = URI("https://example.com"),
@@ -100,12 +102,13 @@ object PolymorphicMetadata {
   )
 }
 
-object PolymorphicModels {
-  sealed interface SlammaJamma
+object GenericModels {
+  @Serializable
+  data class Foosy<T, K>(val test: T, val otherThing: List<K>)
 
   @Serializable
-  data class OneJamma(val a: Int) : SlammaJamma
+  data class Barzo<G>(val result: G)
 
   @Serializable
-  data class AnothaJamma(val b: Double) : SlammaJamma
+  data class SimpleG<G>(val result: G)
 }
