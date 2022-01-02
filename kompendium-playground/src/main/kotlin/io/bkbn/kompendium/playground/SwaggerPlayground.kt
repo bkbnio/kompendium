@@ -13,6 +13,7 @@ import io.ktor.routing.routing
 import io.ktor.serialization.json
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
+import io.ktor.webjars.Webjars
 import java.util.UUID
 
 /**
@@ -33,6 +34,7 @@ private fun Application.mainModule() {
   install(ContentNegotiation) {
     json()
   }
+  install(Webjars)
   // Installs the Kompendium Plugin and sets up baseline server metadata
   install(Kompendium) {
     spec = BasicMetadata.spec
