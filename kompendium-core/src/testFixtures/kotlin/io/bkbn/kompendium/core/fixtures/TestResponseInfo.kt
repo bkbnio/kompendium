@@ -153,5 +153,31 @@ object TestResponseInfo {
     responseInfo = simpleOkResponse()
   )
 
+  val requiredParam = GetInfo<RequiredParam, TestResponse>(
+    summary = "required param",
+    description = "Cool stuff",
+    responseInfo = simpleOkResponse()
+  )
+
+  val defaultParam = GetInfo<DefaultParam, TestResponse>(
+    summary = "default param",
+    description = "Cool stuff",
+    responseInfo = simpleOkResponse()
+  )
+
+  val defaultField = PostInfo<Unit, DefaultField, TestResponse>(
+    summary = "default param",
+    description = "Cool stuff",
+    responseInfo = simpleOkResponse(),
+    requestInfo = RequestInfo("cool")
+  )
+
+  val nullableField = PostInfo<Unit, NullableField, TestResponse>(
+    summary = "default param",
+    description = "Cool stuff",
+    responseInfo = simpleOkResponse(),
+    requestInfo = RequestInfo("cool")
+  )
+
   private fun <T> simpleOkResponse() = ResponseInfo<T>(HttpStatusCode.OK, "A successful endeavor")
 }

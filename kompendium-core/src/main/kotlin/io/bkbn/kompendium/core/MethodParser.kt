@@ -97,7 +97,8 @@ object MethodParser {
       else -> {
         Request(
           description = requestInfo.description,
-          content = feature.resolveContent(this, requestInfo.mediaTypes, requestInfo.examples) ?: mapOf()
+          content = feature.resolveContent(this, requestInfo.mediaTypes, requestInfo.examples) ?: mapOf(),
+          required = requestInfo.required
         )
       }
     }

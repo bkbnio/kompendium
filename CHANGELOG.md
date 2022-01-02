@@ -51,6 +51,7 @@
 - `KompendiumField` and 'KompendiumParam' renamed to `Field` and `Param` respectively
 - Description dropped from `Param`
 - Dropped unnecessary parameter content scanning method
+- Fixed bug causing all request bodies to be marked as optional
 
 ## [1.11.1] - November 25th, 2021
 ### Added

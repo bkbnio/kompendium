@@ -90,7 +90,7 @@
               }
             }
           },
-          "required": false
+          "required": true
         },
         "responses": {
           "201": {

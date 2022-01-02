@@ -5,6 +5,8 @@ import io.bkbn.kompendium.core.fixtures.TestHelpers.getFileSnapshot
 import io.bkbn.kompendium.core.fixtures.TestHelpers.openApiTest
 import io.bkbn.kompendium.core.util.complexType
 import io.bkbn.kompendium.core.util.constrainedIntInfo
+import io.bkbn.kompendium.core.util.defaultField
+import io.bkbn.kompendium.core.util.defaultParameter
 import io.bkbn.kompendium.core.util.genericPolymorphicResponse
 import io.bkbn.kompendium.core.util.genericPolymorphicResponseMultipleImpls
 import io.bkbn.kompendium.core.util.headerParameter
@@ -18,6 +20,7 @@ import io.bkbn.kompendium.core.util.notarizedGetWithNotarizedException
 import io.bkbn.kompendium.core.util.notarizedGetWithPolymorphicErrorResponse
 import io.bkbn.kompendium.core.util.notarizedPostModule
 import io.bkbn.kompendium.core.util.notarizedPutModule
+import io.bkbn.kompendium.core.util.nullableField
 import io.bkbn.kompendium.core.util.overrideFieldInfo
 import io.bkbn.kompendium.core.util.pathParsingTestModule
 import io.bkbn.kompendium.core.util.polymorphicCollectionResponse
@@ -25,6 +28,7 @@ import io.bkbn.kompendium.core.util.polymorphicInterfaceResponse
 import io.bkbn.kompendium.core.util.polymorphicMapResponse
 import io.bkbn.kompendium.core.util.polymorphicResponse
 import io.bkbn.kompendium.core.util.primitives
+import io.bkbn.kompendium.core.util.requiredParameter
 import io.bkbn.kompendium.core.util.returnsList
 import io.bkbn.kompendium.core.util.rootModule
 import io.bkbn.kompendium.core.util.simpleGenericResponse
@@ -153,9 +157,18 @@ class KompendiumTest : DescribeSpec({
       openApiTest("query_with_default_parameter.json") { withDefaultParameter() }
     }
   }
-  describe("Parameters") {
-    it("Only marks a parameter required if there is no default and it is not marked nullable") {
-      TODO()
+  describe("Required Fields") {
+    it("Marks a parameter required if there is no default and it is not marked nullable") {
+      openApiTest("required_param.json") { requiredParameter() }
+    }
+    it("Does not mark a parameter as required if a default value is provided") {
+      openApiTest("default_param.json") { defaultParameter() }
+    }
+    it("Does not mark a field as required if a default value is provided") {
+      openApiTest("default_field.json") { defaultField() }
+    }
+    it("Marks a field as nullable when expected") {
+      openApiTest("nullable_field.json") { nullableField() }
     }
   }
   describe("Polymorphism and Generics") {

@@ -16,6 +16,10 @@ import io.bkbn.kompendium.core.fixtures.TestNested
 import io.bkbn.kompendium.core.fixtures.TestRequest
 import io.bkbn.kompendium.core.fixtures.TestResponse
 import io.bkbn.kompendium.core.fixtures.TestResponseInfo
+import io.bkbn.kompendium.core.fixtures.TestResponseInfo.defaultField
+import io.bkbn.kompendium.core.fixtures.TestResponseInfo.defaultParam
+import io.bkbn.kompendium.core.fixtures.TestResponseInfo.nullableField
+import io.bkbn.kompendium.core.fixtures.TestResponseInfo.requiredParam
 import io.bkbn.kompendium.core.metadata.RequestInfo
 import io.bkbn.kompendium.core.metadata.ResponseInfo
 import io.bkbn.kompendium.core.metadata.method.GetInfo
@@ -369,6 +373,46 @@ fun Application.constrainedIntInfo() {
   routing {
     route("/test/constrained_int") {
       notarizedGet(TestResponseInfo.minMaxInt) {
+        call.respond(HttpStatusCode.OK, TestResponse("hi"))
+      }
+    }
+  }
+}
+
+fun Application.requiredParameter() {
+  routing {
+    route("/test/required_param") {
+      notarizedGet(requiredParam) {
+        call.respond(HttpStatusCode.OK, TestResponse("hi"))
+      }
+    }
+  }
+}
+
+fun Application.defaultParameter() {
+  routing {
+    route("/test/required_param") {
+      notarizedGet(defaultParam) {
+        call.respond(HttpStatusCode.OK, TestResponse("hi"))
+      }
+    }
+  }
+}
+
+fun Application.defaultField() {
+  routing {
+    route("/test/required_param") {
+      notarizedPost(defaultField) {
+        call.respond(HttpStatusCode.OK, TestResponse("hi"))
+      }
+    }
+  }
+}
+
+fun Application.nullableField() {
+  routing {
+    route("/test/required_param") {
+      notarizedPost(nullableField) {
         call.respond(HttpStatusCode.OK, TestResponse("hi"))
       }
     }

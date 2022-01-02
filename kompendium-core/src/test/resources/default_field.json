@@ -26,77 +26,38 @@
     }
   ],
   "paths": {
-    "/test/examples": {
+    "/test/required_param": {
       "post": {
         "tags": [],
-        "summary": "Example Parameters",
-        "description": "A test for setting parameter examples",
+        "summary": "default param",
+        "description": "Cool stuff",
         "parameters": [],
         "requestBody": {
-          "description": "Test",
+          "description": "cool",
           "content": {
             "application/json": {
               "schema": {
                 "properties": {
-                  "aaa": {
-                    "items": {
-                      "format": "int64",
-                      "type": "integer"
-                    },
-                    "type": "array"
+                  "a": {
+                    "type": "string"
                   },
                   "b": {
-                    "format": "double",
-                    "type": "number"
-                  },
-                  "field_name": {
-                    "properties": {
-                      "nesty": {
-                        "type": "string"
-                      }
-                    },
-                    "required": [
-                      "nesty"
-                    ],
-                    "type": "object"
+                    "format": "int32",
+                    "type": "integer"
                   }
                 },
                 "required": [
-                  "fieldName",
-                  "b",
-                  "aaa"
+                  "b"
                 ],
                 "type": "object"
-              },
-              "examples": {
-                "one": {
-                  "value": {
-                    "fieldName": {
-                      "nesty": "hey"
-                    },
-                    "b": 4.0,
-                    "aaa": []
-                  }
-                },
-                "two": {
-                  "value": {
-                    "fieldName": {
-                      "nesty": "hello"
-                    },
-                    "b": 3.8,
-                    "aaa": [
-                      31324234
-                    ]
-                  }
-                }
               }
             }
           },
           "required": true
         },
         "responses": {
-          "201": {
-            "description": "nice",
+          "200": {
+            "description": "A successful endeavor",
             "content": {
               "application/json": {
                 "schema": {
@@ -109,13 +70,6 @@
                     "c"
                   ],
                   "type": "object"
-                },
-                "examples": {
-                  "test": {
-                    "value": {
-                      "c": "spud"
-                    }
-                  }
                 }
               }
             }

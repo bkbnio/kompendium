@@ -61,6 +61,25 @@ data class MinMaxInt(
   val a: Int
 )
 
+data class RequiredParam(
+  @Param(ParamType.QUERY)
+  val a: String
+)
+
+data class DefaultParam(
+  @Param(ParamType.QUERY)
+  val b: String = "heyo"
+)
+
+data class DefaultField(
+  val a: String = "hi",
+  val b: Int
+)
+
+data class NullableField(
+  val a: String?
+)
+
 data class ComplexRequest(
   val org: String,
   @Field("amazing_field")

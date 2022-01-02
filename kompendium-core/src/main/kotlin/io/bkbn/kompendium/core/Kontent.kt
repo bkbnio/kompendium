@@ -265,7 +265,7 @@ object Kontent {
       is AnyOfSchema -> AnyOfSchema(anyOf.map { it.scanForConstraints(clazz, prop) })
       is ArraySchema -> scanForConstraints(prop)
       is DictionarySchema -> this // TODO Anything here?
-      is EnumSchema -> this // todo anything here?
+      is EnumSchema -> scanForConstraints(prop)
       is FormattedSchema -> scanForConstraints(prop)
       is FreeFormSchema -> this // todo anything here?
       is ObjectSchema -> scanForConstraints(clazz, prop)
@@ -284,6 +284,14 @@ object Kontent {
     )
   }
 
+  private fun EnumSchema.scanForConstraints(prop: KProperty1<*, *>): EnumSchema {
+    if (prop.returnType.isMarkedNullable) {
+      return this.copy(nullable = true)
+    }
+
+    return this
+  }
+
   private fun FormattedSchema.scanForConstraints(prop: KProperty1<*, *>): FormattedSchema {
     val minimum = prop.findAnnotation<Minimum>()
     val maximum = prop.findAnnotation<Maximum>()
@@ -291,7 +299,13 @@ object Kontent {
     val exclusiveMaximum = prop.findAnnotation<ExclusiveMaximum>()
     val multipleOf = prop.findAnnotation<MultipleOf>()
 
-    return this.copy(
+    var schema = this
+
+    if (prop.returnType.isMarkedNullable) {
+      schema = schema.copy(nullable = true)
+    }
+
+    return schema.copy(
       minimum = minimum?.min,
       maximum = maximum?.max,
       exclusiveMinimum = exclusiveMinimum?.let { true },
@@ -306,7 +320,13 @@ object Kontent {
     val pattern = prop.findAnnotation<Pattern>()
     val format = prop.findAnnotation<Format>()
 
-    return this.copy(
+    var schema = this
+
+    if (prop.returnType.isMarkedNullable) {
+      schema = schema.copy(nullable = true)
+    }
+
+    return schema.copy(
       minLength = minLength?.length,
       maxLength = maxLength?.length,
       pattern = pattern?.pattern,

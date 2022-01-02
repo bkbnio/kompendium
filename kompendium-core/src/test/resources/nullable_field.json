@@ -26,46 +26,35 @@
     }
   ],
   "paths": {
-    "/test": {
-      "get": {
+    "/test/required_param": {
+      "post": {
         "tags": [],
-        "summary": "Testing Default Params",
-        "description": "Should have a default parameter value",
-        "parameters": [
-          {
-            "name": "a",
-            "in": "query",
-            "schema": {
-              "format": "int32",
-              "type": "integer",
-              "default": 100
-            },
-            "required": false,
-            "deprecated": false
+        "summary": "default param",
+        "description": "Cool stuff",
+        "parameters": [],
+        "requestBody": {
+          "description": "cool",
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "a": {
+                    "type": "string",
+                    "nullable": true
+                  }
+                },
+                "required": [
+                  "a"
+                ],
+                "type": "object"
+              }
+            }
           },
-          {
-            "name": "b",
-            "in": "path",
-            "schema": {
-              "type": "string",
-              "nullable": true
-            },
-            "required": false,
-            "deprecated": false
-          },
-          {
-            "name": "c",
-            "in": "path",
-            "schema": {
-              "type": "boolean"
-            },
-            "required": true,
-            "deprecated": false
-          }
-        ],
+          "required": true
+        },
         "responses": {
           "200": {
-            "description": "A good response",
+            "description": "A successful endeavor",
             "content": {
               "application/json": {
                 "schema": {
