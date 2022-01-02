@@ -19,7 +19,6 @@ import io.bkbn.kompendium.annotations.constraint.Pattern
 import io.bkbn.kompendium.annotations.constraint.UniqueItems
 import io.bkbn.kompendium.core.metadata.SchemaMap
 import io.bkbn.kompendium.core.metadata.TypeMap
-import io.bkbn.kompendium.core.util.Helpers.capitalized
 import io.bkbn.kompendium.core.util.Helpers.genericNameAdapter
 import io.bkbn.kompendium.core.util.Helpers.getSimpleSlug
 import io.bkbn.kompendium.core.util.Helpers.logged
@@ -34,8 +33,6 @@ import io.bkbn.kompendium.oas.schema.ObjectSchema
 import io.bkbn.kompendium.oas.schema.SimpleSchema
 import kotlin.reflect.KClass
 import kotlin.reflect.KClassifier
-import kotlin.reflect.KParameter
-import kotlin.reflect.KProperty
 import kotlin.reflect.KProperty1
 import kotlin.reflect.KType
 import kotlin.reflect.full.createType
@@ -230,7 +227,11 @@ object Kontent {
           it.field to newCache[undeclaredType.getSimpleSlug()]!!
         }
         logger.debug("$slug contains $fieldMap")
-        val schema = ObjectSchema(fieldMap.plus(undeclaredFieldMap))
+        var schema = ObjectSchema(fieldMap.plus(undeclaredFieldMap))
+        val requiredParams = clazz.primaryConstructor?.parameters?.filterNot { it.isOptional } ?: emptyList()
+        if (requiredParams.isNotEmpty()) {
+          schema = schema.copy(required = requiredParams.map { it.name!! })
+        }
         logger.debug("$slug schema: $schema")
         newCache.plus(slug to schema)
       }

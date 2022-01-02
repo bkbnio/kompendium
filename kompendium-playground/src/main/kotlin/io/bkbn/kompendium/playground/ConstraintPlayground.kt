@@ -165,7 +165,7 @@ object ConstrainedModels {
     val fieldy: Field,
     @MinProperties(1)
     @FreeFormObject
-    val data: JsonElement
+    val data: JsonElement? = null
   ) {
     @Serializable
     data class Field(val nesty: Nested?) {
