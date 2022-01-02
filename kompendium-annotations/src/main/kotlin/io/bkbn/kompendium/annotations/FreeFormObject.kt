@@ -1,4 +1,4 @@
-package io.bkbn.kompendium.annotations.constraint
+package io.bkbn.kompendium.annotations
 
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.PROPERTY)

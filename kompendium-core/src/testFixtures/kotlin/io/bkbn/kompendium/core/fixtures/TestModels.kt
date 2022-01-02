@@ -5,6 +5,8 @@ import io.bkbn.kompendium.annotations.Field
 import io.bkbn.kompendium.annotations.Param
 import io.bkbn.kompendium.annotations.ParamType
 import io.bkbn.kompendium.annotations.UndeclaredField
+import io.bkbn.kompendium.annotations.constraint.Maximum
+import io.bkbn.kompendium.annotations.constraint.Minimum
 import java.math.BigDecimal
 import java.math.BigInteger
 
@@ -51,6 +53,12 @@ data class TestCreatedResponse(val id: Int, val c: String)
 data class TestFieldOverride(
   @Field(name = "real_name", description = "A Field that is super important!")
   val b: Boolean
+)
+
+data class MinMaxInt(
+  @Minimum(5)
+  @Maximum(100)
+  val a: Int
 )
 
 data class ComplexRequest(

@@ -364,3 +364,13 @@ fun Application.overrideFieldInfo() {
     }
   }
 }
+
+fun Application.constrainedIntInfo() {
+  routing {
+    route("/test/constrained_int") {
+      notarizedGet(TestResponseInfo.minMaxInt) {
+        call.respond(HttpStatusCode.OK, TestResponse("hi"))
+      }
+    }
+  }
+}

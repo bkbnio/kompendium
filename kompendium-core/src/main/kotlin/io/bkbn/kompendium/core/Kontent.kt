@@ -5,7 +5,7 @@ import io.bkbn.kompendium.annotations.UndeclaredField
 import io.bkbn.kompendium.annotations.constraint.ExclusiveMaximum
 import io.bkbn.kompendium.annotations.constraint.ExclusiveMinimum
 import io.bkbn.kompendium.annotations.constraint.Format
-import io.bkbn.kompendium.annotations.constraint.FreeFormObject
+import io.bkbn.kompendium.annotations.FreeFormObject
 import io.bkbn.kompendium.annotations.constraint.MaxItems
 import io.bkbn.kompendium.annotations.constraint.MaxLength
 import io.bkbn.kompendium.annotations.constraint.MaxProperties
@@ -94,35 +94,6 @@ object Kontent {
     } else {
       listOf(type)
     }
-  }
-
-  /**
-   * Analyze a type [T], but filters out the top-level type
-   * @param T type to analyze
-   * @param cache Existing schema map to append to
-   * @return an updated schema map containing all type information for [T]
-   */
-  @OptIn(ExperimentalStdlibApi::class)
-  inline fun <reified T> generateParameterKontent(
-    cache: SchemaMap = emptyMap()
-  ): SchemaMap {
-    val kontentType = typeOf<T>()
-    return generateKTypeKontent(kontentType, cache)
-      .filterNot { (slug, _) -> slug == (kontentType.classifier as KClass<*>).simpleName }
-  }
-
-  /**
-   * Analyze a type but filters out the top-level type
-   * @param type to analyze
-   * @param cache Existing schema map to append to
-   * @return an updated schema map containing all type information for type [KType]
-   */
-  fun generateParameterKontent(
-    type: KType,
-    cache: SchemaMap = emptyMap()
-  ): SchemaMap {
-    return generateKTypeKontent(type, cache)
-      .filterNot { (slug, _) -> slug == (type.classifier as KClass<*>).simpleName }
   }
 
   /**
@@ -289,71 +260,73 @@ object Kontent {
       false -> handleStandardProperty(clazz, fieldClazz, prop, type, cache)
     }.scanForConstraints(clazz, prop)
 
-  // TODO Break this up, it's getting gross
-  @Suppress("ReturnCount")
-  private fun ComponentSchema.scanForConstraints(clazz: KClass<*>, prop: KProperty1<*, *>): ComponentSchema {
-    if (this is FormattedSchema) {
-      // Get all possible FormattedSchema constraints
-      val minimum = prop.findAnnotation<Minimum>()
-      val maximum = prop.findAnnotation<Maximum>()
-      val exclusiveMinimum = prop.findAnnotation<ExclusiveMinimum>()
-      val exclusiveMaximum = prop.findAnnotation<ExclusiveMaximum>()
-      val multipleOf = prop.findAnnotation<MultipleOf>()
-
-      // Apply any non-null to the schema
-      return this.copy(
-        minimum = minimum?.min,
-        maximum = maximum?.max,
-        exclusiveMinimum = exclusiveMinimum?.let { true },
-        exclusiveMaximum = exclusiveMaximum?.let { true },
-        multipleOf = multipleOf?.multiple,
-      )
+  private fun ComponentSchema.scanForConstraints(clazz: KClass<*>, prop: KProperty1<*, *>): ComponentSchema =
+    when (this) {
+      is AnyOfSchema -> AnyOfSchema(anyOf.map { it.scanForConstraints(clazz, prop) })
+      is ArraySchema -> scanForConstraints(prop)
+      is DictionarySchema -> this // TODO Anything here?
+      is EnumSchema -> this // todo anything here?
+      is FormattedSchema -> scanForConstraints(prop)
+      is FreeFormSchema -> this // todo anything here?
+      is ObjectSchema -> scanForConstraints(clazz, prop)
+      is SimpleSchema -> scanForConstraints(prop)
     }
 
-    if (this is SimpleSchema) {
-      // Get all possible SimpleSchema constraints
-      val minLength = prop.findAnnotation<MinLength>()
-      val maxLength = prop.findAnnotation<MaxLength>()
-      val pattern = prop.findAnnotation<Pattern>()
-      val format = prop.findAnnotation<Format>()
+  private fun ArraySchema.scanForConstraints(prop: KProperty1<*, *>): ArraySchema {
+    val minItems = prop.findAnnotation<MinItems>()
+    val maxItems = prop.findAnnotation<MaxItems>()
+    val uniqueItems = prop.findAnnotation<UniqueItems>()
 
-      // Apply any non-null to the schema
-      return this.copy(
-        minLength = minLength?.length,
-        maxLength = maxLength?.length,
-        pattern = pattern?.pattern,
-        format = format?.format
-      )
+    return this.copy(
+      minItems = minItems?.items,
+      maxItems = maxItems?.items,
+      uniqueItems = uniqueItems?.let { true }
+    )
+  }
+
+  private fun FormattedSchema.scanForConstraints(prop: KProperty1<*, *>): FormattedSchema {
+    val minimum = prop.findAnnotation<Minimum>()
+    val maximum = prop.findAnnotation<Maximum>()
+    val exclusiveMinimum = prop.findAnnotation<ExclusiveMinimum>()
+    val exclusiveMaximum = prop.findAnnotation<ExclusiveMaximum>()
+    val multipleOf = prop.findAnnotation<MultipleOf>()
+
+    return this.copy(
+      minimum = minimum?.min,
+      maximum = maximum?.max,
+      exclusiveMinimum = exclusiveMinimum?.let { true },
+      exclusiveMaximum = exclusiveMaximum?.let { true },
+      multipleOf = multipleOf?.multiple,
+    )
+  }
+
+  private fun SimpleSchema.scanForConstraints(prop: KProperty1<*, *>): SimpleSchema {
+    val minLength = prop.findAnnotation<MinLength>()
+    val maxLength = prop.findAnnotation<MaxLength>()
+    val pattern = prop.findAnnotation<Pattern>()
+    val format = prop.findAnnotation<Format>()
+
+    return this.copy(
+      minLength = minLength?.length,
+      maxLength = maxLength?.length,
+      pattern = pattern?.pattern,
+      format = format?.format
+    )
+  }
+
+  private fun ObjectSchema.scanForConstraints(clazz: KClass<*>, prop: KProperty1<*, *>): ObjectSchema {
+    val requiredParams = clazz.primaryConstructor?.parameters?.filterNot { it.isOptional } ?: emptyList()
+    var schema = this
+
+    if (requiredParams.isNotEmpty()) {
+      schema = schema.copy(required = requiredParams.map { it.name!! })
     }
 
-    if (this is ArraySchema) {
-      val minItems = prop.findAnnotation<MinItems>()
-      val maxItems = prop.findAnnotation<MaxItems>()
-      val uniqueItems = prop.findAnnotation<UniqueItems>()
-
-      return this.copy(
-        minItems = minItems?.items,
-        maxItems = maxItems?.items,
-        uniqueItems = uniqueItems?.let { true }
-      )
+    if (prop.returnType.isMarkedNullable) {
+      schema = schema.copy(nullable = true)
     }
 
-    if (this is ObjectSchema) {
-      val requiredParams = clazz.primaryConstructor?.parameters?.filterNot { it.isOptional } ?: emptyList()
-      var schema = this
-
-      if (requiredParams.isNotEmpty()) {
-        schema = schema.copy(required = requiredParams.map { it.name!! })
-      }
-
-      if (prop.returnType.isMarkedNullable) {
-        schema = schema.copy(nullable = true)
-      }
-
-      return schema
-    }
-
-    return this
+    return schema
   }
 
   /**

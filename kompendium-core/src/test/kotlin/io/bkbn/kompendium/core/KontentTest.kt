@@ -1,7 +1,6 @@
 package io.bkbn.kompendium.core
 
 import io.bkbn.kompendium.core.Kontent.generateKontent
-import io.bkbn.kompendium.core.Kontent.generateParameterKontent
 import io.bkbn.kompendium.core.fixtures.ComplexRequest
 import io.bkbn.kompendium.core.fixtures.TestBigNumberModel
 import io.bkbn.kompendium.core.fixtures.TestByteArrayModel
@@ -169,15 +168,6 @@ class KontentTest : DescribeSpec({
       result shouldHaveSize 7
       result shouldContainKey "Map-String-CrazyItem"
       result["Map-String-CrazyItem"] as DictionarySchema shouldNotBe null
-    }
-    it("Filters out top level declaration from parameter kontent") {
-      // act
-      val result = generateParameterKontent<TestSimpleModel>()
-
-      // assert
-      result shouldNotBe null
-      result shouldHaveSize 2
-      result shouldNotHaveKey TestSimpleModel::class.simpleName!!
     }
   }
 })

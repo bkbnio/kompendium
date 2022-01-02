@@ -48,6 +48,9 @@
 - Fixed bug where params with default values were listed as required
 - Made empty put/post request info opt-in rather than default
 - Fields are now marked as required when there is no default, and they are non-nullable
+- `KompendiumField` and 'KompendiumParam' renamed to `Field` and `Param` respectively
+- Description dropped from `Param`
+- Dropped unnecessary parameter content scanning method
 
 ## [1.11.1] - November 25th, 2021
 ### Added

@@ -4,6 +4,7 @@ import io.bkbn.kompendium.core.fixtures.TestHelpers.apiFunctionalityTest
 import io.bkbn.kompendium.core.fixtures.TestHelpers.getFileSnapshot
 import io.bkbn.kompendium.core.fixtures.TestHelpers.openApiTest
 import io.bkbn.kompendium.core.util.complexType
+import io.bkbn.kompendium.core.util.constrainedIntInfo
 import io.bkbn.kompendium.core.util.genericPolymorphicResponse
 import io.bkbn.kompendium.core.util.genericPolymorphicResponseMultipleImpls
 import io.bkbn.kompendium.core.util.headerParameter
@@ -152,6 +153,11 @@ class KompendiumTest : DescribeSpec({
       openApiTest("query_with_default_parameter.json") { withDefaultParameter() }
     }
   }
+  describe("Parameters") {
+    it("Only marks a parameter required if there is no default and it is not marked nullable") {
+      TODO()
+    }
+  }
   describe("Polymorphism and Generics") {
     it("can generate a polymorphic response type") {
       // act
@@ -201,6 +207,46 @@ class KompendiumTest : DescribeSpec({
     }
     it("Can override field values via annotation") {
       openApiTest("field_override.json") { overrideFieldInfo() }
+    }
+  }
+  describe("Constraints") {
+    it("Can set a minimum and maximum integer value") {
+      openApiTest("min_max_int_field.json") { constrainedIntInfo() }
+    }
+    it("Can set a minimum and maximum double value") {
+      TODO()
+    }
+    it("Can set an exclusive min and exclusive max integer value") {
+      TODO()
+    }
+    it("Can add a custom format to a string field") {
+      TODO()
+    }
+    it("Can set a minimum and maximum length on a string field") {
+      TODO()
+    }
+    it("Can set a custom regex pattern on a string field") {
+      TODO()
+    }
+    it("Can set a minimum and maximum item count on an array field") {
+      TODO()
+    }
+    it("Can set a unique items constraint on an array field") {
+      TODO()
+    }
+    it("Can set a multiple of constraint on an int field") {
+      TODO()
+    }
+    it("Can set a multiple of constraint on an double field") {
+      TODO()
+    }
+  }
+  describe("Free Form") {
+    it("Can create a free-form field") {
+      TODO()
+    }
+    it("Can set a minimum and maximum number of properties on a free-form type") {
+      TODO()
     }
   }
 })

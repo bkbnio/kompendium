@@ -147,6 +147,11 @@ object TestResponseInfo {
     description = "Important info within!",
     responseInfo = simpleOkResponse()
   )
+  val minMaxInt = GetInfo<Unit, MinMaxInt>(
+    summary = "Constrained int field",
+    description = "Cool stuff",
+    responseInfo = simpleOkResponse()
+  )
 
   private fun <T> simpleOkResponse() = ResponseInfo<T>(HttpStatusCode.OK, "A successful endeavor")
 }

@@ -5,7 +5,7 @@ import io.bkbn.kompendium.annotations.Param
 import io.bkbn.kompendium.annotations.ParamType
 import io.bkbn.kompendium.annotations.constraint.ExclusiveMaximum
 import io.bkbn.kompendium.annotations.constraint.Format
-import io.bkbn.kompendium.annotations.constraint.FreeFormObject
+import io.bkbn.kompendium.annotations.FreeFormObject
 import io.bkbn.kompendium.annotations.constraint.MaxItems
 import io.bkbn.kompendium.annotations.constraint.MaxLength
 import io.bkbn.kompendium.annotations.constraint.Maximum
