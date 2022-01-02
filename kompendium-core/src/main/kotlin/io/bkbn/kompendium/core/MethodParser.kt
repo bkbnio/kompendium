@@ -161,11 +161,11 @@ object MethodParser {
    * @throws [IllegalStateException] if the class could not be parsed properly
    */
   private fun KType.toParameterSpec(feature: Kompendium): List<Parameter> {
-    val wrapperSchema = feature.config.cache[this.getSimpleSlug()]!! as ObjectSchema
     val clazz = classifier as KClass<*>
     return clazz.memberProperties.filter { prop ->
       prop.findAnnotation<Param>() != null
     }.map { prop ->
+      val wrapperSchema = feature.config.cache[this.getSimpleSlug()]!! as ObjectSchema
       val anny = prop.findAnnotation<Param>()
         ?: error("Field ${prop.name} is not annotated with KompendiumParam")
       val schema = wrapperSchema.properties[prop.name]

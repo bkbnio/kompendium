@@ -40,7 +40,7 @@
               "type": "integer",
               "default": 100
             },
-            "required": true,
+            "required": false,
             "deprecated": false
           },
           {
@@ -73,6 +73,9 @@
                       "type": "string"
                     }
                   },
+                  "required": [
+                    "c"
+                  ],
                   "type": "object"
                 }
               }

@@ -53,6 +53,9 @@
                       "type": "boolean"
                     }
                   },
+                  "required": [
+                    "result"
+                  ],
                   "type": "object"
                 }
               }

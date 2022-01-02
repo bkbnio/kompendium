@@ -44,6 +44,9 @@
                       "description": "A Field that is super important!"
                     }
                   },
+                  "required": [
+                    "b"
+                  ],
                   "type": "object"
                 }
               }

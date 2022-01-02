@@ -1,111 +1,129 @@
 {
-  "openapi" : "3.0.3",
-  "info" : {
-    "title" : "Test API",
-    "version" : "1.33.7",
-    "description" : "An amazing, fully-ish 😉 generated API spec",
-    "termsOfService" : "https://example.com",
-    "contact" : {
-      "name" : "Homer Simpson",
-      "url" : "https://gph.is/1NPUDiM",
-      "email" : "chunkylover53@aol.com"
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Test API",
+    "version": "1.33.7",
+    "description": "An amazing, fully-ish 😉 generated API spec",
+    "termsOfService": "https://example.com",
+    "contact": {
+      "name": "Homer Simpson",
+      "url": "https://gph.is/1NPUDiM",
+      "email": "chunkylover53@aol.com"
     },
-    "license" : {
-      "name" : "MIT",
-      "url" : "https://github.com/bkbnio/kompendium/blob/main/LICENSE"
+    "license": {
+      "name": "MIT",
+      "url": "https://github.com/bkbnio/kompendium/blob/main/LICENSE"
     }
   },
-  "servers" : [ {
-    "url" : "https://myawesomeapi.com",
-    "description" : "Production instance of my API"
-  }, {
-    "url" : "https://staging.myawesomeapi.com",
-    "description" : "Where the fun stuff happens"
-  } ],
-  "paths" : {
-    "/test" : {
-      "post" : {
-        "tags" : [ ],
-        "summary" : "Test post endpoint",
-        "description" : "Post your tests here!",
-        "parameters" : [ {
-          "name" : "a",
-          "in" : "path",
-          "schema" : {
-            "type" : "string"
+  "servers": [
+    {
+      "url": "https://myawesomeapi.com",
+      "description": "Production instance of my API"
+    },
+    {
+      "url": "https://staging.myawesomeapi.com",
+      "description": "Where the fun stuff happens"
+    }
+  ],
+  "paths": {
+    "/test": {
+      "post": {
+        "tags": [],
+        "summary": "Test post endpoint",
+        "description": "Post your tests here!",
+        "parameters": [
+          {
+            "name": "a",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "deprecated": false
           },
-          "required" : true,
-          "deprecated" : false
-        }, {
-          "name" : "aa",
-          "in" : "query",
-          "schema" : {
-            "format" : "int32",
-            "type" : "integer"
-          },
-          "required" : true,
-          "deprecated" : false
-        } ],
-        "requestBody" : {
-          "description" : "A Test request",
-          "content" : {
-            "application/json" : {
-              "schema" : {
-                "properties" : {
-                  "aaa" : {
-                    "items" : {
-                      "format" : "int64",
-                      "type" : "integer"
+          {
+            "name": "aa",
+            "in": "query",
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            },
+            "required": true,
+            "deprecated": false
+          }
+        ],
+        "requestBody": {
+          "description": "A Test request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "aaa": {
+                    "items": {
+                      "format": "int64",
+                      "type": "integer"
                     },
-                    "type" : "array"
+                    "type": "array"
                   },
-                  "b" : {
-                    "format" : "double",
-                    "type" : "number"
+                  "b": {
+                    "format": "double",
+                    "type": "number"
                   },
-                  "field_name" : {
-                    "properties" : {
-                      "nesty" : {
-                        "type" : "string"
+                  "field_name": {
+                    "properties": {
+                      "nesty": {
+                        "type": "string"
                       }
                     },
-                    "type" : "object"
+                    "required": [
+                      "nesty"
+                    ],
+                    "type": "object"
                   }
                 },
-                "type" : "object"
+                "required": [
+                  "fieldName",
+                  "b",
+                  "aaa"
+                ],
+                "type": "object"
               }
             }
           },
-          "required" : false
+          "required": false
         },
-        "responses" : {
-          "201" : {
-            "description" : "A Successful Endeavor",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "properties" : {
-                    "c" : {
-                      "type" : "string"
+        "responses": {
+          "201": {
+            "description": "A Successful Endeavor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "c": {
+                      "type": "string"
                     },
-                    "id" : {
-                      "format" : "int32",
-                      "type" : "integer"
+                    "id": {
+                      "format": "int32",
+                      "type": "integer"
                     }
                   },
-                  "type" : "object"
+                  "required": [
+                    "id",
+                    "c"
+                  ],
+                  "type": "object"
                 }
               }
             }
           }
         },
-        "deprecated" : false
+        "deprecated": false
       }
     }
   },
-  "components" : {
-    "securitySchemes" : { }
+  "components": {
+    "securitySchemes": {}
   },
-  "security" : [ ],
-  "tags" : [ ]
+  "security": [],
+  "tags": []
 }

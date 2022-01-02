@@ -1,103 +1,119 @@
 {
-  "openapi" : "3.0.3",
-  "info" : {
-    "title" : "Test API",
-    "version" : "1.33.7",
-    "description" : "An amazing, fully-ish 😉 generated API spec",
-    "termsOfService" : "https://example.com",
-    "contact" : {
-      "name" : "Homer Simpson",
-      "url" : "https://gph.is/1NPUDiM",
-      "email" : "chunkylover53@aol.com"
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Test API",
+    "version": "1.33.7",
+    "description": "An amazing, fully-ish 😉 generated API spec",
+    "termsOfService": "https://example.com",
+    "contact": {
+      "name": "Homer Simpson",
+      "url": "https://gph.is/1NPUDiM",
+      "email": "chunkylover53@aol.com"
     },
-    "license" : {
-      "name" : "MIT",
-      "url" : "https://github.com/bkbnio/kompendium/blob/main/LICENSE"
+    "license": {
+      "name": "MIT",
+      "url": "https://github.com/bkbnio/kompendium/blob/main/LICENSE"
     }
   },
-  "servers" : [ {
-    "url" : "https://myawesomeapi.com",
-    "description" : "Production instance of my API"
-  }, {
-    "url" : "https://staging.myawesomeapi.com",
-    "description" : "Where the fun stuff happens"
-  } ],
-  "paths" : {
-    "/test/examples" : {
-      "post" : {
-        "tags" : [ ],
-        "summary" : "Example Parameters",
-        "description" : "A test for setting parameter examples",
-        "parameters" : [ ],
-        "requestBody" : {
-          "description" : "Test",
-          "content" : {
-            "application/json" : {
-              "schema" : {
-                "properties" : {
-                  "aaa" : {
-                    "items" : {
-                      "format" : "int64",
-                      "type" : "integer"
+  "servers": [
+    {
+      "url": "https://myawesomeapi.com",
+      "description": "Production instance of my API"
+    },
+    {
+      "url": "https://staging.myawesomeapi.com",
+      "description": "Where the fun stuff happens"
+    }
+  ],
+  "paths": {
+    "/test/examples": {
+      "post": {
+        "tags": [],
+        "summary": "Example Parameters",
+        "description": "A test for setting parameter examples",
+        "parameters": [],
+        "requestBody": {
+          "description": "Test",
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "aaa": {
+                    "items": {
+                      "format": "int64",
+                      "type": "integer"
                     },
-                    "type" : "array"
+                    "type": "array"
                   },
-                  "b" : {
-                    "format" : "double",
-                    "type" : "number"
+                  "b": {
+                    "format": "double",
+                    "type": "number"
                   },
-                  "field_name" : {
-                    "properties" : {
-                      "nesty" : {
-                        "type" : "string"
+                  "field_name": {
+                    "properties": {
+                      "nesty": {
+                        "type": "string"
                       }
                     },
-                    "type" : "object"
+                    "required": [
+                      "nesty"
+                    ],
+                    "type": "object"
                   }
                 },
-                "type" : "object"
+                "required": [
+                  "fieldName",
+                  "b",
+                  "aaa"
+                ],
+                "type": "object"
               },
-              "examples" : {
-                "one" : {
-                  "value" : {
-                    "fieldName" : {
-                      "nesty" : "hey"
+              "examples": {
+                "one": {
+                  "value": {
+                    "fieldName": {
+                      "nesty": "hey"
                     },
-                    "b" : 4.0,
-                    "aaa" : [ ]
+                    "b": 4.0,
+                    "aaa": []
                   }
                 },
-                "two" : {
-                  "value" : {
-                    "fieldName" : {
-                      "nesty" : "hello"
+                "two": {
+                  "value": {
+                    "fieldName": {
+                      "nesty": "hello"
                     },
-                    "b" : 3.8,
-                    "aaa" : [ 31324234 ]
+                    "b": 3.8,
+                    "aaa": [
+                      31324234
+                    ]
                   }
                 }
               }
             }
           },
-          "required" : false
+          "required": false
         },
-        "responses" : {
-          "201" : {
-            "description" : "nice",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "properties" : {
-                    "c" : {
-                      "type" : "string"
+        "responses": {
+          "201": {
+            "description": "nice",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "c": {
+                      "type": "string"
                     }
                   },
-                  "type" : "object"
+                  "required": [
+                    "c"
+                  ],
+                  "type": "object"
                 },
-                "examples" : {
-                  "test" : {
-                    "value" : {
-                      "c" : "spud"
+                "examples": {
+                  "test": {
+                    "value": {
+                      "c": "spud"
                     }
                   }
                 }
@@ -105,13 +121,13 @@
             }
           }
         },
-        "deprecated" : false
+        "deprecated": false
       }
     }
   },
-  "components" : {
-    "securitySchemes" : { }
+  "components": {
+    "securitySchemes": {}
   },
-  "security" : [ ],
-  "tags" : [ ]
+  "security": [],
+  "tags": []
 }
