@@ -1,6 +1,6 @@
 package io.bkbn.kompendium.core
 
-import io.bkbn.kompendium.annotations.KompendiumParam
+import io.bkbn.kompendium.annotations.Param
 import io.bkbn.kompendium.core.KompendiumPreFlight.methodNotarizationPreFlight
 import io.bkbn.kompendium.core.MethodParser.parseMethodInfo
 import io.bkbn.kompendium.core.metadata.method.DeleteInfo
@@ -26,7 +26,7 @@ object Notarized {
 
   /**
    * Notarization for an HTTP GET request
-   * @param TParam The class containing all parameter fields. Each field must be annotated with @[KompendiumParam]
+   * @param TParam The class containing all parameter fields. Each field must be annotated with @[Param]
    * @param TResp Class detailing the expected API response
    * @param info Route metadata
    * @param postProcess Adds an optional callback hook to perform manual overrides on the generated [PathOperation]
@@ -46,7 +46,7 @@ object Notarized {
 
   /**
    * Notarization for an HTTP POST request
-   * @param TParam The class containing all parameter fields. Each field must be annotated with @[KompendiumParam]
+   * @param TParam The class containing all parameter fields. Each field must be annotated with @[Param]
    * @param TReq Class detailing the expected API request body
    * @param TResp Class detailing the expected API response
    * @param info Route metadata
@@ -67,7 +67,7 @@ object Notarized {
 
   /**
    * Notarization for an HTTP Delete request
-   * @param TParam The class containing all parameter fields. Each field must be annotated with @[KompendiumParam]
+   * @param TParam The class containing all parameter fields. Each field must be annotated with @[Param]
    * @param TReq Class detailing the expected API request body
    * @param TResp Class detailing the expected API response
    * @param info Route metadata
@@ -88,7 +88,7 @@ object Notarized {
 
   /**
    * Notarization for an HTTP POST request
-   * @param TParam The class containing all parameter fields. Each field must be annotated with @[KompendiumParam]
+   * @param TParam The class containing all parameter fields. Each field must be annotated with @[Param]
    * @param TResp Class detailing the expected API response
    * @param info Route metadata
    * @param postProcess Adds an optional callback hook to perform manual overrides on the generated [PathOperation]

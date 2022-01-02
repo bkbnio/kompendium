@@ -1,8 +1,8 @@
 package io.bkbn.kompendium.core.fixtures
 
 import java.util.UUID
-import io.bkbn.kompendium.annotations.KompendiumField
-import io.bkbn.kompendium.annotations.KompendiumParam
+import io.bkbn.kompendium.annotations.Field
+import io.bkbn.kompendium.annotations.Param
 import io.bkbn.kompendium.annotations.ParamType
 import io.bkbn.kompendium.annotations.UndeclaredField
 import java.math.BigDecimal
@@ -27,8 +27,8 @@ data class TestSimpleWithEnumList(val a: Double, val b: List<SimpleEnum>)
 data class TestInvalidMap(val a: Map<Int, TestSimpleModel>)
 
 data class TestParams(
-  @KompendiumParam(ParamType.PATH) val a: String,
-  @KompendiumParam(ParamType.QUERY) val aa: Int
+  @Param(ParamType.PATH) val a: String,
+  @Param(ParamType.QUERY) val aa: Int
 )
 
 data class TestNested(val nesty: String)
@@ -36,7 +36,7 @@ data class TestNested(val nesty: String)
 data class TestWithUUID(val id: UUID)
 
 data class TestRequest(
-  @KompendiumField(name = "field_name")
+  @Field(name = "field_name")
   val fieldName: TestNested,
   val b: Double,
   val aaa: List<Long>
@@ -49,13 +49,13 @@ data class TestGeneric<T>(val messy: String, val potato: T)
 data class TestCreatedResponse(val id: Int, val c: String)
 
 data class TestFieldOverride(
-  @KompendiumField(name = "real_name", description = "A Field that is super important!")
+  @Field(name = "real_name", description = "A Field that is super important!")
   val b: Boolean
 )
 
 data class ComplexRequest(
   val org: String,
-  @KompendiumField("amazing_field")
+  @Field("amazing_field")
   val amazingField: String,
   val tables: List<NestedComplexItem>
 )
@@ -75,16 +75,16 @@ enum class SimpleEnum {
 }
 
 data class DefaultParameter(
-  @KompendiumParam(ParamType.QUERY) val a: Int = 100,
-  @KompendiumParam(ParamType.PATH) val b: String?,
-  @KompendiumParam(ParamType.PATH) val c: Boolean
+  @Param(ParamType.QUERY) val a: Int = 100,
+  @Param(ParamType.PATH) val b: String?,
+  @Param(ParamType.PATH) val c: Boolean
 )
 
 data class ExceptionResponse(val message: String)
 
 data class OptionalParams(
-  @KompendiumParam(ParamType.QUERY) val required: String,
-  @KompendiumParam(ParamType.QUERY) val notRequired: String?
+  @Param(ParamType.QUERY) val required: String,
+  @Param(ParamType.QUERY) val notRequired: String?
 )
 
 sealed class FlibbityGibbit
@@ -112,5 +112,5 @@ enum class Hehe {
 data class Mysterious(val nowYouSeeMe: String)
 
 data class HeaderNameTest(
-  @KompendiumParam(type = ParamType.HEADER) val `X-UserEmail`: String
+  @Param(type = ParamType.HEADER) val `X-UserEmail`: String
 )

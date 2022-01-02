@@ -34,6 +34,6 @@ object KompendiumPreFlight {
   fun addToCache(paramType: KType, requestType: KType, responseType: KType, feature: Kompendium) {
     feature.config.cache = Kontent.generateKontent(requestType, feature.config.cache)
     feature.config.cache = Kontent.generateKontent(responseType, feature.config.cache)
-    feature.config.cache = Kontent.generateParameterKontent(paramType, feature.config.cache)
+    feature.config.cache = Kontent.generateKontent(paramType, feature.config.cache)
   }
 }

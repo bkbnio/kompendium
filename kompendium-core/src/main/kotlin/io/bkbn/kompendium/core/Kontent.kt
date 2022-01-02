@@ -1,7 +1,19 @@
 package io.bkbn.kompendium.core
 
-import io.bkbn.kompendium.annotations.KompendiumField
+import io.bkbn.kompendium.annotations.Field
 import io.bkbn.kompendium.annotations.UndeclaredField
+import io.bkbn.kompendium.annotations.constraint.ExclusiveMaximum
+import io.bkbn.kompendium.annotations.constraint.ExclusiveMinimum
+import io.bkbn.kompendium.annotations.constraint.Format
+import io.bkbn.kompendium.annotations.constraint.MaxItems
+import io.bkbn.kompendium.annotations.constraint.MaxLength
+import io.bkbn.kompendium.annotations.constraint.Maximum
+import io.bkbn.kompendium.annotations.constraint.MinItems
+import io.bkbn.kompendium.annotations.constraint.MinLength
+import io.bkbn.kompendium.annotations.constraint.Minimum
+import io.bkbn.kompendium.annotations.constraint.MultipleOf
+import io.bkbn.kompendium.annotations.constraint.Pattern
+import io.bkbn.kompendium.annotations.constraint.UniqueItems
 import io.bkbn.kompendium.core.metadata.SchemaMap
 import io.bkbn.kompendium.core.metadata.TypeMap
 import io.bkbn.kompendium.core.util.Helpers.genericNameAdapter
@@ -115,7 +127,7 @@ object Kontent {
    */
   fun generateKTypeKontent(
     type: KType,
-    cache: SchemaMap = emptyMap()
+    cache: SchemaMap = emptyMap(),
   ): SchemaMap = logged(object {}.javaClass.enclosingMethod.name, mapOf("cache" to cache)) {
     logger.debug("Parsing Kontent of $type")
     when (val clazz = type.classifier as KClass<*>) {
@@ -178,7 +190,7 @@ object Kontent {
           )
           // todo move to helper
           var name = prop.name
-          prop.findAnnotation<KompendiumField>()?.let { fieldOverrides ->
+          prop.findAnnotation<Field>()?.let { fieldOverrides ->
             if (fieldOverrides.description.isNotBlank()) {
               propSchema = propSchema.setDescription(fieldOverrides.description)
             }
@@ -251,7 +263,58 @@ object Kontent {
     when (typeMap.containsKey(prop.returnType.classifier)) {
       true -> handleGenericProperty(typeMap, clazz, type, prop.returnType.classifier, cache)
       false -> handleStandardProperty(clazz, fieldClazz, prop, type, cache)
+    }.scanForConstraints(prop)
+
+  @Suppress("ReturnCount")
+  private fun ComponentSchema.scanForConstraints(prop: KProperty1<*, *>): ComponentSchema {
+    if (this is FormattedSchema) {
+      // Get all possible FormattedSchema constraints
+      val minimum = prop.findAnnotation<Minimum>()
+      val maximum = prop.findAnnotation<Maximum>()
+      val exclusiveMinimum = prop.findAnnotation<ExclusiveMinimum>()
+      val exclusiveMaximum = prop.findAnnotation<ExclusiveMaximum>()
+      val multipleOf = prop.findAnnotation<MultipleOf>()
+
+      // Apply any non-null to the schema
+      return this.copy(
+        minimum = minimum?.min,
+        maximum = maximum?.max,
+        exclusiveMinimum = exclusiveMinimum?.let { true },
+        exclusiveMaximum = exclusiveMaximum?.let { true },
+        multipleOf = multipleOf?.multiple,
+      )
     }
+
+    if (this is SimpleSchema) {
+      // Get all possible SimpleSchema constraints
+      val minLength = prop.findAnnotation<MinLength>()
+      val maxLength = prop.findAnnotation<MaxLength>()
+      val pattern = prop.findAnnotation<Pattern>()
+      val format = prop.findAnnotation<Format>()
+
+      // Apply any non-null to the schema
+      return this.copy(
+        minLength = minLength?.length,
+        maxLength = maxLength?.length,
+        pattern = pattern?.pattern,
+        format = format?.format
+      )
+    }
+
+    if (this is ArraySchema) {
+      val minItems = prop.findAnnotation<MinItems>()
+      val maxItems = prop.findAnnotation<MaxItems>()
+      val uniqueItems = prop.findAnnotation<UniqueItems>()
+
+      return this.copy(
+        minItems = minItems?.items,
+        maxItems = maxItems?.items,
+        uniqueItems = uniqueItems?.let { true }
+      )
+    }
+
+    return this
+  }
 
   /**
    * If a field has no type parameters, build its [ComponentSchema] without referencing the [TypeMap]

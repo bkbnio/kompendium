@@ -1,6 +1,6 @@
 package io.bkbn.kompendium.playground
 
-import io.bkbn.kompendium.annotations.KompendiumParam
+import io.bkbn.kompendium.annotations.Param
 import io.bkbn.kompendium.annotations.ParamType
 import io.bkbn.kompendium.core.Kompendium
 import io.bkbn.kompendium.core.metadata.ResponseInfo
@@ -100,18 +100,18 @@ private object LocationsToC {
 // with KompendiumParam!!!
 @Location("test/{name}")
 data class TestLocations(
-  @KompendiumParam(ParamType.PATH)
+  @Param(ParamType.PATH)
   val name: String,
 ) {
   @Location("/spaghetti")
   data class NestedTestLocations(
-    @KompendiumParam(ParamType.QUERY)
+    @Param(ParamType.QUERY)
     val idk: Int,
     val parent: TestLocations
   ) {
     @Location("/hehe/{madness}")
     data class OhBoiUCrazy(
-      @KompendiumParam(ParamType.PATH)
+      @Param(ParamType.PATH)
       val madness: Boolean,
       val parent: NestedTestLocations
     )

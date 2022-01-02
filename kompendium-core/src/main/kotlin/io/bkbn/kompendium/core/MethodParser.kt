@@ -1,6 +1,6 @@
 package io.bkbn.kompendium.core
 
-import io.bkbn.kompendium.annotations.KompendiumParam
+import io.bkbn.kompendium.annotations.Param
 import io.bkbn.kompendium.core.Kontent.generateKontent
 import io.bkbn.kompendium.core.metadata.ExceptionInfo
 import io.bkbn.kompendium.core.metadata.RequestInfo
@@ -14,10 +14,10 @@ import io.bkbn.kompendium.core.util.Helpers.getSimpleSlug
 import io.bkbn.kompendium.oas.path.PathOperation
 import io.bkbn.kompendium.oas.payload.MediaType
 import io.bkbn.kompendium.oas.payload.Parameter
-import io.bkbn.kompendium.oas.payload.Payload
 import io.bkbn.kompendium.oas.payload.Request
 import io.bkbn.kompendium.oas.payload.Response
 import io.bkbn.kompendium.oas.schema.AnyOfSchema
+import io.bkbn.kompendium.oas.schema.ObjectSchema
 import kotlin.reflect.KClass
 import kotlin.reflect.KParameter
 import kotlin.reflect.KProperty
@@ -26,7 +26,6 @@ import kotlin.reflect.full.createType
 import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
-import kotlin.reflect.jvm.javaField
 import java.util.Locale
 import java.util.UUID
 
@@ -72,12 +71,12 @@ object MethodParser {
     responseType: KType,
     responseInfo: ResponseInfo<*>?,
     feature: Kompendium
-  ): Map<Int, Payload> = responseType.toResponseSpec(responseInfo, feature)?.let { mapOf(it) }.orEmpty()
+  ): Map<Int, Response<*>> = responseType.toResponseSpec(responseInfo, feature)?.let { mapOf(it) }.orEmpty()
 
   private fun parseExceptions(
     exceptionInfo: Set<ExceptionInfo<*>>,
     feature: Kompendium,
-  ): Map<Int, Payload> = exceptionInfo.associate { info ->
+  ): Map<Int, Response<*>> = exceptionInfo.associate { info ->
     feature.config.cache = generateKontent(info.responseType, feature.config.cache)
     val response = Response(
       description = info.description,
@@ -156,29 +155,28 @@ object MethodParser {
 
   /**
    * Parses a type for all parameter information.  All fields in the receiver
-   * must be annotated with [io.bkbn.kompendium.annotations.KompendiumParam].
+   * must be annotated with [io.bkbn.kompendium.annotations.Param].
    * @receiver type
    * @return list of valid parameter specs as detailed by the [KType] members
    * @throws [IllegalStateException] if the class could not be parsed properly
    */
   private fun KType.toParameterSpec(feature: Kompendium): List<Parameter> {
+    val wrapperSchema = feature.config.cache[this.getSimpleSlug()]!! as ObjectSchema
     val clazz = classifier as KClass<*>
     return clazz.memberProperties.filter { prop ->
-      prop.findAnnotation<KompendiumParam>() != null
+      prop.findAnnotation<Param>() != null
     }.map { prop ->
-      val field = prop.javaField?.type?.kotlin
-        ?: error("Unable to parse field type from $prop")
-      val anny = prop.findAnnotation<KompendiumParam>()
+      val anny = prop.findAnnotation<Param>()
         ?: error("Field ${prop.name} is not annotated with KompendiumParam")
-      val schema = feature.config.cache[field.getSimpleSlug(prop)]
+      val schema = wrapperSchema.properties[prop.name]
         ?: error("Could not find component type for $prop")
       val defaultValue = getDefaultParameterValue(clazz, prop)
       Parameter(
         name = prop.name,
         `in` = anny.type.name.lowercase(Locale.getDefault()),
         schema = schema.addDefault(defaultValue),
-        description = anny.description.ifBlank { null },
-        required = !prop.returnType.isMarkedNullable
+        description = schema.description,
+        required = !prop.returnType.isMarkedNullable && defaultValue == null
       )
     }
   }

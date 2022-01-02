@@ -1,7 +1,7 @@
 package io.bkbn.kompendium.playground
 
-import io.bkbn.kompendium.annotations.KompendiumField
-import io.bkbn.kompendium.annotations.KompendiumParam
+import io.bkbn.kompendium.annotations.Field
+import io.bkbn.kompendium.annotations.Param
 import io.bkbn.kompendium.annotations.ParamType
 import io.bkbn.kompendium.core.Kompendium
 import io.bkbn.kompendium.core.Notarized.notarizedDelete
@@ -199,15 +199,15 @@ object BasicModels {
 
   @Serializable
   data class BasicParameters(
-    @KompendiumParam(type = ParamType.PATH)
+    @Param(type = ParamType.PATH)
     val a: String,
-    @KompendiumParam(type = ParamType.QUERY)
+    @Param(type = ParamType.QUERY)
     val b: Int
   )
 
   @Serializable
   data class BasicRequest(
-    @KompendiumField(description = "This is a super important field!!", name = "best_field")
+    @Field(description = "This is a super important field!!", name = "best_field")
     val d: Boolean
   )
 }
