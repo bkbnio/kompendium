@@ -8,9 +8,11 @@ import io.bkbn.kompendium.annotations.constraint.Format
 import io.bkbn.kompendium.annotations.constraint.FreeFormObject
 import io.bkbn.kompendium.annotations.constraint.MaxItems
 import io.bkbn.kompendium.annotations.constraint.MaxLength
+import io.bkbn.kompendium.annotations.constraint.MaxProperties
 import io.bkbn.kompendium.annotations.constraint.Maximum
 import io.bkbn.kompendium.annotations.constraint.MinItems
 import io.bkbn.kompendium.annotations.constraint.MinLength
+import io.bkbn.kompendium.annotations.constraint.MinProperties
 import io.bkbn.kompendium.annotations.constraint.Minimum
 import io.bkbn.kompendium.annotations.constraint.MultipleOf
 import io.bkbn.kompendium.annotations.constraint.Pattern
@@ -188,7 +190,7 @@ object Kontent {
 
           // todo add method to clean up
           when (freeForm) {
-            null ->  {
+            null -> {
               val baseType = scanForGeneric(typeMap, prop)
               val baseClazz = baseType.classifier as KClass<*>
               val allTypes = scanForSealed(baseClazz, baseType)
@@ -213,7 +215,11 @@ object Kontent {
               Pair(name, propSchema)
             }
             else -> {
-              Pair(name, FreeFormSchema())
+              val minProperties = prop.findAnnotation<MinProperties>()
+              val maxProperties = prop.findAnnotation<MaxProperties>()
+              val schema =
+                FreeFormSchema(minProperties = minProperties?.properties, maxProperties = maxProperties?.properties)
+              Pair(name, schema)
             }
           }
         }

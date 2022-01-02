@@ -11,6 +11,7 @@ import io.bkbn.kompendium.annotations.constraint.MaxLength
 import io.bkbn.kompendium.annotations.constraint.Maximum
 import io.bkbn.kompendium.annotations.constraint.MinItems
 import io.bkbn.kompendium.annotations.constraint.MinLength
+import io.bkbn.kompendium.annotations.constraint.MinProperties
 import io.bkbn.kompendium.annotations.constraint.Minimum
 import io.bkbn.kompendium.annotations.constraint.MultipleOf
 import io.bkbn.kompendium.annotations.constraint.Pattern
@@ -162,6 +163,7 @@ object ConstrainedModels {
   @Serializable
   data class ConstrainedRequest(
     val fieldy: Field,
+    @MinProperties(1)
     @FreeFormObject
     val data: JsonElement
   ) {
