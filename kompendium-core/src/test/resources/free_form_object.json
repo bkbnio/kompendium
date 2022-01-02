@@ -26,10 +26,10 @@
     }
   ],
   "paths": {
-    "/test/constrained_int": {
+    "/test/required_param": {
       "get": {
         "tags": [],
-        "summary": "Constrained int field",
+        "summary": "required param",
         "description": "Cool stuff",
         "parameters": [],
         "responses": {
@@ -39,17 +39,13 @@
               "application/json": {
                 "schema": {
                   "properties": {
-                    "a": {
-                      "format": "int32",
-                      "type": "integer",
-                      "minimum": 5,
-                      "maximum": 100,
-                      "exclusiveMinimum": false,
-                      "exclusiveMaximum": false
+                    "data": {
+                      "additionalProperties": true,
+                      "type": "object"
                     }
                   },
                   "required": [
-                    "a"
+                    "data"
                   ],
                   "type": "object"
                 }

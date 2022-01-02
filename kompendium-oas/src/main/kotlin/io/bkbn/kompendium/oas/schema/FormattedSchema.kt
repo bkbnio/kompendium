@@ -7,9 +7,9 @@ data class FormattedSchema(
   override val description: String? = null,
   override val nullable: Boolean? = null,
   // Constraints
-  val minimum: Int? = null,
-  val maximum: Int? = null,
+  val minimum: Number? = null,
+  val maximum: Number? = null,
   val exclusiveMinimum: Boolean? = null,
   val exclusiveMaximum: Boolean? = null,
-  val multipleOf: Int? = null,
+  val multipleOf: Number? = null,
 ) : TypedSchema

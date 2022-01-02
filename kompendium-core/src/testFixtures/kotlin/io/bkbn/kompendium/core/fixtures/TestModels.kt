@@ -1,14 +1,26 @@
 package io.bkbn.kompendium.core.fixtures
 
-import java.util.UUID
 import io.bkbn.kompendium.annotations.Field
+import io.bkbn.kompendium.annotations.FreeFormObject
 import io.bkbn.kompendium.annotations.Param
 import io.bkbn.kompendium.annotations.ParamType
 import io.bkbn.kompendium.annotations.UndeclaredField
+import io.bkbn.kompendium.annotations.constraint.Format
+import io.bkbn.kompendium.annotations.constraint.MaxItems
+import io.bkbn.kompendium.annotations.constraint.MaxLength
+import io.bkbn.kompendium.annotations.constraint.MaxProperties
 import io.bkbn.kompendium.annotations.constraint.Maximum
+import io.bkbn.kompendium.annotations.constraint.MinItems
+import io.bkbn.kompendium.annotations.constraint.MinLength
+import io.bkbn.kompendium.annotations.constraint.MinProperties
 import io.bkbn.kompendium.annotations.constraint.Minimum
+import io.bkbn.kompendium.annotations.constraint.MultipleOf
+import io.bkbn.kompendium.annotations.constraint.Pattern
+import io.bkbn.kompendium.annotations.constraint.UniqueItems
+import kotlinx.serialization.json.JsonElement
 import java.math.BigDecimal
 import java.math.BigInteger
+import java.util.UUID
 
 data class TestSimpleModel(val a: String, val b: Int)
 
@@ -56,10 +68,73 @@ data class TestFieldOverride(
 )
 
 data class MinMaxInt(
-  @Minimum(5)
-  @Maximum(100)
+  @Minimum("5")
+  @Maximum("100")
   val a: Int
 )
+
+data class MinMaxDouble(
+  @Minimum("5.5")
+  @Maximum("13.37")
+  val a: Double
+)
+
+data class ExclusiveMinMax(
+  @Minimum("5", true)
+  @Maximum("100", true)
+  val a: Int
+)
+
+data class FormattedString(
+  @Format("password")
+  @Param(ParamType.QUERY)
+  val a: String
+)
+
+data class MinMaxString(
+  @MinLength(42)
+  @MaxLength(1337)
+  val a: String
+)
+
+data class RegexString(
+  @Pattern("^\\d{3}-\\d{2}-\\d{4}\$")
+  val a: String
+)
+
+data class MinMaxArray(
+  @MinItems(1)
+  @MaxItems(10)
+  val a: List<String>
+)
+
+data class UniqueArray(
+  @UniqueItems
+  val a: List<Int>
+)
+
+data class MultipleOfInt(
+  @MultipleOf("5")
+  val a: Int
+)
+
+data class MultipleOfDouble(
+  @MultipleOf("2.5")
+  val a: Double
+)
+
+data class FreeFormData(
+  @FreeFormObject
+  val data: JsonElement
+)
+
+data class MinMaxFreeForm(
+  @FreeFormObject
+  @MinProperties(5)
+  @MaxProperties(10)
+  val data: JsonElement
+)
+
 
 data class RequiredParam(
   @Param(ParamType.QUERY)

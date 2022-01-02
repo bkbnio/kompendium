@@ -1,11 +1,9 @@
 package io.bkbn.kompendium.core
 
 import io.bkbn.kompendium.annotations.Field
-import io.bkbn.kompendium.annotations.UndeclaredField
-import io.bkbn.kompendium.annotations.constraint.ExclusiveMaximum
-import io.bkbn.kompendium.annotations.constraint.ExclusiveMinimum
-import io.bkbn.kompendium.annotations.constraint.Format
 import io.bkbn.kompendium.annotations.FreeFormObject
+import io.bkbn.kompendium.annotations.UndeclaredField
+import io.bkbn.kompendium.annotations.constraint.Format
 import io.bkbn.kompendium.annotations.constraint.MaxItems
 import io.bkbn.kompendium.annotations.constraint.MaxLength
 import io.bkbn.kompendium.annotations.constraint.MaxProperties
@@ -22,6 +20,7 @@ import io.bkbn.kompendium.core.metadata.TypeMap
 import io.bkbn.kompendium.core.util.Helpers.genericNameAdapter
 import io.bkbn.kompendium.core.util.Helpers.getSimpleSlug
 import io.bkbn.kompendium.core.util.Helpers.logged
+import io.bkbn.kompendium.core.util.Helpers.toNumber
 import io.bkbn.kompendium.oas.schema.AnyOfSchema
 import io.bkbn.kompendium.oas.schema.ArraySchema
 import io.bkbn.kompendium.oas.schema.ComponentSchema
@@ -295,8 +294,6 @@ object Kontent {
   private fun FormattedSchema.scanForConstraints(prop: KProperty1<*, *>): FormattedSchema {
     val minimum = prop.findAnnotation<Minimum>()
     val maximum = prop.findAnnotation<Maximum>()
-    val exclusiveMinimum = prop.findAnnotation<ExclusiveMinimum>()
-    val exclusiveMaximum = prop.findAnnotation<ExclusiveMaximum>()
     val multipleOf = prop.findAnnotation<MultipleOf>()
 
     var schema = this
@@ -306,11 +303,11 @@ object Kontent {
     }
 
     return schema.copy(
-      minimum = minimum?.min,
-      maximum = maximum?.max,
-      exclusiveMinimum = exclusiveMinimum?.let { true },
-      exclusiveMaximum = exclusiveMaximum?.let { true },
-      multipleOf = multipleOf?.multiple,
+      minimum = minimum?.min?.toNumber(),
+      maximum = maximum?.max?.toNumber(),
+      exclusiveMinimum = minimum?.exclusive,
+      exclusiveMaximum = maximum?.exclusive,
+      multipleOf = multipleOf?.multiple?.toNumber(),
     )
   }
 

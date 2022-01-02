@@ -74,4 +74,12 @@ object Helpers {
   fun String.capitalized() = replaceFirstChar {
     if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
   }
+
+  fun String.toNumber(): Number {
+    return try {
+      this.toInt()
+    } catch (e: NumberFormatException) {
+      this.toDouble()
+    }
+  }
 }

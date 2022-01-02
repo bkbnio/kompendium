@@ -40,10 +40,10 @@
                 "schema": {
                   "properties": {
                     "a": {
-                      "format": "int32",
-                      "type": "integer",
-                      "minimum": 5,
-                      "maximum": 100,
+                      "format": "double",
+                      "type": "number",
+                      "minimum": 5.5,
+                      "maximum": 13.37,
                       "exclusiveMinimum": false,
                       "exclusiveMaximum": false
                     }

@@ -44,8 +44,8 @@
                       "type": "integer",
                       "minimum": 5,
                       "maximum": 100,
-                      "exclusiveMinimum": false,
-                      "exclusiveMaximum": false
+                      "exclusiveMinimum": true,
+                      "exclusiveMaximum": true
                     }
                   },
                   "required": [

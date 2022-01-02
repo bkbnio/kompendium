@@ -1,11 +1,10 @@
 package io.bkbn.kompendium.playground
 
 import io.bkbn.kompendium.annotations.Field
+import io.bkbn.kompendium.annotations.FreeFormObject
 import io.bkbn.kompendium.annotations.Param
 import io.bkbn.kompendium.annotations.ParamType
-import io.bkbn.kompendium.annotations.constraint.ExclusiveMaximum
 import io.bkbn.kompendium.annotations.constraint.Format
-import io.bkbn.kompendium.annotations.FreeFormObject
 import io.bkbn.kompendium.annotations.constraint.MaxItems
 import io.bkbn.kompendium.annotations.constraint.MaxLength
 import io.bkbn.kompendium.annotations.constraint.Maximum
@@ -138,10 +137,9 @@ object ConstrainedMetadata {
 object ConstrainedModels {
   @Serializable
   data class ConstrainedResponse(
-    @Minimum(5)
-    @Maximum(101)
-    @ExclusiveMaximum
-    @MultipleOf(5)
+    @Minimum("5")
+    @Maximum("101")
+    @MultipleOf("5")
     val a: Int = 10,
     @MinItems(100)
     @MaxItems(1000)

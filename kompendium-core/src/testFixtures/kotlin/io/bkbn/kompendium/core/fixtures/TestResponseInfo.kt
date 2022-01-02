@@ -147,13 +147,80 @@ object TestResponseInfo {
     description = "Important info within!",
     responseInfo = simpleOkResponse()
   )
+
   val minMaxInt = GetInfo<Unit, MinMaxInt>(
     summary = "Constrained int field",
     description = "Cool stuff",
     responseInfo = simpleOkResponse()
   )
 
+  val minMaxDouble = GetInfo<Unit, MinMaxDouble>(
+    summary = "Constrained int field",
+    description = "Cool stuff",
+    responseInfo = simpleOkResponse()
+  )
+
+  val exclusiveMinMax = GetInfo<Unit, ExclusiveMinMax>(
+    summary = "Constrained int field",
+    description = "Cool stuff",
+    responseInfo = simpleOkResponse()
+  )
+
   val requiredParam = GetInfo<RequiredParam, TestResponse>(
+    summary = "required param",
+    description = "Cool stuff",
+    responseInfo = simpleOkResponse()
+  )
+
+  val formattedParam = GetInfo<FormattedString, TestResponse>(
+    summary = "required param",
+    description = "Cool stuff",
+    responseInfo = simpleOkResponse()
+  )
+
+  val minMaxString = GetInfo<Unit, MinMaxString>(
+    summary = "required param",
+    description = "Cool stuff",
+    responseInfo = simpleOkResponse()
+  )
+
+  val regexString = GetInfo<Unit, RegexString>(
+    summary = "required param",
+    description = "Cool stuff",
+    responseInfo = simpleOkResponse()
+  )
+
+  val minMaxArray = GetInfo<Unit, MinMaxArray>(
+    summary = "required param",
+    description = "Cool stuff",
+    responseInfo = simpleOkResponse()
+  )
+
+  val uniqueArray = GetInfo<Unit, UniqueArray>(
+    summary = "required param",
+    description = "Cool stuff",
+    responseInfo = simpleOkResponse()
+  )
+
+  val multipleOfInt = GetInfo<Unit, MultipleOfInt>(
+    summary = "required param",
+    description = "Cool stuff",
+    responseInfo = simpleOkResponse()
+  )
+
+  val multipleOfDouble = GetInfo<Unit, MultipleOfDouble>(
+    summary = "required param",
+    description = "Cool stuff",
+    responseInfo = simpleOkResponse()
+  )
+
+  val freeFormObject = GetInfo<Unit, FreeFormData>(
+    summary = "required param",
+    description = "Cool stuff",
+    responseInfo = simpleOkResponse()
+  )
+
+  val minMaxFreeForm = GetInfo<Unit, MinMaxFreeForm>(
     summary = "required param",
     description = "Cool stuff",
     responseInfo = simpleOkResponse()
