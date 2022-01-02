@@ -5,6 +5,7 @@ import io.bkbn.kompendium.annotations.Param
 import io.bkbn.kompendium.annotations.ParamType
 import io.bkbn.kompendium.annotations.constraint.ExclusiveMaximum
 import io.bkbn.kompendium.annotations.constraint.Format
+import io.bkbn.kompendium.annotations.constraint.FreeFormObject
 import io.bkbn.kompendium.annotations.constraint.MaxItems
 import io.bkbn.kompendium.annotations.constraint.MaxLength
 import io.bkbn.kompendium.annotations.constraint.Maximum
@@ -43,6 +44,7 @@ import io.ktor.serialization.json
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonElement
 import java.net.URI
 
 fun main() {
@@ -159,9 +161,14 @@ object ConstrainedModels {
 
   @Serializable
   data class ConstrainedRequest(
-    val fieldy: Field
+    val fieldy: Field,
+    @FreeFormObject
+    val data: JsonElement
   ) {
     @Serializable
-    data class Field(val a: Int = 100, val b: Boolean)
+    data class Field(val nesty: Nested?) {
+      @Serializable
+      data class Nested(val a: Int = 100, val b: Boolean)
+    }
   }
 }

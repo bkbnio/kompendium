@@ -5,6 +5,7 @@ data class FormattedSchema(
   override val type: String,
   override val default: Any? = null,
   override val description: String? = null,
+  override val nullable: Boolean? = null,
   // Constraints
   val minimum: Int? = null,
   val maximum: Int? = null,

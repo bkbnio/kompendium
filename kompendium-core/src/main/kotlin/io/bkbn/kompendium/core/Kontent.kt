@@ -5,6 +5,7 @@ import io.bkbn.kompendium.annotations.UndeclaredField
 import io.bkbn.kompendium.annotations.constraint.ExclusiveMaximum
 import io.bkbn.kompendium.annotations.constraint.ExclusiveMinimum
 import io.bkbn.kompendium.annotations.constraint.Format
+import io.bkbn.kompendium.annotations.constraint.FreeFormObject
 import io.bkbn.kompendium.annotations.constraint.MaxItems
 import io.bkbn.kompendium.annotations.constraint.MaxLength
 import io.bkbn.kompendium.annotations.constraint.Maximum
@@ -16,6 +17,7 @@ import io.bkbn.kompendium.annotations.constraint.Pattern
 import io.bkbn.kompendium.annotations.constraint.UniqueItems
 import io.bkbn.kompendium.core.metadata.SchemaMap
 import io.bkbn.kompendium.core.metadata.TypeMap
+import io.bkbn.kompendium.core.util.Helpers.capitalized
 import io.bkbn.kompendium.core.util.Helpers.genericNameAdapter
 import io.bkbn.kompendium.core.util.Helpers.getSimpleSlug
 import io.bkbn.kompendium.core.util.Helpers.logged
@@ -25,16 +27,20 @@ import io.bkbn.kompendium.oas.schema.ComponentSchema
 import io.bkbn.kompendium.oas.schema.DictionarySchema
 import io.bkbn.kompendium.oas.schema.EnumSchema
 import io.bkbn.kompendium.oas.schema.FormattedSchema
+import io.bkbn.kompendium.oas.schema.FreeFormSchema
 import io.bkbn.kompendium.oas.schema.ObjectSchema
 import io.bkbn.kompendium.oas.schema.SimpleSchema
 import kotlin.reflect.KClass
 import kotlin.reflect.KClassifier
+import kotlin.reflect.KParameter
+import kotlin.reflect.KProperty
 import kotlin.reflect.KProperty1
 import kotlin.reflect.KType
 import kotlin.reflect.full.createType
 import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.full.memberProperties
+import kotlin.reflect.full.primaryConstructor
 import kotlin.reflect.jvm.javaField
 import kotlin.reflect.typeOf
 import org.slf4j.LoggerFactory
@@ -176,29 +182,40 @@ object Kontent {
           logger.debug("Analyzing $prop in class $clazz")
           // Grab the field of the current property
           val field = prop.javaField?.type?.kotlin ?: error("Unable to parse field type from $prop")
-          val baseType = scanForGeneric(typeMap, prop)
-          val baseClazz = baseType.classifier as KClass<*>
-          val allTypes = scanForSealed(baseClazz, baseType)
-          newCache = updateCache(newCache, field, allTypes)
-          var propSchema = constructComponentSchema(
-            typeMap = typeMap,
-            prop = prop,
-            fieldClazz = field,
-            clazz = baseClazz,
-            type = baseType,
-            cache = newCache
-          )
-          // todo move to helper
+          // Short circuit if data is free form
+          val freeForm = prop.findAnnotation<FreeFormObject>()
           var name = prop.name
-          prop.findAnnotation<Field>()?.let { fieldOverrides ->
-            if (fieldOverrides.description.isNotBlank()) {
-              propSchema = propSchema.setDescription(fieldOverrides.description)
+
+          // todo add method to clean up
+          when (freeForm) {
+            null ->  {
+              val baseType = scanForGeneric(typeMap, prop)
+              val baseClazz = baseType.classifier as KClass<*>
+              val allTypes = scanForSealed(baseClazz, baseType)
+              newCache = updateCache(newCache, field, allTypes)
+              var propSchema = constructComponentSchema(
+                typeMap = typeMap,
+                prop = prop,
+                fieldClazz = field,
+                clazz = baseClazz,
+                type = baseType,
+                cache = newCache
+              )
+              // todo move to helper
+              prop.findAnnotation<Field>()?.let { fieldOverrides ->
+                if (fieldOverrides.description.isNotBlank()) {
+                  propSchema = propSchema.setDescription(fieldOverrides.description)
+                }
+                if (fieldOverrides.name.isNotBlank()) {
+                  name = fieldOverrides.name
+                }
+              }
+              Pair(name, propSchema)
             }
-            if (fieldOverrides.name.isNotBlank()) {
-              name = fieldOverrides.name
+            else -> {
+              Pair(name, FreeFormSchema())
             }
           }
-          Pair(name, propSchema)
         }
         logger.debug("Looking for undeclared fields")
         val undeclaredFieldMap = clazz.annotations.filterIsInstance<UndeclaredField>().associate {
@@ -263,10 +280,11 @@ object Kontent {
     when (typeMap.containsKey(prop.returnType.classifier)) {
       true -> handleGenericProperty(typeMap, clazz, type, prop.returnType.classifier, cache)
       false -> handleStandardProperty(clazz, fieldClazz, prop, type, cache)
-    }.scanForConstraints(prop)
+    }.scanForConstraints(clazz, prop)
 
+  // TODO Break this up, it's getting gross
   @Suppress("ReturnCount")
-  private fun ComponentSchema.scanForConstraints(prop: KProperty1<*, *>): ComponentSchema {
+  private fun ComponentSchema.scanForConstraints(clazz: KClass<*>, prop: KProperty1<*, *>): ComponentSchema {
     if (this is FormattedSchema) {
       // Get all possible FormattedSchema constraints
       val minimum = prop.findAnnotation<Minimum>()
@@ -311,6 +329,21 @@ object Kontent {
         maxItems = maxItems?.items,
         uniqueItems = uniqueItems?.let { true }
       )
+    }
+
+    if (this is ObjectSchema) {
+      val requiredParams = clazz.primaryConstructor?.parameters?.filterNot { it.isOptional } ?: emptyList()
+      var schema = this
+
+      if (requiredParams.isNotEmpty()) {
+        schema = schema.copy(required = requiredParams.map { it.name!! })
+      }
+
+      if (prop.returnType.isMarkedNullable) {
+        schema = schema.copy(nullable = true)
+      }
+
+      return schema
     }
 
     return this
