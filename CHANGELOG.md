@@ -18,6 +18,8 @@
 - Dokka integration
 - Post-processing callback hook
 - `description` key to KompendiumField
+- Set of base constraints for simple and formatted types
+- Ability to document expected unstructured data
 
 ### Changed
 - `$ref` types are no longer generated, instead all objects are defined explicitly
@@ -42,6 +44,14 @@
 - Refactored `handleComplexType` 🎉
 - Enabled field descriptions
 - Dropped Version Catalog
+- Responses are now a map of _actual_ responses rather than generic payloads
+- Fixed bug where params with default values were listed as required
+- Made empty put/post request info opt-in rather than default
+- Fields are now marked as required when there is no default, and they are non-nullable
+- `KompendiumField` and 'KompendiumParam' renamed to `Field` and `Param` respectively
+- Description dropped from `Param`
+- Dropped unnecessary parameter content scanning method
+- Fixed bug causing all request bodies to be marked as optional
 
 ## [1.11.1] - November 25th, 2021
 ### Added

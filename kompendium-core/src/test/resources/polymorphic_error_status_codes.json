@@ -63,6 +63,9 @@
                       "type": "string"
                     }
                   },
+                  "required": [
+                    "c"
+                  ],
                   "type": "object"
                 }
               }
@@ -80,6 +83,9 @@
                           "type": "string"
                         }
                       },
+                      "required": [
+                        "a"
+                      ],
                       "type": "object"
                     },
                     {
@@ -92,6 +98,10 @@
                           "type": "integer"
                         }
                       },
+                      "required": [
+                        "b",
+                        "c"
+                      ],
                       "type": "object"
                     }
                   ]

@@ -63,6 +63,9 @@
                       "type": "string"
                     }
                   },
+                  "required": [
+                    "c"
+                  ],
                   "type": "object"
                 }
               }
@@ -78,6 +81,9 @@
                       "type": "string"
                     }
                   },
+                  "required": [
+                    "message"
+                  ],
                   "type": "object"
                 }
               }
@@ -93,6 +99,9 @@
                       "type": "string"
                     }
                   },
+                  "required": [
+                    "message"
+                  ],
                   "type": "object"
                 }
               }

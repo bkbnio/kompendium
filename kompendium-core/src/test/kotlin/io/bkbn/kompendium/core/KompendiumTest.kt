@@ -4,9 +4,21 @@ import io.bkbn.kompendium.core.fixtures.TestHelpers.apiFunctionalityTest
 import io.bkbn.kompendium.core.fixtures.TestHelpers.getFileSnapshot
 import io.bkbn.kompendium.core.fixtures.TestHelpers.openApiTest
 import io.bkbn.kompendium.core.util.complexType
+import io.bkbn.kompendium.core.util.constrainedDoubleInfo
+import io.bkbn.kompendium.core.util.constrainedIntInfo
+import io.bkbn.kompendium.core.util.defaultField
+import io.bkbn.kompendium.core.util.defaultParameter
+import io.bkbn.kompendium.core.util.exclusiveMinMax
+import io.bkbn.kompendium.core.util.formattedParam
+import io.bkbn.kompendium.core.util.freeFormObject
 import io.bkbn.kompendium.core.util.genericPolymorphicResponse
 import io.bkbn.kompendium.core.util.genericPolymorphicResponseMultipleImpls
 import io.bkbn.kompendium.core.util.headerParameter
+import io.bkbn.kompendium.core.util.minMaxArray
+import io.bkbn.kompendium.core.util.minMaxFreeForm
+import io.bkbn.kompendium.core.util.minMaxString
+import io.bkbn.kompendium.core.util.multipleOfDouble
+import io.bkbn.kompendium.core.util.multipleOfInt
 import io.bkbn.kompendium.core.util.nestedUnderRootModule
 import io.bkbn.kompendium.core.util.nonRequiredParamsGet
 import io.bkbn.kompendium.core.util.notarizedDeleteModule
@@ -17,6 +29,7 @@ import io.bkbn.kompendium.core.util.notarizedGetWithNotarizedException
 import io.bkbn.kompendium.core.util.notarizedGetWithPolymorphicErrorResponse
 import io.bkbn.kompendium.core.util.notarizedPostModule
 import io.bkbn.kompendium.core.util.notarizedPutModule
+import io.bkbn.kompendium.core.util.nullableField
 import io.bkbn.kompendium.core.util.overrideFieldInfo
 import io.bkbn.kompendium.core.util.pathParsingTestModule
 import io.bkbn.kompendium.core.util.polymorphicCollectionResponse
@@ -24,11 +37,14 @@ import io.bkbn.kompendium.core.util.polymorphicInterfaceResponse
 import io.bkbn.kompendium.core.util.polymorphicMapResponse
 import io.bkbn.kompendium.core.util.polymorphicResponse
 import io.bkbn.kompendium.core.util.primitives
+import io.bkbn.kompendium.core.util.regexString
+import io.bkbn.kompendium.core.util.requiredParameter
 import io.bkbn.kompendium.core.util.returnsList
 import io.bkbn.kompendium.core.util.rootModule
 import io.bkbn.kompendium.core.util.simpleGenericResponse
 import io.bkbn.kompendium.core.util.trailingSlash
 import io.bkbn.kompendium.core.util.undeclaredType
+import io.bkbn.kompendium.core.util.uniqueArray
 import io.bkbn.kompendium.core.util.withDefaultParameter
 import io.bkbn.kompendium.core.util.withExamples
 import io.bkbn.kompendium.core.util.withOperationId
@@ -152,6 +168,20 @@ class KompendiumTest : DescribeSpec({
       openApiTest("query_with_default_parameter.json") { withDefaultParameter() }
     }
   }
+  describe("Required Fields") {
+    it("Marks a parameter required if there is no default and it is not marked nullable") {
+      openApiTest("required_param.json") { requiredParameter() }
+    }
+    it("Does not mark a parameter as required if a default value is provided") {
+      openApiTest("default_param.json") { defaultParameter() }
+    }
+    it("Does not mark a field as required if a default value is provided") {
+      openApiTest("default_field.json") { defaultField() }
+    }
+    it("Marks a field as nullable when expected") {
+      openApiTest("nullable_field.json") { nullableField() }
+    }
+  }
   describe("Polymorphism and Generics") {
     it("can generate a polymorphic response type") {
       // act
@@ -201,6 +231,46 @@ class KompendiumTest : DescribeSpec({
     }
     it("Can override field values via annotation") {
       openApiTest("field_override.json") { overrideFieldInfo() }
+    }
+  }
+  describe("Constraints") {
+    it("Can set a minimum and maximum integer value") {
+      openApiTest("min_max_int_field.json") { constrainedIntInfo() }
+    }
+    it("Can set a minimum and maximum double value") {
+      openApiTest("min_max_double_field.json") { constrainedDoubleInfo() }
+    }
+    it("Can set an exclusive min and exclusive max integer value") {
+      openApiTest("exclusive_min_max.json") { exclusiveMinMax() }
+    }
+    it("Can add a custom format to a string field") {
+      openApiTest("formatted_param_type.json") { formattedParam() }
+    }
+    it("Can set a minimum and maximum length on a string field") {
+      openApiTest("min_max_string.json") { minMaxString() }
+    }
+    it("Can set a custom regex pattern on a string field") {
+      openApiTest("regex_string.json") { regexString() }
+    }
+    it("Can set a minimum and maximum item count on an array field") {
+      openApiTest("min_max_array.json") { minMaxArray() }
+    }
+    it("Can set a unique items constraint on an array field") {
+      openApiTest("unique_array.json") { uniqueArray() }
+    }
+    it("Can set a multiple-of constraint on an int field") {
+      openApiTest("multiple_of_int.json") { multipleOfInt() }
+    }
+    it("Can set a multiple of constraint on an double field") {
+      openApiTest("multiple_of_double.json") { multipleOfDouble() }
+    }
+    it("Can set a minimum and maximum number of properties on a free-form type") {
+      openApiTest("min_max_free_form.json") { minMaxFreeForm() }
+    }
+  }
+  describe("Free Form") {
+    it("Can create a free-form field") {
+      openApiTest("free_form_object.json") { freeFormObject() }
     }
   }
 })

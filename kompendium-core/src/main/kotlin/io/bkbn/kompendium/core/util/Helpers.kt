@@ -18,7 +18,7 @@ object Helpers {
   val UNIT_TYPE by lazy { Unit::class.createType() }
 
   /**
-   * Higher order function that takes a map of names to objects and will log their state ahead of function invocation
+   * Higher order function that takes a map of names to object and will log their state ahead of function invocation
    * along with the result of the function invocation
    */
   fun <T> logged(functionName: String, entities: Map<String, Any>, block: () -> T): T {
@@ -73,5 +73,13 @@ object Helpers {
 
   fun String.capitalized() = replaceFirstChar {
     if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
+  }
+
+  fun String.toNumber(): Number {
+    return try {
+      this.toInt()
+    } catch (e: NumberFormatException) {
+      this.toDouble()
+    }
   }
 }

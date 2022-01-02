@@ -16,6 +16,13 @@ import io.bkbn.kompendium.core.fixtures.TestNested
 import io.bkbn.kompendium.core.fixtures.TestRequest
 import io.bkbn.kompendium.core.fixtures.TestResponse
 import io.bkbn.kompendium.core.fixtures.TestResponseInfo
+import io.bkbn.kompendium.core.fixtures.TestResponseInfo.defaultField
+import io.bkbn.kompendium.core.fixtures.TestResponseInfo.defaultParam
+import io.bkbn.kompendium.core.fixtures.TestResponseInfo.formattedParam
+import io.bkbn.kompendium.core.fixtures.TestResponseInfo.minMaxString
+import io.bkbn.kompendium.core.fixtures.TestResponseInfo.nullableField
+import io.bkbn.kompendium.core.fixtures.TestResponseInfo.regexString
+import io.bkbn.kompendium.core.fixtures.TestResponseInfo.requiredParam
 import io.bkbn.kompendium.core.metadata.RequestInfo
 import io.bkbn.kompendium.core.metadata.ResponseInfo
 import io.bkbn.kompendium.core.metadata.method.GetInfo
@@ -360,6 +367,166 @@ fun Application.overrideFieldInfo() {
     route("/test/field_override") {
       notarizedGet(TestResponseInfo.fieldOverride) {
         call.respond(HttpStatusCode.OK, TestFieldOverride(true))
+      }
+    }
+  }
+}
+
+fun Application.constrainedIntInfo() {
+  routing {
+    route("/test/constrained_int") {
+      notarizedGet(TestResponseInfo.minMaxInt) {
+        call.respond(HttpStatusCode.OK, TestResponse("hi"))
+      }
+    }
+  }
+}
+
+fun Application.constrainedDoubleInfo() {
+  routing {
+    route("/test/constrained_int") {
+      notarizedGet(TestResponseInfo.minMaxDouble) {
+        call.respond(HttpStatusCode.OK, TestResponse("hi"))
+      }
+    }
+  }
+}
+
+fun Application.exclusiveMinMax() {
+  routing {
+    route("/test/constrained_int") {
+      notarizedGet(TestResponseInfo.exclusiveMinMax) {
+        call.respond(HttpStatusCode.OK, TestResponse("hi"))
+      }
+    }
+  }
+}
+
+fun Application.requiredParameter() {
+  routing {
+    route("/test/required_param") {
+      notarizedGet(requiredParam) {
+        call.respond(HttpStatusCode.OK, TestResponse("hi"))
+      }
+    }
+  }
+}
+
+fun Application.defaultParameter() {
+  routing {
+    route("/test/required_param") {
+      notarizedGet(defaultParam) {
+        call.respond(HttpStatusCode.OK, TestResponse("hi"))
+      }
+    }
+  }
+}
+
+fun Application.defaultField() {
+  routing {
+    route("/test/required_param") {
+      notarizedPost(defaultField) {
+        call.respond(HttpStatusCode.OK, TestResponse("hi"))
+      }
+    }
+  }
+}
+
+fun Application.nullableField() {
+  routing {
+    route("/test/required_param") {
+      notarizedPost(nullableField) {
+        call.respond(HttpStatusCode.OK, TestResponse("hi"))
+      }
+    }
+  }
+}
+
+fun Application.formattedParam() {
+  routing {
+    route("/test/required_param") {
+      notarizedGet(formattedParam) {
+        call.respond(HttpStatusCode.OK, TestResponse("hi"))
+      }
+    }
+  }
+}
+
+fun Application.minMaxString() {
+  routing {
+    route("/test/required_param") {
+      notarizedGet(minMaxString) {
+        call.respond(HttpStatusCode.OK, TestResponse("hi"))
+      }
+    }
+  }
+}
+
+fun Application.regexString() {
+  routing {
+    route("/test/required_param") {
+      notarizedGet(regexString) {
+        call.respond(HttpStatusCode.OK, TestResponse("hi"))
+      }
+    }
+  }
+}
+
+fun Application.minMaxArray() {
+  routing {
+    route("/test/required_param") {
+      notarizedGet(TestResponseInfo.minMaxArray) {
+        call.respond(HttpStatusCode.OK, TestResponse("hi"))
+      }
+    }
+  }
+}
+
+fun Application.uniqueArray() {
+  routing {
+    route("/test/required_param") {
+      notarizedGet(TestResponseInfo.uniqueArray) {
+        call.respond(HttpStatusCode.OK, TestResponse("hi"))
+      }
+    }
+  }
+}
+
+fun Application.multipleOfInt() {
+  routing {
+    route("/test/required_param") {
+      notarizedGet(TestResponseInfo.multipleOfInt) {
+        call.respond(HttpStatusCode.OK, TestResponse("hi"))
+      }
+    }
+  }
+}
+
+fun Application.multipleOfDouble() {
+  routing {
+    route("/test/required_param") {
+      notarizedGet(TestResponseInfo.multipleOfDouble) {
+        call.respond(HttpStatusCode.OK, TestResponse("hi"))
+      }
+    }
+  }
+}
+
+fun Application.freeFormObject() {
+  routing {
+    route("/test/required_param") {
+      notarizedGet(TestResponseInfo.freeFormObject) {
+        call.respond(HttpStatusCode.OK, TestResponse("hi"))
+      }
+    }
+  }
+}
+
+fun Application.minMaxFreeForm() {
+  routing {
+    route("/test/required_param") {
+      notarizedGet(TestResponseInfo.minMaxFreeForm) {
+        call.respond(HttpStatusCode.OK, TestResponse("hi"))
       }
     }
   }

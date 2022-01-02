@@ -1,18 +1,33 @@
 package io.bkbn.kompendium.core
 
-import io.bkbn.kompendium.annotations.KompendiumField
+import io.bkbn.kompendium.annotations.Field
+import io.bkbn.kompendium.annotations.FreeFormObject
 import io.bkbn.kompendium.annotations.UndeclaredField
+import io.bkbn.kompendium.annotations.constraint.Format
+import io.bkbn.kompendium.annotations.constraint.MaxItems
+import io.bkbn.kompendium.annotations.constraint.MaxLength
+import io.bkbn.kompendium.annotations.constraint.MaxProperties
+import io.bkbn.kompendium.annotations.constraint.Maximum
+import io.bkbn.kompendium.annotations.constraint.MinItems
+import io.bkbn.kompendium.annotations.constraint.MinLength
+import io.bkbn.kompendium.annotations.constraint.MinProperties
+import io.bkbn.kompendium.annotations.constraint.Minimum
+import io.bkbn.kompendium.annotations.constraint.MultipleOf
+import io.bkbn.kompendium.annotations.constraint.Pattern
+import io.bkbn.kompendium.annotations.constraint.UniqueItems
 import io.bkbn.kompendium.core.metadata.SchemaMap
 import io.bkbn.kompendium.core.metadata.TypeMap
 import io.bkbn.kompendium.core.util.Helpers.genericNameAdapter
 import io.bkbn.kompendium.core.util.Helpers.getSimpleSlug
 import io.bkbn.kompendium.core.util.Helpers.logged
+import io.bkbn.kompendium.core.util.Helpers.toNumber
 import io.bkbn.kompendium.oas.schema.AnyOfSchema
 import io.bkbn.kompendium.oas.schema.ArraySchema
 import io.bkbn.kompendium.oas.schema.ComponentSchema
 import io.bkbn.kompendium.oas.schema.DictionarySchema
 import io.bkbn.kompendium.oas.schema.EnumSchema
 import io.bkbn.kompendium.oas.schema.FormattedSchema
+import io.bkbn.kompendium.oas.schema.FreeFormSchema
 import io.bkbn.kompendium.oas.schema.ObjectSchema
 import io.bkbn.kompendium.oas.schema.SimpleSchema
 import kotlin.reflect.KClass
@@ -23,6 +38,7 @@ import kotlin.reflect.full.createType
 import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.full.memberProperties
+import kotlin.reflect.full.primaryConstructor
 import kotlin.reflect.jvm.javaField
 import kotlin.reflect.typeOf
 import org.slf4j.LoggerFactory
@@ -80,42 +96,13 @@ object Kontent {
   }
 
   /**
-   * Analyze a type [T], but filters out the top-level type
-   * @param T type to analyze
-   * @param cache Existing schema map to append to
-   * @return an updated schema map containing all type information for [T]
-   */
-  @OptIn(ExperimentalStdlibApi::class)
-  inline fun <reified T> generateParameterKontent(
-    cache: SchemaMap = emptyMap()
-  ): SchemaMap {
-    val kontentType = typeOf<T>()
-    return generateKTypeKontent(kontentType, cache)
-      .filterNot { (slug, _) -> slug == (kontentType.classifier as KClass<*>).simpleName }
-  }
-
-  /**
-   * Analyze a type but filters out the top-level type
-   * @param type to analyze
-   * @param cache Existing schema map to append to
-   * @return an updated schema map containing all type information for type [KType]
-   */
-  fun generateParameterKontent(
-    type: KType,
-    cache: SchemaMap = emptyMap()
-  ): SchemaMap {
-    return generateKTypeKontent(type, cache)
-      .filterNot { (slug, _) -> slug == (type.classifier as KClass<*>).simpleName }
-  }
-
-  /**
    * Recursively fills schema map depending on [KType] classifier
    * @param type [KType] to parse
    * @param cache Existing schema map to append to
    */
   fun generateKTypeKontent(
     type: KType,
-    cache: SchemaMap = emptyMap()
+    cache: SchemaMap = emptyMap(),
   ): SchemaMap = logged(object {}.javaClass.enclosingMethod.name, mapOf("cache" to cache)) {
     logger.debug("Parsing Kontent of $type")
     when (val clazz = type.classifier as KClass<*>) {
@@ -164,29 +151,44 @@ object Kontent {
           logger.debug("Analyzing $prop in class $clazz")
           // Grab the field of the current property
           val field = prop.javaField?.type?.kotlin ?: error("Unable to parse field type from $prop")
-          val baseType = scanForGeneric(typeMap, prop)
-          val baseClazz = baseType.classifier as KClass<*>
-          val allTypes = scanForSealed(baseClazz, baseType)
-          newCache = updateCache(newCache, field, allTypes)
-          var propSchema = constructComponentSchema(
-            typeMap = typeMap,
-            prop = prop,
-            fieldClazz = field,
-            clazz = baseClazz,
-            type = baseType,
-            cache = newCache
-          )
-          // todo move to helper
+          // Short circuit if data is free form
+          val freeForm = prop.findAnnotation<FreeFormObject>()
           var name = prop.name
-          prop.findAnnotation<KompendiumField>()?.let { fieldOverrides ->
-            if (fieldOverrides.description.isNotBlank()) {
-              propSchema = propSchema.setDescription(fieldOverrides.description)
+
+          // todo add method to clean up
+          when (freeForm) {
+            null -> {
+              val baseType = scanForGeneric(typeMap, prop)
+              val baseClazz = baseType.classifier as KClass<*>
+              val allTypes = scanForSealed(baseClazz, baseType)
+              newCache = updateCache(newCache, field, allTypes)
+              var propSchema = constructComponentSchema(
+                typeMap = typeMap,
+                prop = prop,
+                fieldClazz = field,
+                clazz = baseClazz,
+                type = baseType,
+                cache = newCache
+              )
+              // todo move to helper
+              prop.findAnnotation<Field>()?.let { fieldOverrides ->
+                if (fieldOverrides.description.isNotBlank()) {
+                  propSchema = propSchema.setDescription(fieldOverrides.description)
+                }
+                if (fieldOverrides.name.isNotBlank()) {
+                  name = fieldOverrides.name
+                }
+              }
+              Pair(name, propSchema)
             }
-            if (fieldOverrides.name.isNotBlank()) {
-              name = fieldOverrides.name
+            else -> {
+              val minProperties = prop.findAnnotation<MinProperties>()
+              val maxProperties = prop.findAnnotation<MaxProperties>()
+              val schema =
+                FreeFormSchema(minProperties = minProperties?.properties, maxProperties = maxProperties?.properties)
+              Pair(name, schema)
             }
           }
-          Pair(name, propSchema)
         }
         logger.debug("Looking for undeclared fields")
         val undeclaredFieldMap = clazz.annotations.filterIsInstance<UndeclaredField>().associate {
@@ -195,7 +197,11 @@ object Kontent {
           it.field to newCache[undeclaredType.getSimpleSlug()]!!
         }
         logger.debug("$slug contains $fieldMap")
-        val schema = ObjectSchema(fieldMap.plus(undeclaredFieldMap))
+        var schema = ObjectSchema(fieldMap.plus(undeclaredFieldMap))
+        val requiredParams = clazz.primaryConstructor?.parameters?.filterNot { it.isOptional } ?: emptyList()
+        if (requiredParams.isNotEmpty()) {
+          schema = schema.copy(required = requiredParams.map { it.name!! })
+        }
         logger.debug("$slug schema: $schema")
         newCache.plus(slug to schema)
       }
@@ -251,7 +257,94 @@ object Kontent {
     when (typeMap.containsKey(prop.returnType.classifier)) {
       true -> handleGenericProperty(typeMap, clazz, type, prop.returnType.classifier, cache)
       false -> handleStandardProperty(clazz, fieldClazz, prop, type, cache)
+    }.scanForConstraints(clazz, prop)
+
+  private fun ComponentSchema.scanForConstraints(clazz: KClass<*>, prop: KProperty1<*, *>): ComponentSchema =
+    when (this) {
+      is AnyOfSchema -> AnyOfSchema(anyOf.map { it.scanForConstraints(clazz, prop) })
+      is ArraySchema -> scanForConstraints(prop)
+      is DictionarySchema -> this // TODO Anything here?
+      is EnumSchema -> scanForConstraints(prop)
+      is FormattedSchema -> scanForConstraints(prop)
+      is FreeFormSchema -> this // todo anything here?
+      is ObjectSchema -> scanForConstraints(clazz, prop)
+      is SimpleSchema -> scanForConstraints(prop)
     }
+
+  private fun ArraySchema.scanForConstraints(prop: KProperty1<*, *>): ArraySchema {
+    val minItems = prop.findAnnotation<MinItems>()
+    val maxItems = prop.findAnnotation<MaxItems>()
+    val uniqueItems = prop.findAnnotation<UniqueItems>()
+
+    return this.copy(
+      minItems = minItems?.items,
+      maxItems = maxItems?.items,
+      uniqueItems = uniqueItems?.let { true }
+    )
+  }
+
+  private fun EnumSchema.scanForConstraints(prop: KProperty1<*, *>): EnumSchema {
+    if (prop.returnType.isMarkedNullable) {
+      return this.copy(nullable = true)
+    }
+
+    return this
+  }
+
+  private fun FormattedSchema.scanForConstraints(prop: KProperty1<*, *>): FormattedSchema {
+    val minimum = prop.findAnnotation<Minimum>()
+    val maximum = prop.findAnnotation<Maximum>()
+    val multipleOf = prop.findAnnotation<MultipleOf>()
+
+    var schema = this
+
+    if (prop.returnType.isMarkedNullable) {
+      schema = schema.copy(nullable = true)
+    }
+
+    return schema.copy(
+      minimum = minimum?.min?.toNumber(),
+      maximum = maximum?.max?.toNumber(),
+      exclusiveMinimum = minimum?.exclusive,
+      exclusiveMaximum = maximum?.exclusive,
+      multipleOf = multipleOf?.multiple?.toNumber(),
+    )
+  }
+
+  private fun SimpleSchema.scanForConstraints(prop: KProperty1<*, *>): SimpleSchema {
+    val minLength = prop.findAnnotation<MinLength>()
+    val maxLength = prop.findAnnotation<MaxLength>()
+    val pattern = prop.findAnnotation<Pattern>()
+    val format = prop.findAnnotation<Format>()
+
+    var schema = this
+
+    if (prop.returnType.isMarkedNullable) {
+      schema = schema.copy(nullable = true)
+    }
+
+    return schema.copy(
+      minLength = minLength?.length,
+      maxLength = maxLength?.length,
+      pattern = pattern?.pattern,
+      format = format?.format
+    )
+  }
+
+  private fun ObjectSchema.scanForConstraints(clazz: KClass<*>, prop: KProperty1<*, *>): ObjectSchema {
+    val requiredParams = clazz.primaryConstructor?.parameters?.filterNot { it.isOptional } ?: emptyList()
+    var schema = this
+
+    if (requiredParams.isNotEmpty()) {
+      schema = schema.copy(required = requiredParams.map { it.name!! })
+    }
+
+    if (prop.returnType.isMarkedNullable) {
+      schema = schema.copy(nullable = true)
+    }
+
+    return schema
+  }
 
   /**
    * If a field has no type parameters, build its [ComponentSchema] without referencing the [TypeMap]

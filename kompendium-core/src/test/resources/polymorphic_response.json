@@ -1,71 +1,84 @@
 {
-  "openapi" : "3.0.3",
-  "info" : {
-    "title" : "Test API",
-    "version" : "1.33.7",
-    "description" : "An amazing, fully-ish 😉 generated API spec",
-    "termsOfService" : "https://example.com",
-    "contact" : {
-      "name" : "Homer Simpson",
-      "url" : "https://gph.is/1NPUDiM",
-      "email" : "chunkylover53@aol.com"
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Test API",
+    "version": "1.33.7",
+    "description": "An amazing, fully-ish 😉 generated API spec",
+    "termsOfService": "https://example.com",
+    "contact": {
+      "name": "Homer Simpson",
+      "url": "https://gph.is/1NPUDiM",
+      "email": "chunkylover53@aol.com"
     },
-    "license" : {
-      "name" : "MIT",
-      "url" : "https://github.com/bkbnio/kompendium/blob/main/LICENSE"
+    "license": {
+      "name": "MIT",
+      "url": "https://github.com/bkbnio/kompendium/blob/main/LICENSE"
     }
   },
-  "servers" : [ {
-    "url" : "https://myawesomeapi.com",
-    "description" : "Production instance of my API"
-  }, {
-    "url" : "https://staging.myawesomeapi.com",
-    "description" : "Where the fun stuff happens"
-  } ],
-  "paths" : {
-    "/test/polymorphic" : {
-      "get" : {
-        "tags" : [ ],
-        "summary" : "All the gibbits",
-        "description" : "Polymorphic response",
-        "parameters" : [ ],
-        "responses" : {
-          "200" : {
-            "description" : "A successful endeavor",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "anyOf" : [ {
-                    "properties" : {
-                      "a" : {
-                        "type" : "string"
-                      }
-                    },
-                    "type" : "object"
-                  }, {
-                    "properties" : {
-                      "b" : {
-                        "type" : "string"
+  "servers": [
+    {
+      "url": "https://myawesomeapi.com",
+      "description": "Production instance of my API"
+    },
+    {
+      "url": "https://staging.myawesomeapi.com",
+      "description": "Where the fun stuff happens"
+    }
+  ],
+  "paths": {
+    "/test/polymorphic": {
+      "get": {
+        "tags": [],
+        "summary": "All the gibbits",
+        "description": "Polymorphic response",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "A successful endeavor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "properties": {
+                        "a": {
+                          "type": "string"
+                        }
                       },
-                      "c" : {
-                        "format" : "int32",
-                        "type" : "integer"
-                      }
+                      "required": [
+                        "a"
+                      ],
+                      "type": "object"
                     },
-                    "type" : "object"
-                  } ]
+                    {
+                      "properties": {
+                        "b": {
+                          "type": "string"
+                        },
+                        "c": {
+                          "format": "int32",
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "b",
+                        "c"
+                      ],
+                      "type": "object"
+                    }
+                  ]
                 }
               }
             }
           }
         },
-        "deprecated" : false
+        "deprecated": false
       }
     }
   },
-  "components" : {
-    "securitySchemes" : { }
+  "components": {
+    "securitySchemes": {}
   },
-  "security" : [ ],
-  "tags" : [ ]
+  "security": [],
+  "tags": []
 }

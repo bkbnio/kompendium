@@ -40,14 +40,15 @@
               "type": "integer",
               "default": 100
             },
-            "required": true,
+            "required": false,
             "deprecated": false
           },
           {
             "name": "b",
             "in": "path",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "nullable": true
             },
             "required": false,
             "deprecated": false
@@ -73,6 +74,9 @@
                       "type": "string"
                     }
                   },
+                  "required": [
+                    "c"
+                  ],
                   "type": "object"
                 }
               }

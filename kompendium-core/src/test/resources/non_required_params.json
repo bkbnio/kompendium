@@ -36,7 +36,8 @@
             "name": "notRequired",
             "in": "query",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "nullable": true
             },
             "required": false,
             "deprecated": false
