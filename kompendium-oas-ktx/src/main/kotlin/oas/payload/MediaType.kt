@@ -1,10 +1,14 @@
 package oas.payload
 
+import kotlinx.serialization.Contextual
+import kotlinx.serialization.Serializable
 import oas.schema.ComponentSchema
 
-data class MediaType<T>(
+@Serializable
+data class MediaType(
   val schema: ComponentSchema,
-  val examples: Map<String, Example<T>>? = null
+  val examples: Map<String, Example>? = null
 ) {
-  data class Example<T>(val value: T)
+  @Serializable
+  data class Example(val value: @Contextual Any)
 }

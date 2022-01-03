@@ -1,8 +1,13 @@
 package oas.schema
 
-data class SimpleSchema(
+import kotlinx.serialization.Contextual
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonClassDiscriminator
+
+@Serializable
+data class SimpleSchema (
   override val type: String,
-  override val default: Any? = null,
+  override val default: @Contextual Any? = null,
   override val description: String? = null,
   override val nullable: Boolean? = null,
   // Constraints

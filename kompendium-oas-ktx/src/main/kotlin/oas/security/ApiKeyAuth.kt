@@ -1,11 +1,13 @@
 package oas.security
 
+import kotlinx.serialization.Serializable
 import java.util.Locale
 
 // TODO... is there even an official ktor api auth mechanism??
 
+@Serializable
 @Suppress("UnusedPrivateMember")
-class ApiKeyAuth(val `in`: ApiKeyLocation, name: String) : SecuritySchema {
+class ApiKeyAuth(val `in`: ApiKeyLocation, val name: String) : SecuritySchema {
   val type: String = "apiKey"
 
   enum class ApiKeyLocation {
