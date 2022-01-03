@@ -1,6 +1,7 @@
 package io.bkbn.kompendium.core.fixtures
 
 import io.bkbn.kompendium.core.metadata.ExceptionInfo
+import io.bkbn.kompendium.core.metadata.ParameterExample
 import io.bkbn.kompendium.core.metadata.method.PostInfo
 import io.bkbn.kompendium.core.metadata.method.PutInfo
 import io.bkbn.kompendium.core.metadata.RequestInfo
@@ -264,6 +265,17 @@ object TestResponseInfo {
     description = "Cool stuff",
     responseInfo = simpleOkResponse(),
     requestInfo = RequestInfo("cool")
+  )
+
+  val exampleParams = GetInfo<TestParams, TestResponse>(
+    summary = "param stuff",
+    description = "Cool stuff",
+    responseInfo = simpleOkResponse(),
+    parameterExamples = setOf(
+      ParameterExample(TestParams::a.name, "Testerino", "a"),
+      ParameterExample(TestParams::a.name, "Testerina", "b"),
+      ParameterExample(TestParams::aa.name, "Wowza", 6),
+    )
   )
 
   private fun <T> simpleOkResponse() = ResponseInfo<T>(HttpStatusCode.OK, "A successful endeavor")

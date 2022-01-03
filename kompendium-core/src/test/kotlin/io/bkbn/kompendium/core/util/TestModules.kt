@@ -564,3 +564,13 @@ fun Application.minMaxFreeForm() {
     }
   }
 }
+
+fun Application.exampleParams() {
+  routing {
+    route("/test/{a}") {
+      notarizedGet(TestResponseInfo.exampleParams) {
+        call.respondText { "Hi 🌊" }
+      }
+    }
+  }
+}
