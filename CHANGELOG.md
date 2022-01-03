@@ -11,7 +11,7 @@
 
 ## Released
 
-## [2.0.0-RC1] - December 18th, 2021
+## [2.0.0-alpha] - January 2nd, 2021
 ### Added
 - Support for OAuth authentication
 - Gradle Toolchain feature to ensure match between local JDK and compile target
@@ -52,6 +52,7 @@
 - Description dropped from `Param`
 - Dropped unnecessary parameter content scanning method
 - Fixed bug causing all request bodies to be marked as optional
+- Dropped ASDF tool manifest
 
 ## [1.11.1] - November 25th, 2021
 ### Added
