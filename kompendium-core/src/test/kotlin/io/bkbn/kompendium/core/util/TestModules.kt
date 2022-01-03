@@ -2,6 +2,9 @@ package io.bkbn.kompendium.core.util
 
 import io.bkbn.kompendium.core.Notarized.notarizedDelete
 import io.bkbn.kompendium.core.Notarized.notarizedGet
+import io.bkbn.kompendium.core.Notarized.notarizedHead
+import io.bkbn.kompendium.core.Notarized.notarizedOptions
+import io.bkbn.kompendium.core.Notarized.notarizedPatch
 import io.bkbn.kompendium.core.Notarized.notarizedPost
 import io.bkbn.kompendium.core.Notarized.notarizedPut
 import io.bkbn.kompendium.core.fixtures.Bibbity
@@ -100,6 +103,36 @@ fun Application.notarizedDeleteModule() {
     route("/test") {
       notarizedDelete(TestResponseInfo.testDeleteInfo) {
         call.respond(HttpStatusCode.NoContent)
+      }
+    }
+  }
+}
+
+fun Application.notarizedPatchModule() {
+  routing {
+    route("/test") {
+      notarizedPatch(TestResponseInfo.testPatchInfo) {
+        call.respondText { "hey dude ✌️ congratz on the patch request" }
+      }
+    }
+  }
+}
+
+fun Application.notarizedHeadModule() {
+  routing {
+    route("/test") {
+      notarizedHead(TestResponseInfo.testHeadInfo) {
+        call.response.status(HttpStatusCode.OK)
+      }
+    }
+  }
+}
+
+fun Application.notarizedOptionsModule() {
+  routing {
+    route("/test") {
+      notarizedOptions(TestResponseInfo.testOptionsInfo) {
+        call.response.status(HttpStatusCode.OK)
       }
     }
   }
@@ -245,12 +278,12 @@ fun Application.withDefaultParameter() {
   }
 }
 
-fun Application.withOperationId(){
+fun Application.withOperationId() {
   routing {
     route("/test") {
       notarizedGet(
         info = TestResponseInfo.testGetInfo.copy(operationId = "getTest")
-      ){
+      ) {
         call.respond(HttpStatusCode.OK)
       }
     }

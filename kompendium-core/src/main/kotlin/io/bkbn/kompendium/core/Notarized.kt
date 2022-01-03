@@ -5,6 +5,9 @@ import io.bkbn.kompendium.core.KompendiumPreFlight.methodNotarizationPreFlight
 import io.bkbn.kompendium.core.MethodParser.parseMethodInfo
 import io.bkbn.kompendium.core.metadata.method.DeleteInfo
 import io.bkbn.kompendium.core.metadata.method.GetInfo
+import io.bkbn.kompendium.core.metadata.method.HeadInfo
+import io.bkbn.kompendium.core.metadata.method.OptionsInfo
+import io.bkbn.kompendium.core.metadata.method.PatchInfo
 import io.bkbn.kompendium.core.metadata.method.PostInfo
 import io.bkbn.kompendium.core.metadata.method.PutInfo
 import io.bkbn.kompendium.oas.path.Path
@@ -66,7 +69,7 @@ object Notarized {
   }
 
   /**
-   * Notarization for an HTTP Delete request
+   * Notarization for an HTTP PUT request
    * @param TParam The class containing all parameter fields. Each field must be annotated with @[Param]
    * @param TReq Class detailing the expected API request body
    * @param TResp Class detailing the expected API response
@@ -87,7 +90,28 @@ object Notarized {
   }
 
   /**
-   * Notarization for an HTTP POST request
+   * Notarization for an HTTP PATCH request
+   * @param TParam The class containing all parameter fields. Each field must be annotated with @[Param]
+   * @param TReq Class detailing the expected API request body
+   * @param TResp Class detailing the expected API response
+   * @param info Route metadata
+   * @param postProcess Adds an optional callback hook to perform manual overrides on the generated [PathOperation]
+   */
+  inline fun <reified TParam : Any, reified TReq : Any, reified TResp : Any> Route.notarizedPatch(
+    info: PatchInfo<TParam, TReq, TResp>,
+    postProcess: (PathOperation) -> PathOperation = { p -> p },
+    noinline body: PipelineInterceptor<Unit, ApplicationCall>,
+  ): Route = methodNotarizationPreFlight<TParam, TReq, TResp> { paramType, requestType, responseType ->
+    val feature = this.application.feature(Kompendium)
+    val path = calculateRoutePath()
+    feature.config.spec.paths.getOrPut(path) { Path() }
+    val baseInfo = parseMethodInfo(info, paramType, requestType, responseType, feature)
+    feature.config.spec.paths[path]?.patch = postProcess(baseInfo)
+    return method(HttpMethod.Patch) { handle(body) }
+  }
+
+  /**
+   * Notarization for an HTTP DELETE request
    * @param TParam The class containing all parameter fields. Each field must be annotated with @[Param]
    * @param TResp Class detailing the expected API response
    * @param info Route metadata
@@ -104,6 +128,45 @@ object Notarized {
     val baseInfo = parseMethodInfo(info, paramType, requestType, responseType, feature)
     feature.config.spec.paths[path]?.delete = postProcess(baseInfo)
     return method(HttpMethod.Delete) { handle(body) }
+  }
+
+  /**
+   * Notarization for an HTTP HEAD request
+   * @param TParam The class containing all parameter fields. Each field must be annotated with @[Param]
+   * @param info Route metadata
+   * @param postProcess Adds an optional callback hook to perform manual overrides on the generated [PathOperation]
+   */
+  inline fun <reified TParam : Any> Route.notarizedHead(
+    info: HeadInfo<TParam>,
+    postProcess: (PathOperation) -> PathOperation = { p -> p },
+    noinline body: PipelineInterceptor<Unit, ApplicationCall>
+  ): Route = methodNotarizationPreFlight<TParam, Unit, Unit> { paramType, requestType, responseType ->
+    val feature = this.application.feature(Kompendium)
+    val path = calculateRoutePath()
+    feature.config.spec.paths.getOrPut(path) { Path() }
+    val baseInfo = parseMethodInfo(info, paramType, requestType, responseType, feature)
+    feature.config.spec.paths[path]?.head = postProcess(baseInfo)
+    return method(HttpMethod.Head) { handle(body) }
+  }
+
+  /**
+   * Notarization for an HTTP OPTION request
+   * @param TParam The class containing all parameter fields. Each field must be annotated with @[Param]
+   * @param TResp Class detailing the expected API response
+   * @param info Route metadata
+   * @param postProcess Adds an optional callback hook to perform manual overrides on the generated [PathOperation]
+   */
+  inline fun <reified TParam : Any, reified TResp : Any> Route.notarizedOptions(
+    info: OptionsInfo<TParam, TResp>,
+    postProcess: (PathOperation) -> PathOperation = { p -> p },
+    noinline body: PipelineInterceptor<Unit, ApplicationCall>
+  ): Route = methodNotarizationPreFlight<TParam, Unit, TResp> { paramType, requestType, responseType ->
+    val feature = this.application.feature(Kompendium)
+    val path = calculateRoutePath()
+    feature.config.spec.paths.getOrPut(path) { Path() }
+    val baseInfo = parseMethodInfo(info, paramType, requestType, responseType, feature)
+    feature.config.spec.paths[path]?.options = postProcess(baseInfo)
+    return method(HttpMethod.Options) { handle(body) }
   }
 
   /**

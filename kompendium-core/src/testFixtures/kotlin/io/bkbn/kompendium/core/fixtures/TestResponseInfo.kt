@@ -7,6 +7,9 @@ import io.bkbn.kompendium.core.metadata.RequestInfo
 import io.bkbn.kompendium.core.metadata.ResponseInfo
 import io.bkbn.kompendium.core.metadata.method.DeleteInfo
 import io.bkbn.kompendium.core.metadata.method.GetInfo
+import io.bkbn.kompendium.core.metadata.method.HeadInfo
+import io.bkbn.kompendium.core.metadata.method.OptionsInfo
+import io.bkbn.kompendium.core.metadata.method.PatchInfo
 import io.ktor.http.HttpStatusCode
 import kotlin.reflect.typeOf
 
@@ -15,6 +18,7 @@ object TestResponseInfo {
   private val testGetListResponse =
     ResponseInfo<List<TestResponse>>(HttpStatusCode.OK, "A Successful List-y Endeavor")
   private val testPostResponse = ResponseInfo<TestCreatedResponse>(HttpStatusCode.Created, "A Successful Endeavor")
+  private val testPatchResponse = ResponseInfo<TestResponse>(HttpStatusCode.Created, "A Successful Endeavor")
   private val testPostResponseAgain = ResponseInfo<Boolean>(HttpStatusCode.Created, "A Successful Endeavor")
   private val testDeleteResponse =
     ResponseInfo<Unit>(HttpStatusCode.NoContent, "A Successful Endeavor", mediaTypes = emptyList())
@@ -74,6 +78,22 @@ object TestResponseInfo {
     description = "Put your tests here!",
     responseInfo = testPostResponse,
     requestInfo = complexRequest
+  )
+  val testPatchInfo = PatchInfo<Unit, TestRequest, TestResponse>(
+    summary = "Test patch endpoint",
+    description = "patch your tests here!",
+    responseInfo = testPatchResponse,
+    requestInfo = testRequest
+  )
+  val testHeadInfo = HeadInfo<Unit>(
+    summary = "Test head endpoint",
+    description = "head test 💀",
+    responseInfo = ResponseInfo(HttpStatusCode.OK, "great!")
+  )
+  val testOptionsInfo = OptionsInfo<TestParams, TestResponse>(
+    summary = "Test options",
+    description = "endpoint of options",
+    responseInfo = ResponseInfo(HttpStatusCode.OK, "nice")
   )
   val testPutInfoAlso = PutInfo<TestParams, TestRequest, TestCreatedResponse>(
     summary = "Test put endpoint",
