@@ -20,9 +20,8 @@ class Kompendium(val config: Configuration) {
 
   class Configuration {
     lateinit var spec: OpenApiSpec
-    var cache: SchemaMap = emptyMap()
 
-    // TODO Document this better!!
+    var cache: SchemaMap = emptyMap()
     var specRoute = "/openapi.json"
 
     // TODO Add tests for this!!
