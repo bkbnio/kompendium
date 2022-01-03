@@ -2,6 +2,7 @@
 
 ## Unreleased
 ### Added
+- Support for HTTP Patch, Head, and Options methods
 
 ### Changed
 
