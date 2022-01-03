@@ -2,6 +2,7 @@ package io.bkbn.kompendium.playground
 
 import io.bkbn.kompendium.core.Kompendium
 import io.bkbn.kompendium.core.Notarized.notarizedGet
+import io.bkbn.kompendium.playground.util.Util
 import io.bkbn.kompendium.swagger.swaggerUI
 import io.ktor.application.Application
 import io.ktor.application.call
@@ -37,7 +38,7 @@ private fun Application.mainModule() {
   install(Webjars)
   // Installs the Kompendium Plugin and sets up baseline server metadata
   install(Kompendium) {
-    spec = BasicMetadata.spec
+    spec = Util.baseSpec
   }
   // Configures the routes for our API
   routing {

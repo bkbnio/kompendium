@@ -5,12 +5,8 @@ import io.bkbn.kompendium.core.Notarized.notarizedGet
 import io.bkbn.kompendium.core.metadata.ResponseInfo
 import io.bkbn.kompendium.core.metadata.method.GetInfo
 import io.bkbn.kompendium.core.routes.redoc
-import io.bkbn.kompendium.oas.OpenApiSpec
-import io.bkbn.kompendium.oas.info.Contact
-import io.bkbn.kompendium.oas.info.Info
-import io.bkbn.kompendium.oas.info.License
-import io.bkbn.kompendium.oas.server.Server
 import io.bkbn.kompendium.playground.GenericPlaygroundToC.simpleGenericGet
+import io.bkbn.kompendium.playground.util.Util
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
@@ -22,7 +18,6 @@ import io.ktor.serialization.json
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import kotlinx.serialization.Serializable
-import java.net.URI
 
 /**
  * Application entrypoint.  Run this and head on over to `localhost:8081/docs`
@@ -44,7 +39,7 @@ private fun Application.mainModule() {
   }
   // Installs the Kompendium Plugin and sets up baseline server metadata
   install(Kompendium) {
-    spec = GenericMetadata.spec
+    spec = Util.baseSpec
   }
   routing {
     redoc(pageTitle = "Simple API Docs")
@@ -66,38 +61,6 @@ object GenericPlaygroundToC {
     responseInfo = ResponseInfo(
       status = HttpStatusCode.OK,
       description = "Enjoy all this data, pal"
-    )
-  )
-}
-
-// Contains the root metadata for our server.  This is all the stuff that is defined once
-// and cannot be inferred from the Ktor application
-object GenericMetadata {
-  val spec = OpenApiSpec(
-    info = Info(
-      title = "Simple Demo API with Generic Data",
-      version = "1.33.7",
-      description = "Wow isn't this cool?",
-      termsOfService = URI("https://example.com"),
-      contact = Contact(
-        name = "Homer Simpson",
-        email = "chunkylover53@aol.com",
-        url = URI("https://gph.is/1NPUDiM")
-      ),
-      license = License(
-        name = "MIT",
-        url = URI("https://github.com/bkbnio/kompendium/blob/main/LICENSE")
-      )
-    ),
-    servers = mutableListOf(
-      Server(
-        url = URI("https://myawesomeapi.com"),
-        description = "Production instance of my API"
-      ),
-      Server(
-        url = URI("https://staging.myawesomeapi.com"),
-        description = "Where the fun stuff happens"
-      )
     )
   )
 }

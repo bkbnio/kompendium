@@ -18,6 +18,7 @@ dependencies {
   implementation(group = "io.ktor", name = "ktor-auth", version = ktorVersion)
   implementation(group = "io.ktor", name = "ktor-auth-jwt", version = ktorVersion)
   implementation(group = "io.ktor", name = "ktor-serialization", version = ktorVersion)
+  implementation(group = "io.ktor", name = "ktor-jackson", version = ktorVersion)
   implementation(group = "io.ktor", name = "ktor-locations", version = ktorVersion)
   implementation(group = "io.ktor", name = "ktor-webjars", version = ktorVersion)
 

@@ -4,17 +4,17 @@ plugins {
 }
 
 dependencies {
+  // VERSIONS
+  val ktorVersion: String by project
+  val kotestVersion: String by project
+
   // IMPLEMENTATION
 
   api(projects.kompendiumOas)
   api(projects.kompendiumAnnotations)
 
-  val ktorVersion: String by project
-  val kotestVersion: String by project
   implementation(group = "io.ktor", name = "ktor-server-core", version = ktorVersion)
   implementation(group = "io.ktor", name = "ktor-html-builder", version = ktorVersion)
-
-  implementation(group = "com.fasterxml.jackson.module", name = "jackson-module-kotlin", version = "2.13.0")
 
   // TEST FIXTURES
 
