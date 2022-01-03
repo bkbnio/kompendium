@@ -1,6 +1,7 @@
 package io.bkbn.kompendium.playground
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.google.gson.annotations.SerializedName
 import io.bkbn.kompendium.annotations.Field
 import io.bkbn.kompendium.annotations.Param
 import io.bkbn.kompendium.annotations.ParamType
@@ -172,6 +173,7 @@ object BasicModels {
   @Serializable
   data class BasicRequest(
     @JsonProperty("best_field")
+    @SerializedName("best_field")
     @Field(description = "This is a super important field!!", name = "best_field")
     val d: Boolean
   )
