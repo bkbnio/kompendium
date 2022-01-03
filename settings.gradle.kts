@@ -3,6 +3,7 @@ rootProject.name = "kompendium"
 include("kompendium-annotations")
 include("kompendium-core")
 include("kompendium-oas")
+include("kompendium-oas-ktx")
 include("kompendium-auth")
 include("kompendium-swagger-ui")
 include("kompendium-playground")
