@@ -1,75 +1,94 @@
 {
-  "openapi" : "3.0.3",
-  "info" : { },
-  "servers" : [ ],
-  "paths" : {
-    "/test" : {
-      "get" : {
-        "tags" : [ ],
-        "summary" : "Another get test",
-        "description" : "testing more",
-        "parameters" : [ {
-          "name" : "a",
-          "in" : "path",
-          "schema" : {
-            "type" : "string"
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Test API",
+    "version": "1.33.7",
+    "description": "An amazing, fully-ish 😉 generated API spec",
+    "termsOfService": "https://example.com",
+    "contact": {
+      "name": "Homer Simpson",
+      "url": "https://gph.is/1NPUDiM",
+      "email": "chunkylover53@aol.com"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://github.com/bkbnio/kompendium/blob/main/LICENSE"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://myawesomeapi.com",
+      "description": "Production instance of my API"
+    },
+    {
+      "url": "https://staging.myawesomeapi.com",
+      "description": "Where the fun stuff happens"
+    }
+  ],
+  "paths": {
+    "/test": {
+      "get": {
+        "tags": [],
+        "summary": "Another get test",
+        "description": "testing more",
+        "parameters": [
+          {
+            "name": "a",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "deprecated": false
           },
-          "required" : true,
-          "deprecated" : false
-        }, {
-          "name" : "aa",
-          "in" : "query",
-          "schema" : {
-            "type" : "integer",
-            "format" : "int32"
-          },
-          "required" : true,
-          "deprecated" : false
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "A Successful Endeavor",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/TestResponse"
+          {
+            "name": "aa",
+            "in": "query",
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            },
+            "required": true,
+            "deprecated": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A Successful Endeavor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "c": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "c"
+                  ],
+                  "type": "object"
                 }
               }
             }
           }
         },
-        "deprecated" : false,
-        "security" : [ {
-          "basic" : [ ]
-        } ]
-      }
-    }
-  },
-  "components" : {
-    "schemas" : {
-      "String" : {
-        "type" : "string"
-      },
-      "TestResponse" : {
-        "type" : "object",
-        "properties" : {
-          "c" : {
-            "$ref" : "#/components/schemas/String"
+        "deprecated": false,
+        "security": [
+          {
+            "basic": []
           }
-        }
-      },
-      "Int" : {
-        "type" : "integer",
-        "format" : "int32"
-      }
-    },
-    "securitySchemes" : {
-      "basic" : {
-        "type" : "http",
-        "scheme" : "basic"
+        ]
       }
     }
   },
-  "security" : [ ],
-  "tags" : [ ]
+  "components": {
+    "securitySchemes": {
+      "basic": {
+        "type": "http",
+        "scheme": "basic"
+      }
+    }
+  },
+  "security": [],
+  "tags": []
 }

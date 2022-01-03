@@ -1,133 +1,126 @@
 {
-  "openapi" : "3.0.3",
-  "info" : {
-    "title" : "Test API",
-    "version" : "1.33.7",
-    "description" : "An amazing, fully-ish 😉 generated API spec",
-    "termsOfService" : "https://example.com",
-    "contact" : {
-      "name" : "Homer Simpson",
-      "url" : "https://gph.is/1NPUDiM",
-      "email" : "chunkylover53@aol.com"
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Test API",
+    "version": "1.33.7",
+    "description": "An amazing, fully-ish 😉 generated API spec",
+    "termsOfService": "https://example.com",
+    "contact": {
+      "name": "Homer Simpson",
+      "url": "https://gph.is/1NPUDiM",
+      "email": "chunkylover53@aol.com"
     },
-    "license" : {
-      "name" : "MIT",
-      "url" : "https://github.com/bkbnio/kompendium/blob/main/LICENSE"
+    "license": {
+      "name": "MIT",
+      "url": "https://github.com/bkbnio/kompendium/blob/main/LICENSE"
     }
   },
-  "servers" : [ {
-    "url" : "https://myawesomeapi.com",
-    "description" : "Production instance of my API"
-  }, {
-    "url" : "https://staging.myawesomeapi.com",
-    "description" : "Where the fun stuff happens"
-  } ],
-  "paths" : {
-    "/test" : {
-      "put" : {
-        "tags" : [ ],
-        "summary" : "Test put endpoint",
-        "description" : "Put your tests here!",
-        "parameters" : [ ],
-        "requestBody" : {
-          "description" : "A Complex request",
-          "content" : {
-            "application/json" : {
-              "schema" : {
-                "$ref" : "#/components/schemas/ComplexRequest"
+  "servers": [
+    {
+      "url": "https://myawesomeapi.com",
+      "description": "Production instance of my API"
+    },
+    {
+      "url": "https://staging.myawesomeapi.com",
+      "description": "Where the fun stuff happens"
+    }
+  ],
+  "paths": {
+    "/test": {
+      "put": {
+        "tags": [],
+        "summary": "Test put endpoint",
+        "description": "Put your tests here!",
+        "parameters": [],
+        "requestBody": {
+          "description": "A Complex request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "amazing_field": {
+                    "type": "string"
+                  },
+                  "org": {
+                    "type": "string"
+                  },
+                  "tables": {
+                    "items": {
+                      "properties": {
+                        "alias": {
+                          "additionalProperties": {
+                            "properties": {
+                              "enumeration": {
+                                "enum": [
+                                  "ONE",
+                                  "TWO"
+                                ],
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "enumeration"
+                            ],
+                            "type": "object"
+                          },
+                          "type": "object"
+                        },
+                        "name": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "name",
+                        "alias"
+                      ],
+                      "type": "object"
+                    },
+                    "type": "array"
+                  }
+                },
+                "required": [
+                  "org",
+                  "amazingField",
+                  "tables"
+                ],
+                "type": "object"
               }
             }
           },
-          "required" : false
+          "required": true
         },
-        "responses" : {
-          "201" : {
-            "description" : "A Successful Endeavor",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/TestCreatedResponse"
+        "responses": {
+          "201": {
+            "description": "A Successful Endeavor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "c": {
+                      "type": "string"
+                    },
+                    "id": {
+                      "format": "int32",
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "c"
+                  ],
+                  "type": "object"
                 }
               }
             }
           }
         },
-        "deprecated" : false
+        "deprecated": false
       }
     }
   },
-  "components" : {
-    "schemas" : {
-      "String" : {
-        "type" : "string"
-      },
-      "SimpleEnum" : {
-        "type" : "string",
-        "enum" : [ "ONE", "TWO" ]
-      },
-      "CrazyItem" : {
-        "type" : "object",
-        "properties" : {
-          "enumeration" : {
-            "$ref" : "#/components/schemas/SimpleEnum"
-          }
-        }
-      },
-      "Map-String-CrazyItem" : {
-        "type" : "object",
-        "additionalProperties" : {
-          "$ref" : "#/components/schemas/CrazyItem"
-        }
-      },
-      "NestedComplexItem" : {
-        "type" : "object",
-        "properties" : {
-          "alias" : {
-            "$ref" : "#/components/schemas/Map-String-CrazyItem"
-          },
-          "name" : {
-            "$ref" : "#/components/schemas/String"
-          }
-        }
-      },
-      "List-NestedComplexItem" : {
-        "type" : "array",
-        "items" : {
-          "$ref" : "#/components/schemas/NestedComplexItem"
-        }
-      },
-      "ComplexRequest" : {
-        "type" : "object",
-        "properties" : {
-          "amazingField" : {
-            "$ref" : "#/components/schemas/String"
-          },
-          "org" : {
-            "$ref" : "#/components/schemas/String"
-          },
-          "tables" : {
-            "$ref" : "#/components/schemas/List-NestedComplexItem"
-          }
-        }
-      },
-      "Int" : {
-        "type" : "integer",
-        "format" : "int32"
-      },
-      "TestCreatedResponse" : {
-        "type" : "object",
-        "properties" : {
-          "c" : {
-            "$ref" : "#/components/schemas/String"
-          },
-          "id" : {
-            "$ref" : "#/components/schemas/Int"
-          }
-        }
-      }
-    },
-    "securitySchemes" : { }
+  "components": {
+    "securitySchemes": {}
   },
-  "security" : [ ],
-  "tags" : [ ]
+  "security": [],
+  "tags": []
 }

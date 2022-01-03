@@ -1,137 +1,129 @@
 {
-  "openapi" : "3.0.3",
-  "info" : {
-    "title" : "Test API",
-    "version" : "1.33.7",
-    "description" : "An amazing, fully-ish 😉 generated API spec",
-    "termsOfService" : "https://example.com",
-    "contact" : {
-      "name" : "Homer Simpson",
-      "url" : "https://gph.is/1NPUDiM",
-      "email" : "chunkylover53@aol.com"
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Test API",
+    "version": "1.33.7",
+    "description": "An amazing, fully-ish 😉 generated API spec",
+    "termsOfService": "https://example.com",
+    "contact": {
+      "name": "Homer Simpson",
+      "url": "https://gph.is/1NPUDiM",
+      "email": "chunkylover53@aol.com"
     },
-    "license" : {
-      "name" : "MIT",
-      "url" : "https://github.com/bkbnio/kompendium/blob/main/LICENSE"
+    "license": {
+      "name": "MIT",
+      "url": "https://github.com/bkbnio/kompendium/blob/main/LICENSE"
     }
   },
-  "servers" : [ {
-    "url" : "https://myawesomeapi.com",
-    "description" : "Production instance of my API"
-  }, {
-    "url" : "https://staging.myawesomeapi.com",
-    "description" : "Where the fun stuff happens"
-  } ],
-  "paths" : {
-    "/test" : {
-      "put" : {
-        "tags" : [ ],
-        "summary" : "Test put endpoint",
-        "description" : "Put your tests here!",
-        "parameters" : [ {
-          "name" : "a",
-          "in" : "path",
-          "schema" : {
-            "type" : "string"
+  "servers": [
+    {
+      "url": "https://myawesomeapi.com",
+      "description": "Production instance of my API"
+    },
+    {
+      "url": "https://staging.myawesomeapi.com",
+      "description": "Where the fun stuff happens"
+    }
+  ],
+  "paths": {
+    "/test": {
+      "put": {
+        "tags": [],
+        "summary": "Test put endpoint",
+        "description": "Put your tests here!",
+        "parameters": [
+          {
+            "name": "a",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "deprecated": false
           },
-          "required" : true,
-          "deprecated" : false
-        }, {
-          "name" : "aa",
-          "in" : "query",
-          "schema" : {
-            "type" : "integer",
-            "format" : "int32"
-          },
-          "required" : true,
-          "deprecated" : false
-        } ],
-        "requestBody" : {
-          "description" : "A Test request",
-          "content" : {
-            "application/json" : {
-              "schema" : {
-                "$ref" : "#/components/schemas/TestRequest"
+          {
+            "name": "aa",
+            "in": "query",
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            },
+            "required": true,
+            "deprecated": false
+          }
+        ],
+        "requestBody": {
+          "description": "A Test request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "aaa": {
+                    "items": {
+                      "format": "int64",
+                      "type": "integer"
+                    },
+                    "type": "array"
+                  },
+                  "b": {
+                    "format": "double",
+                    "type": "number"
+                  },
+                  "field_name": {
+                    "properties": {
+                      "nesty": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "nesty"
+                    ],
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "fieldName",
+                  "b",
+                  "aaa"
+                ],
+                "type": "object"
               }
             }
           },
-          "required" : false
+          "required": true
         },
-        "responses" : {
-          "201" : {
-            "description" : "A Successful Endeavor",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/TestCreatedResponse"
+        "responses": {
+          "201": {
+            "description": "A Successful Endeavor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "c": {
+                      "type": "string"
+                    },
+                    "id": {
+                      "format": "int32",
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "c"
+                  ],
+                  "type": "object"
                 }
               }
             }
           }
         },
-        "deprecated" : false
+        "deprecated": false
       }
     }
   },
-  "components" : {
-    "schemas" : {
-      "Long" : {
-        "type" : "integer",
-        "format" : "int64"
-      },
-      "List-Long" : {
-        "type" : "array",
-        "items" : {
-          "$ref" : "#/components/schemas/Long"
-        }
-      },
-      "Double" : {
-        "type" : "number",
-        "format" : "double"
-      },
-      "String" : {
-        "type" : "string"
-      },
-      "TestNested" : {
-        "type" : "object",
-        "properties" : {
-          "nesty" : {
-            "$ref" : "#/components/schemas/String"
-          }
-        }
-      },
-      "TestRequest" : {
-        "type" : "object",
-        "properties" : {
-          "aaa" : {
-            "$ref" : "#/components/schemas/List-Long"
-          },
-          "b" : {
-            "$ref" : "#/components/schemas/Double"
-          },
-          "fieldName" : {
-            "$ref" : "#/components/schemas/TestNested"
-          }
-        }
-      },
-      "Int" : {
-        "type" : "integer",
-        "format" : "int32"
-      },
-      "TestCreatedResponse" : {
-        "type" : "object",
-        "properties" : {
-          "c" : {
-            "$ref" : "#/components/schemas/String"
-          },
-          "id" : {
-            "$ref" : "#/components/schemas/Int"
-          }
-        }
-      }
-    },
-    "securitySchemes" : { }
+  "components": {
+    "securitySchemes": {}
   },
-  "security" : [ ],
-  "tags" : [ ]
+  "security": [],
+  "tags": []
 }

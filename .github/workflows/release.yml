@@ -15,15 +15,16 @@ jobs:
       - uses: actions/setup-java@v2
         with:
           distribution: 'adopt'
-          java-version: '11'
-      - name: Cache Gradle packages
-        uses: actions/cache@v2
+          java-version: '17'
+      - name: Publish to GitHub Packages
+        uses: burrunan/gradle-cache-action@v1
         with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle.kts') }}
-          restore-keys: ${{ runner.os }}-gradle
-      - name: Publish packages to Github
-        run: ./gradlew publishAllPublicationsToGithubPackagesRepository -Prelease=true
+          gradle-version: wrapper
+          arguments: publishAllPublicationsToGithubPackagesRepository
+          properties: |
+            release=true
+            org.gradle.vfs.watch=false
+            org.gradle.vfs.verbose=false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   publish-to-nexus:
@@ -33,15 +34,13 @@ jobs:
       - uses: actions/setup-java@v2
         with:
           distribution: 'adopt'
-          java-version: '11'
-      - name: Cache Gradle packages
-        uses: actions/cache@v2
+          java-version: '17'
+      - name: Publlish to GithubPackages
+        uses: burrunan/gradle-cache-action@v1
         with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle.kts') }}
-          restore-keys: ${{ runner.os }}-gradle
-      - name: Publish packages to Github
-        run: ./gradlew publishToSonatype closeAndReleaseSonatypeStagingRepository -Prelease=true
-        env:
-          ORG_GRADLE_PROJECT_sonatypeUsername: ${{ secrets.SONATYPE_USER }}
-          ORG_GRADLE_PROJECT_sonatypePassword: ${{ secrets.SONATYPE_PASSWORD }}
+          gradle-version: wrapper
+          arguments: publishToSonatype closeAndReleaseSonatypeStagingRepository
+          properties: |
+            release=true
+            org.gradle.vfs.watch=false
+            org.gradle.vfs.verbose=false

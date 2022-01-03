@@ -1,0 +1,69 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Test API",
+    "version": "1.33.7",
+    "description": "An amazing, fully-ish 😉 generated API spec",
+    "termsOfService": "https://example.com",
+    "contact": {
+      "name": "Homer Simpson",
+      "url": "https://gph.is/1NPUDiM",
+      "email": "chunkylover53@aol.com"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://github.com/bkbnio/kompendium/blob/main/LICENSE"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://myawesomeapi.com",
+      "description": "Production instance of my API"
+    },
+    {
+      "url": "https://staging.myawesomeapi.com",
+      "description": "Where the fun stuff happens"
+    }
+  ],
+  "paths": {
+    "/test/constrained_int": {
+      "get": {
+        "tags": [],
+        "summary": "Constrained int field",
+        "description": "Cool stuff",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "A successful endeavor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "a": {
+                      "format": "int32",
+                      "type": "integer",
+                      "minimum": 5,
+                      "maximum": 100,
+                      "exclusiveMinimum": false,
+                      "exclusiveMaximum": false
+                    }
+                  },
+                  "required": [
+                    "a"
+                  ],
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {}
+  },
+  "security": [],
+  "tags": []
+}

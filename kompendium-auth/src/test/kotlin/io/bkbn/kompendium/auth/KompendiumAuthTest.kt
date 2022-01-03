@@ -1,201 +1,69 @@
 package io.bkbn.kompendium.auth
 
-import com.fasterxml.jackson.annotation.JsonInclude
-import com.fasterxml.jackson.databind.SerializationFeature
-import io.ktor.application.Application
-import io.ktor.application.call
-import io.ktor.application.install
-import io.ktor.auth.Authentication
-import io.ktor.auth.UserIdPrincipal
-import io.ktor.auth.authenticate
-import io.ktor.features.ContentNegotiation
-import io.ktor.http.ContentType
-import io.ktor.http.HttpMethod
-import io.ktor.http.HttpStatusCode
-import io.ktor.jackson.jackson
-import io.ktor.response.respondText
-import io.ktor.routing.route
-import io.ktor.routing.routing
-import io.ktor.server.testing.handleRequest
-import io.ktor.server.testing.withTestApplication
-import kotlin.test.AfterTest
-import kotlin.test.assertEquals
-import org.junit.Test
-import io.bkbn.kompendium.Kompendium
-import io.bkbn.kompendium.Notarized.notarizedGet
-import io.bkbn.kompendium.auth.KompendiumAuth.notarizedBasic
-import io.bkbn.kompendium.auth.KompendiumAuth.notarizedJwt
-import io.bkbn.kompendium.auth.util.TestData
-import io.bkbn.kompendium.auth.util.TestParams
-import io.bkbn.kompendium.auth.util.TestResponse
-import io.bkbn.kompendium.models.meta.MethodInfo
-import io.bkbn.kompendium.models.meta.ResponseInfo
-import io.bkbn.kompendium.routes.openApi
-import io.bkbn.kompendium.routes.redoc
+import io.bkbn.kompendium.auth.configuration.BasicAuthConfiguration
+import io.bkbn.kompendium.auth.configuration.JwtAuthConfiguration
+import io.bkbn.kompendium.auth.configuration.OAuthConfiguration
+import io.bkbn.kompendium.auth.util.AuthConfigName
+import io.bkbn.kompendium.auth.util.configBasicAuth
+import io.bkbn.kompendium.auth.util.configJwtAuth
+import io.bkbn.kompendium.auth.util.notarizedAuthRoute
+import io.bkbn.kompendium.auth.util.setupOauth
+import io.bkbn.kompendium.core.fixtures.TestHelpers.openApiTest
+import io.bkbn.kompendium.oas.security.OAuth
+import io.kotest.core.spec.style.DescribeSpec
 
-internal class KompendiumAuthTest {
-
-  @AfterTest
-  fun `reset kompendium`() {
-    Kompendium.resetSchema()
-  }
-
-  @Test
-  fun `Notarized Get with basic authentication records all expected information`() {
-    withTestApplication({
-      configModule()
-      configBasicAuth()
-      docs()
-      notarizedAuthenticatedGetModule(TestData.AuthConfigName.Basic)
-    }) {
-      // do
-      val json = handleRequest(HttpMethod.Get, "/openapi.json").response.content
-
-      // expect
-      val expected = TestData.getFileSnapshot("notarized_basic_authenticated_get.json").trim()
-      assertEquals(expected, json, "The received json spec should match the expected content")
-    }
-  }
-
-  @Test
-  fun `Notarized Get with jwt authentication records all expected information`() {
-    withTestApplication({
-      configModule()
-      configJwtAuth()
-      docs()
-      notarizedAuthenticatedGetModule(TestData.AuthConfigName.JWT)
-    }) {
-      // do
-      val json = handleRequest(HttpMethod.Get, "/openapi.json").response.content
-
-      // expect
-      val expected = TestData.getFileSnapshot("notarized_jwt_authenticated_get.json").trim()
-      assertEquals(expected, json, "The received json spec should match the expected content")
-    }
-  }
-
-  @Test
-  fun `Notarized Get with jwt authentication and custom scheme records all expected information`() {
-    withTestApplication({
-      configModule()
-      configJwtAuth(scheme = "oauth")
-      docs()
-      notarizedAuthenticatedGetModule(TestData.AuthConfigName.JWT)
-    }) {
-      // do
-      val json = handleRequest(HttpMethod.Get, "/openapi.json").response.content
-
-      // expect
-      val expected = TestData.getFileSnapshot("notarized_jwt_custom_scheme_authenticated_get.json").trim()
-      assertEquals(expected, json, "The received json spec should match the expected content")
-    }
-  }
-
-  @Test
-  fun `Notarized Get with jwt authentication and custom header records all expected information`() {
-    withTestApplication({
-      configModule()
-      configJwtAuth(header = "x-api-key")
-      docs()
-      notarizedAuthenticatedGetModule(TestData.AuthConfigName.JWT)
-    }) {
-      // do
-      val json = handleRequest(HttpMethod.Get, "/openapi.json").response.content
-
-      // expect
-      val expected = TestData.getFileSnapshot("notarized_jwt_custom_header_authenticated_get.json").trim()
-      assertEquals(expected, json, "The received json spec should match the expected content")
-    }
-  }
-
-  @Test
-  fun `Notarized Get with multiple jwt schemes records all expected information`() {
-    withTestApplication({
-      configModule()
-      install(Authentication) {
-        notarizedJwt("jwt1", header = "x-api-key-1") {
-          realm = "Ktor server"
-        }
-        notarizedJwt("jwt2", header = "x-api-key-2") {
-          realm = "Ktor server"
-        }
+class KompendiumAuthTest : DescribeSpec({
+  describe("Basic Authentication") {
+    it("Can create a notarized basic authentication record with all expected information") {
+      // arrange
+      val authConfig = object : BasicAuthConfiguration {
+        override val name: String = AuthConfigName.Basic
       }
-      docs()
-      notarizedAuthenticatedGetModule("jwt1", "jwt2")
-    }) {
-      // do
-      val json = handleRequest(HttpMethod.Get, "/openapi.json").response.content
 
-      // expect
-      val expected = TestData.getFileSnapshot("notarized_multiple_jwt_authenticated_get.json").trim()
-      assertEquals(expected, json, "The received json spec should match the expected content")
-    }
-  }
-
-  private fun Application.configModule() {
-    install(ContentNegotiation) {
-      jackson(ContentType.Application.Json) {
-        enable(SerializationFeature.INDENT_OUTPUT)
-        setSerializationInclusion(JsonInclude.Include.NON_NULL)
+      // act
+      openApiTest("notarized_basic_authenticated_get.json") {
+        configBasicAuth()
+        notarizedAuthRoute(authConfig)
       }
     }
   }
+  describe("JWT Authentication") {
+    it("Can create a simple notarized JWT route") {
+      // arrange
+      val authConfig = object : JwtAuthConfiguration {
+        override val name: String = AuthConfigName.JWT
+      }
 
-  private fun Application.configBasicAuth() {
-    install(Authentication) {
-      notarizedBasic(TestData.AuthConfigName.Basic) {
-        realm = "Ktor Server"
-        validate { credentials ->
-          if (credentials.name == credentials.password) {
-            UserIdPrincipal(credentials.name)
-          } else {
-            null
-          }
-        }
+      // act
+      openApiTest("notarized_jwt_authenticated_get.json") {
+        configJwtAuth()
+        notarizedAuthRoute(authConfig)
       }
     }
   }
-
-  private fun Application.configJwtAuth(
-    header: String? = null,
-    scheme: String? = null
-  ) {
-    install(Authentication) {
-      notarizedJwt(TestData.AuthConfigName.JWT, header, scheme) {
-        realm = "Ktor server"
-      }
-    }
-  }
-
-  private fun Application.notarizedAuthenticatedGetModule(vararg authenticationConfigName: String) {
-    routing {
-      authenticate(*authenticationConfigName) {
-        route(TestData.getRoutePath) {
-          notarizedGet(testGetInfo(*authenticationConfigName)) {
-            call.respondText { "hey dude ‼️ congratz on the get request" }
-          }
-        }
-      }
-    }
-  }
-
-  private val oas = Kompendium.openApiSpec.copy()
-
-  private fun Application.docs() {
-    routing {
-      openApi(oas)
-      redoc(oas)
-    }
-  }
-
-  private companion object {
-    val testGetResponse = ResponseInfo<TestResponse>(HttpStatusCode.OK, "A Successful Endeavor")
-    fun testGetInfo(vararg security: String) =
-      MethodInfo.GetInfo<TestParams, TestResponse>(
-        summary = "Another get test",
-        description = "testing more",
-        responseInfo = testGetResponse,
-        securitySchemes = security.toSet()
+  describe("OAuth Authentication") {
+    it("Can create an Oauth schema with all possible flows") {
+      // arrange
+      val flows = OAuth.Flows(
+        implicit = OAuth.Flows.Implicit(
+          "https://accounts.google.com/o/oauth2/auth",
+          scopes = mapOf("test" to "is a cool scope", "this" to "is also cool")
+        ),
+        authorizationCode = OAuth.Flows.AuthorizationCode("https://accounts.google.com/o/oauth2/auth"),
+        password = OAuth.Flows.Password("https://accounts.google.com/o/oauth2/auth"),
+        clientCredentials = OAuth.Flows.ClientCredential("https://accounts.google.com/token")
       )
+
+      val authConfig = object : OAuthConfiguration {
+        override val flows: OAuth.Flows = flows
+        override val name: String = AuthConfigName.OAuth
+      }
+
+      // act
+      openApiTest("notarized_oauth_all_flows.json") {
+        setupOauth()
+        notarizedAuthRoute(authConfig)
+      }
+    }
   }
-}
+})

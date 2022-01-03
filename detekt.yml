@@ -12,9 +12,14 @@ formatting:
     active: false
 style:
   MaxLineLength:
-    excludes: ['**/test/**/*', '**/testIntegration/**/*']
+    excludes: ['**/test/**/*']
     active: true
     maxLineLength: 120
+  MagicNumber:
+    excludes: ['**/kompendium-playground/**/*', '**/test/**/*']
 naming:
   ConstructorParameterNaming:
+    active: false
+performance:
+  SpreadOperator:
     active: false

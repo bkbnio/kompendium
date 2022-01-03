@@ -1,77 +1,119 @@
 {
-  "openapi" : "3.0.3",
-  "info" : {
-    "title" : "Test API",
-    "version" : "1.33.7",
-    "description" : "An amazing, fully-ish 😉 generated API spec",
-    "termsOfService" : "https://example.com",
-    "contact" : {
-      "name" : "Homer Simpson",
-      "url" : "https://gph.is/1NPUDiM",
-      "email" : "chunkylover53@aol.com"
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Test API",
+    "version": "1.33.7",
+    "description": "An amazing, fully-ish 😉 generated API spec",
+    "termsOfService": "https://example.com",
+    "contact": {
+      "name": "Homer Simpson",
+      "url": "https://gph.is/1NPUDiM",
+      "email": "chunkylover53@aol.com"
     },
-    "license" : {
-      "name" : "MIT",
-      "url" : "https://github.com/bkbnio/kompendium/blob/main/LICENSE"
+    "license": {
+      "name": "MIT",
+      "url": "https://github.com/bkbnio/kompendium/blob/main/LICENSE"
     }
   },
-  "servers" : [ {
-    "url" : "https://myawesomeapi.com",
-    "description" : "Production instance of my API"
-  }, {
-    "url" : "https://staging.myawesomeapi.com",
-    "description" : "Where the fun stuff happens"
-  } ],
-  "paths" : {
-    "/test/examples" : {
-      "post" : {
-        "tags" : [ ],
-        "summary" : "Example Parameters",
-        "description" : "A test for setting parameter examples",
-        "parameters" : [ ],
-        "requestBody" : {
-          "description" : "Test",
-          "content" : {
-            "application/json" : {
-              "schema" : {
-                "$ref" : "#/components/schemas/TestRequest"
-              },
-              "examples" : {
-                "one" : {
-                  "value" : {
-                    "fieldName" : {
-                      "nesty" : "hey"
+  "servers": [
+    {
+      "url": "https://myawesomeapi.com",
+      "description": "Production instance of my API"
+    },
+    {
+      "url": "https://staging.myawesomeapi.com",
+      "description": "Where the fun stuff happens"
+    }
+  ],
+  "paths": {
+    "/test/examples": {
+      "post": {
+        "tags": [],
+        "summary": "Example Parameters",
+        "description": "A test for setting parameter examples",
+        "parameters": [],
+        "requestBody": {
+          "description": "Test",
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "aaa": {
+                    "items": {
+                      "format": "int64",
+                      "type": "integer"
                     },
-                    "b" : 4.0,
-                    "aaa" : [ ]
+                    "type": "array"
+                  },
+                  "b": {
+                    "format": "double",
+                    "type": "number"
+                  },
+                  "field_name": {
+                    "properties": {
+                      "nesty": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "nesty"
+                    ],
+                    "type": "object"
                   }
                 },
-                "two" : {
-                  "value" : {
-                    "fieldName" : {
-                      "nesty" : "hello"
+                "required": [
+                  "fieldName",
+                  "b",
+                  "aaa"
+                ],
+                "type": "object"
+              },
+              "examples": {
+                "one": {
+                  "value": {
+                    "fieldName": {
+                      "nesty": "hey"
                     },
-                    "b" : 3.8,
-                    "aaa" : [ 31324234 ]
+                    "b": 4.0,
+                    "aaa": []
+                  }
+                },
+                "two": {
+                  "value": {
+                    "fieldName": {
+                      "nesty": "hello"
+                    },
+                    "b": 3.8,
+                    "aaa": [
+                      31324234
+                    ]
                   }
                 }
               }
             }
           },
-          "required" : false
+          "required": true
         },
-        "responses" : {
-          "201" : {
-            "description" : "nice",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/TestResponse"
+        "responses": {
+          "201": {
+            "description": "nice",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "c": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "c"
+                  ],
+                  "type": "object"
                 },
-                "examples" : {
-                  "test" : {
-                    "value" : {
-                      "c" : "spud"
+                "examples": {
+                  "test": {
+                    "value": {
+                      "c": "spud"
                     }
                   }
                 }
@@ -79,62 +121,13 @@
             }
           }
         },
-        "deprecated" : false
+        "deprecated": false
       }
     }
   },
-  "components" : {
-    "schemas" : {
-      "Long" : {
-        "type" : "integer",
-        "format" : "int64"
-      },
-      "List-Long" : {
-        "type" : "array",
-        "items" : {
-          "$ref" : "#/components/schemas/Long"
-        }
-      },
-      "Double" : {
-        "type" : "number",
-        "format" : "double"
-      },
-      "String" : {
-        "type" : "string"
-      },
-      "TestNested" : {
-        "type" : "object",
-        "properties" : {
-          "nesty" : {
-            "$ref" : "#/components/schemas/String"
-          }
-        }
-      },
-      "TestRequest" : {
-        "type" : "object",
-        "properties" : {
-          "aaa" : {
-            "$ref" : "#/components/schemas/List-Long"
-          },
-          "b" : {
-            "$ref" : "#/components/schemas/Double"
-          },
-          "fieldName" : {
-            "$ref" : "#/components/schemas/TestNested"
-          }
-        }
-      },
-      "TestResponse" : {
-        "type" : "object",
-        "properties" : {
-          "c" : {
-            "$ref" : "#/components/schemas/String"
-          }
-        }
-      }
-    },
-    "securitySchemes" : { }
+  "components": {
+    "securitySchemes": {}
   },
-  "security" : [ ],
-  "tags" : [ ]
+  "security": [],
+  "tags": []
 }

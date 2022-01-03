@@ -1,0 +1,1 @@
+# Module kompendium-swagger-ui

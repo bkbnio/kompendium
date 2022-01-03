@@ -1,13 +1,23 @@
-import com.adarshr.gradle.testlogger.TestLoggerExtension
-import com.adarshr.gradle.testlogger.theme.ThemeType
-import io.gitlab.arturbosch.detekt.extensions.DetektExtension
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import io.bkbn.sourdough.gradle.core.extension.SourdoughLibraryExtension
 
 plugins {
-  id("org.jetbrains.kotlin.jvm") version "1.5.31" apply false
-  id("io.gitlab.arturbosch.detekt") version "1.18.1" apply false
-  id("com.adarshr.test-logger") version "3.0.0" apply false
-  id("io.github.gradle-nexus.publish-plugin") version "1.1.0" apply true
+  id("io.bkbn.sourdough.root") version "0.3.0"
+  id("com.github.jakemarsden.git-hooks") version "0.0.2"
+}
+
+sourdough {
+  toolChainJavaVersion.set(JavaLanguageVersion.of(JavaVersion.VERSION_17.majorVersion))
+  jvmTarget.set(JavaVersion.VERSION_11.majorVersion)
+  compilerArgs.set(listOf("-opt-in=kotlin.RequiresOptIn"))
+}
+
+gitHooks {
+  setHooks(
+    mapOf(
+      "pre-commit" to "detekt",
+      "pre-push" to "test"
+    )
+  )
 }
 
 allprojects {
@@ -20,76 +30,20 @@ allprojects {
       else -> "$baseVersion-SNAPSHOT"
     }
   }
-
-  repositories {
-    mavenCentral()
-    maven { url = uri("https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven") }
-  }
-
-  apply(plugin = "org.jetbrains.kotlin.jvm")
-  apply(plugin = "io.gitlab.arturbosch.detekt")
-  apply(plugin = "com.adarshr.test-logger")
-  apply(plugin = "idea")
-  apply(plugin = "jacoco")
-
-  tasks.withType<KotlinCompile>().configureEach {
-    kotlinOptions {
-      jvmTarget = "1.8"
-    }
-  }
-
-  tasks.withType<Test>() {
-    finalizedBy(tasks.withType(JacocoReport::class))
-  }
-
-  tasks.withType<JacocoReport>() {
-    reports {
-      html.required.set(true)
-      xml.required.set(true)
-    }
-  }
-
-  configure<JacocoPluginExtension> {
-    toolVersion = "0.8.7"
-  }
-
-  @Suppress("MagicNumber")
-  configure<TestLoggerExtension> {
-    theme = ThemeType.MOCHA
-    setLogLevel("lifecycle")
-    showExceptions = true
-    showStackTraces = true
-    showFullStackTraces = false
-    showCauses = true
-    slowThreshold = 2000
-    showSummary = true
-    showSimpleNames = false
-    showPassed = true
-    showSkipped = true
-    showFailed = true
-    showStandardStreams = false
-    showPassedStandardStreams = true
-    showSkippedStandardStreams = true
-    showFailedStandardStreams = true
-  }
-
-  configure<DetektExtension> {
-    toolVersion = "1.18.1"
-    config = files("${rootProject.projectDir}/detekt.yml")
-    buildUponDefaultConfig = true
-  }
-
-  configure<JavaPluginExtension> {
-    withSourcesJar()
-    withJavadocJar()
-  }
 }
 
-nexusPublishing {
-  repositories {
-    sonatype {
-      nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
-      snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
-    }
+subprojects {
+  apply(plugin = "io.bkbn.sourdough.library")
+
+  configure<SourdoughLibraryExtension> {
+    githubOrg.set("bkbnio")
+    githubRepo.set("kompendium")
+    libraryName.set("Kompendium")
+    libraryDescription.set("A minimally invasive OpenAPI spec generator for Ktor")
+    licenseName.set("MIT License")
+    licenseUrl.set("https://mit-license.org")
+    developerId.set("bkbnio")
+    developerName.set("Ryan Brink")
+    developerEmail.set("admin@bkbn.io")
   }
 }

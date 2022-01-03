@@ -1,91 +1,87 @@
 {
-  "openapi" : "3.0.3",
-  "info" : {
-    "title" : "Test API",
-    "version" : "1.33.7",
-    "description" : "An amazing, fully-ish 😉 generated API spec",
-    "termsOfService" : "https://example.com",
-    "contact" : {
-      "name" : "Homer Simpson",
-      "url" : "https://gph.is/1NPUDiM",
-      "email" : "chunkylover53@aol.com"
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Test API",
+    "version": "1.33.7",
+    "description": "An amazing, fully-ish 😉 generated API spec",
+    "termsOfService": "https://example.com",
+    "contact": {
+      "name": "Homer Simpson",
+      "url": "https://gph.is/1NPUDiM",
+      "email": "chunkylover53@aol.com"
     },
-    "license" : {
-      "name" : "MIT",
-      "url" : "https://github.com/bkbnio/kompendium/blob/main/LICENSE"
+    "license": {
+      "name": "MIT",
+      "url": "https://github.com/bkbnio/kompendium/blob/main/LICENSE"
     }
   },
-  "servers" : [ {
-    "url" : "https://myawesomeapi.com",
-    "description" : "Production instance of my API"
-  }, {
-    "url" : "https://staging.myawesomeapi.com",
-    "description" : "Where the fun stuff happens"
-  } ],
-  "paths" : {
-    "/test/polymorphicmap" : {
-      "get" : {
-        "tags" : [ ],
-        "summary" : "By gawd that's a lot of gibbits",
-        "description" : "Polymorphic list response",
-        "parameters" : [ ],
-        "responses" : {
-          "200" : {
-            "description" : "A successful endeavor",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/Map-String-FlibbityGibbit"
+  "servers": [
+    {
+      "url": "https://myawesomeapi.com",
+      "description": "Production instance of my API"
+    },
+    {
+      "url": "https://staging.myawesomeapi.com",
+      "description": "Where the fun stuff happens"
+    }
+  ],
+  "paths": {
+    "/test/polymorphicmap": {
+      "get": {
+        "tags": [],
+        "summary": "By gawd that's a lot of gibbits",
+        "description": "Polymorphic list response",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "A successful endeavor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "anyOf": [
+                      {
+                        "properties": {
+                          "a": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "a"
+                        ],
+                        "type": "object"
+                      },
+                      {
+                        "properties": {
+                          "b": {
+                            "type": "string"
+                          },
+                          "c": {
+                            "format": "int32",
+                            "type": "integer"
+                          }
+                        },
+                        "required": [
+                          "b",
+                          "c"
+                        ],
+                        "type": "object"
+                      }
+                    ]
+                  },
+                  "type": "object"
                 }
               }
             }
           }
         },
-        "deprecated" : false
+        "deprecated": false
       }
     }
   },
-  "components" : {
-    "schemas" : {
-      "String" : {
-        "type" : "string"
-      },
-      "SimpleGibbit" : {
-        "type" : "object",
-        "properties" : {
-          "a" : {
-            "$ref" : "#/components/schemas/String"
-          }
-        }
-      },
-      "Int" : {
-        "type" : "integer",
-        "format" : "int32"
-      },
-      "ComplexGibbit" : {
-        "type" : "object",
-        "properties" : {
-          "b" : {
-            "$ref" : "#/components/schemas/String"
-          },
-          "c" : {
-            "$ref" : "#/components/schemas/Int"
-          }
-        }
-      },
-      "Map-String-FlibbityGibbit" : {
-        "type" : "object",
-        "additionalProperties" : {
-          "anyOf" : [ {
-            "$ref" : "#/components/schemas/SimpleGibbit"
-          }, {
-            "$ref" : "#/components/schemas/ComplexGibbit"
-          } ]
-        }
-      }
-    },
-    "securitySchemes" : { }
+  "components": {
+    "securitySchemes": {}
   },
-  "security" : [ ],
-  "tags" : [ ]
+  "security": [],
+  "tags": []
 }

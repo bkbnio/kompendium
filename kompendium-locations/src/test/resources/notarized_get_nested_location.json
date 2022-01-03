@@ -1,65 +1,74 @@
 {
-  "openapi" : "3.0.3",
-  "info" : { },
-  "servers" : [ ],
-  "paths" : {
-    "/test/test/{name}/nesty" : {
-      "get" : {
-        "tags" : [ ],
-        "summary" : "Location Test",
-        "description" : "A cool test",
-        "parameters" : [ {
-          "name" : "isCool",
-          "in" : "query",
-          "schema" : {
-            "type" : "boolean"
-          },
-          "required" : true,
-          "deprecated" : false
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "A successful endeavor",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/SimpleResponse"
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Test API",
+    "version": "1.33.7",
+    "description": "An amazing, fully-ish 😉 generated API spec",
+    "termsOfService": "https://example.com",
+    "contact": {
+      "name": "Homer Simpson",
+      "url": "https://gph.is/1NPUDiM",
+      "email": "chunkylover53@aol.com"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://github.com/bkbnio/kompendium/blob/main/LICENSE"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://myawesomeapi.com",
+      "description": "Production instance of my API"
+    },
+    {
+      "url": "https://staging.myawesomeapi.com",
+      "description": "Where the fun stuff happens"
+    }
+  ],
+  "paths": {
+    "/test/test/{name}/nesty": {
+      "get": {
+        "tags": [],
+        "summary": "Location Test",
+        "description": "A cool test",
+        "parameters": [
+          {
+            "name": "isCool",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": true,
+            "deprecated": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A successful endeavor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "result": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "result"
+                  ],
+                  "type": "object"
                 }
               }
             }
           }
         },
-        "deprecated" : false
+        "deprecated": false
       }
     }
   },
-  "components" : {
-    "schemas" : {
-      "Boolean" : {
-        "type" : "boolean"
-      },
-      "SimpleResponse" : {
-        "type" : "object",
-        "properties" : {
-          "result" : {
-            "$ref" : "#/components/schemas/Boolean"
-          }
-        }
-      },
-      "String" : {
-        "type" : "string"
-      },
-      "SimpleLoc" : {
-        "type" : "object",
-        "properties" : {
-          "name" : {
-            "$ref" : "#/components/schemas/String"
-          }
-        }
-      }
-    },
-    "securitySchemes" : { }
+  "components": {
+    "securitySchemes": {}
   },
-  "security" : [ ],
-  "tags" : [ ]
+  "security": [],
+  "tags": []
 }

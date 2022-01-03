@@ -1,33 +1,27 @@
 plugins {
-  kotlin("plugin.serialization") version "1.5.0"
+  kotlin("plugin.serialization") version "1.6.0"
   application
 }
 
 dependencies {
-  implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
-  implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-
+  // IMPLEMENTATION
   implementation(projects.kompendiumCore)
   implementation(projects.kompendiumAuth)
   implementation(projects.kompendiumLocations)
   implementation(projects.kompendiumSwaggerUi)
 
-  implementation(libs.bundles.ktor)
-  implementation(libs.ktor.jackson)
-  implementation(libs.kotlinx.serialization.json)
-  implementation(libs.ktor.serialization)
-  implementation(libs.bundles.ktorAuth)
-  implementation(libs.ktor.locations)
-  implementation(libs.bundles.logging)
+  // Ktor
+  val ktorVersion: String by project
 
-  implementation("joda-time:joda-time:2.10.13")
+  implementation(group = "io.ktor", name = "ktor-server-core", version = ktorVersion)
+  implementation(group = "io.ktor", name = "ktor-server-netty", version = ktorVersion)
+  implementation(group = "io.ktor", name = "ktor-auth", version = ktorVersion)
+  implementation(group = "io.ktor", name = "ktor-auth-jwt", version = ktorVersion)
+  implementation(group = "io.ktor", name = "ktor-serialization", version = ktorVersion)
+  implementation(group = "io.ktor", name = "ktor-locations", version = ktorVersion)
+  implementation(group = "io.ktor", name = "ktor-webjars", version = ktorVersion)
 
-  testImplementation("org.jetbrains.kotlin:kotlin-test")
-  testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
-}
+  implementation(group = "org.jetbrains.kotlinx", "kotlinx-serialization-json", version = "1.3.1")
 
-application {
-  @Suppress("DEPRECATION")
-  mainClassName = "io.bkbn.kompendium.playground.MainKt"
-  applicationDefaultJvmArgs = listOf("-Dio.ktor.development=true") // TODO I don't think this is working 😢
+  implementation(group = "joda-time", name = "joda-time", version = "2.10.13")
 }

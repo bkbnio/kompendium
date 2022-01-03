@@ -1,5 +1,59 @@
 # Changelog
 
+## Unreleased
+### Added
+
+### Changed
+
+### Remove
+
+---
+
+## Released
+
+## [2.0.0-alpha] - January 2nd, 2021
+### Added
+- Support for OAuth authentication
+- Gradle Toolchain feature to ensure match between local JDK and compile target
+- Dokka integration
+- Post-processing callback hook
+- `description` key to KompendiumField
+- Set of base constraints for simple and formatted types
+- Ability to document expected unstructured data
+
+### Changed
+- `$ref` types are no longer generated, instead all objects are defined explicitly
+- All OpenAPI domain models moved to a separate module `kompendium-oas`
+- Moved all files in `kompendium-core` into `io.bkbn.kompendium.core` package from `io.bkbn.kompendium`
+- Gradle bumped to 7.3.2
+- Gradle build logic offloaded to Sourdough Plugin
+- Minimum supported Java version is now 11
+- Bumped Kotlin to 1.6
+- Annotations now live in a separate module.  (Should not impact end users as module is imported as api dependency by core).
+- Kotest as the testing framework of choice
+- Path calculation removed in favor of built-in route toString
+- Ktor to 1.6.7
+- Completely reworked authentication and exceptions
+- MethodInfo now exists in a separate package as a sealed interface, each implementation also has its own file
+- Kompendium is now a Ktor Plugin!
+- GitHub Actions now leverage Gradle Wrapper
+- Dropped Codacy support b/c codacy kinda sucks
+- Fixed bug where KompendiumField was being completely ignored
+- Redid playground to serve as a showcase for various functionality
+- README updates
+- Refactored `handleComplexType` 🎉
+- Enabled field descriptions
+- Dropped Version Catalog
+- Responses are now a map of _actual_ responses rather than generic payloads
+- Fixed bug where params with default values were listed as required
+- Made empty put/post request info opt-in rather than default
+- Fields are now marked as required when there is no default, and they are non-nullable
+- `KompendiumField` and 'KompendiumParam' renamed to `Field` and `Param` respectively
+- Description dropped from `Param`
+- Dropped unnecessary parameter content scanning method
+- Fixed bug causing all request bodies to be marked as optional
+- Dropped ASDF tool manifest
+
 ## [1.11.1] - November 25th, 2021
 ### Added
 - Documentation showing how to add header names using Kotlin backtick convention
