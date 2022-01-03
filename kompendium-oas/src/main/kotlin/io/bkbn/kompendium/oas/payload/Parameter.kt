@@ -11,5 +11,8 @@ data class Parameter(
   val deprecated: Boolean = false,
   val allowEmptyValue: Boolean? = null,
   val style: String? = null,
-  val explode: Boolean? = null
-)
+  val explode: Boolean? = null,
+  val examples: Map<String, Example>? = null
+) {
+  data class Example(val value: Any)
+}

@@ -3,6 +3,7 @@ package io.bkbn.kompendium.core
 import io.bkbn.kompendium.annotations.Param
 import io.bkbn.kompendium.core.Kontent.generateKontent
 import io.bkbn.kompendium.core.metadata.ExceptionInfo
+import io.bkbn.kompendium.core.metadata.ParameterExample
 import io.bkbn.kompendium.core.metadata.RequestInfo
 import io.bkbn.kompendium.core.metadata.ResponseInfo
 import io.bkbn.kompendium.core.metadata.method.MethodInfo
@@ -54,7 +55,7 @@ object MethodParser {
     operationId = info.operationId,
     tags = info.tags,
     deprecated = info.deprecated,
-    parameters = paramType.toParameterSpec(feature),
+    parameters = paramType.toParameterSpec(info, feature),
     responses = parseResponse(responseType, info.responseInfo, feature).plus(parseExceptions(info.canThrow, feature)),
     requestBody = when (info) {
       is PutInfo<*, *, *> -> requestType.toRequestSpec(info.requestInfo, feature)
@@ -161,7 +162,7 @@ object MethodParser {
    * @return list of valid parameter specs as detailed by the [KType] members
    * @throws [IllegalStateException] if the class could not be parsed properly
    */
-  private fun KType.toParameterSpec(feature: Kompendium): List<Parameter> {
+  private fun KType.toParameterSpec(info: MethodInfo<*, *>, feature: Kompendium): List<Parameter> {
     val clazz = classifier as KClass<*>
     return clazz.memberProperties.filter { prop ->
       prop.findAnnotation<Param>() != null
@@ -177,8 +178,18 @@ object MethodParser {
         `in` = anny.type.name.lowercase(Locale.getDefault()),
         schema = schema.addDefault(defaultValue),
         description = schema.description,
-        required = !prop.returnType.isMarkedNullable && defaultValue == null
+        required = !prop.returnType.isMarkedNullable && defaultValue == null,
+        examples = info.parameterExamples.mapToSpec(prop.name)
       )
+    }
+  }
+
+  private fun Set<ParameterExample>.mapToSpec(parameterName: String): Map<String, Parameter.Example>? {
+    val filtered = filter { it.parameterName == parameterName }
+    return if (filtered.isEmpty()) {
+      null
+    } else {
+      filtered.associate { it.exampleName to Parameter.Example(it.exampleValue) }
     }
   }
 

@@ -1,6 +1,7 @@
 package io.bkbn.kompendium.core.metadata.method
 
 import io.bkbn.kompendium.core.metadata.ExceptionInfo
+import io.bkbn.kompendium.core.metadata.ParameterExample
 import io.bkbn.kompendium.core.metadata.ResponseInfo
 
 sealed interface MethodInfo<TParam, TResp> {
@@ -16,9 +17,13 @@ sealed interface MethodInfo<TParam, TResp> {
   val canThrow: Set<ExceptionInfo<*>>
     get() = emptySet()
   val responseInfo: ResponseInfo<TResp>
-  // TODO Is this even used anywhere?
-  val parameterExamples: Map<String, TParam>
-    get() = emptyMap()
+  val parameterExamples: Set<ParameterExample>
+    get() = emptySet()
   val operationId: String?
     get() = null
+}
+
+fun main() {
+  data class Potato(val a: String)
+  println(Potato::a)
 }

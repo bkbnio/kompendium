@@ -8,6 +8,7 @@ import io.bkbn.kompendium.core.util.constrainedDoubleInfo
 import io.bkbn.kompendium.core.util.constrainedIntInfo
 import io.bkbn.kompendium.core.util.defaultField
 import io.bkbn.kompendium.core.util.defaultParameter
+import io.bkbn.kompendium.core.util.exampleParams
 import io.bkbn.kompendium.core.util.exclusiveMinMax
 import io.bkbn.kompendium.core.util.formattedParam
 import io.bkbn.kompendium.core.util.freeFormObject
@@ -149,6 +150,9 @@ class KompendiumTest : DescribeSpec({
   describe("Examples") {
     it("Can generate example response and request bodies") {
       openApiTest("example_req_and_resp.json") { withExamples() }
+    }
+    it("Can describe example parameters") {
+      openApiTest("example_parameters.json") { exampleParams() }
     }
   }
   describe("Defaults") {
