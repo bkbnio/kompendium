@@ -3,6 +3,7 @@
 ## Unreleased
 ### Added
 - Support for HTTP Patch, Head, and Options methods
+- Support for including parameter examples via `MethodInfo`
 
 ### Changed
 
