@@ -6,7 +6,7 @@
 
 - [What Is Kompendium](#what-is-kompendium)
 - [How to Install](#how-to-install)
-- [Getting Started](#getting-started)
+- [Library Details](#library-details)
 - [Local Development](#local-development)
 - [The Playground](#the-playground)
 
@@ -37,9 +37,9 @@ In addition to publishing releases to Maven Central, a snapshot version gets pub
 to `main`. These can be consumed by adding the repository to your gradle build file. Instructions can be
 found [here](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-gradle-registry#using-a-published-package)
 
-## Getting Started
+# Library Details
 
-TODO
+Details on how to use Kompendium can be found in the Wiki (WIP, this is new for V2 and will be fleshed out prior to release)
 
 ## Local Development
 
