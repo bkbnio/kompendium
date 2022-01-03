@@ -33,17 +33,19 @@ allprojects {
 }
 
 subprojects {
-  apply(plugin = "io.bkbn.sourdough.library")
+  if (this.name != "kompendium-playground") {
+    apply(plugin = "io.bkbn.sourdough.library")
 
-  configure<SourdoughLibraryExtension> {
-    githubOrg.set("bkbnio")
-    githubRepo.set("kompendium")
-    libraryName.set("Kompendium")
-    libraryDescription.set("A minimally invasive OpenAPI spec generator for Ktor")
-    licenseName.set("MIT License")
-    licenseUrl.set("https://mit-license.org")
-    developerId.set("bkbnio")
-    developerName.set("Ryan Brink")
-    developerEmail.set("admin@bkbn.io")
+    configure<SourdoughLibraryExtension> {
+      githubOrg.set("bkbnio")
+      githubRepo.set("kompendium")
+      libraryName.set("Kompendium")
+      libraryDescription.set("A minimally invasive OpenAPI spec generator for Ktor")
+      licenseName.set("MIT License")
+      licenseUrl.set("https://mit-license.org")
+      developerId.set("bkbnio")
+      developerName.set("Ryan Brink")
+      developerEmail.set("admin@bkbn.io")
+    }
   }
 }

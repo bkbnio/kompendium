@@ -1,4 +1,4 @@
-name: Publish to GitHub Packages
+name: Publish Release
 on:
   release:
     types:
@@ -23,8 +23,6 @@ jobs:
           arguments: publishAllPublicationsToGithubPackagesRepository
           properties: |
             release=true
-            org.gradle.vfs.watch=false
-            org.gradle.vfs.verbose=false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   publish-to-nexus:
@@ -35,12 +33,13 @@ jobs:
         with:
           distribution: 'adopt'
           java-version: '17'
-      - name: Publlish to GithubPackages
+      - name: Publlish to Maven Central
         uses: burrunan/gradle-cache-action@v1
         with:
           gradle-version: wrapper
           arguments: publishToSonatype closeAndReleaseSonatypeStagingRepository
           properties: |
             release=true
-            org.gradle.vfs.watch=false
-            org.gradle.vfs.verbose=false
+        env:
+          ORG_GRADLE_PROJECT_sonatypeUsername: ${{ secrets.SONATYPE_USER }}
+          ORG_GRADLE_PROJECT_sonatypePassword: ${{ secrets.SONATYPE_PASSWORD }}
