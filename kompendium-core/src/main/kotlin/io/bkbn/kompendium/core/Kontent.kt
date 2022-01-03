@@ -199,8 +199,13 @@ object Kontent {
         logger.debug("$slug contains $fieldMap")
         var schema = ObjectSchema(fieldMap.plus(undeclaredFieldMap))
         val requiredParams = clazz.primaryConstructor?.parameters?.filterNot { it.isOptional } ?: emptyList()
+        // todo de-dup this logic
         if (requiredParams.isNotEmpty()) {
-          schema = schema.copy(required = requiredParams.map { it.name!! })
+          schema = schema.copy(required = requiredParams.map { param ->
+            clazz.memberProperties.first { it.name == param.name }.findAnnotation<Field>()
+              ?.let { field -> field.name.ifBlank { param.name!! } }
+              ?: param.name!!
+          })
         }
         logger.debug("$slug schema: $schema")
         newCache.plus(slug to schema)
@@ -335,8 +340,13 @@ object Kontent {
     val requiredParams = clazz.primaryConstructor?.parameters?.filterNot { it.isOptional } ?: emptyList()
     var schema = this
 
+    // todo dedup this
     if (requiredParams.isNotEmpty()) {
-      schema = schema.copy(required = requiredParams.map { it.name!! })
+      schema = schema.copy(required = requiredParams.map { param ->
+        clazz.memberProperties.first { it.name == param.name }.findAnnotation<Field>()
+          ?.let { field -> field.name.ifBlank { param.name!! } }
+          ?: param.name!!
+      })
     }
 
     if (prop.returnType.isMarkedNullable) {
