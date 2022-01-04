@@ -15,7 +15,7 @@ object NumberSerializer : KSerializer<Number> {
     decoder.decodeInt()
   }
 
-  override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("URI", PrimitiveKind.STRING)
+  override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("Number", PrimitiveKind.DOUBLE)
 
   override fun serialize(encoder: Encoder, value: Number) {
     encoder.encodeString(value.toString())
