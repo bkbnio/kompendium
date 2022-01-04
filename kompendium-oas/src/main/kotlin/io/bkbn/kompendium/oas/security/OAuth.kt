@@ -1,8 +1,12 @@
 package io.bkbn.kompendium.oas.security
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class OAuth(val description: String? = null, val flows: Flows) : SecuritySchema {
   val type: String = "oauth2"
 
+  @Serializable
   data class Flows(
     val implicit: Implicit? = null,
     val authorizationCode: AuthorizationCode? = null,
@@ -21,12 +25,14 @@ data class OAuth(val description: String? = null, val flows: Flows) : SecuritySc
         get() = emptyMap()
     }
 
+    @Serializable
     data class Implicit(
       override val authorizationUrl: String,
       override val refreshUrl: String? = null,
       override val scopes: Map<String, String> = emptyMap()
     ) : Flow
 
+    @Serializable
     data class AuthorizationCode(
       override val authorizationUrl: String,
       override val tokenUrl: String? = null,
@@ -34,12 +40,14 @@ data class OAuth(val description: String? = null, val flows: Flows) : SecuritySc
       override val scopes: Map<String, String> = emptyMap()
     ) : Flow
 
+    @Serializable
     data class Password(
       override val tokenUrl: String? = null,
       override val refreshUrl: String? = null,
       override val scopes: Map<String, String> = emptyMap()
     ) : Flow
 
+    @Serializable
     data class ClientCredential(
       override val tokenUrl: String? = null,
       override val refreshUrl: String? = null,

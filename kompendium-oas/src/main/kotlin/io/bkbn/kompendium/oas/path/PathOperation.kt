@@ -6,7 +6,9 @@ import io.bkbn.kompendium.oas.payload.Payload
 import io.bkbn.kompendium.oas.payload.Request
 import io.bkbn.kompendium.oas.payload.Response
 import io.bkbn.kompendium.oas.server.Server
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class PathOperation(
   var tags: Set<String> = emptySet(),
   var summary: String? = null,
@@ -14,9 +16,9 @@ data class PathOperation(
   var externalDocs: ExternalDocumentation? = null,
   var operationId: String? = null,
   var parameters: List<Parameter>? = null,
-  var requestBody: Request<*>? = null,
+  var requestBody: Request? = null,
   // TODO How to enforce `default` requirement 🧐
-  var responses: Map<Int, Response<*>>? = null,
+  var responses: Map<Int, Response>? = null,
   var callbacks: Map<String, Payload>? = null, // todo what is this?
   var deprecated: Boolean = false,
   var security: List<Map<String, List<String>>>? = null,

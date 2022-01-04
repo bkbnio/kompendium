@@ -72,12 +72,12 @@ object MethodParser {
     responseType: KType,
     responseInfo: ResponseInfo<*>?,
     feature: Kompendium
-  ): Map<Int, Response<*>> = responseType.toResponseSpec(responseInfo, feature)?.let { mapOf(it) }.orEmpty()
+  ): Map<Int, Response> = responseType.toResponseSpec(responseInfo, feature)?.let { mapOf(it) }.orEmpty()
 
   private fun parseExceptions(
     exceptionInfo: Set<ExceptionInfo<*>>,
     feature: Kompendium,
-  ): Map<Int, Response<*>> = exceptionInfo.associate { info ->
+  ): Map<Int, Response> = exceptionInfo.associate { info ->
     feature.config.cache = generateKontent(info.responseType, feature.config.cache)
     val response = Response(
       description = info.description,
@@ -92,13 +92,14 @@ object MethodParser {
    * @param requestInfo request metadata
    * @return Will return a generated [Request] if requestInfo is not null
    */
-  private fun KType.toRequestSpec(requestInfo: RequestInfo<*>?, feature: Kompendium): Request<*>? =
+  private fun KType.toRequestSpec(requestInfo: RequestInfo<*>?, feature: Kompendium): Request? =
     when (requestInfo) {
       null -> null
       else -> {
         Request(
           description = requestInfo.description,
-          content = feature.resolveContent(this, requestInfo.mediaTypes, requestInfo.examples) ?: mapOf(),
+          content = feature.resolveContent(this, requestInfo.mediaTypes, requestInfo.examples as Map<String, Any>)
+            ?: mapOf(),
           required = requestInfo.required
         )
       }
@@ -110,13 +111,13 @@ object MethodParser {
    * @param responseInfo response metadata
    * @return Will return a generated [Pair] if responseInfo is not null
    */
-  private fun KType.toResponseSpec(responseInfo: ResponseInfo<*>?, feature: Kompendium): Pair<Int, Response<*>>? =
+  private fun KType.toResponseSpec(responseInfo: ResponseInfo<*>?, feature: Kompendium): Pair<Int, Response>? =
     when (responseInfo) {
       null -> null
       else -> {
         val specResponse = Response(
           description = responseInfo.description,
-          content = feature.resolveContent(this, responseInfo.mediaTypes, responseInfo.examples)
+          content = feature.resolveContent(this, responseInfo.mediaTypes, responseInfo.examples as Map<String, Any>)
         )
         Pair(responseInfo.status.value, specResponse)
       }
@@ -129,11 +130,11 @@ object MethodParser {
    * @param examples Mapping of named examples of valid bodies.
    * @return Named mapping of media types.
    */
-  private fun <F> Kompendium.resolveContent(
+  private fun Kompendium.resolveContent(
     type: KType,
     mediaTypes: List<String>,
-    examples: Map<String, F>
-  ): Map<String, MediaType<F>>? {
+    examples: Map<String, Any>
+  ): Map<String, MediaType>? {
     val classifier = type.classifier as KClass<*>
     return if (type != Helpers.UNIT_TYPE && mediaTypes.isNotEmpty()) {
       mediaTypes.associateWith {

@@ -1,5 +1,7 @@
 package io.bkbn.kompendium.playground
 
+import com.fasterxml.jackson.annotation.JsonProperty
+import com.google.gson.annotations.SerializedName
 import io.bkbn.kompendium.annotations.Field
 import io.bkbn.kompendium.annotations.Param
 import io.bkbn.kompendium.annotations.ParamType
@@ -13,18 +15,15 @@ import io.bkbn.kompendium.core.metadata.method.DeleteInfo
 import io.bkbn.kompendium.core.metadata.method.GetInfo
 import io.bkbn.kompendium.core.metadata.method.PostInfo
 import io.bkbn.kompendium.core.routes.redoc
-import io.bkbn.kompendium.oas.OpenApiSpec
-import io.bkbn.kompendium.oas.info.Contact
-import io.bkbn.kompendium.oas.info.Info
-import io.bkbn.kompendium.oas.info.License
-import io.bkbn.kompendium.oas.server.Server
+import io.bkbn.kompendium.oas.serialization.KompendiumSerializersModule
 import io.bkbn.kompendium.playground.BasicModels.BasicParameters
-import io.bkbn.kompendium.playground.BasicModels.BasicResponse
 import io.bkbn.kompendium.playground.BasicModels.BasicRequest
+import io.bkbn.kompendium.playground.BasicModels.BasicResponse
 import io.bkbn.kompendium.playground.BasicPlaygroundToC.simpleDeleteRequest
 import io.bkbn.kompendium.playground.BasicPlaygroundToC.simpleGetExample
 import io.bkbn.kompendium.playground.BasicPlaygroundToC.simpleGetExampleWithParameters
 import io.bkbn.kompendium.playground.BasicPlaygroundToC.simplePostRequest
+import io.bkbn.kompendium.playground.util.Util
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
@@ -37,8 +36,9 @@ import io.ktor.routing.routing
 import io.ktor.serialization.json
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import java.net.URI
+import kotlinx.serialization.json.Json
 import java.util.UUID
 
 /**
@@ -57,11 +57,11 @@ fun main() {
 private fun Application.mainModule() {
   // Installs Simple JSON Content Negotiation
   install(ContentNegotiation) {
-    json()
+    json(json = Util.kotlinxConfig)
   }
   // Installs the Kompendium Plugin and sets up baseline server metadata
   install(Kompendium) {
-    spec = BasicMetadata.spec
+    spec = Util.baseSpec
   }
   // Configures the routes for our API
   routing {
@@ -161,38 +161,6 @@ object BasicPlaygroundToC {
   )
 }
 
-// Contains the root metadata for our server.  This is all the stuff that is defined once
-// and cannot be inferred from the Ktor application
-object BasicMetadata {
-  val spec = OpenApiSpec(
-    info = Info(
-      title = "Simple Demo API",
-      version = "1.33.7",
-      description = "Wow isn't this cool?",
-      termsOfService = URI("https://example.com"),
-      contact = Contact(
-        name = "Homer Simpson",
-        email = "chunkylover53@aol.com",
-        url = URI("https://gph.is/1NPUDiM")
-      ),
-      license = License(
-        name = "MIT",
-        url = URI("https://github.com/bkbnio/kompendium/blob/main/LICENSE")
-      )
-    ),
-    servers = mutableListOf(
-      Server(
-        url = URI("https://myawesomeapi.com"),
-        description = "Production instance of my API"
-      ),
-      Server(
-        url = URI("https://staging.myawesomeapi.com"),
-        description = "Where the fun stuff happens"
-      )
-    )
-  )
-}
-
 object BasicModels {
   @Serializable
   data class BasicResponse(val c: String)
@@ -207,6 +175,9 @@ object BasicModels {
 
   @Serializable
   data class BasicRequest(
+    @JsonProperty("best_field")
+    @SerializedName("best_field")
+    @SerialName("best_field")
     @Field(description = "This is a super important field!!", name = "best_field")
     val d: Boolean
   )

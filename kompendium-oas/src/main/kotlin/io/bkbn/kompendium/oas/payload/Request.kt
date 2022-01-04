@@ -1,7 +1,10 @@
 package io.bkbn.kompendium.oas.payload
 
-data class Request<T>(
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class Request(
   val description: String?,
-  val content: Map<String, MediaType<T>>,
+  val content: Map<String, MediaType>,
   val required: Boolean = false
 ) : Payload

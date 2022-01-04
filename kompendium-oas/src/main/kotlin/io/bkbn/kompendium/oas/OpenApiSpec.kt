@@ -6,7 +6,9 @@ import io.bkbn.kompendium.oas.component.Components
 import io.bkbn.kompendium.oas.info.Info
 import io.bkbn.kompendium.oas.path.Path
 import io.bkbn.kompendium.oas.server.Server
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class OpenApiSpec(
   val openapi: String = "3.0.3",
   val info: Info,

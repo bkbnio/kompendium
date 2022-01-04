@@ -1,8 +1,12 @@
 package io.bkbn.kompendium.oas.schema
 
+import kotlinx.serialization.Contextual
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class SimpleSchema(
   override val type: String,
-  override val default: Any? = null,
+  override val default: @Contextual Any? = null,
   override val description: String? = null,
   override val nullable: Boolean? = null,
   // Constraints

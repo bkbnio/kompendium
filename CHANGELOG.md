@@ -6,6 +6,8 @@
 - Support for including parameter examples via `MethodInfo`
 
 ### Changed
+- Kompendium now leverages the chosen API serializer.  Supports Jackson, Gson and Kotlinx Serialization
+- Fixed bug where overridden field names were not reflected in serialized object and required array 
 
 ### Remove
 
