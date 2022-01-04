@@ -80,7 +80,7 @@
                 },
                 "required": [
                   "org",
-                  "amazingField",
+                  "amazing_field",
                   "tables"
                 ],
                 "type": "object"

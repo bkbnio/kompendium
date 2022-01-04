@@ -82,7 +82,7 @@
                   }
                 },
                 "required": [
-                  "fieldName",
+                  "field_name",
                   "b",
                   "aaa"
                 ],

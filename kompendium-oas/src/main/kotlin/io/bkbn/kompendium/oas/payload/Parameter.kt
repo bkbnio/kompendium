@@ -1,7 +1,10 @@
 package io.bkbn.kompendium.oas.payload
 
 import io.bkbn.kompendium.oas.schema.ComponentSchema
+import kotlinx.serialization.Contextual
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class Parameter(
   val name: String,
   val `in`: String, // TODO Enum? "query", "header", "path" or "cookie"
@@ -14,5 +17,6 @@ data class Parameter(
   val explode: Boolean? = null,
   val examples: Map<String, Example>? = null
 ) {
-  data class Example(val value: Any)
+  @Serializable
+  data class Example(val value: @Contextual Any)
 }

@@ -33,7 +33,7 @@ fun main() {
 private fun Application.mainModule() {
   // Installs Simple JSON Content Negotiation
   install(ContentNegotiation) {
-    json()
+    json(json = Util.kotlinxConfig)
   }
   install(Webjars)
   // Installs the Kompendium Plugin and sets up baseline server metadata

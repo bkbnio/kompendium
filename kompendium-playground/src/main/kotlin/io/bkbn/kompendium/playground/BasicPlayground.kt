@@ -15,6 +15,7 @@ import io.bkbn.kompendium.core.metadata.method.DeleteInfo
 import io.bkbn.kompendium.core.metadata.method.GetInfo
 import io.bkbn.kompendium.core.metadata.method.PostInfo
 import io.bkbn.kompendium.core.routes.redoc
+import io.bkbn.kompendium.oas.serialization.KompendiumSerializersModule
 import io.bkbn.kompendium.playground.BasicModels.BasicParameters
 import io.bkbn.kompendium.playground.BasicModels.BasicRequest
 import io.bkbn.kompendium.playground.BasicModels.BasicResponse
@@ -35,7 +36,9 @@ import io.ktor.routing.routing
 import io.ktor.serialization.json
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 import java.util.UUID
 
 /**
@@ -54,7 +57,7 @@ fun main() {
 private fun Application.mainModule() {
   // Installs Simple JSON Content Negotiation
   install(ContentNegotiation) {
-    json()
+    json(json = Util.kotlinxConfig)
   }
   // Installs the Kompendium Plugin and sets up baseline server metadata
   install(Kompendium) {
@@ -174,6 +177,7 @@ object BasicModels {
   data class BasicRequest(
     @JsonProperty("best_field")
     @SerializedName("best_field")
+    @SerialName("best_field")
     @Field(description = "This is a super important field!!", name = "best_field")
     val d: Boolean
   )

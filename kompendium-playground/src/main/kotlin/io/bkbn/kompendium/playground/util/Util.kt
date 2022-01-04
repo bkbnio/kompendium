@@ -4,10 +4,20 @@ import io.bkbn.kompendium.oas.OpenApiSpec
 import io.bkbn.kompendium.oas.info.Contact
 import io.bkbn.kompendium.oas.info.Info
 import io.bkbn.kompendium.oas.info.License
+import io.bkbn.kompendium.oas.serialization.KompendiumSerializersModule
 import io.bkbn.kompendium.oas.server.Server
+import kotlinx.serialization.json.Json
 import java.net.URI
 
 object Util {
+  val kotlinxConfig = Json {
+    classDiscriminator = "class"
+    serializersModule = KompendiumSerializersModule.module
+    prettyPrint = true
+    explicitNulls = false
+    encodeDefaults = true
+  }
+
   val baseSpec = OpenApiSpec(
     info = Info(
       title = "Simple Demo API",

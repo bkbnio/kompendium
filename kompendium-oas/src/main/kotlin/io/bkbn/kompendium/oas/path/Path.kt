@@ -2,7 +2,9 @@ package io.bkbn.kompendium.oas.path
 
 import io.bkbn.kompendium.oas.payload.Parameter
 import io.bkbn.kompendium.oas.server.Server
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class Path(
   var get: PathOperation? = null,
   var put: PathOperation? = null,

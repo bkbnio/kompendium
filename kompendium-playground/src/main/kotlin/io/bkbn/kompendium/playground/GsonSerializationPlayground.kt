@@ -2,6 +2,7 @@ package io.bkbn.kompendium.playground
 
 import io.bkbn.kompendium.core.Kompendium
 import io.bkbn.kompendium.core.Notarized.notarizedPost
+import io.bkbn.kompendium.core.routes.redoc
 import io.bkbn.kompendium.playground.util.Util
 import io.ktor.application.Application
 import io.ktor.application.call
@@ -34,6 +35,7 @@ private fun Application.mainModule() {
     spec = Util.baseSpec
   }
   routing {
+    redoc()
     route("/create") {
       notarizedPost(BasicPlaygroundToC.simplePostRequest) {
         val request = call.receive<BasicModels.BasicRequest>()

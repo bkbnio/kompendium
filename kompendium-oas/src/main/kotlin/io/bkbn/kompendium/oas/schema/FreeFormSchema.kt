@@ -1,5 +1,9 @@
 package io.bkbn.kompendium.oas.schema
 
+import kotlinx.serialization.Contextual
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class FreeFormSchema(
   override val nullable: Boolean? = null,
   // constraints
@@ -8,5 +12,5 @@ data class FreeFormSchema(
 ) : TypedSchema {
   val additionalProperties: Boolean = true
   override val type: String = "object"
-  override val default: Any? = null
+  override val default: @Contextual Any? = null
 }
