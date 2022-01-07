@@ -40,6 +40,15 @@
             },
             "required": true,
             "deprecated": false
+          },
+          {
+            "name": "name",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "deprecated": false
           }
         ],
         "requestBody": {

@@ -8,6 +8,7 @@
 ### Changed
 - Kompendium now leverages the chosen API serializer.  Supports Jackson, Gson and Kotlinx Serialization
 - Fixed bug where overridden field names were not reflected in serialized object and required array 
+- Fixed bug where Ktor Location parents were not being scanned for parameters 
 
 ### Remove
 

@@ -27,6 +27,7 @@ import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.full.createType
 import kotlin.reflect.full.findAnnotation
+import kotlin.reflect.full.hasAnnotation
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
 import java.util.Locale
@@ -163,24 +164,31 @@ interface IMethodParser {
    */
   fun KType.toParameterSpec(info: MethodInfo<*, *>, feature: Kompendium): List<Parameter> {
     val clazz = classifier as KClass<*>
-    return clazz.memberProperties.filter { prop ->
-      prop.findAnnotation<Param>() != null
-    }.map { prop ->
-      val wrapperSchema = feature.config.cache[this.getSimpleSlug()]!! as ObjectSchema
-      val anny = prop.findAnnotation<Param>()
-        ?: error("Field ${prop.name} is not annotated with KompendiumParam")
-      val schema = wrapperSchema.properties[prop.name]
-        ?: error("Could not find component type for $prop")
-      val defaultValue = getDefaultParameterValue(clazz, prop)
-      Parameter(
-        name = prop.name,
-        `in` = anny.type.name.lowercase(Locale.getDefault()),
-        schema = schema.addDefault(defaultValue),
-        description = schema.description,
-        required = !prop.returnType.isMarkedNullable && defaultValue == null,
-        examples = info.parameterExamples.mapToSpec(prop.name)
-      )
-    }
+    return clazz.memberProperties
+      .filter { prop -> prop.hasAnnotation<Param>() }
+      .map { prop -> prop.toParameter(info, this, clazz, feature) }
+  }
+
+  fun KProperty<*>.toParameter(
+    info: MethodInfo<*, *>,
+    parentType: KType,
+    parentClazz: KClass<*>,
+    feature: Kompendium
+  ): Parameter {
+    val wrapperSchema = feature.config.cache[parentType.getSimpleSlug()]!! as ObjectSchema
+    val anny = this.findAnnotation<Param>()
+      ?: error("Field $name is not annotated with KompendiumParam")
+    val schema = wrapperSchema.properties[name]
+      ?: error("Could not find component type for $this")
+    val defaultValue = getDefaultParameterValue(parentClazz, this)
+    return Parameter(
+      name = name,
+      `in` = anny.type.name.lowercase(Locale.getDefault()),
+      schema = schema.addDefault(defaultValue),
+      description = schema.description,
+      required = !returnType.isMarkedNullable && defaultValue == null,
+      examples = info.parameterExamples.mapToSpec(name)
+    )
   }
 
   fun Set<ParameterExample>.mapToSpec(parameterName: String): Map<String, Parameter.Example>? {
