@@ -1,7 +1,8 @@
-package io.bkbn.kompendium.core
+package io.bkbn.kompendium.core.parser
 
 import io.bkbn.kompendium.annotations.Param
-import io.bkbn.kompendium.core.Kontent.generateKontent
+import io.bkbn.kompendium.core.Kompendium
+import io.bkbn.kompendium.core.Kontent
 import io.bkbn.kompendium.core.metadata.ExceptionInfo
 import io.bkbn.kompendium.core.metadata.ParameterExample
 import io.bkbn.kompendium.core.metadata.RequestInfo
@@ -19,22 +20,20 @@ import io.bkbn.kompendium.oas.payload.Request
 import io.bkbn.kompendium.oas.payload.Response
 import io.bkbn.kompendium.oas.schema.AnyOfSchema
 import io.bkbn.kompendium.oas.schema.ObjectSchema
+import io.ktor.routing.Route
 import kotlin.reflect.KClass
 import kotlin.reflect.KParameter
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.full.createType
 import kotlin.reflect.full.findAnnotation
+import kotlin.reflect.full.hasAnnotation
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
 import java.util.Locale
 import java.util.UUID
 
-/**
- * The MethodParser is responsible for converting route metadata and types into an OpenAPI compatible data class.
- */
-object MethodParser {
-
+interface IMethodParser {
   /**
    * Generates the OpenAPI Path spec from provided metadata
    * @param info implementation of the [MethodInfo] sealed class
@@ -68,17 +67,17 @@ object MethodParser {
     ) else null
   )
 
-  private fun parseResponse(
+  fun parseResponse(
     responseType: KType,
     responseInfo: ResponseInfo<*>?,
     feature: Kompendium
   ): Map<Int, Response> = responseType.toResponseSpec(responseInfo, feature)?.let { mapOf(it) }.orEmpty()
 
-  private fun parseExceptions(
+  fun parseExceptions(
     exceptionInfo: Set<ExceptionInfo<*>>,
     feature: Kompendium,
   ): Map<Int, Response> = exceptionInfo.associate { info ->
-    feature.config.cache = generateKontent(info.responseType, feature.config.cache)
+    feature.config.cache = Kontent.generateKontent(info.responseType, feature.config.cache)
     val response = Response(
       description = info.description,
       content = feature.resolveContent(info.responseType, info.mediaTypes, info.examples)
@@ -92,7 +91,7 @@ object MethodParser {
    * @param requestInfo request metadata
    * @return Will return a generated [Request] if requestInfo is not null
    */
-  private fun KType.toRequestSpec(requestInfo: RequestInfo<*>?, feature: Kompendium): Request? =
+  fun KType.toRequestSpec(requestInfo: RequestInfo<*>?, feature: Kompendium): Request? =
     when (requestInfo) {
       null -> null
       else -> {
@@ -111,7 +110,7 @@ object MethodParser {
    * @param responseInfo response metadata
    * @return Will return a generated [Pair] if responseInfo is not null
    */
-  private fun KType.toResponseSpec(responseInfo: ResponseInfo<*>?, feature: Kompendium): Pair<Int, Response>? =
+  fun KType.toResponseSpec(responseInfo: ResponseInfo<*>?, feature: Kompendium): Pair<Int, Response>? =
     when (responseInfo) {
       null -> null
       else -> {
@@ -130,7 +129,7 @@ object MethodParser {
    * @param examples Mapping of named examples of valid bodies.
    * @return Named mapping of media types.
    */
-  private fun Kompendium.resolveContent(
+  fun Kompendium.resolveContent(
     type: KType,
     mediaTypes: List<String>,
     examples: Map<String, Any>
@@ -163,29 +162,36 @@ object MethodParser {
    * @return list of valid parameter specs as detailed by the [KType] members
    * @throws [IllegalStateException] if the class could not be parsed properly
    */
-  private fun KType.toParameterSpec(info: MethodInfo<*, *>, feature: Kompendium): List<Parameter> {
+  fun KType.toParameterSpec(info: MethodInfo<*, *>, feature: Kompendium): List<Parameter> {
     val clazz = classifier as KClass<*>
-    return clazz.memberProperties.filter { prop ->
-      prop.findAnnotation<Param>() != null
-    }.map { prop ->
-      val wrapperSchema = feature.config.cache[this.getSimpleSlug()]!! as ObjectSchema
-      val anny = prop.findAnnotation<Param>()
-        ?: error("Field ${prop.name} is not annotated with KompendiumParam")
-      val schema = wrapperSchema.properties[prop.name]
-        ?: error("Could not find component type for $prop")
-      val defaultValue = getDefaultParameterValue(clazz, prop)
-      Parameter(
-        name = prop.name,
-        `in` = anny.type.name.lowercase(Locale.getDefault()),
-        schema = schema.addDefault(defaultValue),
-        description = schema.description,
-        required = !prop.returnType.isMarkedNullable && defaultValue == null,
-        examples = info.parameterExamples.mapToSpec(prop.name)
-      )
-    }
+    return clazz.memberProperties
+      .filter { prop -> prop.hasAnnotation<Param>() }
+      .map { prop -> prop.toParameter(info, this, clazz, feature) }
   }
 
-  private fun Set<ParameterExample>.mapToSpec(parameterName: String): Map<String, Parameter.Example>? {
+  fun KProperty<*>.toParameter(
+    info: MethodInfo<*, *>,
+    parentType: KType,
+    parentClazz: KClass<*>,
+    feature: Kompendium
+  ): Parameter {
+    val wrapperSchema = feature.config.cache[parentType.getSimpleSlug()]!! as ObjectSchema
+    val anny = this.findAnnotation<Param>()
+      ?: error("Field $name is not annotated with KompendiumParam")
+    val schema = wrapperSchema.properties[name]
+      ?: error("Could not find component type for $this")
+    val defaultValue = getDefaultParameterValue(parentClazz, this)
+    return Parameter(
+      name = name,
+      `in` = anny.type.name.lowercase(Locale.getDefault()),
+      schema = schema.addDefault(defaultValue),
+      description = schema.description,
+      required = !returnType.isMarkedNullable && defaultValue == null,
+      examples = info.parameterExamples.mapToSpec(name)
+    )
+  }
+
+  fun Set<ParameterExample>.mapToSpec(parameterName: String): Map<String, Parameter.Example>? {
     val filtered = filter { it.parameterName == parameterName }
     return if (filtered.isEmpty()) {
       null
@@ -200,7 +206,7 @@ object MethodParser {
    * @param prop the property in question
    * @return The default value if found
    */
-  private fun getDefaultParameterValue(clazz: KClass<*>, prop: KProperty<*>): Any? {
+  fun getDefaultParameterValue(clazz: KClass<*>, prop: KProperty<*>): Any? {
     val constructor = clazz.primaryConstructor
     val parameterInQuestion = constructor
       ?.parameters
@@ -227,7 +233,7 @@ object MethodParser {
    * @return value of the proper type to match param
    * @throws [IllegalStateException] if parameter type is not one of the basic types supported below.
    */
-  private fun defaultValueInjector(param: KParameter): Any = when (param.type.classifier) {
+  fun defaultValueInjector(param: KParameter): Any = when (param.type.classifier) {
     String::class -> "test"
     Boolean::class -> false
     Int::class -> 1
@@ -237,4 +243,10 @@ object MethodParser {
     UUID::class -> UUID.randomUUID()
     else -> error("Unsupported Type")
   }
+
+  /**
+   * Uses the built-in Ktor route path [Route.toString] but cuts out any meta route such as authentication... anything
+   * that matches the RegEx pattern `/\\(.+\\)`
+   */
+  fun Route.calculateRoutePath() = toString().replace(Regex("/\\(.+\\)"), "")
 }

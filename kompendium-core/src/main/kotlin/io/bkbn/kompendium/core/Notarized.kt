@@ -1,8 +1,9 @@
 package io.bkbn.kompendium.core
 
 import io.bkbn.kompendium.annotations.Param
+import io.bkbn.kompendium.core.DefaultMethodParser.calculateRoutePath
 import io.bkbn.kompendium.core.KompendiumPreFlight.methodNotarizationPreFlight
-import io.bkbn.kompendium.core.MethodParser.parseMethodInfo
+import io.bkbn.kompendium.core.DefaultMethodParser.parseMethodInfo
 import io.bkbn.kompendium.core.metadata.method.DeleteInfo
 import io.bkbn.kompendium.core.metadata.method.GetInfo
 import io.bkbn.kompendium.core.metadata.method.HeadInfo
@@ -168,10 +169,4 @@ object Notarized {
     feature.config.spec.paths[path]?.options = postProcess(baseInfo)
     return method(HttpMethod.Options) { handle(body) }
   }
-
-  /**
-   * Uses the built-in Ktor route path [Route.toString] but cuts out any meta route such as authentication... anything
-   * that matches the RegEx pattern `/\\(.+\\)`
-   */
-  fun Route.calculateRoutePath() = toString().replace(Regex("/\\(.+\\)"), "")
 }

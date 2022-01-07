@@ -20,5 +20,4 @@ object NumberSerializer : KSerializer<Number> {
   override fun serialize(encoder: Encoder, value: Number) {
     encoder.encodeString(value.toString())
   }
-
 }
