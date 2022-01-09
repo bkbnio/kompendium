@@ -6,6 +6,10 @@
     {
       "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
       "automerge": true
+    },
+    {
+      "matchPackagePatterns": ["ktor"],
+      "groupName": "ktor"
     }
   ]
 }
