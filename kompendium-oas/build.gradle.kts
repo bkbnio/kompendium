@@ -1,6 +1,6 @@
 plugins {
   id("io.bkbn.sourdough.library")
-  kotlin("plugin.serialization") version "1.6.0"
+  kotlin("plugin.serialization") version "1.6.10"
 }
 
 dependencies {
