@@ -7,6 +7,7 @@ plugins {
   id("org.jetbrains.dokka")
   id("maven-publish")
   id("java-library")
+  id("signing")
 }
 
 sourdough {
