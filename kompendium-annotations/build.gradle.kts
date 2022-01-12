@@ -19,3 +19,11 @@ sourdough {
   developerName.set("Ryan Brink")
   developerEmail.set("admin@bkbn.io")
 }
+
+testing {
+  suites {
+    named("test", JvmTestSuite::class) {
+      useJUnitJupiter()
+    }
+  }
+}

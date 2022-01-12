@@ -33,3 +33,11 @@ dependencies {
 
   testImplementation(testFixtures(projects.kompendiumCore))
 }
+
+testing {
+  suites {
+    named("test", JvmTestSuite::class) {
+      useJUnitJupiter()
+    }
+  }
+}

@@ -26,3 +26,11 @@ dependencies {
   implementation(group = "io.ktor", name = "ktor-webjars", version = ktorVersion)
   implementation(group = "org.webjars", name = "swagger-ui", version = "4.1.3")
 }
+
+testing {
+  suites {
+    named("test", JvmTestSuite::class) {
+      useJUnitJupiter()
+    }
+  }
+}

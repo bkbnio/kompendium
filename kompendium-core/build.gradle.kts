@@ -50,3 +50,11 @@ dependencies {
 
   testFixturesApi(group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version = "1.3.2")
 }
+
+testing {
+  suites {
+    named("test", JvmTestSuite::class) {
+      useJUnitJupiter()
+    }
+  }
+}
