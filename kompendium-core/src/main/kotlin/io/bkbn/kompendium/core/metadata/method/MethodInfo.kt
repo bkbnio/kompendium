@@ -22,8 +22,3 @@ sealed interface MethodInfo<TParam, TResp> {
   val operationId: String?
     get() = null
 }
-
-fun main() {
-  data class Potato(val a: String)
-  println(Potato::a)
-}

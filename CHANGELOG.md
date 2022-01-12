@@ -2,13 +2,8 @@
 
 ## Unreleased
 ### Added
-- Support for HTTP Patch, Head, and Options methods
-- Support for including parameter examples via `MethodInfo`
 
 ### Changed
-- Kompendium now leverages the chosen API serializer.  Supports Jackson, Gson and Kotlinx Serialization
-- Fixed bug where overridden field names were not reflected in serialized object and required array 
-- Fixed bug where Ktor Location parents were not being scanned for parameters 
 
 ### Remove
 
@@ -16,7 +11,20 @@
 
 ## Released
 
-## [2.0.0-alpha] - January 2nd, 2021
+## [2.0.0-beta] - January 12th, 2022
+### Added
+- Support for HTTP Patch, Head, and Options methods
+- Support for including parameter examples via `MethodInfo`
+- Dokka Pipeline Generation
+- GitHub Pages integration
+- Sourdough Gradle updates
+
+### Changed
+- Kompendium now leverages the chosen API serializer.  Supports Jackson, Gson and Kotlinx Serialization
+- Fixed bug where overridden field names were not reflected in serialized object and required array
+- Fixed bug where Ktor Location parents were not being scanned for parameters
+
+## [2.0.0-alpha] - January 2nd, 2022
 ### Added
 - Support for OAuth authentication
 - Gradle Toolchain feature to ensure match between local JDK and compile target

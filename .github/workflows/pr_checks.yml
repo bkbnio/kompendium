@@ -15,9 +15,6 @@ jobs:
         with:
           gradle-version: wrapper
           arguments: detekt
-          properties: |
-            org.gradle.vfs.watch=false
-            org.gradle.vfs.verbose=false
   unit:
     runs-on: ubuntu-latest
     steps:
@@ -32,6 +29,3 @@ jobs:
         with:
           gradle-version: wrapper
           arguments: test koverCollectReports
-          properties: |
-            org.gradle.vfs.watch=false
-            org.gradle.vfs.verbose=false

@@ -31,15 +31,13 @@ dependencies {
 }
 ```
 
-The last two dependencies are optional.
-
 In addition to publishing releases to Maven Central, a snapshot version gets published to GitHub Packages on every merge
 to `main`. These can be consumed by adding the repository to your gradle build file. Instructions can be
 found [here](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-gradle-registry#using-a-published-package)
 
 # Library Details
 
-Details on how to use Kompendium can be found in the Wiki (WIP, this is new for V2 and will be fleshed out prior to release)
+Forthcoming, more details on V2 will be published soon :)
 
 ## Local Development
 
