@@ -1,9 +1,7 @@
 package io.bkbn.kompendium.core
 
 import io.bkbn.kompendium.annotations.Param
-import io.bkbn.kompendium.core.DefaultMethodParser.calculateRoutePath
 import io.bkbn.kompendium.core.KompendiumPreFlight.methodNotarizationPreFlight
-import io.bkbn.kompendium.core.DefaultMethodParser.parseMethodInfo
 import io.bkbn.kompendium.core.metadata.method.DeleteInfo
 import io.bkbn.kompendium.core.metadata.method.GetInfo
 import io.bkbn.kompendium.core.metadata.method.HeadInfo
@@ -11,6 +9,8 @@ import io.bkbn.kompendium.core.metadata.method.OptionsInfo
 import io.bkbn.kompendium.core.metadata.method.PatchInfo
 import io.bkbn.kompendium.core.metadata.method.PostInfo
 import io.bkbn.kompendium.core.metadata.method.PutInfo
+import io.bkbn.kompendium.core.parser.DefaultMethodParser.calculateRoutePath
+import io.bkbn.kompendium.core.parser.DefaultMethodParser.parseMethodInfo
 import io.bkbn.kompendium.oas.path.Path
 import io.bkbn.kompendium.oas.path.PathOperation
 import io.ktor.application.ApplicationCall

@@ -1,6 +1,12 @@
 plugins {
+  kotlin("jvm")
   kotlin("plugin.serialization") version "1.6.10"
-  application
+  id("io.bkbn.sourdough.application.jvm") version "0.5.4"
+  id("application")
+}
+
+sourdough {
+  compilerArgs.set(listOf("-opt-in=kotlin.RequiresOptIn"))
 }
 
 dependencies {

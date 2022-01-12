@@ -7,3 +7,7 @@ It is separated from core predominantly to allow for potential future integratio
 # Package io.bkbn.kompendium.annotations
 
 Contains all annotations used by Kompendium
+
+# Package io.bkbn.kompendium.annotations.constraint
+
+Annotations that place bespoke constraints on individual fields of your API schemas. 
