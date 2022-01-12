@@ -6,6 +6,7 @@ plugins {
   id("org.jetbrains.dokka")
   id("maven-publish")
   id("java-library")
+  id("signing")
   id("java-test-fixtures")
 }
 
