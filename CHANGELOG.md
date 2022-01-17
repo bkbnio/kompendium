@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- Gradle refactor
 
 ### Remove
 
