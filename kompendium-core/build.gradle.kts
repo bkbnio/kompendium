@@ -1,8 +1,8 @@
 plugins {
   kotlin("jvm")
-  id("io.bkbn.sourdough.library.jvm") version "0.5.5"
-  id("io.gitlab.arturbosch.detekt") version "1.19.0"
-  id("com.adarshr.test-logger") version "3.1.0"
+  id("io.bkbn.sourdough.library.jvm")
+  id("io.gitlab.arturbosch.detekt")
+  id("com.adarshr.test-logger")
   id("org.jetbrains.dokka")
   id("maven-publish")
   id("java-library")
@@ -11,15 +11,8 @@ plugins {
 }
 
 sourdough {
-  githubOrg.set("bkbnio")
-  githubRepo.set("kompendium")
   libraryName.set("Kompendium Core")
   libraryDescription.set("Core functionality for the Kompendium library")
-  licenseName.set("MIT License")
-  licenseUrl.set("https://mit-license.org")
-  developerId.set("unredundant")
-  developerName.set("Ryan Brink")
-  developerEmail.set("admin@bkbn.io")
   compilerArgs.set(listOf("-opt-in=kotlin.RequiresOptIn"))
 }
 
