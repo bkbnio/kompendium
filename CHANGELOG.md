@@ -12,6 +12,11 @@
 
 ## Released
 
+## [2.0.1] - January 23rd, 2022
+
+### Change
+- Fix bug in documentation publishing pipeline
+
 ## [2.0.0] - January 23rd, 2022
 
 Major Release 🎉 As we head towards the Ktor 2 release, this library will be kept compatible with Ktor 1. A future
