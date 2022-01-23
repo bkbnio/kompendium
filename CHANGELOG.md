@@ -1,10 +1,10 @@
 # Changelog
 
 ## Unreleased
+
 ### Added
 
 ### Changed
-- Gradle refactor
 
 ### Remove
 
@@ -12,21 +12,19 @@
 
 ## Released
 
-## [2.0.0-beta] - January 12th, 2022
+## [2.0.0] - January 23rd, 2022
+
+Major Release 🎉 As we head towards the Ktor 2 release, this library will be kept compatible with Ktor 1. A future
+Kompendium 2 repository will be created soon, porting much of the changes you see here, with some awesome Ktor 2 twists
+😉
+
 ### Added
+
 - Support for HTTP Patch, Head, and Options methods
 - Support for including parameter examples via `MethodInfo`
 - Dokka Pipeline Generation
 - GitHub Pages integration
 - Sourdough Gradle updates
-
-### Changed
-- Kompendium now leverages the chosen API serializer.  Supports Jackson, Gson and Kotlinx Serialization
-- Fixed bug where overridden field names were not reflected in serialized object and required array
-- Fixed bug where Ktor Location parents were not being scanned for parameters
-
-## [2.0.0-alpha] - January 2nd, 2022
-### Added
 - Support for OAuth authentication
 - Gradle Toolchain feature to ensure match between local JDK and compile target
 - Dokka integration
@@ -36,6 +34,10 @@
 - Ability to document expected unstructured data
 
 ### Changed
+
+- Kompendium now leverages the chosen API serializer. Supports Jackson, Gson and Kotlinx Serialization
+- Fixed bug where overridden field names were not reflected in serialized object and required array
+- Fixed bug where Ktor Location parents were not being scanned for parameters
 - `$ref` types are no longer generated, instead all objects are defined explicitly
 - All OpenAPI domain models moved to a separate module `kompendium-oas`
 - Moved all files in `kompendium-core` into `io.bkbn.kompendium.core` package from `io.bkbn.kompendium`
@@ -43,7 +45,8 @@
 - Gradle build logic offloaded to Sourdough Plugin
 - Minimum supported Java version is now 11
 - Bumped Kotlin to 1.6
-- Annotations now live in a separate module.  (Should not impact end users as module is imported as api dependency by core).
+- Annotations now live in a separate module.  (Should not impact end users as module is imported as api dependency by
+  core).
 - Kotest as the testing framework of choice
 - Path calculation removed in favor of built-in route toString
 - Ktor to 1.6.7
@@ -69,11 +72,15 @@
 - Dropped ASDF tool manifest
 
 ## [1.11.1] - November 25th, 2021
+
 ### Added
+
 - Documentation showing how to add header names using Kotlin backtick convention
 
 ## [1.11.0] - November 25th, 2021
+
 ### Added
+
 - Support for Ktor Location Plugin
 
 ## [1.10.0] - November 25th, 2021
@@ -93,7 +100,7 @@
 
 ### Changed
 
-- Code Coverage removed from PR checks due to limitations with GitHub workflows 
+- Code Coverage removed from PR checks due to limitations with GitHub workflows
 - Minor linting fixes
 - Detekt now builds off of default config
 
@@ -102,7 +109,6 @@
 ### Added
 
 - ByteArray added to the set of default types
-
 
 ## [1.8.1] - October 4th, 2021
 
@@ -217,13 +223,13 @@ This is just to get my repo back to normal now that I have confirmed sonatype pu
 
 - In order to facilitate default parameters, a couple changes were needed
   - `KompendiumParam` was added in replacement of the four parameter annotations
-  - Specs now explicitly declare type of parameter rather than a reference in order to not override default values. 
+  - Specs now explicitly declare type of parameter rather than a reference in order to not override default values.
 
 ## [0.8.0] - May 4th, 2021
 
 ### Added
 
-- Support for example request and response bodies.  Parameter examples / defaults are a separate issue for later.
+- Support for example request and response bodies. Parameter examples / defaults are a separate issue for later.
 
 ### Changed
 
@@ -239,7 +245,7 @@ This is just to get my repo back to normal now that I have confirmed sonatype pu
 ### Changed
 
 - Refactored `kompendium-core` to break up the `Kompendium` object into slightly more manageable chunks
-- Notarization Parameters can now be inferred from method info 
+- Notarization Parameters can now be inferred from method info
 
 ## [0.6.2] - April 23rd, 2021
 
@@ -256,23 +262,24 @@ This is just to get my repo back to normal now that I have confirmed sonatype pu
 ### Changed
 
 - Set jvm target to 11
-- Resolved bug for empty params and/or empty response body 
+- Resolved bug for empty params and/or empty response body
 
 ## [0.6.0] - April 21st, 2021
 
 ### Added
 
-- Added basic and jwt security scheme support with the new module kompendium-auth 
+- Added basic and jwt security scheme support with the new module kompendium-auth
 
 ## [0.5.2] - April 19th, 2021
 
-### Removed 
+### Removed
 
 - Removed `Route.calculatePath`
-  
-### Added 
 
-- Added an explicit  `PathCalculator` interface to allow for easier handling of routes external to the core set of Ktor route selectors.
+### Added
+
+- Added an explicit  `PathCalculator` interface to allow for easier handling of routes external to the core set of Ktor
+  route selectors.
 
 ## [0.5.1] - April 19th, 2021
 
@@ -284,7 +291,7 @@ This is just to get my repo back to normal now that I have confirmed sonatype pu
 
 ### Added
 
-- Expose `/openapi.json` and `/docs` as opt-in pre-built Routes 
+- Expose `/openapi.json` and `/docs` as opt-in pre-built Routes
 
 ## [0.4.0] - April 17th, 2021
 
@@ -363,12 +370,13 @@ This is just to get my repo back to normal now that I have confirmed sonatype pu
 
 ### Added
 
-- Beginning of an implementation.  Currently, able to generate a rough outline of the API at runtime, along with generating 
-full data classes represented by JSON Schema.  
+- Beginning of an implementation. Currently, able to generate a rough outline of the API at runtime, along with
+  generating full data classes represented by JSON Schema.
 
 ## [0.0.1] - April 11th, 2021
 
 ### Added
+
 - Added _most_ of the data classes necessary for generating an [Open API Spec](https://swagger.io/specification)
 - Added playground to allow users to tinker with a live Ktor api in conjunction with development
 - Added all standard OSS files
