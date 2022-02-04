@@ -46,6 +46,7 @@ import io.bkbn.kompendium.core.util.requiredParameter
 import io.bkbn.kompendium.core.util.returnsList
 import io.bkbn.kompendium.core.util.rootModule
 import io.bkbn.kompendium.core.util.simpleGenericResponse
+import io.bkbn.kompendium.core.util.simpleRecursive
 import io.bkbn.kompendium.core.util.trailingSlash
 import io.bkbn.kompendium.core.util.undeclaredType
 import io.bkbn.kompendium.core.util.uniqueArray
@@ -212,6 +213,9 @@ class KompendiumTest : DescribeSpec({
     }
     it("Can override field values via annotation") {
       openApiTest("field_override.json") { overrideFieldInfo() }
+    }
+    it("Can serialize a recursive type using references") {
+      openApiTest("simple_recursive.json") { simpleRecursive() }
     }
   }
   describe("Constraints") {

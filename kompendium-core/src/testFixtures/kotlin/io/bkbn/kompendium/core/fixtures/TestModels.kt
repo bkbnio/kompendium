@@ -4,6 +4,7 @@ import io.bkbn.kompendium.annotations.Field
 import io.bkbn.kompendium.annotations.FreeFormObject
 import io.bkbn.kompendium.annotations.Param
 import io.bkbn.kompendium.annotations.ParamType
+import io.bkbn.kompendium.annotations.Referenced
 import io.bkbn.kompendium.annotations.UndeclaredField
 import io.bkbn.kompendium.annotations.constraint.Format
 import io.bkbn.kompendium.annotations.constraint.MaxItems
@@ -215,4 +216,19 @@ data class Mysterious(val nowYouSeeMe: String)
 
 data class HeaderNameTest(
   @Param(type = ParamType.HEADER) val `X-UserEmail`: String
+)
+
+enum class ColumnMode {
+  NULLABLE,
+  REQUIRED,
+  REPEATED
+}
+
+@Referenced
+data class ColumnSchema(
+  val name: String,
+  val type: String,
+  val description: String,
+  val mode: ColumnMode,
+  val subColumns: List<ColumnSchema> = emptyList()
 )

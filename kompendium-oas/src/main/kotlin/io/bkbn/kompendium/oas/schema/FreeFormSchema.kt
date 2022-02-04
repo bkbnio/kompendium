@@ -8,9 +8,10 @@ data class FreeFormSchema(
   override val nullable: Boolean? = null,
   // constraints
   val minProperties: Int? = null,
-  val maxProperties: Int? = null
+  val maxProperties: Int? = null,
+  override val default: @Contextual Any? = null,
+  override val description: String? = null,
 ) : TypedSchema {
   val additionalProperties: Boolean = true
   override val type: String = "object"
-  override val default: @Contextual Any? = null
 }

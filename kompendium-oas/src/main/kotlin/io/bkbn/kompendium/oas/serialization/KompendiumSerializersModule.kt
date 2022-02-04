@@ -8,6 +8,7 @@ import io.bkbn.kompendium.oas.schema.EnumSchema
 import io.bkbn.kompendium.oas.schema.FormattedSchema
 import io.bkbn.kompendium.oas.schema.FreeFormSchema
 import io.bkbn.kompendium.oas.schema.ObjectSchema
+import io.bkbn.kompendium.oas.schema.ReferencedSchema
 import io.bkbn.kompendium.oas.schema.SimpleSchema
 import io.bkbn.kompendium.oas.security.ApiKeyAuth
 import io.bkbn.kompendium.oas.security.BasicAuth
@@ -29,6 +30,7 @@ object KompendiumSerializersModule {
       subclass(DictionarySchema::class, DictionarySchema.serializer())
       subclass(EnumSchema::class, EnumSchema.serializer())
       subclass(FreeFormSchema::class, FreeFormSchema.serializer())
+      subclass(ReferencedSchema::class, ReferencedSchema.serializer())
     }
     polymorphic(SecuritySchema::class) {
       subclass(ApiKeyAuth::class, ApiKeyAuth.serializer())
