@@ -13,6 +13,7 @@ import io.ktor.application.install
 import io.ktor.features.ContentNegotiation
 import io.ktor.http.HttpStatusCode
 import io.ktor.response.respond
+import io.ktor.routing.route
 import io.ktor.routing.routing
 import io.ktor.serialization.json
 import io.ktor.server.engine.embeddedServer
@@ -25,7 +26,7 @@ enum class ColumnMode {
   REPEATED
 }
 
-@Referenced
+@Referenced // Indicates that Kompendium should store this class as a $ref component.
 @Serializable
 data class ColumnSchema(
   val name: String,
@@ -34,6 +35,18 @@ data class ColumnSchema(
   val mode: ColumnMode,
   val subColumns: List<ColumnSchema> = emptyList()
 )
+
+sealed interface RecursiveSlammaJamma
+
+@Serializable
+data class OneJamma(val a: Int) : RecursiveSlammaJamma
+
+@Serializable
+data class AnothaJamma(val b: Float) : RecursiveSlammaJamma
+
+@Referenced
+@Serializable
+data class InsaneJamma(val c: RecursiveSlammaJamma) : RecursiveSlammaJamma
 
 fun main() {
   embeddedServer(
@@ -64,6 +77,21 @@ private fun Application.mainModule() {
       )
     ) {
       call.respond(HttpStatusCode.OK, "Nice!")
+    }
+    route("cmon_and_slam") {
+      notarizedGet(
+        GetInfo<Unit, RecursiveSlammaJamma>(
+          summary = "Its recursive",
+          description = "This is how we do it!",
+          responseInfo = ResponseInfo(
+            status = HttpStatusCode.OK,
+            description = "This means everything went as expected!",
+          ),
+          tags = setOf("Simple")
+        )
+      ) {
+        call.respond(HttpStatusCode.OK, "Nice!")
+      }
     }
   }
 }

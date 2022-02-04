@@ -12,6 +12,10 @@
 
 ## Released
 
+## [2.0.2] - February 4th, 2022
+### Added
+- `@Referenced` annotation enabling support for recursive models
+
 ## [2.0.1] - January 23rd, 2022
 
 ### Change
