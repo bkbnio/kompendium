@@ -2,8 +2,6 @@ package io.bkbn.kompendium.core.fixtures
 
 import io.bkbn.kompendium.core.metadata.ExceptionInfo
 import io.bkbn.kompendium.core.metadata.ParameterExample
-import io.bkbn.kompendium.core.metadata.method.PostInfo
-import io.bkbn.kompendium.core.metadata.method.PutInfo
 import io.bkbn.kompendium.core.metadata.RequestInfo
 import io.bkbn.kompendium.core.metadata.ResponseInfo
 import io.bkbn.kompendium.core.metadata.method.DeleteInfo
@@ -11,6 +9,8 @@ import io.bkbn.kompendium.core.metadata.method.GetInfo
 import io.bkbn.kompendium.core.metadata.method.HeadInfo
 import io.bkbn.kompendium.core.metadata.method.OptionsInfo
 import io.bkbn.kompendium.core.metadata.method.PatchInfo
+import io.bkbn.kompendium.core.metadata.method.PostInfo
+import io.bkbn.kompendium.core.metadata.method.PutInfo
 import io.ktor.http.HttpStatusCode
 import kotlin.reflect.typeOf
 
@@ -166,6 +166,12 @@ object TestResponseInfo {
   val fieldOverride = GetInfo<Unit, TestFieldOverride>(
     summary = "A Response with a spicy field",
     description = "Important info within!",
+    responseInfo = simpleOkResponse()
+  )
+
+  val simpleRecursive = GetInfo<Unit, ColumnSchema>(
+    summary = "Simple recursive example",
+    description = "Pretty neato!",
     responseInfo = simpleOkResponse()
   )
 

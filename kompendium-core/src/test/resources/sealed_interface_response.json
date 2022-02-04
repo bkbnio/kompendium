@@ -62,6 +62,45 @@
                         "b"
                       ],
                       "type": "object"
+                    },
+                    {
+                      "properties": {
+                        "c": {
+                          "anyOf": [
+                            {
+                              "properties": {
+                                "a": {
+                                  "format": "int32",
+                                  "type": "integer"
+                                }
+                              },
+                              "required": [
+                                "a"
+                              ],
+                              "type": "object"
+                            },
+                            {
+                              "properties": {
+                                "b": {
+                                  "format": "float",
+                                  "type": "number"
+                                }
+                              },
+                              "required": [
+                                "b"
+                              ],
+                              "type": "object"
+                            },
+                            {
+                              "$ref": "#/components/schemas/InsaneJamma"
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "c"
+                      ],
+                      "type": "object"
                     }
                   ]
                 }
@@ -74,6 +113,47 @@
     }
   },
   "components": {
+    "schemas": {
+      "InsaneJamma": {
+        "properties": {
+          "c": {
+            "anyOf": [
+              {
+                "properties": {
+                  "a": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "a"
+                ],
+                "type": "object"
+              },
+              {
+                "properties": {
+                  "b": {
+                    "format": "float",
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "b"
+                ],
+                "type": "object"
+              },
+              {
+                "$ref": "#/components/schemas/InsaneJamma"
+              }
+            ]
+          }
+        },
+        "required": [
+          "c"
+        ],
+        "type": "object"
+      }
+    },
     "securitySchemes": {}
   },
   "security": [],

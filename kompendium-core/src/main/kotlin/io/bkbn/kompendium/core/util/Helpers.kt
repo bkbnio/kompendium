@@ -1,19 +1,19 @@
 package io.bkbn.kompendium.core.util
 
-import java.lang.reflect.ParameterizedType
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.full.createType
 import kotlin.reflect.jvm.javaField
 import org.slf4j.LoggerFactory
+import java.lang.reflect.ParameterizedType
 import java.util.Locale
 
 object Helpers {
 
   private val logger = LoggerFactory.getLogger(javaClass)
 
-  private const val COMPONENT_SLUG = "#/components/schemas"
+  const val COMPONENT_SLUG = "#/components/schemas"
 
   val UNIT_TYPE by lazy { Unit::class.createType() }
 

@@ -405,6 +405,16 @@ fun Application.overrideFieldInfo() {
   }
 }
 
+fun Application.simpleRecursive() {
+  routing {
+    route("/test/simple_recursive") {
+      notarizedGet(TestResponseInfo.simpleRecursive) {
+        call.respond(HttpStatusCode.OK)
+      }
+    }
+  }
+}
+
 fun Application.constrainedIntInfo() {
   routing {
     route("/test/constrained_int") {

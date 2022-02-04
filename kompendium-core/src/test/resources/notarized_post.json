@@ -122,6 +122,7 @@
     }
   },
   "components": {
+    "schemas": {},
     "securitySchemes": {}
   },
   "security": [],

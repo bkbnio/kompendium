@@ -61,6 +61,7 @@
     }
   },
   "components": {
+    "schemas": {},
     "securitySchemes": {}
   },
   "security": [],

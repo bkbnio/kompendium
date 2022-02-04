@@ -88,6 +88,7 @@
     }
   },
   "components": {
+    "schemas": {},
     "securitySchemes": {}
   },
   "security": [],

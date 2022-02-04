@@ -82,6 +82,7 @@
     }
   },
   "components": {
+    "schemas": {},
     "securitySchemes": {
       "oauth": {
         "flows": {

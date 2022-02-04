@@ -2,6 +2,7 @@ package io.bkbn.kompendium.core
 
 import io.bkbn.kompendium.annotations.Field
 import io.bkbn.kompendium.annotations.FreeFormObject
+import io.bkbn.kompendium.annotations.Referenced
 import io.bkbn.kompendium.annotations.UndeclaredField
 import io.bkbn.kompendium.annotations.constraint.Format
 import io.bkbn.kompendium.annotations.constraint.MaxItems
@@ -18,6 +19,7 @@ import io.bkbn.kompendium.annotations.constraint.UniqueItems
 import io.bkbn.kompendium.core.metadata.SchemaMap
 import io.bkbn.kompendium.core.metadata.TypeMap
 import io.bkbn.kompendium.core.util.Helpers.genericNameAdapter
+import io.bkbn.kompendium.core.util.Helpers.getReferenceSlug
 import io.bkbn.kompendium.core.util.Helpers.getSimpleSlug
 import io.bkbn.kompendium.core.util.Helpers.logged
 import io.bkbn.kompendium.core.util.Helpers.toNumber
@@ -29,6 +31,7 @@ import io.bkbn.kompendium.oas.schema.EnumSchema
 import io.bkbn.kompendium.oas.schema.FormattedSchema
 import io.bkbn.kompendium.oas.schema.FreeFormSchema
 import io.bkbn.kompendium.oas.schema.ObjectSchema
+import io.bkbn.kompendium.oas.schema.ReferencedSchema
 import io.bkbn.kompendium.oas.schema.SimpleSchema
 import kotlin.reflect.KClass
 import kotlin.reflect.KClassifier
@@ -36,6 +39,7 @@ import kotlin.reflect.KProperty1
 import kotlin.reflect.KType
 import kotlin.reflect.full.createType
 import kotlin.reflect.full.findAnnotation
+import kotlin.reflect.full.hasAnnotation
 import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
@@ -144,6 +148,10 @@ object Kontent {
       false -> {
         logger.debug("$slug was not found in cache, generating now")
         var newCache = cache
+        // If referenced, add tie from simple slug to schema slug
+        if (clazz.hasAnnotation<Referenced>()) {
+          newCache = newCache.plus(type.getSimpleSlug() to ReferencedSchema(type.getReferenceSlug()))
+        }
         // Grabs any type parameters mapped to the corresponding type argument(s)
         val typeMap: TypeMap = clazz.typeParameters.zip(type.arguments).toMap()
         // associates each member with a Pair of prop name to property schema
@@ -274,6 +282,7 @@ object Kontent {
       is FreeFormSchema -> this // todo anything here?
       is ObjectSchema -> scanForConstraints(clazz, prop)
       is SimpleSchema -> scanForConstraints(prop)
+      is ReferencedSchema -> this // todo anything here?
     }
 
   private fun ArraySchema.scanForConstraints(prop: KProperty1<*, *>): ArraySchema {
