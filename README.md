@@ -37,7 +37,7 @@ found [here](https://docs.github.com/en/packages/working-with-a-github-packages-
 
 # Library Details
 
-Forthcoming, more details on V2 will be published soon :)
+Library documentation lives alongside the source code, and is generated into a static site via Dokka.  Can be viewed [here](https://bkbnio.github.io/kompendium)
 
 ## Local Development
 
