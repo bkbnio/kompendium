@@ -14,7 +14,6 @@ dependencies {
   implementation(projects.kompendiumCore)
   implementation(projects.kompendiumAuth)
   implementation(projects.kompendiumLocations)
-  implementation(projects.kompendiumSwaggerUi)
 
   // Ktor
   val ktorVersion: String by project

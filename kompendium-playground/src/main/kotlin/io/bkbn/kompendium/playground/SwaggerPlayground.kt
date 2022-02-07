@@ -2,8 +2,8 @@ package io.bkbn.kompendium.playground
 
 import io.bkbn.kompendium.core.Kompendium
 import io.bkbn.kompendium.core.Notarized.notarizedGet
+import io.bkbn.kompendium.core.routes.swagger
 import io.bkbn.kompendium.playground.util.Util
-import io.bkbn.kompendium.swagger.swaggerUI
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
@@ -43,7 +43,7 @@ private fun Application.mainModule() {
   // Configures the routes for our API
   routing {
     // This is all you need to do to add Swagger! Reachable at `/swagger-ui`
-    swaggerUI()
+    swagger()
     // Kompendium infers the route path from the Ktor Route.  This will show up as the root path `/`
     notarizedGet(BasicPlaygroundToC.simpleGetExample) {
       call.respond(HttpStatusCode.OK, BasicModels.BasicResponse(c = UUID.randomUUID().toString()))

@@ -15,9 +15,9 @@ import kotlinx.html.title
 import kotlinx.html.unsafe
 
 /**
- * Provides an out-of-the-box route to view docs using ReDoc
+ * Provides an out-of-the-box route to view docs using Swagger
  * @param pageTitle Webpage title you wish to be displayed on your docs
- * @param specUrl url to point ReDoc to the OpenAPI json document
+ * @param specUrl url to point Swagger to the OpenAPI json document
  */
 fun Routing.redoc(pageTitle: String = "Docs", specUrl: String = "/openapi.json") {
   route("/docs") {
@@ -25,7 +25,7 @@ fun Routing.redoc(pageTitle: String = "Docs", specUrl: String = "/openapi.json")
       call.respondHtml {
         head {
           title {
-            +"$pageTitle"
+            +pageTitle
           }
           meta {
             charset = "utf-8"

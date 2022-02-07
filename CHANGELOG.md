@@ -12,6 +12,11 @@
 
 ## Released
 
+## [2.0.3] - February 7th, 2022
+### Changed
+- Fixed swagger documentation bug
+- Deprecated Swagger Webjar approach
+
 ## [2.0.2] - February 4th, 2022
 ### Added
 - `@Referenced` annotation enabling support for recursive models
