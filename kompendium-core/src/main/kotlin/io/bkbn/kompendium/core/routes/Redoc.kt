@@ -25,7 +25,7 @@ fun Routing.redoc(pageTitle: String = "Docs", specUrl: String = "/openapi.json")
       call.respondHtml {
         head {
           title {
-            +"$pageTitle"
+            +pageTitle
           }
           meta {
             charset = "utf-8"
