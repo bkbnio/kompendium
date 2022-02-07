@@ -15,6 +15,11 @@ import kotlinx.html.script
 import kotlinx.html.title
 import kotlinx.html.unsafe
 
+/**
+ * Provides an out-of-the-box route to view docs using Swagger
+ * @param pageTitle Webpage title you wish to be displayed on your docs
+ * @param specUrl url to point Swagger to the OpenAPI json document
+ */
 fun Routing.swagger(pageTitle: String = "Docs", specUrl: String = "/openapi.json") {
   route("/swagger-ui") {
     get {
