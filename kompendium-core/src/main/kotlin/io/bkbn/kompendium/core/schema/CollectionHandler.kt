@@ -21,25 +21,25 @@ object CollectionHandler : SchemaHandler {
    * @param clazz Collection class information
    * @param cache Existing schema map to append to
    */
-  override fun handle(type: KType, clazz: KClass<*>, cache: SchemaMap): SchemaMap {
+  override fun handle(type: KType, clazz: KClass<*>, cache: SchemaMap) {
     logger.debug("Collection detected for $type, generating schema and appending to cache")
     val collectionType = type.arguments.first().type!!
     val collectionClass = collectionType.classifier as KClass<*>
     logger.debug("Obtained collection class: $collectionClass")
     val referenceName = Helpers.genericNameAdapter(type, clazz)
-    var updatedCache = Kontent.generateKTypeKontent(collectionType, cache)
+    generateKTypeKontent(collectionType, cache)
     val valueReference = when (collectionClass.isSealed) {
       true -> {
         val subTypes = gatherSubTypes(collectionType)
         AnyOfSchema(subTypes.map {
-          updatedCache = generateKTypeKontent(it, cache)
-          updatedCache[it.getSimpleSlug()] ?: error("${it.getSimpleSlug()} not found")
+          generateKTypeKontent(it, cache)
+          cache[it.getSimpleSlug()] ?: error("${it.getSimpleSlug()} not found")
         })
       }
-      false -> updatedCache[collectionClass.simpleName] ?: error("${collectionClass.simpleName} not found")
+      false -> cache[collectionClass.simpleName] ?: error("${collectionClass.simpleName} not found")
     }
     val schema = ArraySchema(items = valueReference)
-    updatedCache = Kontent.generateKontent(collectionType, cache)
-    return updatedCache.plus(referenceName to schema)
+    Kontent.generateKontent(collectionType, cache)
+    cache[referenceName] = schema
   }
 }

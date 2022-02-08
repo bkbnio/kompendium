@@ -40,22 +40,21 @@ object ObjectHandler : SchemaHandler {
    * @param clazz Class of the object to analyze
    * @param cache Existing schema map to append to
    */
-  override fun handle(type: KType, clazz: KClass<*>, cache: SchemaMap): SchemaMap {
+  override fun handle(type: KType, clazz: KClass<*>, cache: SchemaMap) {
     // This needs to be simple because it will be stored under its appropriate reference component implicitly
     val slug = type.getSimpleSlug()
     // Only analyze if component has not already been stored in the cache
-    return when (cache.containsKey(slug)) {
+    when (cache.containsKey(slug)) {
       true -> {
         logger.debug("Cache already contains $slug, returning cache untouched")
         cache
       }
       false -> {
         logger.debug("$slug was not found in cache, generating now")
-        var newCache = cache
         // TODO Replace with something better!
         // If referenced, add tie from simple slug to schema slug
         if (clazz.hasAnnotation<Referenced>()) {
-          newCache = newCache.plus(type.getSimpleSlug() to ReferencedSchema(type.getReferenceSlug()))
+          cache[type.getSimpleSlug()] = ReferencedSchema(type.getReferenceSlug())
         }
         // Grabs any type parameters mapped to the corresponding type argument(s)
         val typeMap: TypeMap = clazz.typeParameters.zip(type.arguments).toMap()
@@ -72,8 +71,7 @@ object ObjectHandler : SchemaHandler {
 
           when (freeForm) {
             null -> {
-              val bleh = handleDefault(typeMap, prop, newCache)
-              newCache = bleh.second
+              val bleh = handleDefault(typeMap, prop, cache)
               bleh.first
             }
             else -> handleFreeForm(prop)
@@ -82,8 +80,8 @@ object ObjectHandler : SchemaHandler {
         logger.debug("Looking for undeclared fields")
         val undeclaredFieldMap = clazz.annotations.filterIsInstance<UndeclaredField>().associate {
           val undeclaredType = it.clazz.createType()
-          newCache = generateKontent(undeclaredType, newCache)
-          it.field to newCache[undeclaredType.getSimpleSlug()]!!
+          generateKontent(undeclaredType, cache)
+          it.field to cache[undeclaredType.getSimpleSlug()]!!
         }
         logger.debug("$slug contains $fieldMap")
         var schema = ObjectSchema(fieldMap.plus(undeclaredFieldMap))
@@ -97,7 +95,7 @@ object ObjectHandler : SchemaHandler {
           })
         }
         logger.debug("$slug schema: $schema")
-        newCache.plus(slug to schema)
+        cache[slug] = schema
       }
     }
   }
@@ -108,20 +106,19 @@ object ObjectHandler : SchemaHandler {
     prop: KProperty1<*, *>,
     cache: SchemaMap
   ): Pair<Pair<String, ComponentSchema>, SchemaMap> {
-    var newCache = cache
     var name = prop.name
     val field = prop.javaField?.type?.kotlin ?: error("Unable to parse field type from $prop")
     val baseType = scanForGeneric(typeMap, prop)
     val baseClazz = baseType.classifier as KClass<*>
     val allTypes = scanForSealed(baseClazz, baseType)
-    newCache = updateCache(newCache, field, allTypes)
+    updateCache(cache, field, allTypes)
     var propSchema = constructComponentSchema(
       typeMap = typeMap,
       prop = prop,
       fieldClazz = field,
       clazz = baseClazz,
       type = baseType,
-      cache = newCache
+      cache = cache
     )
     // todo move to helper
     prop.findAnnotation<Field>()?.let { fieldOverrides ->
@@ -132,7 +129,7 @@ object ObjectHandler : SchemaHandler {
         name = fieldOverrides.name
       }
     }
-    return Pair(Pair(name, propSchema), newCache)
+    return Pair(Pair(name, propSchema), cache)
   }
 
   private fun handleFreeForm(prop: KProperty1<*, *>): Pair<String, FreeFormSchema> {
@@ -169,15 +166,13 @@ object ObjectHandler : SchemaHandler {
   /**
    * Takes the type information provided and adds any missing data to the schema map
    */
-  private fun updateCache(cache: SchemaMap, clazz: KClass<*>, types: List<KType>): SchemaMap {
-    var newCache = cache
+  private fun updateCache(cache: SchemaMap, clazz: KClass<*>, types: List<KType>) {
     if (!cache.containsKey(clazz.simpleName)) {
       logger.debug("Cache was missing ${clazz.simpleName}, adding now")
       types.forEach {
-        newCache = Kontent.generateKTypeKontent(it, newCache)
+        Kontent.generateKTypeKontent(it, cache)
       }
     }
-    return newCache
   }
 
   private fun constructComponentSchema(

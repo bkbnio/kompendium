@@ -13,8 +13,8 @@ object EnumHandler : SchemaHandler {
    * @param clazz Class of the object to analyze
    * @param cache Existing schema map to append to
    */
-  override fun handle(type: KType, clazz: KClass<*>, cache: SchemaMap): SchemaMap {
+  override fun handle(type: KType, clazz: KClass<*>, cache: SchemaMap) {
     val options = clazz.java.enumConstants.map { it.toString() }.toSet()
-    return cache.plus(clazz.simpleName!! to EnumSchema(options))
+    cache[clazz.simpleName!!] = EnumSchema(options)
   }
 }

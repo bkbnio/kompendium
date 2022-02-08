@@ -6,7 +6,7 @@ import kotlin.reflect.KType
 import kotlin.reflect.full.createType
 
 interface SchemaHandler {
-  fun handle(type: KType, clazz: KClass<*>, cache: SchemaMap): SchemaMap
+  fun handle(type: KType, clazz: KClass<*>, cache: SchemaMap)
 
   fun gatherSubTypes(type: KType): List<KType> {
     val classifier = type.classifier as KClass<*>

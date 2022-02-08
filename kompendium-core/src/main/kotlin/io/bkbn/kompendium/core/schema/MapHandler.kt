@@ -21,14 +21,14 @@ object MapHandler : SchemaHandler {
    * @param clazz Map class information
    * @param cache Existing schema map to append to
    */
-  override fun handle(type: KType, clazz: KClass<*>, cache: SchemaMap): SchemaMap {
+  override fun handle(type: KType, clazz: KClass<*>, cache: SchemaMap) {
     logger.debug("Map detected for $type, generating schema and appending to cache")
     val (keyType, valType) = type.arguments.map { it.type }
     logger.debug("Obtained map types -> key: $keyType and value: $valType")
     if (keyType?.classifier != String::class) {
       error("Invalid Map $type: OpenAPI dictionaries must have keys of type String")
     }
-    var updatedCache = generateKTypeKontent(valType!!, cache)
+    generateKTypeKontent(valType!!, cache)
     val valClass = valType.classifier as KClass<*>
     val valClassName = valClass.simpleName
     val referenceName = genericNameAdapter(type, clazz)
@@ -36,14 +36,14 @@ object MapHandler : SchemaHandler {
       true -> {
         val subTypes = gatherSubTypes(valType)
         AnyOfSchema(subTypes.map {
-          updatedCache = generateKTypeKontent(it, updatedCache)
-          updatedCache[it.getSimpleSlug()] ?: error("${it.getSimpleSlug()} not found")
+          generateKTypeKontent(it, cache)
+          cache[it.getSimpleSlug()] ?: error("${it.getSimpleSlug()} not found")
         })
       }
-      false -> updatedCache[valClassName] ?: error("$valClassName not found")
+      false -> cache[valClassName] ?: error("$valClassName not found")
     }
     val schema = DictionarySchema(additionalProperties = valueReference)
-    updatedCache = generateKontent(valType, updatedCache)
-    return updatedCache.plus(referenceName to schema)
+    generateKontent(valType, cache)
+    cache[referenceName] = schema
   }
 }

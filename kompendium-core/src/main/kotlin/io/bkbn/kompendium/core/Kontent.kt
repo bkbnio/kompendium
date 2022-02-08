@@ -33,10 +33,10 @@ object Kontent {
    */
   @OptIn(ExperimentalStdlibApi::class)
   inline fun <reified T> generateKontent(
-    cache: SchemaMap = emptyMap()
-  ): SchemaMap {
+    cache: SchemaMap = mutableMapOf()
+  ) {
     val kontentType = typeOf<T>()
-    return generateKTypeKontent(kontentType, cache)
+    generateKTypeKontent(kontentType, cache)
   }
 
   /**
@@ -47,13 +47,11 @@ object Kontent {
    */
   fun generateKontent(
     type: KType,
-    cache: SchemaMap = emptyMap()
-  ): SchemaMap {
-    var newCache = cache
+    cache: SchemaMap = mutableMapOf()
+  ) {
     gatherSubTypes(type).forEach {
-      newCache = generateKTypeKontent(it, newCache)
+      generateKTypeKontent(it, cache)
     }
-    return newCache
   }
 
   private fun gatherSubTypes(type: KType): List<KType> {
@@ -74,21 +72,21 @@ object Kontent {
    */
   fun generateKTypeKontent(
     type: KType,
-    cache: SchemaMap = emptyMap(),
-  ): SchemaMap = logged(object {}.javaClass.enclosingMethod.name, mapOf("cache" to cache)) {
+    cache: SchemaMap = mutableMapOf(),
+  ) = logged(object {}.javaClass.enclosingMethod.name, mapOf("cache" to cache)) {
     logger.debug("Parsing Kontent of $type")
     when (val clazz = type.classifier as KClass<*>) {
       Unit::class -> cache
-      Int::class -> cache.plus(clazz.simpleName!! to FormattedSchema("int32", "integer"))
-      Long::class -> cache.plus(clazz.simpleName!! to FormattedSchema("int64", "integer"))
-      Double::class -> cache.plus(clazz.simpleName!! to FormattedSchema("double", "number"))
-      Float::class -> cache.plus(clazz.simpleName!! to FormattedSchema("float", "number"))
-      String::class -> cache.plus(clazz.simpleName!! to SimpleSchema("string"))
-      Boolean::class -> cache.plus(clazz.simpleName!! to SimpleSchema("boolean"))
-      UUID::class -> cache.plus(clazz.simpleName!! to FormattedSchema("uuid", "string"))
-      BigDecimal::class -> cache.plus(clazz.simpleName!! to FormattedSchema("double", "number"))
-      BigInteger::class -> cache.plus(clazz.simpleName!! to FormattedSchema("int64", "integer"))
-      ByteArray::class -> cache.plus(clazz.simpleName!! to FormattedSchema("byte", "string"))
+      Int::class -> cache[clazz.simpleName!!] = FormattedSchema("int32", "integer")
+      Long::class -> cache[clazz.simpleName!!] = FormattedSchema("int64", "integer")
+      Double::class -> cache[clazz.simpleName!!] = FormattedSchema("double", "number")
+      Float::class -> cache[clazz.simpleName!!] = FormattedSchema("float", "number")
+      String::class -> cache[clazz.simpleName!!] = SimpleSchema("string")
+      Boolean::class -> cache[clazz.simpleName!!] = SimpleSchema("boolean")
+      UUID::class -> cache[clazz.simpleName!!] = FormattedSchema("uuid", "string")
+      BigDecimal::class -> cache[clazz.simpleName!!] = FormattedSchema("double", "number")
+      BigInteger::class -> cache[clazz.simpleName!!] = FormattedSchema("int64", "integer")
+      ByteArray::class -> cache[clazz.simpleName!!] = FormattedSchema("byte", "string")
       else -> when {
         clazz.isSubclassOf(Collection::class) -> CollectionHandler.handle(type, clazz, cache)
         clazz.isSubclassOf(Enum::class) -> EnumHandler.handle(type, clazz, cache)
