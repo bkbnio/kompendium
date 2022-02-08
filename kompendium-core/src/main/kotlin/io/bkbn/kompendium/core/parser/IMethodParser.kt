@@ -77,7 +77,7 @@ interface IMethodParser {
     exceptionInfo: Set<ExceptionInfo<*>>,
     feature: Kompendium,
   ): Map<Int, Response> = exceptionInfo.associate { info ->
-    feature.config.cache = Kontent.generateKontent(info.responseType, feature.config.cache)
+    Kontent.generateKontent(info.responseType, feature.config.cache)
     val response = Response(
       description = info.description,
       content = feature.resolveContent(info.responseType, info.mediaTypes, info.examples)

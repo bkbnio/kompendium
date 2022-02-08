@@ -12,6 +12,7 @@ import io.bkbn.kompendium.core.fixtures.TestSimpleWithEnums
 import io.bkbn.kompendium.core.fixtures.TestSimpleWithList
 import io.bkbn.kompendium.core.fixtures.TestSimpleWithMap
 import io.bkbn.kompendium.core.fixtures.TestWithUUID
+import io.bkbn.kompendium.core.metadata.SchemaMap
 import io.bkbn.kompendium.oas.schema.DictionarySchema
 import io.bkbn.kompendium.oas.schema.FormattedSchema
 import io.bkbn.kompendium.oas.schema.ObjectSchema
@@ -21,7 +22,6 @@ import io.kotest.matchers.maps.beEmpty
 import io.kotest.matchers.maps.shouldContainKey
 import io.kotest.matchers.maps.shouldHaveKey
 import io.kotest.matchers.maps.shouldHaveSize
-import io.kotest.matchers.maps.shouldNotHaveKey
 import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
@@ -30,144 +30,186 @@ import java.util.UUID
 class KontentTest : DescribeSpec({
   describe("Kontent analysis") {
     it("Can return an empty map when passed Unit") {
+      // arrange
+      val cache: SchemaMap = mutableMapOf()
+
       // act
-      val result = generateKontent<Unit>()
+      generateKontent<Unit>(cache)
 
       // assert
-      result should beEmpty()
+      cache should beEmpty()
     }
     it("Can return a single map result when analyzing a primitive") {
+      // arrange
+      val cache: SchemaMap = mutableMapOf()
+
       // act
-      val result = generateKontent<Long>()
+      generateKontent<Long>(cache)
 
       // assert
-      result shouldHaveSize 1
-      result["Long"] shouldBe FormattedSchema("int64", "integer")
+      cache shouldHaveSize 1
+      cache["Long"] shouldBe FormattedSchema("int64", "integer")
     }
     it("Can handle BigDecimal and BigInteger Types") {
+      // arrange
+      val cache: SchemaMap = mutableMapOf()
+
       // act
-      val result = generateKontent<TestBigNumberModel>()
+      generateKontent<TestBigNumberModel>(cache)
 
       // assert
-      result shouldHaveSize 3
-      result shouldContainKey TestBigNumberModel::class.simpleName!!
-      result["BigDecimal"] shouldBe FormattedSchema("double", "number")
-      result["BigInteger"] shouldBe FormattedSchema("int64", "integer")
+      cache shouldHaveSize 3
+      cache shouldContainKey TestBigNumberModel::class.simpleName!!
+      cache["BigDecimal"] shouldBe FormattedSchema("double", "number")
+      cache["BigInteger"] shouldBe FormattedSchema("int64", "integer")
     }
     it("Can handle ByteArray type") {
+      // arrange
+      val cache: SchemaMap = mutableMapOf()
+
       // act
-      val result = generateKontent<TestByteArrayModel>()
+      generateKontent<TestByteArrayModel>(cache)
 
       // assert
-      result shouldHaveSize 2
-      result shouldContainKey TestByteArrayModel::class.simpleName!!
-      result["ByteArray"] shouldBe FormattedSchema("byte", "string")
+      cache shouldHaveSize 2
+      cache shouldContainKey TestByteArrayModel::class.simpleName!!
+      cache["ByteArray"] shouldBe FormattedSchema("byte", "string")
     }
     it("Allows objects to reference their base type in the cache") {
+      // arrange
+      val cache: SchemaMap = mutableMapOf()
+
       // act
-      val result = generateKontent<TestSimpleModel>()
+      generateKontent<TestSimpleModel>(cache)
 
       // assert
-      result shouldNotBe null
-      result shouldHaveSize 3
-      result shouldContainKey TestSimpleModel::class.simpleName!!
+      cache shouldNotBe null
+      cache shouldHaveSize 3
+      cache shouldContainKey TestSimpleModel::class.simpleName!!
     }
     it("Can generate cache for nested object types") {
+      // arrange
+      val cache: SchemaMap = mutableMapOf()
+
       // act
-      val result = generateKontent<TestNestedModel>()
+      generateKontent<TestNestedModel>(cache)
 
       // assert
-      result shouldNotBe null
-      result shouldHaveSize 4
-      result shouldContainKey TestNestedModel::class.simpleName!!
-      result shouldContainKey TestSimpleModel::class.simpleName!!
+      cache shouldNotBe null
+      cache shouldHaveSize 4
+      cache shouldContainKey TestNestedModel::class.simpleName!!
+      cache shouldContainKey TestSimpleModel::class.simpleName!!
     }
     it("Does not repeat generation for cached items") {
       // arrange
+      val cache: SchemaMap = mutableMapOf()
+
+      // arrange
       val clazz = TestNestedModel::class
-      val initialCache = generateKontent<TestNestedModel>()
+      generateKontent<TestNestedModel>(cache)
 
       // act
-      val result = generateKontent<TestSimpleModel>(initialCache)
+      generateKontent<TestSimpleModel>(cache)
 
       // assert TODO Spy to check invocation count?
-      result shouldNotBe null
-      result shouldHaveSize 4
-      result shouldContainKey clazz.simpleName!!
-      result shouldContainKey TestSimpleModel::class.simpleName!!
+      cache shouldNotBe null
+      cache shouldHaveSize 4
+      cache shouldContainKey clazz.simpleName!!
+      cache shouldContainKey TestSimpleModel::class.simpleName!!
     }
     it("allows for generation of enum types") {
+      // arrange
+      val cache: SchemaMap = mutableMapOf()
+
       // act
-      val result = generateKontent<TestSimpleWithEnums>()
+      generateKontent<TestSimpleWithEnums>(cache)
 
       // assert
-      result shouldNotBe null
-      result shouldHaveSize 3
-      result shouldContainKey TestSimpleWithEnums::class.simpleName!!
+      cache shouldNotBe null
+      cache shouldHaveSize 3
+      cache shouldContainKey TestSimpleWithEnums::class.simpleName!!
     }
     it("Allows for generation of map fields") {
+      // arrange
+      val cache: SchemaMap = mutableMapOf()
+
       // act
-      val result = generateKontent<TestSimpleWithMap>()
+      generateKontent<TestSimpleWithMap>(cache)
 
       // assert
-      result shouldNotBe null
-      result shouldHaveSize 5
-      result shouldContainKey "Map-String-TestSimpleModel"
-      result shouldContainKey TestSimpleWithMap::class.simpleName!!
-      result[TestSimpleWithMap::class.simpleName] as ObjectSchema shouldNotBe null // TODO Improve
+      cache shouldNotBe null
+      cache shouldHaveSize 5
+      cache shouldContainKey "Map-String-TestSimpleModel"
+      cache shouldContainKey TestSimpleWithMap::class.simpleName!!
+      cache[TestSimpleWithMap::class.simpleName] as ObjectSchema shouldNotBe null // TODO Improve
     }
     it("Throws an error if a map is of an invalid type") {
       // assert
       shouldThrow<IllegalStateException> { generateKontent<TestInvalidMap>() }
     }
     it("Can generate for collection fields") {
+      // arrange
+      val cache: SchemaMap = mutableMapOf()
+
       // act
-      val result = generateKontent<TestSimpleWithList>()
+      generateKontent<TestSimpleWithList>(cache)
 
       // assert
-      result shouldNotBe null
-      result shouldHaveSize 6
-      result shouldContainKey "List-TestSimpleModel"
-      result shouldContainKey TestSimpleWithList::class.simpleName!!
+      cache shouldNotBe null
+      cache shouldHaveSize 6
+      cache shouldContainKey "List-TestSimpleModel"
+      cache shouldContainKey TestSimpleWithList::class.simpleName!!
     }
     it("Can parse an enum list as a field") {
+      // arrange
+      val cache: SchemaMap = mutableMapOf()
+
       // act
-      val result = generateKontent<TestSimpleWithEnumList>()
+      generateKontent<TestSimpleWithEnumList>(cache)
 
       // assert
-      result shouldNotBe null
-      result shouldHaveSize 4
-      result shouldHaveKey "List-SimpleEnum"
+      cache shouldNotBe null
+      cache shouldHaveSize 4
+      cache shouldHaveKey "List-SimpleEnum"
     }
     it("Can support UUIDs") {
+      // arrange
+      val cache: SchemaMap = mutableMapOf()
+
       // act
-      val result = generateKontent<TestWithUUID>()
+      generateKontent<TestWithUUID>(cache)
 
       // assert
-      result shouldNotBe null
-      result shouldHaveSize 2
-      result shouldContainKey UUID::class.simpleName!!
-      result shouldContainKey TestWithUUID::class.simpleName!!
-      result[UUID::class.simpleName] as FormattedSchema shouldBe FormattedSchema("uuid", "string")
+      cache shouldNotBe null
+      cache shouldHaveSize 2
+      cache shouldContainKey UUID::class.simpleName!!
+      cache shouldContainKey TestWithUUID::class.simpleName!!
+      cache[UUID::class.simpleName] as FormattedSchema shouldBe FormattedSchema("uuid", "string")
     }
     it("Can generate a top level list response") {
+      // arrange
+      val cache: SchemaMap = mutableMapOf()
+
       // act
-      val result = generateKontent<List<TestSimpleModel>>()
+      generateKontent<List<TestSimpleModel>>(cache)
 
       // assert
-      result shouldNotBe null
-      result shouldHaveSize 4
-      result shouldContainKey "List-TestSimpleModel"
+      cache shouldNotBe null
+      cache shouldHaveSize 4
+      cache shouldContainKey "List-TestSimpleModel"
     }
     it("Can handle a complex type") {
+      // arrange
+      val cache: SchemaMap = mutableMapOf()
+
       // act
-      val result = generateKontent<ComplexRequest>()
+      generateKontent<ComplexRequest>(cache)
 
       // assert
-      result shouldNotBe null
-      result shouldHaveSize 7
-      result shouldContainKey "Map-String-CrazyItem"
-      result["Map-String-CrazyItem"] as DictionarySchema shouldNotBe null
+      cache shouldNotBe null
+      cache shouldHaveSize 7
+      cache shouldContainKey "Map-String-CrazyItem"
+      cache["Map-String-CrazyItem"] as DictionarySchema shouldNotBe null
     }
   }
 })
