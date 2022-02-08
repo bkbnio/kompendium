@@ -44,59 +44,53 @@ object ObjectHandler : SchemaHandler {
     // This needs to be simple because it will be stored under its appropriate reference component implicitly
     val slug = type.getSimpleSlug()
     // Only analyze if component has not already been stored in the cache
-    when (cache.containsKey(slug)) {
-      true -> {
-        logger.debug("Cache already contains $slug, returning cache untouched")
-        cache
+    if (!cache.containsKey(slug)) {
+      logger.debug("$slug was not found in cache, generating now")
+      // TODO Replace with something better!
+      // If referenced, add tie from simple slug to schema slug
+      if (clazz.hasAnnotation<Referenced>()) {
+        cache[type.getSimpleSlug()] = ReferencedSchema(type.getReferenceSlug())
       }
-      false -> {
-        logger.debug("$slug was not found in cache, generating now")
-        // TODO Replace with something better!
-        // If referenced, add tie from simple slug to schema slug
-        if (clazz.hasAnnotation<Referenced>()) {
-          cache[type.getSimpleSlug()] = ReferencedSchema(type.getReferenceSlug())
-        }
-        // Grabs any type parameters mapped to the corresponding type argument(s)
-        val typeMap: TypeMap = clazz.typeParameters.zip(type.arguments).toMap()
-        // associates each member with a Pair of prop name to property schema
-        val fieldMap = clazz.memberProperties.associate { prop ->
-          logger.debug("Analyzing $prop in class $clazz")
+      // Grabs any type parameters mapped to the corresponding type argument(s)
+      val typeMap: TypeMap = clazz.typeParameters.zip(type.arguments).toMap()
+      // associates each member with a Pair of prop name to property schema
+      val fieldMap = clazz.memberProperties.associate { prop ->
+        logger.debug("Analyzing $prop in class $clazz")
 
-          // Grab the field of the current property
-          val field = prop.javaField?.type?.kotlin ?: error("Unable to parse field type from $prop")
+        // Grab the field of the current property
+        val field = prop.javaField?.type?.kotlin ?: error("Unable to parse field type from $prop")
 
-          // Short circuit if data is free form
-          val freeForm = prop.findAnnotation<FreeFormObject>()
-          var name = prop.name
+        // Short circuit if data is free form
+        val freeForm = prop.findAnnotation<FreeFormObject>()
+        var name = prop.name
 
-          when (freeForm) {
-            null -> {
-              val bleh = handleDefault(typeMap, prop, cache)
-              bleh.first
-            }
-            else -> handleFreeForm(prop)
+        when (freeForm) {
+          null -> {
+            val bleh = handleDefault(typeMap, prop, cache)
+            bleh.first
           }
+          else -> handleFreeForm(prop)
         }
-        logger.debug("Looking for undeclared fields")
-        val undeclaredFieldMap = clazz.annotations.filterIsInstance<UndeclaredField>().associate {
-          val undeclaredType = it.clazz.createType()
-          generateKontent(undeclaredType, cache)
-          it.field to cache[undeclaredType.getSimpleSlug()]!!
-        }
-        logger.debug("$slug contains $fieldMap")
-        var schema = ObjectSchema(fieldMap.plus(undeclaredFieldMap))
-        val requiredParams = clazz.primaryConstructor?.parameters?.filterNot { it.isOptional } ?: emptyList()
-        // todo de-dup this logic
-        if (requiredParams.isNotEmpty()) {
-          schema = schema.copy(required = requiredParams.map { param ->
-            clazz.memberProperties.first { it.name == param.name }.findAnnotation<Field>()
-              ?.let { field -> field.name.ifBlank { param.name!! } }
-              ?: param.name!!
-          })
-        }
-        logger.debug("$slug schema: $schema")
-        cache[slug] = schema
       }
+      logger.debug("Looking for undeclared fields")
+      val undeclaredFieldMap = clazz.annotations.filterIsInstance<UndeclaredField>().associate {
+        val undeclaredType = it.clazz.createType()
+        generateKontent(undeclaredType, cache)
+        it.field to cache[undeclaredType.getSimpleSlug()]!!
+      }
+      logger.debug("$slug contains $fieldMap")
+      var schema = ObjectSchema(fieldMap.plus(undeclaredFieldMap))
+      val requiredParams = clazz.primaryConstructor?.parameters?.filterNot { it.isOptional } ?: emptyList()
+      // todo de-dup this logic
+      if (requiredParams.isNotEmpty()) {
+        schema = schema.copy(required = requiredParams.map { param ->
+          clazz.memberProperties.first { it.name == param.name }.findAnnotation<Field>()
+            ?.let { field -> field.name.ifBlank { param.name!! } }
+            ?: param.name!!
+        })
+      }
+      logger.debug("$slug schema: $schema")
+      cache[slug] = schema
     }
   }
 
