@@ -8,7 +8,7 @@ import io.bkbn.kompendium.auth.util.configBasicAuth
 import io.bkbn.kompendium.auth.util.configJwtAuth
 import io.bkbn.kompendium.auth.util.notarizedAuthRoute
 import io.bkbn.kompendium.auth.util.setupOauth
-import io.bkbn.kompendium.core.fixtures.TestHelpers.openApiTest
+import io.bkbn.kompendium.core.fixtures.TestHelpers.openApiTestAllSerializers
 import io.bkbn.kompendium.oas.security.OAuth
 import io.kotest.core.spec.style.DescribeSpec
 
@@ -21,7 +21,7 @@ class KompendiumAuthTest : DescribeSpec({
       }
 
       // act
-      openApiTest("notarized_basic_authenticated_get.json") {
+      openApiTestAllSerializers("notarized_basic_authenticated_get.json") {
         configBasicAuth()
         notarizedAuthRoute(authConfig)
       }
@@ -35,7 +35,7 @@ class KompendiumAuthTest : DescribeSpec({
       }
 
       // act
-      openApiTest("notarized_jwt_authenticated_get.json") {
+      openApiTestAllSerializers("notarized_jwt_authenticated_get.json") {
         configJwtAuth()
         notarizedAuthRoute(authConfig)
       }
@@ -60,7 +60,7 @@ class KompendiumAuthTest : DescribeSpec({
       }
 
       // act
-      openApiTest("notarized_oauth_all_flows.json") {
+      openApiTestAllSerializers("notarized_oauth_all_flows.json") {
         setupOauth()
         notarizedAuthRoute(authConfig)
       }
