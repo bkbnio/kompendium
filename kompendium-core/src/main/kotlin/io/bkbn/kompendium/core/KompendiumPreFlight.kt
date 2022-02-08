@@ -1,6 +1,5 @@
 package io.bkbn.kompendium.core
 
-import io.bkbn.kompendium.core.util.Helpers.COMPONENT_SLUG
 import io.bkbn.kompendium.oas.schema.AnyOfSchema
 import io.bkbn.kompendium.oas.schema.ArraySchema
 import io.bkbn.kompendium.oas.schema.ComponentSchema
@@ -46,21 +45,15 @@ object KompendiumPreFlight {
     Kontent.generateKontent(requestType, feature.config.cache)
     Kontent.generateKontent(responseType, feature.config.cache)
     Kontent.generateKontent(paramType, feature.config.cache)
-    feature.updateReferences()
+    feature.generateReferences()
   }
 
-  private fun Kompendium.updateReferences() {
-    val references = config.cache.values
-      .asSequence()
-      .map { flattenSchema(it) }
-      .flatten()
-      .filterIsInstance<ReferencedSchema>()
-      .map { it.`$ref` }
-      .map { it.replace(COMPONENT_SLUG.plus("/"), "") }
-      .toList()
-    references.forEach { ref ->
-      config.spec.components.schemas[ref] = config.cache[ref] ?: error("$ref does not exist in cache 😱")
-    }
+  private fun Kompendium.generateReferences() {
+    config.cache
+      .filterValues { it is ObjectSchema }
+      .forEach { (k, v) ->
+        config.spec.components.schemas[k] = v
+      }
   }
 
   private fun flattenSchema(schema: ComponentSchema): List<ComponentSchema> = when (schema) {

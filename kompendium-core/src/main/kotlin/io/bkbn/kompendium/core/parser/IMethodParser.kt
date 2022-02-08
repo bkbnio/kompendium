@@ -12,6 +12,7 @@ import io.bkbn.kompendium.core.metadata.method.PostInfo
 import io.bkbn.kompendium.core.metadata.method.PutInfo
 import io.bkbn.kompendium.core.util.Helpers
 import io.bkbn.kompendium.core.util.Helpers.capitalized
+import io.bkbn.kompendium.core.util.Helpers.getReferenceSlug
 import io.bkbn.kompendium.core.util.Helpers.getSimpleSlug
 import io.bkbn.kompendium.oas.path.PathOperation
 import io.bkbn.kompendium.oas.payload.MediaType
@@ -20,6 +21,7 @@ import io.bkbn.kompendium.oas.payload.Request
 import io.bkbn.kompendium.oas.payload.Response
 import io.bkbn.kompendium.oas.schema.AnyOfSchema
 import io.bkbn.kompendium.oas.schema.ObjectSchema
+import io.bkbn.kompendium.oas.schema.ReferencedSchema
 import io.ktor.routing.Route
 import kotlin.reflect.KClass
 import kotlin.reflect.KParameter
@@ -140,12 +142,10 @@ interface IMethodParser {
         val schema = if (classifier.isSealed) {
           val refs = classifier.sealedSubclasses
             .map { it.createType(type.arguments) }
-            .map { it.getSimpleSlug() }
-            .map { config.cache[it] ?: error("$it not available") }
+            .map { ReferencedSchema(it.getReferenceSlug()) }
           AnyOfSchema(refs)
         } else {
-          val ref = type.getSimpleSlug()
-          config.cache[ref] ?: error("$ref not available")
+          ReferencedSchema(type.getReferenceSlug())
         }
         MediaType(
           schema = schema,
