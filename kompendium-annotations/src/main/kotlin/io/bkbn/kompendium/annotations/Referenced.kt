@@ -8,4 +8,4 @@ package io.bkbn.kompendium.annotations
  */
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.CLASS)
-annotation class Referenced
+annotation class Referenced(val name: String = "")
