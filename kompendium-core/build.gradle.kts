@@ -1,5 +1,6 @@
 plugins {
   kotlin("jvm")
+  kotlin("plugin.serialization")
   id("io.bkbn.sourdough.library.jvm")
   id("io.gitlab.arturbosch.detekt")
   id("com.adarshr.test-logger")
@@ -40,6 +41,7 @@ dependencies {
   testFixturesApi(group = "io.ktor", name = "ktor-server-core", version = ktorVersion)
   testFixturesApi(group = "io.ktor", name = "ktor-server-test-host", version = ktorVersion)
   testFixturesApi(group = "io.ktor", name = "ktor-jackson", version = ktorVersion)
+  testFixturesApi(group = "io.ktor", name = "ktor-gson", version = ktorVersion)
   testFixturesApi(group = "io.ktor", name = "ktor-serialization", version = ktorVersion)
 
   testFixturesApi(group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version = "1.3.2")

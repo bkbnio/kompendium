@@ -39,7 +39,7 @@ fun main() {
 // Application Module
 private fun Application.mainModule() {
   install(ContentNegotiation) {
-    json(json = Util.kotlinxConfig)
+    json()
   }
   install(Kompendium) {
     spec = Util.baseSpec

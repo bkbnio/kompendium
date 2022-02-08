@@ -1,10 +1,9 @@
 package io.bkbn.kompendium.oas.schema
 
-import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.json.JsonClassDiscriminator
+import io.bkbn.kompendium.oas.serialization.ComponentSchemaSerializer
+import kotlinx.serialization.Serializable
 
-@OptIn(ExperimentalSerializationApi::class)
-@JsonClassDiscriminator("component_type") // todo figure out a way to filter this
+@Serializable(with = ComponentSchemaSerializer::class)
 sealed interface ComponentSchema {
   val description: String?
     get() = null

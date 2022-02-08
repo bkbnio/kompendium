@@ -18,6 +18,10 @@ object NumberSerializer : KSerializer<Number> {
   override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("Number", PrimitiveKind.DOUBLE)
 
   override fun serialize(encoder: Encoder, value: Number) {
-    encoder.encodeString(value.toString())
+    when (value) {
+      is Int -> encoder.encodeInt(value)
+      is Double -> encoder.encodeDouble(value)
+      else -> error("Invalid OpenApi Number $value")
+    }
   }
 }
