@@ -45,26 +45,30 @@ object TestHelpers {
     }
   }
 
+  /**
+   * This will take a provided JSON snapshot file, retrieve it from the resource folder,
+   * and build a test ktor server to compare the expected output with the output found in the default
+   * OpenAPI json endpoint.  By default, this will run the same test with Gson, Kotlinx, and Jackson serializers
+   * @param snapshotName The snapshot file to retrieve from the resources folder
+   * @param moduleFunction Initializer for the application to allow tests to pass the required Ktor modules
+   */
   fun openApiTestAllSerializers(snapshotName: String, moduleFunction: Application.() -> Unit) {
     openApiTest(snapshotName, SupportedSerializer.KOTLINX, moduleFunction)
     openApiTest(snapshotName, SupportedSerializer.JACKSON, moduleFunction)
     openApiTest(snapshotName, SupportedSerializer.GSON, moduleFunction)
   }
 
-  /**
-   * This will take a provided JSON snapshot file, retrieve it from the resource folder,
-   * and build a test ktor server to compare the expected output with the output found in the default
-   * OpenAPI json endpoint
-   * @param snapshotName The snapshot file to retrieve from the resources folder
-   * @param moduleFunction Initializer for the application to allow tests to pass the required Ktor modules
-   */
-  fun openApiTest(snapshotName: String, serializer: SupportedSerializer, moduleFunction: Application.() -> Unit) {
-    when (serializer) {
-      SupportedSerializer.KOTLINX -> {
-        withApplication(createTestEnvironment()) {
-          moduleFunction(application.apply {
-            kompendium()
-            docs()
+  private fun openApiTest(
+    snapshotName: String,
+    serializer: SupportedSerializer,
+    moduleFunction: Application.() -> Unit
+  ) {
+    withApplication(createTestEnvironment()) {
+      moduleFunction(application.apply {
+        kompendium()
+        docs()
+        when (serializer) {
+          SupportedSerializer.KOTLINX -> {
             install(ContentNegotiation) {
               json(Json {
                 encodeDefaults = true
@@ -72,32 +76,18 @@ object TestHelpers {
                 serializersModule = KompendiumSerializersModule.module
               })
             }
-          })
-          compareOpenAPISpec(snapshotName)
-        }
-      }
-      SupportedSerializer.GSON -> {
-        withApplication(createTestEnvironment()) {
-          moduleFunction(application.apply {
-            kompendium()
-            docs()
+          }
+          SupportedSerializer.GSON -> {
             install(ContentNegotiation) {
               gson()
             }
-          })
-          compareOpenAPISpec(snapshotName)
-        }
-      }
-      SupportedSerializer.JACKSON -> {
-        withApplication(createTestEnvironment()) {
-          moduleFunction(application.apply {
-            kompendium()
-            docs()
+          }
+          SupportedSerializer.JACKSON -> {
             jacksonConfigModule()
-          })
-          compareOpenAPISpec(snapshotName)
+          }
         }
-      }
+      })
+      compareOpenAPISpec(snapshotName)
     }
   }
 
