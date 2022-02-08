@@ -36,7 +36,7 @@ fun main() {
 private fun Application.mainModule() {
   // Installs Simple JSON Content Negotiation
   install(ContentNegotiation) {
-    json(json = Util.kotlinxConfig)
+    json()
   }
   // Installs the Kompendium Plugin and sets up baseline server metadata
   install(Kompendium) {

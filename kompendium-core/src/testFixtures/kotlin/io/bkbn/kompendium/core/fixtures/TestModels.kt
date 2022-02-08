@@ -18,6 +18,7 @@ import io.bkbn.kompendium.annotations.constraint.Minimum
 import io.bkbn.kompendium.annotations.constraint.MultipleOf
 import io.bkbn.kompendium.annotations.constraint.Pattern
 import io.bkbn.kompendium.annotations.constraint.UniqueItems
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
 import java.math.BigDecimal
 import java.math.BigInteger
@@ -46,10 +47,12 @@ data class TestParams(
   @Param(ParamType.QUERY) val aa: Int
 )
 
+@Serializable
 data class TestNested(val nesty: String)
 
 data class TestWithUUID(val id: UUID)
 
+@Serializable
 data class TestRequest(
   @Field(name = "field_name")
   val fieldName: TestNested,
@@ -57,6 +60,7 @@ data class TestRequest(
   val aaa: List<Long>
 )
 
+@Serializable
 data class TestResponse(val c: String)
 
 data class TestGeneric<T>(val messy: String, val potato: T)

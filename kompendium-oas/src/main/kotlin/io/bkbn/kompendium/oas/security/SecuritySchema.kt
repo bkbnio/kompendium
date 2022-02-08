@@ -1,8 +1,7 @@
 package io.bkbn.kompendium.oas.security
 
-import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.json.JsonClassDiscriminator
+import io.bkbn.kompendium.oas.serialization.SecuritySchemaSerializer
+import kotlinx.serialization.Serializable
 
-@OptIn(ExperimentalSerializationApi::class)
-@JsonClassDiscriminator("schema_type") // todo figure out a way to filter this
+@Serializable(with = SecuritySchemaSerializer::class)
 sealed interface SecuritySchema

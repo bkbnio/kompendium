@@ -1,16 +1,22 @@
 package io.bkbn.kompendium.core.fixtures
 
+import io.bkbn.kompendium.oas.serialization.KompendiumSerializersModule
 import io.kotest.assertions.json.shouldEqualJson
 import io.kotest.assertions.ktor.shouldHaveStatus
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.ktor.application.Application
+import io.ktor.application.install
+import io.ktor.features.ContentNegotiation
+import io.ktor.gson.gson
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
+import io.ktor.serialization.json
 import io.ktor.server.testing.TestApplicationEngine
 import io.ktor.server.testing.createTestEnvironment
 import io.ktor.server.testing.handleRequest
 import io.ktor.server.testing.withApplication
+import kotlinx.serialization.json.Json
 import java.io.File
 
 object TestHelpers {
@@ -47,11 +53,38 @@ object TestHelpers {
    * @param moduleFunction Initializer for the application to allow tests to pass the required Ktor modules
    */
   fun openApiTest(snapshotName: String, moduleFunction: Application.() -> Unit) {
+    // Jackson
     withApplication(createTestEnvironment()) {
       moduleFunction(application.apply {
         kompendium()
         docs()
         jacksonConfigModule()
+      })
+      compareOpenAPISpec(snapshotName)
+    }
+    // GSON
+    withApplication(createTestEnvironment()) {
+      moduleFunction(application.apply {
+        kompendium()
+        docs()
+        install(ContentNegotiation) {
+          gson()
+        }
+      })
+      compareOpenAPISpec(snapshotName)
+    }
+    // Kotlinx Serialization
+    withApplication(createTestEnvironment()) {
+      moduleFunction(application.apply {
+        kompendium()
+        docs()
+        install(ContentNegotiation) {
+          json(Json {
+            encodeDefaults = true
+            explicitNulls = false
+            serializersModule = KompendiumSerializersModule.module
+          })
+        }
       })
       compareOpenAPISpec(snapshotName)
     }

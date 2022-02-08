@@ -36,7 +36,7 @@ dependencies {
   implementation("org.slf4j:slf4j-simple:1.7.35")
 
 
-  implementation(group = "org.jetbrains.kotlinx", "kotlinx-serialization-json", version = "1.3.1")
+  implementation(group = "org.jetbrains.kotlinx", "kotlinx-serialization-json", version = "1.3.2")
 
   implementation(group = "joda-time", name = "joda-time", version = "2.10.13")
 }
