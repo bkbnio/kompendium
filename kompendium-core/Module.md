@@ -21,6 +21,14 @@ The downside is that issues could exist in serialization frameworks that have no
 Gson and KotlinX serialization have all been tested. If you run into any serialization issues, particularly with a
 serializer not listed above, please open an issue on GitHub 🙏
 
+Note for Kotlinx ⚠️
+
+You will need to include the `SerializersModule` provided in `KompendiumSerializersModule` in order to serialize 
+any provided defaults.  This comes down to how Kotlinx expects users to handle serializing `Any`.  Essentially, this 
+serializer module will convert any `Any` serialization to be `Contextual`.  This is pretty hacky, but seemed to be the
+only way to get Kotlinx to play nice with serializing `Any`.  If you come up with a better solution, definitely go ahead
+and open up a PR!
+
 ## Notarization
 
 Central to Kompendium is the concept of notarization.

@@ -6,6 +6,8 @@
 
 ### Changed
 - Cleaned up and broke out handlers into separate classes
+- Serializer cleanup
+- Tests now run against Jackson, Gson and kotlinx on every run
 
 ### Remove
 
