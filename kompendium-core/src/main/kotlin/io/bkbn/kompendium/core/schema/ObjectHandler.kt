@@ -40,7 +40,6 @@ object ObjectHandler : SchemaHandler {
    * @param clazz Class of the object to analyze
    * @param cache Existing schema map to append to
    */
-  @Suppress("LongMethod")
   override fun handle(type: KType, clazz: KClass<*>, cache: SchemaMap): SchemaMap {
     // This needs to be simple because it will be stored under its appropriate reference component implicitly
     val slug = type.getSimpleSlug()
@@ -71,31 +70,11 @@ object ObjectHandler : SchemaHandler {
           val freeForm = prop.findAnnotation<FreeFormObject>()
           var name = prop.name
 
-          // todo add method to clean up
           when (freeForm) {
             null -> {
-              val baseType = scanForGeneric(typeMap, prop)
-              val baseClazz = baseType.classifier as KClass<*>
-              val allTypes = scanForSealed(baseClazz, baseType)
-              newCache = updateCache(newCache, field, allTypes)
-              var propSchema = constructComponentSchema(
-                typeMap = typeMap,
-                prop = prop,
-                fieldClazz = field,
-                clazz = baseClazz,
-                type = baseType,
-                cache = newCache
-              )
-              // todo move to helper
-              prop.findAnnotation<Field>()?.let { fieldOverrides ->
-                if (fieldOverrides.description.isNotBlank()) {
-                  propSchema = propSchema.setDescription(fieldOverrides.description)
-                }
-                if (fieldOverrides.name.isNotBlank()) {
-                  name = fieldOverrides.name
-                }
-              }
-              Pair(name, propSchema)
+              val bleh = handleDefault(typeMap, prop, newCache)
+              newCache = bleh.second
+              bleh.first
             }
             else -> handleFreeForm(prop)
           }
@@ -124,7 +103,6 @@ object ObjectHandler : SchemaHandler {
   }
 
   // TODO Better type, or just make map mutable
-  @Suppress("UnusedPrivateMember")
   private fun handleDefault(
     typeMap: TypeMap,
     prop: KProperty1<*, *>,
