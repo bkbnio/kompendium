@@ -5,6 +5,7 @@
 ### Added
 
 ### Changed
+- Cleaned up and broke out handlers into separate classes
 
 ### Remove
 
