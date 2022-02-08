@@ -16,7 +16,6 @@ import io.bkbn.kompendium.oas.schema.AnyOfSchema
 import io.bkbn.kompendium.oas.schema.ArraySchema
 import io.bkbn.kompendium.oas.schema.ComponentSchema
 import io.bkbn.kompendium.oas.schema.DictionarySchema
-import io.bkbn.kompendium.oas.schema.EmptySchema
 import io.bkbn.kompendium.oas.schema.EnumSchema
 import io.bkbn.kompendium.oas.schema.FormattedSchema
 import io.bkbn.kompendium.oas.schema.FreeFormSchema
@@ -40,7 +39,6 @@ fun ComponentSchema.scanForConstraints(clazz: KClass<*>, prop: KProperty1<*, *>)
     is ObjectSchema -> scanForConstraints(clazz, prop)
     is SimpleSchema -> scanForConstraints(prop)
     is ReferencedSchema -> this // todo anything here?
-    EmptySchema -> error("Empty Schema cannot be scanned for constraints!")
   }
 
 fun ArraySchema.scanForConstraints(prop: KProperty1<*, *>): ArraySchema {

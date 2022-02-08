@@ -22,7 +22,6 @@ sealed interface ComponentSchema {
     is SimpleSchema -> this.copy(default = default)
     is ReferencedSchema -> this.copy(default = default)
     is FreeFormSchema -> this.copy(default = default)
-    is EmptySchema -> error("Cannot add default to an empty schema")
     else -> error("Compiler bug??")
   }
 
@@ -36,7 +35,6 @@ sealed interface ComponentSchema {
     is SimpleSchema -> this.copy(description = description)
     is ReferencedSchema -> this.copy(description = description)
     is FreeFormSchema -> this.copy(description = description)
-    is EmptySchema -> error("Cannot add description to an empty schema")
     else -> error("Compiler bug??")
   }
 }

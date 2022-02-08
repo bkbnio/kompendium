@@ -5,7 +5,6 @@ import io.bkbn.kompendium.oas.schema.AnyOfSchema
 import io.bkbn.kompendium.oas.schema.ArraySchema
 import io.bkbn.kompendium.oas.schema.ComponentSchema
 import io.bkbn.kompendium.oas.schema.DictionarySchema
-import io.bkbn.kompendium.oas.schema.EmptySchema
 import io.bkbn.kompendium.oas.schema.EnumSchema
 import io.bkbn.kompendium.oas.schema.FormattedSchema
 import io.bkbn.kompendium.oas.schema.FreeFormSchema
@@ -74,6 +73,5 @@ object KompendiumPreFlight {
     is FreeFormSchema -> listOf(schema)
     is ObjectSchema -> schema.properties.values.map { flattenSchema(it) }.flatten()
     is SimpleSchema -> listOf(schema)
-    EmptySchema -> error("There should be no empty schemas at this point! This indicates a library bug!")
   }
 }
