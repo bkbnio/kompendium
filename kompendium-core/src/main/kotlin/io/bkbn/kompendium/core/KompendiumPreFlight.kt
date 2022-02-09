@@ -1,15 +1,6 @@
 package io.bkbn.kompendium.core
 
-import io.bkbn.kompendium.oas.schema.AnyOfSchema
-import io.bkbn.kompendium.oas.schema.ArraySchema
-import io.bkbn.kompendium.oas.schema.ComponentSchema
-import io.bkbn.kompendium.oas.schema.DictionarySchema
-import io.bkbn.kompendium.oas.schema.EnumSchema
-import io.bkbn.kompendium.oas.schema.FormattedSchema
-import io.bkbn.kompendium.oas.schema.FreeFormSchema
 import io.bkbn.kompendium.oas.schema.ObjectSchema
-import io.bkbn.kompendium.oas.schema.ReferencedSchema
-import io.bkbn.kompendium.oas.schema.SimpleSchema
 import io.ktor.application.feature
 import io.ktor.routing.Route
 import io.ktor.routing.application
@@ -42,29 +33,17 @@ object KompendiumPreFlight {
   }
 
   fun addToCache(paramType: KType, requestType: KType, responseType: KType, feature: Kompendium) {
-    Kontent.generateKontent(requestType, feature.config.cache)
-    Kontent.generateKontent(responseType, feature.config.cache)
-    Kontent.generateKontent(paramType, feature.config.cache)
+    Kontent.generateKontent(requestType, feature.config.bodyCache)
+    Kontent.generateKontent(responseType, feature.config.bodyCache)
+    Kontent.generateKontent(paramType, feature.config.parameterCache)
     feature.generateReferences()
   }
 
   private fun Kompendium.generateReferences() {
-    config.cache
+    config.bodyCache
       .filterValues { it is ObjectSchema }
       .forEach { (k, v) ->
         config.spec.components.schemas[k] = v
       }
-  }
-
-  private fun flattenSchema(schema: ComponentSchema): List<ComponentSchema> = when (schema) {
-    is AnyOfSchema -> schema.anyOf.map { flattenSchema(it) }.flatten()
-    is ReferencedSchema -> listOf(schema)
-    is ArraySchema -> flattenSchema(schema.items)
-    is DictionarySchema -> flattenSchema(schema.additionalProperties)
-    is EnumSchema -> listOf(schema)
-    is FormattedSchema -> listOf(schema)
-    is FreeFormSchema -> listOf(schema)
-    is ObjectSchema -> schema.properties.values.map { flattenSchema(it) }.flatten()
-    is SimpleSchema -> listOf(schema)
   }
 }

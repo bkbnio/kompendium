@@ -2,12 +2,12 @@ package io.bkbn.kompendium.core.schema
 
 import io.bkbn.kompendium.annotations.Field
 import io.bkbn.kompendium.annotations.FreeFormObject
-import io.bkbn.kompendium.annotations.Referenced
 import io.bkbn.kompendium.annotations.UndeclaredField
 import io.bkbn.kompendium.annotations.constraint.MaxProperties
 import io.bkbn.kompendium.annotations.constraint.MinProperties
 import io.bkbn.kompendium.core.Kontent
 import io.bkbn.kompendium.core.Kontent.generateKontent
+import io.bkbn.kompendium.core.constraint.adjustForRequiredParams
 import io.bkbn.kompendium.core.constraint.scanForConstraints
 import io.bkbn.kompendium.core.metadata.SchemaMap
 import io.bkbn.kompendium.core.metadata.TypeMap
@@ -24,9 +24,7 @@ import kotlin.reflect.KProperty1
 import kotlin.reflect.KType
 import kotlin.reflect.full.createType
 import kotlin.reflect.full.findAnnotation
-import kotlin.reflect.full.hasAnnotation
 import kotlin.reflect.full.memberProperties
-import kotlin.reflect.full.primaryConstructor
 import kotlin.reflect.jvm.javaField
 import org.slf4j.LoggerFactory
 
@@ -46,67 +44,49 @@ object ObjectHandler : SchemaHandler {
     // Only analyze if component has not already been stored in the cache
     if (!cache.containsKey(slug)) {
       logger.debug("$slug was not found in cache, generating now")
-      // TODO Replace with something better!
-      // If referenced, add tie from simple slug to schema slug
-      if (clazz.hasAnnotation<Referenced>()) {
-        cache[type.getSimpleSlug()] = ReferencedSchema(type.getReferenceSlug())
-      }
-      // Grabs any type parameters mapped to the corresponding type argument(s)
+      cache[type.getSimpleSlug()] = ReferencedSchema(type.getReferenceSlug())
       val typeMap: TypeMap = clazz.typeParameters.zip(type.arguments).toMap()
-      // associates each member with a Pair of prop name to property schema
-      val fieldMap = clazz.memberProperties.associate { prop ->
-        logger.debug("Analyzing $prop in class $clazz")
-
-        // Grab the field of the current property
-        val field = prop.javaField?.type?.kotlin ?: error("Unable to parse field type from $prop")
-
-        // Short circuit if data is free form
-        val freeForm = prop.findAnnotation<FreeFormObject>()
-        var name = prop.name
-
-        when (freeForm) {
-          null -> {
-            val bleh = handleDefault(typeMap, prop, cache)
-            bleh.first
-          }
-          else -> handleFreeForm(prop)
-        }
-      }
-      logger.debug("Looking for undeclared fields")
-      val undeclaredFieldMap = clazz.annotations.filterIsInstance<UndeclaredField>().associate {
-        val undeclaredType = it.clazz.createType()
-        generateKontent(undeclaredType, cache)
-        it.field to cache[undeclaredType.getSimpleSlug()]!!
-      }
+      val fieldMap = clazz.generateFieldMap(typeMap, cache)
+      val undeclaredFieldMap = clazz.generateUndeclaredFieldMap(cache)
       logger.debug("$slug contains $fieldMap")
-      var schema = ObjectSchema(fieldMap.plus(undeclaredFieldMap))
-      val requiredParams = clazz.primaryConstructor?.parameters?.filterNot { it.isOptional } ?: emptyList()
-      // todo de-dup this logic
-      if (requiredParams.isNotEmpty()) {
-        schema = schema.copy(required = requiredParams.map { param ->
-          clazz.memberProperties.first { it.name == param.name }.findAnnotation<Field>()
-            ?.let { field -> field.name.ifBlank { param.name!! } }
-            ?: param.name!!
-        })
-      }
+      val schema = ObjectSchema(fieldMap.plus(undeclaredFieldMap)).adjustForRequiredParams(clazz)
       logger.debug("$slug schema: $schema")
       cache[slug] = schema
     }
   }
 
-  // TODO Better type, or just make map mutable
+  /**
+   * Associates each member with a Pair of prop name to property schema
+   */
+  private fun KClass<*>.generateFieldMap(typeMap: TypeMap, cache: SchemaMap) = memberProperties.associate { prop ->
+    logger.debug("Analyzing $prop in class $this")
+    // Short circuit if data is free form
+    when (prop.findAnnotation<FreeFormObject>()) {
+      null -> handleDefault(typeMap, prop, cache)
+      else -> handleFreeForm(prop)
+    }
+  }
+
+  private fun KClass<*>.generateUndeclaredFieldMap(cache: SchemaMap) =
+    annotations.filterIsInstance<UndeclaredField>().associate {
+      logger.debug("Identified undeclared field $it")
+      val undeclaredType = it.clazz.createType()
+      generateKontent(undeclaredType, cache)
+      it.field to cache[undeclaredType.getSimpleSlug()]!!
+    }
+
   private fun handleDefault(
     typeMap: TypeMap,
     prop: KProperty1<*, *>,
     cache: SchemaMap
-  ): Pair<Pair<String, ComponentSchema>, SchemaMap> {
+  ): Pair<String, ComponentSchema> {
     var name = prop.name
     val field = prop.javaField?.type?.kotlin ?: error("Unable to parse field type from $prop")
     val baseType = scanForGeneric(typeMap, prop)
     val baseClazz = baseType.classifier as KClass<*>
     val allTypes = scanForSealed(baseClazz, baseType)
     updateCache(cache, field, allTypes)
-    var propSchema = constructComponentSchema(
+    val propSchema = constructComponentSchema(
       typeMap = typeMap,
       prop = prop,
       fieldClazz = field,
@@ -114,16 +94,20 @@ object ObjectHandler : SchemaHandler {
       type = baseType,
       cache = cache
     )
-    // todo move to helper
+    return propSchema.adjustForFieldOverrides(prop)
+  }
+
+  private fun ComponentSchema.adjustForFieldOverrides(prop: KProperty1<*, *>): Pair<String, ComponentSchema> {
+    var name = prop.name
     prop.findAnnotation<Field>()?.let { fieldOverrides ->
       if (fieldOverrides.description.isNotBlank()) {
-        propSchema = propSchema.setDescription(fieldOverrides.description)
+        this.setDescription(fieldOverrides.description)
       }
       if (fieldOverrides.name.isNotBlank()) {
         name = fieldOverrides.name
       }
     }
-    return Pair(Pair(name, propSchema), cache)
+    return Pair(name, this)
   }
 
   private fun handleFreeForm(prop: KProperty1<*, *>): Pair<String, FreeFormSchema> {

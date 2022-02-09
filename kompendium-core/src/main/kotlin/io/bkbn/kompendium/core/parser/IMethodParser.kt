@@ -79,7 +79,7 @@ interface IMethodParser {
     exceptionInfo: Set<ExceptionInfo<*>>,
     feature: Kompendium,
   ): Map<Int, Response> = exceptionInfo.associate { info ->
-    Kontent.generateKontent(info.responseType, feature.config.cache)
+    Kontent.generateKontent(info.responseType, feature.config.bodyCache)
     val response = Response(
       description = info.description,
       content = feature.resolveContent(info.responseType, info.mediaTypes, info.examples)
@@ -175,7 +175,7 @@ interface IMethodParser {
     parentClazz: KClass<*>,
     feature: Kompendium
   ): Parameter {
-    val wrapperSchema = feature.config.cache[parentType.getSimpleSlug()]!! as ObjectSchema
+    val wrapperSchema = feature.config.parameterCache[parentType.getSimpleSlug()]!! as ObjectSchema
     val anny = this.findAnnotation<Param>()
       ?: error("Field $name is not annotated with KompendiumParam")
     val schema = wrapperSchema.properties[name]
