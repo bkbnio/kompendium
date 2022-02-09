@@ -33,7 +33,7 @@ dependencies {
   implementation("org.apache.logging.log4j:log4j-api:2.17.1")
   implementation("org.apache.logging.log4j:log4j-core:2.17.1")
   implementation("org.slf4j:slf4j-api:1.7.35")
-  implementation("org.slf4j:slf4j-simple:1.7.35")
+  implementation("org.slf4j:slf4j-simple:1.7.36")
 
 
   implementation(group = "org.jetbrains.kotlinx", "kotlinx-serialization-json", version = "1.3.2")
