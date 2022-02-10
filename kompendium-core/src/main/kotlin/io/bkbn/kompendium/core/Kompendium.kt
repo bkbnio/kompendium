@@ -4,12 +4,14 @@ import io.bkbn.kompendium.core.metadata.SchemaMap
 import io.bkbn.kompendium.oas.OpenApiSpec
 import io.bkbn.kompendium.oas.schema.TypedSchema
 import io.ktor.application.Application
-import io.ktor.application.ApplicationCallPipeline
 import io.ktor.application.ApplicationFeature
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
-import io.ktor.request.path
 import io.ktor.response.respond
+import io.ktor.routing.Routing
+import io.ktor.routing.get
+import io.ktor.routing.route
+import io.ktor.routing.routing
 import io.ktor.util.AttributeKey
 import kotlin.reflect.KClass
 
@@ -19,7 +21,13 @@ class Kompendium(val config: Configuration) {
     lateinit var spec: OpenApiSpec
 
     var cache: SchemaMap = mutableMapOf()
-    var specRoute = "/openapi.json"
+    var openApiJson: Routing.(OpenApiSpec) -> Unit = { spec ->
+      route("/openapi.json") {
+        get {
+          call.respond(HttpStatusCode.OK, spec)
+        }
+      }
+    }
 
     // TODO Add tests for this!!
     fun addCustomTypeSchema(clazz: KClass<*>, schema: TypedSchema) {
@@ -31,13 +39,8 @@ class Kompendium(val config: Configuration) {
     override val key: AttributeKey<Kompendium> = AttributeKey("Kompendium")
     override fun install(pipeline: Application, configure: Configuration.() -> Unit): Kompendium {
       val configuration = Configuration().apply(configure)
-
-      pipeline.intercept(ApplicationCallPipeline.Call) {
-        if (call.request.path() == configuration.specRoute) {
-          call.respond(HttpStatusCode.OK, configuration.spec)
-        }
-      }
-
+      val routing = pipeline.routing { }
+      configuration.openApiJson(routing, configuration.spec)
       return Kompendium(configuration)
     }
   }
