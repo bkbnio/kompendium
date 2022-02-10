@@ -3,6 +3,7 @@ package io.bkbn.kompendium.playground
 import io.bkbn.kompendium.core.Kompendium
 import io.bkbn.kompendium.core.Notarized.notarizedGet
 import io.bkbn.kompendium.core.routes.swagger
+import io.bkbn.kompendium.oas.serialization.KompendiumSerializersModule
 import io.bkbn.kompendium.playground.util.Util
 import io.ktor.application.Application
 import io.ktor.application.call
@@ -15,6 +16,7 @@ import io.ktor.serialization.json
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import io.ktor.webjars.Webjars
+import kotlinx.serialization.json.Json
 import java.util.UUID
 
 /**
@@ -33,7 +35,11 @@ fun main() {
 private fun Application.mainModule() {
   // Installs Simple JSON Content Negotiation
   install(ContentNegotiation) {
-    json()
+    json(Json {
+      serializersModule = KompendiumSerializersModule.module
+      encodeDefaults = true
+      explicitNulls = false
+    })
   }
   install(Webjars)
   // Installs the Kompendium Plugin and sets up baseline server metadata
