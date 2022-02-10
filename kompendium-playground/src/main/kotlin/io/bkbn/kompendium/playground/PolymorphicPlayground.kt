@@ -5,6 +5,7 @@ import io.bkbn.kompendium.core.Notarized.notarizedGet
 import io.bkbn.kompendium.core.metadata.ResponseInfo
 import io.bkbn.kompendium.core.metadata.method.GetInfo
 import io.bkbn.kompendium.core.routes.redoc
+import io.bkbn.kompendium.oas.serialization.KompendiumSerializersModule
 import io.bkbn.kompendium.playground.PolymorphicPlaygroundToC.polymorphicExample
 import io.bkbn.kompendium.playground.util.Util
 import io.ktor.application.Application
@@ -18,6 +19,7 @@ import io.ktor.serialization.json
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 
 /**
  * Application entrypoint.  Run this and head on over to `localhost:8081/docs`
@@ -34,7 +36,11 @@ fun main() {
 private fun Application.mainModule() {
   // Installs Simple JSON Content Negotiation
   install(ContentNegotiation) {
-    json()
+    json(Json {
+      serializersModule = KompendiumSerializersModule.module
+      encodeDefaults = true
+      explicitNulls = false
+    })
   }
   // Installs the Kompendium Plugin and sets up baseline server metadata
   install(Kompendium) {

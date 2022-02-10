@@ -15,6 +15,8 @@ import io.bkbn.kompendium.core.metadata.method.DeleteInfo
 import io.bkbn.kompendium.core.metadata.method.GetInfo
 import io.bkbn.kompendium.core.metadata.method.PostInfo
 import io.bkbn.kompendium.core.routes.redoc
+import io.bkbn.kompendium.core.routes.swagger
+import io.bkbn.kompendium.oas.serialization.KompendiumSerializersModule
 import io.bkbn.kompendium.playground.BasicModels.BasicParameters
 import io.bkbn.kompendium.playground.BasicModels.BasicRequest
 import io.bkbn.kompendium.playground.BasicModels.BasicResponse
@@ -37,6 +39,7 @@ import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 import java.util.UUID
 
 /**
@@ -55,7 +58,11 @@ fun main() {
 private fun Application.mainModule() {
   // Installs Simple JSON Content Negotiation
   install(ContentNegotiation) {
-    json()
+    json(Json {
+      serializersModule = KompendiumSerializersModule.module
+      encodeDefaults = true
+      explicitNulls = false
+    })
   }
   // Installs the Kompendium Plugin and sets up baseline server metadata
   install(Kompendium) {
@@ -66,6 +73,8 @@ private fun Application.mainModule() {
     // This adds ReDoc support at the `/docs` endpoint.
     // By default, it will point at the `/openapi.json` created by Kompendium
     redoc(pageTitle = "Simple API Docs")
+    // You can also use swagger!
+    swagger(pageTitle = "Swaggerlicious")
     // Kompendium infers the route path from the Ktor Route.  This will show up as the root path `/`
     notarizedGet(simpleGetExample) {
       call.respond(HttpStatusCode.OK, BasicResponse(c = UUID.randomUUID().toString()))

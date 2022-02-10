@@ -23,6 +23,7 @@ import io.bkbn.kompendium.core.metadata.ResponseInfo
 import io.bkbn.kompendium.core.metadata.method.GetInfo
 import io.bkbn.kompendium.core.metadata.method.PostInfo
 import io.bkbn.kompendium.core.routes.redoc
+import io.bkbn.kompendium.oas.serialization.KompendiumSerializersModule
 import io.bkbn.kompendium.playground.ConstrainedModels.ConstrainedParams
 import io.bkbn.kompendium.playground.ConstrainedModels.ConstrainedRequest
 import io.bkbn.kompendium.playground.ConstrainedModels.ConstrainedResponse
@@ -40,6 +41,7 @@ import io.ktor.serialization.json
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 
 fun main() {
@@ -54,7 +56,11 @@ fun main() {
 private fun Application.mainModule() {
   // Installs Simple JSON Content Negotiation
   install(ContentNegotiation) {
-    json()
+    json(Json {
+      serializersModule = KompendiumSerializersModule.module
+      encodeDefaults = true
+      explicitNulls = false
+    })
   }
   // Installs the Kompendium Plugin and sets up baseline server metadata
   install(Kompendium) {

@@ -3,18 +3,24 @@
 ## Unreleased
 
 ### Added
-- Custom Type example to playground
 
 ### Changed
-- Cleaned up and broke out handlers into separate classes
-- Serializer cleanup
-- Tests now run against Jackson, Gson and kotlinx on every run
 
 ### Remove
 
 ---
 
 ## Released
+
+## [2.0.4] - February 10th, 2022
+### Added
+- Custom Type example to playground
+
+### Changed
+- Cleaned up and broke out handlers into separate classes
+- Serializer cleanup
+- Tests now run against Jackson, Gson and kotlinx on every run
+- Swagger UI bumped from v3 to v4
 
 ## [2.0.3] - February 7th, 2022
 ### Changed

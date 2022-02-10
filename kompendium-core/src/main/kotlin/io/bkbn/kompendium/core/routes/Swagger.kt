@@ -36,7 +36,7 @@ fun Routing.swagger(pageTitle: String = "Docs", specUrl: String = "/openapi.json
             content = "width=device-width, initial-scale=1"
           }
           link {
-            href = "https://unpkg.com/swagger-ui-dist@3.12.1/swagger-ui.css"
+            href = "https://unpkg.com/swagger-ui-dist@4.5.0/swagger-ui.css"
             rel = "stylesheet"
           }
         }
@@ -45,10 +45,10 @@ fun Routing.swagger(pageTitle: String = "Docs", specUrl: String = "/openapi.json
             id = "swagger-ui"
           }
           script {
-            src = "https://unpkg.com/swagger-ui-dist@3.12.1/swagger-ui-standalone-preset.js"
+            src = "https://unpkg.com/swagger-ui-dist@4.5.0/swagger-ui-standalone-preset.js"
           }
           script {
-            src = "https://unpkg.com/swagger-ui-dist@3.12.1/swagger-ui-bundle.js"
+            src = "https://unpkg.com/swagger-ui-dist@4.5.0/swagger-ui-bundle.js"
           }
           unsafe {
             +"""
