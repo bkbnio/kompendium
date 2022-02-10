@@ -41,7 +41,7 @@ Library documentation lives alongside the source code, and is generated into a s
 
 ## Local Development
 
-Kompendium should run locally right out of the box, no configuration necessary (assuming you have JDK 1.8+ installed).
+Kompendium should run locally right out of the box, no configuration necessary (assuming you have JDK 11+ installed).
 New features can be built locally and published to your local maven repository with the `./gradlew publishToMavenLocal`
 command!
 
