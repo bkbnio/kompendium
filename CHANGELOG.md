@@ -3,6 +3,7 @@
 ## Unreleased
 
 ### Added
+- Custom Type example to playground
 
 ### Changed
 - Cleaned up and broke out handlers into separate classes
