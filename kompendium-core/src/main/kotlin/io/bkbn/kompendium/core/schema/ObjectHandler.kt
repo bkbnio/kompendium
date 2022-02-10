@@ -44,6 +44,7 @@ object ObjectHandler : SchemaHandler {
     // Only analyze if component has not already been stored in the cache
     if (!cache.containsKey(slug)) {
       logger.debug("$slug was not found in cache, generating now")
+      // todo this should be some kind of empty schema at this point, then throw error if not updated eventually
       cache[type.getSimpleSlug()] = ReferencedSchema(type.getReferenceSlug())
       val typeMap: TypeMap = clazz.typeParameters.zip(type.arguments).toMap()
       val fieldMap = clazz.generateFieldMap(typeMap, cache)
@@ -80,7 +81,6 @@ object ObjectHandler : SchemaHandler {
     prop: KProperty1<*, *>,
     cache: SchemaMap
   ): Pair<String, ComponentSchema> {
-    var name = prop.name
     val field = prop.javaField?.type?.kotlin ?: error("Unable to parse field type from $prop")
     val baseType = scanForGeneric(typeMap, prop)
     val baseClazz = baseType.classifier as KClass<*>
