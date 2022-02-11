@@ -1,8 +1,13 @@
 package io.bkbn.kompendium.core
 
+import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.databind.ObjectMapper
 import io.bkbn.kompendium.core.fixtures.TestHelpers.apiFunctionalityTest
+import io.bkbn.kompendium.core.fixtures.TestHelpers.compareOpenAPISpec
 import io.bkbn.kompendium.core.fixtures.TestHelpers.getFileSnapshot
 import io.bkbn.kompendium.core.fixtures.TestHelpers.openApiTestAllSerializers
+import io.bkbn.kompendium.core.fixtures.TestSpecs.defaultSpec
+import io.bkbn.kompendium.core.fixtures.docs
 import io.bkbn.kompendium.core.util.complexType
 import io.bkbn.kompendium.core.util.constrainedDoubleInfo
 import io.bkbn.kompendium.core.util.constrainedIntInfo
@@ -53,9 +58,22 @@ import io.bkbn.kompendium.core.util.uniqueArray
 import io.bkbn.kompendium.core.util.withDefaultParameter
 import io.bkbn.kompendium.core.util.withExamples
 import io.bkbn.kompendium.core.util.withOperationId
+import io.bkbn.kompendium.oas.serialization.KompendiumSerializersModule
 import io.kotest.core.spec.style.DescribeSpec
+import io.ktor.application.call
+import io.ktor.application.install
+import io.ktor.features.ContentNegotiation
+import io.ktor.http.ContentType
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
+import io.ktor.jackson.jackson
+import io.ktor.response.respondText
+import io.ktor.routing.get
+import io.ktor.routing.route
+import io.ktor.serialization.json
+import io.ktor.server.testing.withTestApplication
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 class KompendiumTest : DescribeSpec({
   describe("Notarized Open API Metadata Tests") {
@@ -256,6 +274,61 @@ class KompendiumTest : DescribeSpec({
   describe("Free Form") {
     it("Can create a free-form field") {
       openApiTestAllSerializers("free_form_object.json") { freeFormObject() }
+    }
+  }
+  describe("Serialization overrides") {
+    it("Can override the jackson serializer") {
+      withTestApplication({
+        install(Kompendium) {
+          spec = defaultSpec()
+          openApiJson = { spec ->
+            val om = ObjectMapper().apply {
+              setSerializationInclusion(JsonInclude.Include.NON_NULL)
+            }
+            route("/openapi.json") {
+              get {
+                call.respondText { om.writeValueAsString(spec) }
+              }
+            }
+          }
+        }
+        install(ContentNegotiation) {
+          jackson(ContentType.Application.Json)
+        }
+        docs()
+        withExamples()
+      }) {
+        compareOpenAPISpec("example_req_and_resp.json")
+      }
+    }
+    it("Can override the kotlinx serializer") {
+      withTestApplication({
+        install(Kompendium) {
+          spec = defaultSpec()
+          openApiJson = { spec ->
+            val om = ObjectMapper().apply {
+              setSerializationInclusion(JsonInclude.Include.NON_NULL)
+            }
+            route("/openapi.json") {
+              get {
+                val customSerializer = Json {
+                  serializersModule = KompendiumSerializersModule.module
+                  encodeDefaults = true
+                  explicitNulls = false
+                }
+                call.respondText { customSerializer.encodeToString(spec) }
+              }
+            }
+          }
+        }
+        install(ContentNegotiation) {
+          json()
+        }
+        docs()
+        withExamples()
+      }) {
+        compareOpenAPISpec("example_req_and_resp.json")
+      }
     }
   }
 })

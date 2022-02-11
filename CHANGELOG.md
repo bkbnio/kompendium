@@ -3,6 +3,7 @@
 ## Unreleased
 
 ### Added
+- Ability to override serializer via custom route
 
 ### Changed
 
