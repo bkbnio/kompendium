@@ -8,6 +8,7 @@ import io.bkbn.kompendium.core.metadata.ParameterExample
 import io.bkbn.kompendium.core.metadata.RequestInfo
 import io.bkbn.kompendium.core.metadata.ResponseInfo
 import io.bkbn.kompendium.core.metadata.method.MethodInfo
+import io.bkbn.kompendium.core.metadata.method.PatchInfo
 import io.bkbn.kompendium.core.metadata.method.PostInfo
 import io.bkbn.kompendium.core.metadata.method.PutInfo
 import io.bkbn.kompendium.core.util.Helpers
@@ -61,6 +62,7 @@ interface IMethodParser {
     requestBody = when (info) {
       is PutInfo<*, *, *> -> requestType.toRequestSpec(info.requestInfo, feature)
       is PostInfo<*, *, *> -> requestType.toRequestSpec(info.requestInfo, feature)
+      is PatchInfo<*, *, *> -> requestType.toRequestSpec(info.requestInfo, feature)
       else -> null
     },
     security = if (info.securitySchemes.isNotEmpty()) listOf(

@@ -11,6 +11,7 @@ import io.bkbn.kompendium.core.constraint.adjustForRequiredParams
 import io.bkbn.kompendium.core.constraint.scanForConstraints
 import io.bkbn.kompendium.core.metadata.SchemaMap
 import io.bkbn.kompendium.core.metadata.TypeMap
+import io.bkbn.kompendium.core.util.Helpers.COMPONENT_SLUG
 import io.bkbn.kompendium.core.util.Helpers.getReferenceSlug
 import io.bkbn.kompendium.core.util.Helpers.getSimpleSlug
 import io.bkbn.kompendium.oas.schema.AnyOfSchema
@@ -47,10 +48,18 @@ object ObjectHandler : SchemaHandler {
       // todo this should be some kind of empty schema at this point, then throw error if not updated eventually
       cache[type.getSimpleSlug()] = ReferencedSchema(type.getReferenceSlug())
       val typeMap: TypeMap = clazz.typeParameters.zip(type.arguments).toMap()
+      // TODO clean this up
       val fieldMap = clazz.generateFieldMap(typeMap, cache)
-      val undeclaredFieldMap = clazz.generateUndeclaredFieldMap(cache)
+        .plus(clazz.generateUndeclaredFieldMap(cache))
+        .mapValues { (_, v) ->
+          when (v is ObjectSchema) {
+            false -> v
+            // TODO LOL DO NOT MERGE THIS
+            true -> ReferencedSchema(COMPONENT_SLUG.plus("/").plus(cache.filter { (_, vv) -> vv == v }.keys.first()))
+          }
+        }
       logger.debug("$slug contains $fieldMap")
-      val schema = ObjectSchema(fieldMap.plus(undeclaredFieldMap)).adjustForRequiredParams(clazz)
+      val schema = ObjectSchema(fieldMap).adjustForRequiredParams(clazz)
       logger.debug("$slug schema: $schema")
       cache[slug] = schema
     }
