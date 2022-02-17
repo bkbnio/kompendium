@@ -147,7 +147,11 @@ interface IMethodParser {
             .map { ReferencedSchema(it.getReferenceSlug()) }
           AnyOfSchema(refs)
         } else {
-          ReferencedSchema(type.getReferenceSlug())
+          if (config.spec.components.schemas.containsKey(type.getSimpleSlug())) {
+            ReferencedSchema(type.getReferenceSlug())
+          } else {
+            config.bodyCache[type.getSimpleSlug()] ?: error("REEEE")
+          }
         }
         MediaType(
           schema = schema,

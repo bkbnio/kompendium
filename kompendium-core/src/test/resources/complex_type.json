@@ -37,53 +37,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "properties": {
-                  "amazing_field": {
-                    "type": "string"
-                  },
-                  "org": {
-                    "type": "string"
-                  },
-                  "tables": {
-                    "items": {
-                      "properties": {
-                        "alias": {
-                          "additionalProperties": {
-                            "properties": {
-                              "enumeration": {
-                                "enum": [
-                                  "ONE",
-                                  "TWO"
-                                ],
-                                "type": "string"
-                              }
-                            },
-                            "required": [
-                              "enumeration"
-                            ],
-                            "type": "object"
-                          },
-                          "type": "object"
-                        },
-                        "name": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "name",
-                        "alias"
-                      ],
-                      "type": "object"
-                    },
-                    "type": "array"
-                  }
-                },
-                "required": [
-                  "org",
-                  "amazing_field",
-                  "tables"
-                ],
-                "type": "object"
+                "$ref": "#/components/schemas/ComplexRequest"
               }
             }
           },
@@ -95,20 +49,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "properties": {
-                    "c": {
-                      "type": "string"
-                    },
-                    "id": {
-                      "format": "int32",
-                      "type": "integer"
-                    }
-                  },
-                  "required": [
-                    "id",
-                    "c"
-                  ],
-                  "type": "object"
+                  "$ref": "#/components/schemas/TestCreatedResponse"
                 }
               }
             }
@@ -119,7 +60,82 @@
     }
   },
   "components": {
-    "schemas": {},
+    "schemas": {
+      "ComplexRequest": {
+        "properties": {
+          "amazing_field": {
+            "type": "string"
+          },
+          "org": {
+            "type": "string"
+          },
+          "tables": {
+            "items": {
+              "$ref": "#/components/schemas/NestedComplexItem"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "org",
+          "amazing_field",
+          "tables"
+        ],
+        "type": "object"
+      },
+      "NestedComplexItem": {
+        "properties": {
+          "alias": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/CrazyItem"
+            },
+            "type": "object"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "alias"
+        ],
+        "type": "object"
+      },
+      "CrazyItem": {
+        "properties": {
+          "enumeration": {
+            "$ref": "#/components/schemas/SimpleEnum"
+          }
+        },
+        "required": [
+          "enumeration"
+        ],
+        "type": "object"
+      },
+      "SimpleEnum": {
+        "enum": [
+          "ONE",
+          "TWO"
+        ],
+        "type": "string"
+      },
+      "TestCreatedResponse": {
+        "properties": {
+          "c": {
+            "type": "string"
+          },
+          "id": {
+            "format": "int32",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "c"
+        ],
+        "type": "object"
+      }
+    },
     "securitySchemes": {}
   },
   "security": [],

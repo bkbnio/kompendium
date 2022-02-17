@@ -16,6 +16,7 @@ import io.bkbn.kompendium.core.util.Helpers.getReferenceSlug
 import io.bkbn.kompendium.core.util.Helpers.getSimpleSlug
 import io.bkbn.kompendium.oas.schema.AnyOfSchema
 import io.bkbn.kompendium.oas.schema.ComponentSchema
+import io.bkbn.kompendium.oas.schema.EnumSchema
 import io.bkbn.kompendium.oas.schema.FreeFormSchema
 import io.bkbn.kompendium.oas.schema.ObjectSchema
 import io.bkbn.kompendium.oas.schema.ReferencedSchema
@@ -52,10 +53,15 @@ object ObjectHandler : SchemaHandler {
       val fieldMap = clazz.generateFieldMap(typeMap, cache)
         .plus(clazz.generateUndeclaredFieldMap(cache))
         .mapValues { (_, v) ->
-          when (v is ObjectSchema) {
-            false -> v
+          when (v) {
             // TODO LOL DO NOT MERGE THIS
-            true -> ReferencedSchema(COMPONENT_SLUG.plus("/").plus(cache.filter { (_, vv) -> vv == v }.keys.first()))
+            is ObjectSchema -> ReferencedSchema(
+              COMPONENT_SLUG.plus("/").plus(cache.filter { (_, vv) -> vv == v }.keys.first())
+            )
+            is EnumSchema -> ReferencedSchema(
+              COMPONENT_SLUG.plus("/").plus(cache.filter { (_, vv) -> vv == v }.keys.first())
+            )
+            else -> v
           }
         }
       logger.debug("$slug contains $fieldMap")

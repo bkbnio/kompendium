@@ -1,5 +1,6 @@
 package io.bkbn.kompendium.core
 
+import io.bkbn.kompendium.oas.schema.EnumSchema
 import io.bkbn.kompendium.oas.schema.ObjectSchema
 import io.ktor.application.feature
 import io.ktor.routing.Route
@@ -41,7 +42,7 @@ object KompendiumPreFlight {
 
   private fun Kompendium.generateReferences() {
     config.bodyCache
-      .filterValues { it is ObjectSchema }
+      .filterValues { it is ObjectSchema || it is EnumSchema }
       .forEach { (k, v) ->
         config.spec.components.schemas[k] = v
       }
