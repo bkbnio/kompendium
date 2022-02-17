@@ -1,4 +1,4 @@
-package io.bkbn.kompendium.core.schema
+package io.bkbn.kompendium.core.handler
 
 import io.bkbn.kompendium.annotations.Field
 import io.bkbn.kompendium.annotations.FreeFormObject

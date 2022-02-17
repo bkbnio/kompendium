@@ -1,4 +1,4 @@
-package io.bkbn.kompendium.core.schema
+package io.bkbn.kompendium.core.handler
 
 import io.bkbn.kompendium.core.Kontent
 import io.bkbn.kompendium.core.Kontent.generateKTypeKontent
