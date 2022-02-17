@@ -40,7 +40,7 @@ object KompendiumPreFlight {
     feature.generateReferences()
   }
 
-  private fun Kompendium.generateReferences() {
+  fun Kompendium.generateReferences() {
     config.bodyCache
       .filterValues { it is ObjectSchema || it is EnumSchema }
       .forEach { (k, v) ->

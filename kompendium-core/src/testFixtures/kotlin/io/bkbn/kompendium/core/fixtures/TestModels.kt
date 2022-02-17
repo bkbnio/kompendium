@@ -4,7 +4,6 @@ import io.bkbn.kompendium.annotations.Field
 import io.bkbn.kompendium.annotations.FreeFormObject
 import io.bkbn.kompendium.annotations.Param
 import io.bkbn.kompendium.annotations.ParamType
-import io.bkbn.kompendium.annotations.Referenced
 import io.bkbn.kompendium.annotations.UndeclaredField
 import io.bkbn.kompendium.annotations.constraint.Format
 import io.bkbn.kompendium.annotations.constraint.MaxItems
@@ -204,7 +203,6 @@ sealed interface SlammaJamma
 data class OneJamma(val a: Int) : SlammaJamma
 data class AnothaJamma(val b: Float) : SlammaJamma
 
-@Referenced
 data class InsaneJamma(val c: SlammaJamma) : SlammaJamma
 
 sealed interface Flibbity<T>
@@ -230,7 +228,6 @@ enum class ColumnMode {
   REPEATED
 }
 
-@Referenced
 data class ColumnSchema(
   val name: String,
   val type: String,

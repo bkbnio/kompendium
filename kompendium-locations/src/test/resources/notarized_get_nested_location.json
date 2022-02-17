@@ -57,15 +57,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "properties": {
-                    "result": {
-                      "type": "boolean"
-                    }
-                  },
-                  "required": [
-                    "result"
-                  ],
-                  "type": "object"
+                  "$ref": "#/components/schemas/SimpleResponse"
                 }
               }
             }
@@ -76,7 +68,19 @@
     }
   },
   "components": {
-    "schemas": {},
+    "schemas": {
+      "SimpleResponse": {
+        "properties": {
+          "result": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "type": "object"
+      }
+    },
     "securitySchemes": {}
   },
   "security": [],

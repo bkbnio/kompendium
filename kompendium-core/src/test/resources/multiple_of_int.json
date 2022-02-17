@@ -38,17 +38,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "properties": {
-                    "a": {
-                      "format": "int32",
-                      "type": "integer",
-                      "multipleOf": 5
-                    }
-                  },
-                  "required": [
-                    "a"
-                  ],
-                  "type": "object"
+                  "$ref": "#/components/schemas/MultipleOfInt"
                 }
               }
             }
@@ -59,7 +49,21 @@
     }
   },
   "components": {
-    "schemas": {},
+    "schemas": {
+      "MultipleOfInt": {
+        "properties": {
+          "a": {
+            "format": "int32",
+            "type": "integer",
+            "multipleOf": 5
+          }
+        },
+        "required": [
+          "a"
+        ],
+        "type": "object"
+      }
+    },
     "securitySchemes": {}
   },
   "security": [],

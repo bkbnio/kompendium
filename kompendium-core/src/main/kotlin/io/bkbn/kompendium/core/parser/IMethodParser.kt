@@ -2,6 +2,7 @@ package io.bkbn.kompendium.core.parser
 
 import io.bkbn.kompendium.annotations.Param
 import io.bkbn.kompendium.core.Kompendium
+import io.bkbn.kompendium.core.KompendiumPreFlight.generateReferences
 import io.bkbn.kompendium.core.Kontent
 import io.bkbn.kompendium.core.metadata.ExceptionInfo
 import io.bkbn.kompendium.core.metadata.ParameterExample
@@ -82,6 +83,7 @@ interface IMethodParser {
     feature: Kompendium,
   ): Map<Int, Response> = exceptionInfo.associate { info ->
     Kontent.generateKontent(info.responseType, feature.config.bodyCache)
+    feature.generateReferences()
     val response = Response(
       description = info.description,
       content = feature.resolveContent(info.responseType, info.mediaTypes, info.examples)

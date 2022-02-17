@@ -38,16 +38,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "properties": {
-                    "data": {
-                      "additionalProperties": true,
-                      "type": "object"
-                    }
-                  },
-                  "required": [
-                    "data"
-                  ],
-                  "type": "object"
+                  "$ref": "#/components/schemas/FreeFormData"
                 }
               }
             }
@@ -58,7 +49,20 @@
     }
   },
   "components": {
-    "schemas": {},
+    "schemas": {
+      "FreeFormData": {
+        "properties": {
+          "data": {
+            "additionalProperties": true,
+            "type": "object"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "type": "object"
+      }
+    },
     "securitySchemes": {}
   },
   "security": [],
