@@ -38,20 +38,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "properties": {
-                    "a": {
-                      "format": "double",
-                      "type": "number",
-                      "minimum": 5.5,
-                      "maximum": 13.37,
-                      "exclusiveMinimum": false,
-                      "exclusiveMaximum": false
-                    }
-                  },
-                  "required": [
-                    "a"
-                  ],
-                  "type": "object"
+                  "$ref": "#/components/schemas/MinMaxDouble"
                 }
               }
             }
@@ -62,7 +49,24 @@
     }
   },
   "components": {
-    "schemas": {},
+    "schemas": {
+      "MinMaxDouble": {
+        "properties": {
+          "a": {
+            "format": "double",
+            "type": "number",
+            "minimum": 5.5,
+            "maximum": 13.37,
+            "exclusiveMinimum": false,
+            "exclusiveMaximum": false
+          }
+        },
+        "required": [
+          "a"
+        ],
+        "type": "object"
+      }
+    },
     "securitySchemes": {}
   },
   "security": [],

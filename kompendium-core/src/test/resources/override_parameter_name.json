@@ -48,15 +48,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "properties": {
-                    "c": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "c"
-                  ],
-                  "type": "object"
+                  "$ref": "#/components/schemas/TestResponse"
                 }
               }
             }
@@ -67,7 +59,19 @@
     }
   },
   "components": {
-    "schemas": {},
+    "schemas": {
+      "TestResponse": {
+        "properties": {
+          "c": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "c"
+        ],
+        "type": "object"
+      }
+    },
     "securitySchemes": {}
   },
   "security": [],

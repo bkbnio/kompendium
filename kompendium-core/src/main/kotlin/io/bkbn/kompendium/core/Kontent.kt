@@ -1,10 +1,10 @@
 package io.bkbn.kompendium.core
 
 import io.bkbn.kompendium.core.metadata.SchemaMap
-import io.bkbn.kompendium.core.schema.CollectionHandler
-import io.bkbn.kompendium.core.schema.EnumHandler
-import io.bkbn.kompendium.core.schema.MapHandler
-import io.bkbn.kompendium.core.schema.ObjectHandler
+import io.bkbn.kompendium.core.handler.CollectionHandler
+import io.bkbn.kompendium.core.handler.EnumHandler
+import io.bkbn.kompendium.core.handler.MapHandler
+import io.bkbn.kompendium.core.handler.ObjectHandler
 import io.bkbn.kompendium.core.util.Helpers.logged
 import io.bkbn.kompendium.oas.schema.FormattedSchema
 import io.bkbn.kompendium.oas.schema.SimpleSchema

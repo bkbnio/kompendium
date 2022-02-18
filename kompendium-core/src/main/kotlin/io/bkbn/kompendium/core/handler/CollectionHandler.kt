@@ -1,4 +1,4 @@
-package io.bkbn.kompendium.core.schema
+package io.bkbn.kompendium.core.handler
 
 import io.bkbn.kompendium.core.Kontent
 import io.bkbn.kompendium.core.Kontent.generateKTypeKontent
@@ -33,10 +33,16 @@ object CollectionHandler : SchemaHandler {
         val subTypes = gatherSubTypes(collectionType)
         AnyOfSchema(subTypes.map {
           generateKTypeKontent(it, cache)
-          cache[it.getSimpleSlug()] ?: error("${it.getSimpleSlug()} not found")
+          val schema = cache[it.getSimpleSlug()] ?: error("${it.getSimpleSlug()} not found")
+          val slug = it.getSimpleSlug()
+          postProcessSchema(schema, slug)
         })
       }
-      false -> cache[collectionClass.simpleName] ?: error("${collectionClass.simpleName} not found")
+      false -> {
+        val schema = cache[collectionClass.simpleName] ?: error("${collectionClass.simpleName} not found")
+        val slug = collectionClass.simpleName!!
+        postProcessSchema(schema, slug)
+      }
     }
     val schema = ArraySchema(items = valueReference)
     Kontent.generateKontent(collectionType, cache)

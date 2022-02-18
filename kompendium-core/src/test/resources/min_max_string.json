@@ -38,17 +38,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "properties": {
-                    "a": {
-                      "type": "string",
-                      "minLength": 42,
-                      "maxLength": 1337
-                    }
-                  },
-                  "required": [
-                    "a"
-                  ],
-                  "type": "object"
+                  "$ref": "#/components/schemas/MinMaxString"
                 }
               }
             }
@@ -59,7 +49,21 @@
     }
   },
   "components": {
-    "schemas": {},
+    "schemas": {
+      "MinMaxString": {
+        "properties": {
+          "a": {
+            "type": "string",
+            "minLength": 42,
+            "maxLength": 1337
+          }
+        },
+        "required": [
+          "a"
+        ],
+        "type": "object"
+      }
+    },
     "securitySchemes": {}
   },
   "security": [],

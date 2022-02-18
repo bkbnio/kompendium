@@ -38,17 +38,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "properties": {
-                    "a": {
-                      "format": "double",
-                      "type": "number",
-                      "multipleOf": 2.5
-                    }
-                  },
-                  "required": [
-                    "a"
-                  ],
-                  "type": "object"
+                  "$ref": "#/components/schemas/MultipleOfDouble"
                 }
               }
             }
@@ -59,7 +49,21 @@
     }
   },
   "components": {
-    "schemas": {},
+    "schemas": {
+      "MultipleOfDouble": {
+        "properties": {
+          "a": {
+            "format": "double",
+            "type": "number",
+            "multipleOf": 2.5
+          }
+        },
+        "required": [
+          "a"
+        ],
+        "type": "object"
+      }
+    },
     "securitySchemes": {}
   },
   "security": [],

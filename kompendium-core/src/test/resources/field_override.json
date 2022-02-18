@@ -38,16 +38,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "properties": {
-                    "real_name": {
-                      "type": "boolean",
-                      "description": "A Field that is super important!"
-                    }
-                  },
-                  "required": [
-                    "real_name"
-                  ],
-                  "type": "object"
+                  "$ref": "#/components/schemas/TestFieldOverride"
                 }
               }
             }
@@ -58,7 +49,19 @@
     }
   },
   "components": {
-    "schemas": {},
+    "schemas": {
+      "TestFieldOverride": {
+        "properties": {
+          "real_name": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "real_name"
+        ],
+        "type": "object"
+      }
+    },
     "securitySchemes": {}
   },
   "security": [],

@@ -37,19 +37,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "properties": {
-                  "a": {
-                    "type": "string"
-                  },
-                  "b": {
-                    "format": "int32",
-                    "type": "integer"
-                  }
-                },
-                "required": [
-                  "b"
-                ],
-                "type": "object"
+                "$ref": "#/components/schemas/DefaultField"
               }
             }
           },
@@ -61,15 +49,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "properties": {
-                    "c": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "c"
-                  ],
-                  "type": "object"
+                  "$ref": "#/components/schemas/TestResponse"
                 }
               }
             }
@@ -80,7 +60,34 @@
     }
   },
   "components": {
-    "schemas": {},
+    "schemas": {
+      "DefaultField": {
+        "properties": {
+          "a": {
+            "type": "string"
+          },
+          "b": {
+            "format": "int32",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "b"
+        ],
+        "type": "object"
+      },
+      "TestResponse": {
+        "properties": {
+          "c": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "c"
+        ],
+        "type": "object"
+      }
+    },
     "securitySchemes": {}
   },
   "security": [],

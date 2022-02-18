@@ -102,10 +102,17 @@ fun SimpleSchema.scanForConstraints(prop: KProperty1<*, *>): SimpleSchema {
 }
 
 fun ObjectSchema.scanForConstraints(clazz: KClass<*>, prop: KProperty1<*, *>): ObjectSchema {
+  var schema = this.adjustForRequiredParams(clazz)
+  if (prop.returnType.isMarkedNullable) {
+    schema = schema.copy(nullable = true)
+  }
+
+  return schema
+}
+
+fun ObjectSchema.adjustForRequiredParams(clazz: KClass<*>): ObjectSchema {
   val requiredParams = clazz.primaryConstructor?.parameters?.filterNot { it.isOptional } ?: emptyList()
   var schema = this
-
-  // todo dedup this
   if (requiredParams.isNotEmpty()) {
     schema = schema.copy(required = requiredParams.map { param ->
       clazz.memberProperties.first { it.name == param.name }.findAnnotation<Field>()
@@ -113,10 +120,5 @@ fun ObjectSchema.scanForConstraints(clazz: KClass<*>, prop: KProperty1<*, *>): O
         ?: param.name!!
     })
   }
-
-  if (prop.returnType.isMarkedNullable) {
-    schema = schema.copy(nullable = true)
-  }
-
   return schema
 }

@@ -40,46 +40,10 @@
                 "schema": {
                   "anyOf": [
                     {
-                      "properties": {
-                        "a": {
-                          "properties": {
-                            "nesty": {
-                              "type": "string"
-                            }
-                          },
-                          "required": [
-                            "nesty"
-                          ],
-                          "type": "object"
-                        }
-                      },
-                      "required": [
-                        "a"
-                      ],
-                      "type": "object"
+                      "$ref": "#/components/schemas/Gibbity-TestNested"
                     },
                     {
-                      "properties": {
-                        "b": {
-                          "type": "string"
-                        },
-                        "f": {
-                          "properties": {
-                            "nesty": {
-                              "type": "string"
-                            }
-                          },
-                          "required": [
-                            "nesty"
-                          ],
-                          "type": "object"
-                        }
-                      },
-                      "required": [
-                        "b",
-                        "f"
-                      ],
-                      "type": "object"
+                      "$ref": "#/components/schemas/Bibbity-TestNested"
                     }
                   ]
                 }
@@ -104,86 +68,10 @@
                 "schema": {
                   "anyOf": [
                     {
-                      "properties": {
-                        "a": {
-                          "anyOf": [
-                            {
-                              "properties": {
-                                "a": {
-                                  "type": "string"
-                                }
-                              },
-                              "required": [
-                                "a"
-                              ],
-                              "type": "object"
-                            },
-                            {
-                              "properties": {
-                                "b": {
-                                  "type": "string"
-                                },
-                                "c": {
-                                  "format": "int32",
-                                  "type": "integer"
-                                }
-                              },
-                              "required": [
-                                "b",
-                                "c"
-                              ],
-                              "type": "object"
-                            }
-                          ]
-                        }
-                      },
-                      "required": [
-                        "a"
-                      ],
-                      "type": "object"
+                      "$ref": "#/components/schemas/Gibbity-FlibbityGibbit"
                     },
                     {
-                      "properties": {
-                        "b": {
-                          "type": "string"
-                        },
-                        "f": {
-                          "anyOf": [
-                            {
-                              "properties": {
-                                "a": {
-                                  "type": "string"
-                                }
-                              },
-                              "required": [
-                                "a"
-                              ],
-                              "type": "object"
-                            },
-                            {
-                              "properties": {
-                                "b": {
-                                  "type": "string"
-                                },
-                                "c": {
-                                  "format": "int32",
-                                  "type": "integer"
-                                }
-                              },
-                              "required": [
-                                "b",
-                                "c"
-                              ],
-                              "type": "object"
-                            }
-                          ]
-                        }
-                      },
-                      "required": [
-                        "b",
-                        "f"
-                      ],
-                      "type": "object"
+                      "$ref": "#/components/schemas/Bibbity-FlibbityGibbit"
                     }
                   ]
                 }
@@ -196,7 +84,154 @@
     }
   },
   "components": {
-    "schemas": {},
+    "schemas": {
+      "Gibbity-TestNested": {
+        "properties": {
+          "a": {
+            "$ref": "#/components/schemas/TestNested"
+          }
+        },
+        "required": [
+          "a"
+        ],
+        "type": "object"
+      },
+      "TestNested": {
+        "properties": {
+          "nesty": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "nesty"
+        ],
+        "type": "object"
+      },
+      "Bibbity-TestNested": {
+        "properties": {
+          "b": {
+            "type": "string"
+          },
+          "f": {
+            "$ref": "#/components/schemas/TestNested"
+          }
+        },
+        "required": [
+          "b",
+          "f"
+        ],
+        "type": "object"
+      },
+      "Gibbity-FlibbityGibbit": {
+        "properties": {
+          "a": {
+            "anyOf": [
+              {
+                "properties": {
+                  "a": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "a"
+                ],
+                "type": "object"
+              },
+              {
+                "properties": {
+                  "b": {
+                    "type": "string"
+                  },
+                  "c": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "b",
+                  "c"
+                ],
+                "type": "object"
+              }
+            ]
+          }
+        },
+        "required": [
+          "a"
+        ],
+        "type": "object"
+      },
+      "SimpleGibbit": {
+        "properties": {
+          "a": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "a"
+        ],
+        "type": "object"
+      },
+      "ComplexGibbit": {
+        "properties": {
+          "b": {
+            "type": "string"
+          },
+          "c": {
+            "format": "int32",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "b",
+          "c"
+        ],
+        "type": "object"
+      },
+      "Bibbity-FlibbityGibbit": {
+        "properties": {
+          "b": {
+            "type": "string"
+          },
+          "f": {
+            "anyOf": [
+              {
+                "properties": {
+                  "a": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "a"
+                ],
+                "type": "object"
+              },
+              {
+                "properties": {
+                  "b": {
+                    "type": "string"
+                  },
+                  "c": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "b",
+                  "c"
+                ],
+                "type": "object"
+              }
+            ]
+          }
+        },
+        "required": [
+          "b",
+          "f"
+        ],
+        "type": "object"
+      }
+    },
     "securitySchemes": {}
   },
   "security": [],

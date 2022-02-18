@@ -6,6 +6,7 @@ package io.bkbn.kompendium.annotations
  * If you do not annotate a recursive class with [Referenced], you will
  * get a stack overflow error when you try to launch your API
  */
+@Deprecated("This annotation now does nothing, as all complex objects are stored as references")
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.CLASS)
 annotation class Referenced

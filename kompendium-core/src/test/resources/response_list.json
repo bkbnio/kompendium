@@ -59,15 +59,7 @@
               "application/json": {
                 "schema": {
                   "items": {
-                    "properties": {
-                      "c": {
-                        "type": "string"
-                      }
-                    },
-                    "required": [
-                      "c"
-                    ],
-                    "type": "object"
+                    "$ref": "#/components/schemas/TestResponse"
                   },
                   "type": "array"
                 }
@@ -80,7 +72,19 @@
     }
   },
   "components": {
-    "schemas": {},
+    "schemas": {
+      "TestResponse": {
+        "properties": {
+          "c": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "c"
+        ],
+        "type": "object"
+      }
+    },
     "securitySchemes": {}
   },
   "security": [],

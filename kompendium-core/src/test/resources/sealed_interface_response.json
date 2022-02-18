@@ -40,67 +40,13 @@
                 "schema": {
                   "anyOf": [
                     {
-                      "properties": {
-                        "a": {
-                          "format": "int32",
-                          "type": "integer"
-                        }
-                      },
-                      "required": [
-                        "a"
-                      ],
-                      "type": "object"
+                      "$ref": "#/components/schemas/OneJamma"
                     },
                     {
-                      "properties": {
-                        "b": {
-                          "format": "float",
-                          "type": "number"
-                        }
-                      },
-                      "required": [
-                        "b"
-                      ],
-                      "type": "object"
+                      "$ref": "#/components/schemas/AnothaJamma"
                     },
                     {
-                      "properties": {
-                        "c": {
-                          "anyOf": [
-                            {
-                              "properties": {
-                                "a": {
-                                  "format": "int32",
-                                  "type": "integer"
-                                }
-                              },
-                              "required": [
-                                "a"
-                              ],
-                              "type": "object"
-                            },
-                            {
-                              "properties": {
-                                "b": {
-                                  "format": "float",
-                                  "type": "number"
-                                }
-                              },
-                              "required": [
-                                "b"
-                              ],
-                              "type": "object"
-                            },
-                            {
-                              "$ref": "#/components/schemas/InsaneJamma"
-                            }
-                          ]
-                        }
-                      },
-                      "required": [
-                        "c"
-                      ],
-                      "type": "object"
+                      "$ref": "#/components/schemas/InsaneJamma"
                     }
                   ]
                 }
@@ -114,6 +60,30 @@
   },
   "components": {
     "schemas": {
+      "OneJamma": {
+        "properties": {
+          "a": {
+            "format": "int32",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "a"
+        ],
+        "type": "object"
+      },
+      "AnothaJamma": {
+        "properties": {
+          "b": {
+            "format": "float",
+            "type": "number"
+          }
+        },
+        "required": [
+          "b"
+        ],
+        "type": "object"
+      },
       "InsaneJamma": {
         "properties": {
           "c": {

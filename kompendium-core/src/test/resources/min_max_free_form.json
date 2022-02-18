@@ -38,18 +38,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "properties": {
-                    "data": {
-                      "minProperties": 5,
-                      "maxProperties": 10,
-                      "additionalProperties": true,
-                      "type": "object"
-                    }
-                  },
-                  "required": [
-                    "data"
-                  ],
-                  "type": "object"
+                  "$ref": "#/components/schemas/MinMaxFreeForm"
                 }
               }
             }
@@ -60,7 +49,22 @@
     }
   },
   "components": {
-    "schemas": {},
+    "schemas": {
+      "MinMaxFreeForm": {
+        "properties": {
+          "data": {
+            "minProperties": 5,
+            "maxProperties": 10,
+            "additionalProperties": true,
+            "type": "object"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "type": "object"
+      }
+    },
     "securitySchemes": {}
   },
   "security": [],

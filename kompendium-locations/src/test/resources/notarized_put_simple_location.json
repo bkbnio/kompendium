@@ -47,15 +47,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "properties": {
-                  "input": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "input"
-                ],
-                "type": "object"
+                "$ref": "#/components/schemas/SimpleRequest"
               }
             }
           },
@@ -67,15 +59,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "properties": {
-                    "result": {
-                      "type": "boolean"
-                    }
-                  },
-                  "required": [
-                    "result"
-                  ],
-                  "type": "object"
+                  "$ref": "#/components/schemas/SimpleResponse"
                 }
               }
             }
@@ -86,7 +70,30 @@
     }
   },
   "components": {
-    "schemas": {},
+    "schemas": {
+      "SimpleRequest": {
+        "properties": {
+          "input": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "input"
+        ],
+        "type": "object"
+      },
+      "SimpleResponse": {
+        "properties": {
+          "result": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "type": "object"
+      }
+    },
     "securitySchemes": {}
   },
   "security": [],

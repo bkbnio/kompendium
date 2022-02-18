@@ -58,15 +58,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "properties": {
-                    "c": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "c"
-                  ],
-                  "type": "object"
+                  "$ref": "#/components/schemas/TestResponse"
                 }
               }
             }
@@ -76,15 +68,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "properties": {
-                    "message": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "message"
-                  ],
-                  "type": "object"
+                  "$ref": "#/components/schemas/ExceptionResponse"
                 }
               }
             }
@@ -95,7 +79,30 @@
     }
   },
   "components": {
-    "schemas": {},
+    "schemas": {
+      "TestResponse": {
+        "properties": {
+          "c": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "c"
+        ],
+        "type": "object"
+      },
+      "ExceptionResponse": {
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "message"
+        ],
+        "type": "object"
+      }
+    },
     "securitySchemes": {}
   },
   "security": [],

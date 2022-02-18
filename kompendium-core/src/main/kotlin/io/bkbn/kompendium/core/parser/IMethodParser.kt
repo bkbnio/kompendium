@@ -2,16 +2,19 @@ package io.bkbn.kompendium.core.parser
 
 import io.bkbn.kompendium.annotations.Param
 import io.bkbn.kompendium.core.Kompendium
+import io.bkbn.kompendium.core.KompendiumPreFlight.generateReferences
 import io.bkbn.kompendium.core.Kontent
 import io.bkbn.kompendium.core.metadata.ExceptionInfo
 import io.bkbn.kompendium.core.metadata.ParameterExample
 import io.bkbn.kompendium.core.metadata.RequestInfo
 import io.bkbn.kompendium.core.metadata.ResponseInfo
 import io.bkbn.kompendium.core.metadata.method.MethodInfo
+import io.bkbn.kompendium.core.metadata.method.PatchInfo
 import io.bkbn.kompendium.core.metadata.method.PostInfo
 import io.bkbn.kompendium.core.metadata.method.PutInfo
 import io.bkbn.kompendium.core.util.Helpers
 import io.bkbn.kompendium.core.util.Helpers.capitalized
+import io.bkbn.kompendium.core.util.Helpers.getReferenceSlug
 import io.bkbn.kompendium.core.util.Helpers.getSimpleSlug
 import io.bkbn.kompendium.oas.path.PathOperation
 import io.bkbn.kompendium.oas.payload.MediaType
@@ -20,6 +23,7 @@ import io.bkbn.kompendium.oas.payload.Request
 import io.bkbn.kompendium.oas.payload.Response
 import io.bkbn.kompendium.oas.schema.AnyOfSchema
 import io.bkbn.kompendium.oas.schema.ObjectSchema
+import io.bkbn.kompendium.oas.schema.ReferencedSchema
 import io.ktor.routing.Route
 import kotlin.reflect.KClass
 import kotlin.reflect.KParameter
@@ -59,6 +63,7 @@ interface IMethodParser {
     requestBody = when (info) {
       is PutInfo<*, *, *> -> requestType.toRequestSpec(info.requestInfo, feature)
       is PostInfo<*, *, *> -> requestType.toRequestSpec(info.requestInfo, feature)
+      is PatchInfo<*, *, *> -> requestType.toRequestSpec(info.requestInfo, feature)
       else -> null
     },
     security = if (info.securitySchemes.isNotEmpty()) listOf(
@@ -77,7 +82,8 @@ interface IMethodParser {
     exceptionInfo: Set<ExceptionInfo<*>>,
     feature: Kompendium,
   ): Map<Int, Response> = exceptionInfo.associate { info ->
-    Kontent.generateKontent(info.responseType, feature.config.cache)
+    Kontent.generateKontent(info.responseType, feature.config.bodyCache)
+    feature.generateReferences()
     val response = Response(
       description = info.description,
       content = feature.resolveContent(info.responseType, info.mediaTypes, info.examples)
@@ -140,12 +146,14 @@ interface IMethodParser {
         val schema = if (classifier.isSealed) {
           val refs = classifier.sealedSubclasses
             .map { it.createType(type.arguments) }
-            .map { it.getSimpleSlug() }
-            .map { config.cache[it] ?: error("$it not available") }
+            .map { ReferencedSchema(it.getReferenceSlug()) }
           AnyOfSchema(refs)
         } else {
-          val ref = type.getSimpleSlug()
-          config.cache[ref] ?: error("$ref not available")
+          if (config.spec.components.schemas.containsKey(type.getSimpleSlug())) {
+            ReferencedSchema(type.getReferenceSlug())
+          } else {
+            config.bodyCache[type.getSimpleSlug()] ?: error("REEEE")
+          }
         }
         MediaType(
           schema = schema,
@@ -175,7 +183,7 @@ interface IMethodParser {
     parentClazz: KClass<*>,
     feature: Kompendium
   ): Parameter {
-    val wrapperSchema = feature.config.cache[parentType.getSimpleSlug()]!! as ObjectSchema
+    val wrapperSchema = feature.config.parameterCache[parentType.getSimpleSlug()]!! as ObjectSchema
     val anny = this.findAnnotation<Param>()
       ?: error("Field $name is not annotated with KompendiumParam")
     val schema = wrapperSchema.properties[name]

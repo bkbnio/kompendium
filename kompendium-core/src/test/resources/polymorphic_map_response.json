@@ -41,31 +41,10 @@
                   "additionalProperties": {
                     "anyOf": [
                       {
-                        "properties": {
-                          "a": {
-                            "type": "string"
-                          }
-                        },
-                        "required": [
-                          "a"
-                        ],
-                        "type": "object"
+                        "$ref": "#/components/schemas/SimpleGibbit"
                       },
                       {
-                        "properties": {
-                          "b": {
-                            "type": "string"
-                          },
-                          "c": {
-                            "format": "int32",
-                            "type": "integer"
-                          }
-                        },
-                        "required": [
-                          "b",
-                          "c"
-                        ],
-                        "type": "object"
+                        "$ref": "#/components/schemas/ComplexGibbit"
                       }
                     ]
                   },
@@ -80,7 +59,39 @@
     }
   },
   "components": {
-    "schemas": {},
+    "schemas": {
+      "FlibbityGibbit": {
+        "properties": {},
+        "type": "object"
+      },
+      "SimpleGibbit": {
+        "properties": {
+          "a": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "a"
+        ],
+        "type": "object"
+      },
+      "ComplexGibbit": {
+        "properties": {
+          "b": {
+            "type": "string"
+          },
+          "c": {
+            "format": "int32",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "b",
+          "c"
+        ],
+        "type": "object"
+      }
+    },
     "securitySchemes": {}
   },
   "security": [],

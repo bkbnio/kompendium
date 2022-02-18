@@ -232,7 +232,7 @@ class KompendiumTest : DescribeSpec({
     it("Can override field values via annotation") {
       openApiTestAllSerializers("field_override.json") { overrideFieldInfo() }
     }
-    it("Can serialize a recursive type using references") {
+    it("Can serialize a recursive type") {
       openApiTestAllSerializers("simple_recursive.json") { simpleRecursive() }
     }
   }

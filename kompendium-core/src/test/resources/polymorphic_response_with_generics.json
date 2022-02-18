@@ -40,46 +40,10 @@
                 "schema": {
                   "anyOf": [
                     {
-                      "properties": {
-                        "a": {
-                          "properties": {
-                            "nesty": {
-                              "type": "string"
-                            }
-                          },
-                          "required": [
-                            "nesty"
-                          ],
-                          "type": "object"
-                        }
-                      },
-                      "required": [
-                        "a"
-                      ],
-                      "type": "object"
+                      "$ref": "#/components/schemas/Gibbity-TestNested"
                     },
                     {
-                      "properties": {
-                        "b": {
-                          "type": "string"
-                        },
-                        "f": {
-                          "properties": {
-                            "nesty": {
-                              "type": "string"
-                            }
-                          },
-                          "required": [
-                            "nesty"
-                          ],
-                          "type": "object"
-                        }
-                      },
-                      "required": [
-                        "b",
-                        "f"
-                      ],
-                      "type": "object"
+                      "$ref": "#/components/schemas/Bibbity-TestNested"
                     }
                   ]
                 }
@@ -92,7 +56,45 @@
     }
   },
   "components": {
-    "schemas": {},
+    "schemas": {
+      "Gibbity-TestNested": {
+        "properties": {
+          "a": {
+            "$ref": "#/components/schemas/TestNested"
+          }
+        },
+        "required": [
+          "a"
+        ],
+        "type": "object"
+      },
+      "TestNested": {
+        "properties": {
+          "nesty": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "nesty"
+        ],
+        "type": "object"
+      },
+      "Bibbity-TestNested": {
+        "properties": {
+          "b": {
+            "type": "string"
+          },
+          "f": {
+            "$ref": "#/components/schemas/TestNested"
+          }
+        },
+        "required": [
+          "b",
+          "f"
+        ],
+        "type": "object"
+      }
+    },
     "securitySchemes": {}
   },
   "security": [],

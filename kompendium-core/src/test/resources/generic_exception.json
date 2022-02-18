@@ -58,15 +58,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "properties": {
-                    "c": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "c"
-                  ],
-                  "type": "object"
+                  "$ref": "#/components/schemas/TestResponse"
                 }
               }
             }
@@ -78,30 +70,10 @@
                 "schema": {
                   "anyOf": [
                     {
-                      "properties": {
-                        "a": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "a"
-                      ],
-                      "type": "object"
+                      "$ref": "#/components/schemas/Gibbity-String"
                     },
                     {
-                      "properties": {
-                        "b": {
-                          "type": "string"
-                        },
-                        "f": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "b",
-                        "f"
-                      ],
-                      "type": "object"
+                      "$ref": "#/components/schemas/Bibbity-String"
                     }
                   ]
                 }
@@ -114,7 +86,45 @@
     }
   },
   "components": {
-    "schemas": {},
+    "schemas": {
+      "TestResponse": {
+        "properties": {
+          "c": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "c"
+        ],
+        "type": "object"
+      },
+      "Gibbity-String": {
+        "properties": {
+          "a": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "a"
+        ],
+        "type": "object"
+      },
+      "Bibbity-String": {
+        "properties": {
+          "b": {
+            "type": "string"
+          },
+          "f": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "b",
+          "f"
+        ],
+        "type": "object"
+      }
+    },
     "securitySchemes": {}
   },
   "security": [],

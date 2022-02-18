@@ -20,7 +20,6 @@ class Kompendium(val config: Configuration) {
   class Configuration {
     lateinit var spec: OpenApiSpec
 
-    var cache: SchemaMap = mutableMapOf()
     var openApiJson: Routing.(OpenApiSpec) -> Unit = { spec ->
       route("/openapi.json") {
         get {
@@ -29,9 +28,12 @@ class Kompendium(val config: Configuration) {
       }
     }
 
+    var bodyCache: SchemaMap = mutableMapOf()
+    var parameterCache: SchemaMap = mutableMapOf()
+
     // TODO Add tests for this!!
     fun addCustomTypeSchema(clazz: KClass<*>, schema: TypedSchema) {
-      cache[clazz.simpleName!!] = schema
+      bodyCache[clazz.simpleName!!] = schema
     }
   }
 
