@@ -11,12 +11,10 @@ import io.bkbn.kompendium.core.constraint.adjustForRequiredParams
 import io.bkbn.kompendium.core.constraint.scanForConstraints
 import io.bkbn.kompendium.core.metadata.SchemaMap
 import io.bkbn.kompendium.core.metadata.TypeMap
-import io.bkbn.kompendium.core.util.Helpers.COMPONENT_SLUG
 import io.bkbn.kompendium.core.util.Helpers.getReferenceSlug
 import io.bkbn.kompendium.core.util.Helpers.getSimpleSlug
 import io.bkbn.kompendium.oas.schema.AnyOfSchema
 import io.bkbn.kompendium.oas.schema.ComponentSchema
-import io.bkbn.kompendium.oas.schema.EnumSchema
 import io.bkbn.kompendium.oas.schema.FreeFormSchema
 import io.bkbn.kompendium.oas.schema.ObjectSchema
 import io.bkbn.kompendium.oas.schema.ReferencedSchema
@@ -49,20 +47,11 @@ object ObjectHandler : SchemaHandler {
       // todo this should be some kind of empty schema at this point, then throw error if not updated eventually
       cache[type.getSimpleSlug()] = ReferencedSchema(type.getReferenceSlug())
       val typeMap: TypeMap = clazz.typeParameters.zip(type.arguments).toMap()
-      // TODO clean this up
       val fieldMap = clazz.generateFieldMap(typeMap, cache)
         .plus(clazz.generateUndeclaredFieldMap(cache))
-        .mapValues { (_, v) ->
-          when (v) {
-            // TODO LOL DO NOT MERGE THIS
-            is ObjectSchema -> ReferencedSchema(
-              COMPONENT_SLUG.plus("/").plus(cache.filter { (_, vv) -> vv == v }.keys.first())
-            )
-            is EnumSchema -> ReferencedSchema(
-              COMPONENT_SLUG.plus("/").plus(cache.filter { (_, vv) -> vv == v }.keys.first())
-            )
-            else -> v
-          }
+        .mapValues { (_, fieldSchema) ->
+          val fieldSlug = cache.filter { (_, vv) -> vv == fieldSchema }.keys.firstOrNull()
+          postProcessSchema(fieldSchema, fieldSlug ?: "Fine if blank, will be ignored")
         }
       logger.debug("$slug contains $fieldMap")
       val schema = ObjectSchema(fieldMap).adjustForRequiredParams(clazz)

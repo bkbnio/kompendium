@@ -7,9 +7,6 @@ import io.bkbn.kompendium.core.util.Helpers
 import io.bkbn.kompendium.core.util.Helpers.getSimpleSlug
 import io.bkbn.kompendium.oas.schema.AnyOfSchema
 import io.bkbn.kompendium.oas.schema.ArraySchema
-import io.bkbn.kompendium.oas.schema.EnumSchema
-import io.bkbn.kompendium.oas.schema.ObjectSchema
-import io.bkbn.kompendium.oas.schema.ReferencedSchema
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import org.slf4j.LoggerFactory
@@ -36,21 +33,15 @@ object CollectionHandler : SchemaHandler {
         val subTypes = gatherSubTypes(collectionType)
         AnyOfSchema(subTypes.map {
           generateKTypeKontent(it, cache)
-          // todo clean this up
-          when (val schema = cache[it.getSimpleSlug()] ?: error("${it.getSimpleSlug()} not found")) {
-            is ObjectSchema -> ReferencedSchema(Helpers.COMPONENT_SLUG.plus("/").plus(it.getSimpleSlug()))
-            is EnumSchema -> ReferencedSchema(Helpers.COMPONENT_SLUG.plus("/").plus(it.getSimpleSlug()))
-            else -> schema
-          }
+          val schema = cache[it.getSimpleSlug()] ?: error("${it.getSimpleSlug()} not found")
+          val slug = it.getSimpleSlug()
+          postProcessSchema(schema, slug)
         })
       }
       false -> {
-        // todo clean up
-        when (val schema = cache[collectionClass.simpleName] ?: error("${collectionClass.simpleName} not found")) {
-          is ObjectSchema -> ReferencedSchema(Helpers.COMPONENT_SLUG.plus("/").plus(collectionClass.simpleName))
-          is EnumSchema -> ReferencedSchema(Helpers.COMPONENT_SLUG.plus("/").plus(collectionClass.simpleName))
-          else -> schema
-        }
+        val schema = cache[collectionClass.simpleName] ?: error("${collectionClass.simpleName} not found")
+        val slug = collectionClass.simpleName!!
+        postProcessSchema(schema, slug)
       }
     }
     val schema = ArraySchema(items = valueReference)
