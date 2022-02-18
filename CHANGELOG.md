@@ -3,7 +3,6 @@
 ## Unreleased
 
 ### Added
-- Ability to override serializer via custom route
 
 ### Changed
 
@@ -12,6 +11,13 @@
 ---
 
 ## Released
+
+## [2.1.0] - February 18th, 2022
+### Added
+- Ability to override serializer via custom route
+### Changed
+- All complex types are now represented by reference schemas
+- Deprecated `@Referenced` since all complex types now create references
 
 ## [2.0.4] - February 10th, 2022
 ### Added
