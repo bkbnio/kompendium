@@ -1,0 +1,119 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Test API",
+    "version": "1.33.7",
+    "description": "An amazing, fully-ish 😉 generated API spec",
+    "termsOfService": "https://example.com",
+    "contact": {
+      "name": "Homer Simpson",
+      "url": "https://gph.is/1NPUDiM",
+      "email": "chunkylover53@aol.com"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://github.com/bkbnio/kompendium/blob/main/LICENSE"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://myawesomeapi.com",
+      "description": "Production instance of my API"
+    },
+    {
+      "url": "https://staging.myawesomeapi.com",
+      "description": "Where the fun stuff happens"
+    }
+  ],
+  "paths": {
+    "/nullable/nested": {
+      "post": {
+        "tags": [],
+        "summary": "Has a bunch of nullable fields",
+        "description": "Should still work!",
+        "parameters": [],
+        "requestBody": {
+          "description": "Cool",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProfileUpdateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "A successful endeavor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TestResponse"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ProfileUpdateRequest": {
+        "properties": {
+          "metadata": {
+            "$ref": "#/components/schemas/ProfileMetadataUpdateRequest"
+          },
+          "mood": {
+            "type": "string",
+            "nullable": true
+          },
+          "viewCount": {
+            "format": "int64",
+            "type": "integer",
+            "nullable": true
+          }
+        },
+        "required": [
+          "mood",
+          "viewCount",
+          "metadata"
+        ],
+        "type": "object"
+      },
+      "ProfileMetadataUpdateRequest": {
+        "properties": {
+          "isPrivate": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "otherThing": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "isPrivate",
+          "otherThing"
+        ],
+        "type": "object"
+      },
+      "TestResponse": {
+        "properties": {
+          "c": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "c"
+        ],
+        "type": "object"
+      }
+    },
+    "securitySchemes": {}
+  },
+  "security": [],
+  "tags": []
+}
