@@ -27,7 +27,6 @@ object CollectionHandler : SchemaHandler {
     val collectionClass = collectionType.classifier as KClass<*>
     logger.debug("Obtained collection class: $collectionClass")
     val referenceName = Helpers.genericNameAdapter(type, clazz)
-    generateKTypeKontent(collectionType, cache)
     val valueReference = when (collectionClass.isSealed) {
       true -> {
         val subTypes = gatherSubTypes(collectionType)
@@ -39,6 +38,7 @@ object CollectionHandler : SchemaHandler {
         })
       }
       false -> {
+        generateKTypeKontent(collectionType, cache)
         val schema = cache[collectionClass.simpleName] ?: error("${collectionClass.simpleName} not found")
         val slug = collectionClass.simpleName!!
         postProcessSchema(schema, slug)

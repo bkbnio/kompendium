@@ -60,10 +60,6 @@
   },
   "components": {
     "schemas": {
-      "FlibbityGibbit": {
-        "properties": {},
-        "type": "object"
-      },
       "SimpleGibbit": {
         "properties": {
           "a": {
