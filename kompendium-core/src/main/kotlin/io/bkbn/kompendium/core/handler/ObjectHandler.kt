@@ -51,7 +51,7 @@ object ObjectHandler : SchemaHandler {
         .plus(clazz.generateUndeclaredFieldMap(cache))
         .mapValues { (_, fieldSchema) ->
           val fieldSlug = cache.filter { (_, vv) -> vv == fieldSchema }.keys.firstOrNull()
-          postProcessSchema(fieldSchema, fieldSlug ?: "Fine if blank, will be ignored")
+          postProcessSchema(fieldSchema, fieldSlug)
         }
       logger.debug("$slug contains $fieldMap")
       val schema = ObjectSchema(fieldMap).adjustForRequiredParams(clazz)

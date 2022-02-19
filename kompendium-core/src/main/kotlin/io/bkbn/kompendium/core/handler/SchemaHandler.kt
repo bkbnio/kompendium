@@ -24,9 +24,15 @@ interface SchemaHandler {
     }
   }
 
-  fun postProcessSchema(schema: ComponentSchema, slug: String): ComponentSchema = when (schema) {
-    is ObjectSchema -> ReferencedSchema(COMPONENT_SLUG.plus("/").plus(slug))
-    is EnumSchema -> ReferencedSchema(COMPONENT_SLUG.plus("/").plus(slug))
+  fun postProcessSchema(schema: ComponentSchema, slug: String?): ComponentSchema = when (schema) {
+    is ObjectSchema -> {
+      require(slug != null) { "Slug cannot be null for an object schema! $schema" }
+      ReferencedSchema(COMPONENT_SLUG.plus("/").plus(slug))
+    }
+    is EnumSchema -> {
+      require(slug != null) { "Slug cannot be null for an enum schema! $schema" }
+      ReferencedSchema(COMPONENT_SLUG.plus("/").plus(slug))
+    }
     else -> schema
   }
 }
