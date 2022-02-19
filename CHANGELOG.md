@@ -5,6 +5,7 @@
 ### Added
 
 ### Changed
+- Fixed sealed typed collections schema generation
 
 ### Remove
 
