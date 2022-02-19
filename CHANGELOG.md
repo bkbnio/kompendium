@@ -5,13 +5,17 @@
 ### Added
 
 ### Changed
-- Fixed sealed typed collections schema generation
 
 ### Remove
 
 ---
 
 ## Released
+
+## [2.1.1] - February 19th, 2022
+### Changed
+- Fixed sealed typed collections schema generation
+- Nullability no longer breaks object schema comparison
 
 ## [2.1.0] - February 18th, 2022
 ### Added

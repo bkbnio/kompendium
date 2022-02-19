@@ -235,3 +235,17 @@ data class ColumnSchema(
   val mode: ColumnMode,
   val subColumns: List<ColumnSchema> = emptyList()
 )
+
+@Serializable
+public data class ProfileUpdateRequest(
+  public val mood: String?,
+  public val viewCount: Long?,
+  public val metadata: ProfileMetadataUpdateRequest?
+)
+
+
+@Serializable
+public data class ProfileMetadataUpdateRequest(
+  public val isPrivate: Boolean?,
+  public val otherThing: String?
+)

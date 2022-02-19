@@ -39,6 +39,7 @@ import io.bkbn.kompendium.core.util.notarizedPatchModule
 import io.bkbn.kompendium.core.util.notarizedPostModule
 import io.bkbn.kompendium.core.util.notarizedPutModule
 import io.bkbn.kompendium.core.util.nullableField
+import io.bkbn.kompendium.core.util.nullableNestedObject
 import io.bkbn.kompendium.core.util.overrideFieldInfo
 import io.bkbn.kompendium.core.util.pathParsingTestModule
 import io.bkbn.kompendium.core.util.polymorphicCollectionResponse
@@ -234,6 +235,9 @@ class KompendiumTest : DescribeSpec({
     }
     it("Can serialize a recursive type") {
       openApiTestAllSerializers("simple_recursive.json") { simpleRecursive() }
+    }
+    it("Nullable fields do not lead to doom") {
+      openApiTestAllSerializers("nullable_fields.json") { nullableNestedObject() }
     }
   }
   describe("Constraints") {
