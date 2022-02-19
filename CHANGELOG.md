@@ -13,6 +13,10 @@
 
 ## Released
 
+## [2.1.1] - February 19th, 2022
+### Changed
+- Nullability no longer breaks object schema comparison
+
 ## [2.1.0] - February 18th, 2022
 ### Added
 - Ability to override serializer via custom route
