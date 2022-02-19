@@ -24,6 +24,7 @@ import io.bkbn.kompendium.core.fixtures.TestResponseInfo.defaultParam
 import io.bkbn.kompendium.core.fixtures.TestResponseInfo.formattedParam
 import io.bkbn.kompendium.core.fixtures.TestResponseInfo.minMaxString
 import io.bkbn.kompendium.core.fixtures.TestResponseInfo.nullableField
+import io.bkbn.kompendium.core.fixtures.TestResponseInfo.nullableNested
 import io.bkbn.kompendium.core.fixtures.TestResponseInfo.regexString
 import io.bkbn.kompendium.core.fixtures.TestResponseInfo.requiredParam
 import io.bkbn.kompendium.core.metadata.RequestInfo
@@ -409,6 +410,16 @@ fun Application.simpleRecursive() {
   routing {
     route("/test/simple_recursive") {
       notarizedGet(TestResponseInfo.simpleRecursive) {
+        call.respond(HttpStatusCode.OK)
+      }
+    }
+  }
+}
+
+fun Application.nullableNestedObject() {
+  routing {
+    route("/nullable/nested") {
+      notarizedPost(nullableNested) {
         call.respond(HttpStatusCode.OK)
       }
     }

@@ -175,6 +175,15 @@ object TestResponseInfo {
     responseInfo = simpleOkResponse()
   )
 
+  val nullableNested = PostInfo<Unit, ProfileUpdateRequest, TestResponse>(
+    summary = "Has a bunch of nullable fields",
+    description = "Should still work!",
+    requestInfo = RequestInfo(
+      description = "Cool"
+    ),
+    responseInfo = simpleOkResponse()
+  )
+
   val minMaxInt = GetInfo<Unit, MinMaxInt>(
     summary = "Constrained int field",
     description = "Cool stuff",
