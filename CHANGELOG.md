@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased
+- Fixed support Location classes located in other non-location classes
 
 ### Added
 
