@@ -50,7 +50,7 @@ object LocationMethodParser : IMethodParser {
   fun KClass<*>.calculateLocationPath(suffix: String = ""): String {
     val locationAnnotation = this.findAnnotation<Location>()
     require(locationAnnotation != null) { "Location annotation must be present to leverage notarized location api" }
-    val parent = this.java.declaringClass?.kotlin
+    val parent = this.java.declaringClass?.kotlin?.takeIf { it.hasAnnotation<Location>() }
     val newSuffix = locationAnnotation.path.plus(suffix)
     return when (parent) {
       null -> newSuffix
