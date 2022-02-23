@@ -43,7 +43,7 @@ private fun Application.mainModule() {
   install(Kompendium) {
     spec = Util.baseSpec
     // Tells Kompendium how to handle a specific type
-    addCustomTypeSchema(Instant::class, SimpleSchema("string"))
+    addCustomTypeSchema(Instant::class, SimpleSchema("string", format = "date-time"))
   }
   routing {
     redoc(pageTitle = "Custom overridden type Docs")
