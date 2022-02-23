@@ -9,16 +9,16 @@ import io.bkbn.kompendium.core.metadata.SchemaMap
 import io.bkbn.kompendium.core.util.Helpers.logged
 import io.bkbn.kompendium.oas.schema.FormattedSchema
 import io.bkbn.kompendium.oas.schema.SimpleSchema
-import org.slf4j.LoggerFactory
-import java.math.BigDecimal
-import java.math.BigInteger
-import java.util.UUID
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.full.createType
 import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.typeOf
+import org.slf4j.LoggerFactory
+import java.math.BigDecimal
+import java.math.BigInteger
+import java.util.UUID
 
 /**
  * Responsible for generating the schema map that is used to power all object references across the API Spec.
