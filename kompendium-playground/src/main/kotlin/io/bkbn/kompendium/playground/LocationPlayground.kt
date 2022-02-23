@@ -69,7 +69,7 @@ private fun Application.mainModule() {
 }
 
 private object LocationsToC {
-  val testLocation = GetInfo<TestLocations, LocationModels.ExampleResponse>(
+  val testLocation = GetInfo<TestLocationsParent.TestLocations, LocationModels.ExampleResponse>(
     summary = "Shallow",
     description = "Ez Pz Lemon Squeezy",
     responseInfo = ResponseInfo(
@@ -77,7 +77,7 @@ private object LocationsToC {
       description = "Great!"
     )
   )
-  val testNestLocation = GetInfo<TestLocations.NestedTestLocations, LocationModels.ExampleResponse>(
+  val testNestLocation = GetInfo<TestLocationsParent.TestLocations.NestedTestLocations, LocationModels.ExampleResponse>(
     summary = "Nested",
     description = "Gettin' scary",
     responseInfo = ResponseInfo(
@@ -85,7 +85,7 @@ private object LocationsToC {
       description = "Hmmm"
     )
   )
-  val ohBoiUCrazy = GetInfo<TestLocations.NestedTestLocations.OhBoiUCrazy, LocationModels.ExampleResponse>(
+  val ohBoiUCrazy = GetInfo<TestLocationsParent.TestLocations.NestedTestLocations.OhBoiUCrazy, LocationModels.ExampleResponse>(
     summary = "Example Deeply Nested",
     description = "We deep now",
     responseInfo = ResponseInfo(
@@ -99,23 +99,28 @@ private object LocationsToC {
 // For more info make sure to read through the Ktor location docs
 // Additionally, make sure to note that even though we define the locations here, we still must annotate fields
 // with KompendiumParam!!!
-@Location("test/{name}")
-data class TestLocations(
-  @Param(ParamType.PATH)
-  val name: String,
-) {
-  @Location("/spaghetti")
-  data class NestedTestLocations(
-    @Param(ParamType.QUERY)
-    val idk: Int,
-    val parent: TestLocations
+object TestLocationsParent {
+
+  @Location("test/{name}")
+  data class TestLocations(
+    @Param(ParamType.PATH)
+    val name: String,
   ) {
-    @Location("/hehe/{madness}")
-    data class OhBoiUCrazy(
-      @Param(ParamType.PATH)
-      val madness: Boolean,
-      val parent: NestedTestLocations
-    )
+
+    @Location("/spaghetti")
+    data class NestedTestLocations(
+      @Param(ParamType.QUERY)
+      val idk: Int,
+      val parent: TestLocations
+    ) {
+
+      @Location("/hehe/{madness}")
+      data class OhBoiUCrazy(
+        @Param(ParamType.PATH)
+        val madness: Boolean,
+        val parent: NestedTestLocations
+      )
+    }
   }
 }
 
