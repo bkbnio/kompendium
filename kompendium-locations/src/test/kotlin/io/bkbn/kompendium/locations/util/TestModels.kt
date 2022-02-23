@@ -10,5 +10,13 @@ data class SimpleLoc(@Param(ParamType.PATH) val name: String) {
   data class NestedLoc(@Param(ParamType.QUERY) val isCool: Boolean, val parent: SimpleLoc)
 }
 
+object LocationHolderClass {
+  @Location("/test/{name}")
+  data class SimpleLoc(@Param(ParamType.PATH) val name: String) {
+    @Location("/nesty")
+    data class NestedLoc(@Param(ParamType.QUERY) val isCool: Boolean, val parent: SimpleLoc)
+  }
+}
+
 data class SimpleResponse(val result: Boolean)
 data class SimpleRequest(val input: String)
