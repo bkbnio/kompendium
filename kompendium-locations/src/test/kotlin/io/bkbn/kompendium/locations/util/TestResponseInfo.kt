@@ -1,6 +1,5 @@
 package io.bkbn.kompendium.locations.util
 
-import io.bkbn.kompendium.core.metadata.method.MethodInfo
 import io.bkbn.kompendium.core.metadata.RequestInfo
 import io.bkbn.kompendium.core.metadata.ResponseInfo
 import io.bkbn.kompendium.core.metadata.method.DeleteInfo
@@ -79,6 +78,15 @@ object TestResponseInfo {
     )
   )
   val testDeleteNestedLocation = DeleteInfo<SimpleLoc.NestedLoc, SimpleResponse>(
+    summary = "Location Test",
+    description = "A cool test",
+    responseInfo = ResponseInfo(
+      status = HttpStatusCode.OK,
+      description = "A successful endeavor"
+    )
+  )
+
+  val testGetNestedLocationFromNonLocationClass = GetInfo<NonLocationObject.SimpleLoc.NestedLoc, SimpleResponse>(
     summary = "Location Test",
     description = "A cool test",
     responseInfo = ResponseInfo(
