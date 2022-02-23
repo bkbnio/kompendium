@@ -293,5 +293,12 @@ object TestResponseInfo {
     )
   )
 
+  val formattedArrayItemType = PostInfo<Unit, FormattedArrayItemType, TestResponse>(
+      summary = "formatted array item type",
+      description = "Cool stuff",
+      responseInfo = simpleOkResponse(),
+      requestInfo = RequestInfo("cool")
+  )
+
   private fun <T> simpleOkResponse() = ResponseInfo<T>(HttpStatusCode.OK, "A successful endeavor")
 }

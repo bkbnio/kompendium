@@ -1,22 +1,24 @@
 package io.bkbn.kompendium.core
 
-import io.bkbn.kompendium.core.metadata.SchemaMap
+import io.bkbn.kompendium.annotations.constraint.Format
 import io.bkbn.kompendium.core.handler.CollectionHandler
 import io.bkbn.kompendium.core.handler.EnumHandler
 import io.bkbn.kompendium.core.handler.MapHandler
 import io.bkbn.kompendium.core.handler.ObjectHandler
+import io.bkbn.kompendium.core.metadata.SchemaMap
 import io.bkbn.kompendium.core.util.Helpers.logged
 import io.bkbn.kompendium.oas.schema.FormattedSchema
 import io.bkbn.kompendium.oas.schema.SimpleSchema
-import kotlin.reflect.KClass
-import kotlin.reflect.KType
-import kotlin.reflect.full.createType
-import kotlin.reflect.full.isSubclassOf
-import kotlin.reflect.typeOf
 import org.slf4j.LoggerFactory
 import java.math.BigDecimal
 import java.math.BigInteger
 import java.util.UUID
+import kotlin.reflect.KClass
+import kotlin.reflect.KType
+import kotlin.reflect.full.createType
+import kotlin.reflect.full.findAnnotation
+import kotlin.reflect.full.isSubclassOf
+import kotlin.reflect.typeOf
 
 /**
  * Responsible for generating the schema map that is used to power all object references across the API Spec.
@@ -81,7 +83,10 @@ object Kontent {
       Long::class -> cache[clazz.simpleName!!] = FormattedSchema("int64", "integer")
       Double::class -> cache[clazz.simpleName!!] = FormattedSchema("double", "number")
       Float::class -> cache[clazz.simpleName!!] = FormattedSchema("float", "number")
-      String::class -> cache[clazz.simpleName!!] = SimpleSchema("string")
+      String::class -> cache[clazz.simpleName!!] = SimpleSchema(
+        "string",
+        format = type.findAnnotation<Format>()?.format
+      )
       Boolean::class -> cache[clazz.simpleName!!] = SimpleSchema("boolean")
       UUID::class -> cache[clazz.simpleName!!] = FormattedSchema("uuid", "string")
       BigDecimal::class -> cache[clazz.simpleName!!] = FormattedSchema("double", "number")

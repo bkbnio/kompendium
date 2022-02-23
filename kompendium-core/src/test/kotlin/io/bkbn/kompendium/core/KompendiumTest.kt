@@ -16,6 +16,7 @@ import io.bkbn.kompendium.core.util.defaultParameter
 import io.bkbn.kompendium.core.util.exampleParams
 import io.bkbn.kompendium.core.util.exclusiveMinMax
 import io.bkbn.kompendium.core.util.formattedParam
+import io.bkbn.kompendium.core.util.formattedType
 import io.bkbn.kompendium.core.util.freeFormObject
 import io.bkbn.kompendium.core.util.genericPolymorphicResponse
 import io.bkbn.kompendium.core.util.genericPolymorphicResponseMultipleImpls
@@ -273,6 +274,9 @@ class KompendiumTest : DescribeSpec({
     }
     it("Can set a minimum and maximum number of properties on a free-form type") {
       openApiTestAllSerializers("min_max_free_form.json") { minMaxFreeForm() }
+    }
+    it("Can add a custom format to a collection type") {
+      openApiTestAllSerializers("formatted_array_item_type.json") { formattedType() }
     }
   }
   describe("Free Form") {
