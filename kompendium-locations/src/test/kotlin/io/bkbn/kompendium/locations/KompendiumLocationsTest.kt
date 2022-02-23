@@ -5,7 +5,7 @@ import io.bkbn.kompendium.locations.util.locationsConfig
 import io.bkbn.kompendium.locations.util.notarizedDeleteNestedLocation
 import io.bkbn.kompendium.locations.util.notarizedDeleteSimpleLocation
 import io.bkbn.kompendium.locations.util.notarizedGetNestedLocation
-import io.bkbn.kompendium.locations.util.notarizedGetNestedLocationClass
+import io.bkbn.kompendium.locations.util.notarizedGetNestedLocationFromNonLocationClass
 import io.bkbn.kompendium.locations.util.notarizedGetSimpleLocation
 import io.bkbn.kompendium.locations.util.notarizedPostNestedLocation
 import io.bkbn.kompendium.locations.util.notarizedPostSimpleLocation
@@ -73,9 +73,9 @@ class KompendiumLocationsTest : DescribeSpec({
     }
     it("Can notarize a get with a nested location nested in a non-location class") {
       // act
-      openApiTestAllSerializers("notarized_get_nested_location.json") {
+      openApiTestAllSerializers("notarized_get_nested_location_from_non_location_class.json") {
         locationsConfig()
-        notarizedGetNestedLocationClass()
+        notarizedGetNestedLocationFromNonLocationClass()
       }
     }
   }

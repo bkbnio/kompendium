@@ -86,7 +86,7 @@ object TestResponseInfo {
     )
   )
 
-  val testGetNestedLocationClass = GetInfo<LocationHolderClass.SimpleLoc.NestedLoc, SimpleResponse>(
+  val testGetNestedLocationFromNonLocationClass = GetInfo<NonLocationObject.SimpleLoc.NestedLoc, SimpleResponse>(
     summary = "Location Test",
     description = "A cool test",
     responseInfo = ResponseInfo(
