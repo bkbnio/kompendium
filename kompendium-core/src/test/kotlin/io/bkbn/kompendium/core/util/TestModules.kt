@@ -608,3 +608,13 @@ fun Application.exampleParams() {
     }
   }
 }
+
+fun Application.formattedType() {
+  routing {
+    route("/test/formatted_type") {
+      notarizedPost(TestResponseInfo.formattedArrayItemType) {
+        call.respond(HttpStatusCode.OK, TestResponse("hi"))
+      }
+    }
+  }
+}

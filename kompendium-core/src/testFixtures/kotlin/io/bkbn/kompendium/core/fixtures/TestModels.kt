@@ -96,6 +96,10 @@ data class FormattedString(
   val a: String
 )
 
+data class FormattedArrayItemType(
+  val a: List<@Format("binary") String>
+)
+
 data class MinMaxString(
   @MinLength(42)
   @MaxLength(1337)
