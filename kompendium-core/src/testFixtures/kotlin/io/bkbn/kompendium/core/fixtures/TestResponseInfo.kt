@@ -226,6 +226,13 @@ object TestResponseInfo {
     responseInfo = simpleOkResponse()
   )
 
+
+  val dateTimeString = GetInfo<Unit, DateTimeString>(
+    summary = "Date time string test",
+    description = "Cool stuff",
+    responseInfo = simpleOkResponse()
+  )
+
   val minMaxArray = GetInfo<Unit, MinMaxArray>(
     summary = "required param",
     description = "Cool stuff",
