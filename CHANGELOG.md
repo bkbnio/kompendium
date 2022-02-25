@@ -1,6 +1,8 @@
 # Changelog
 
 ## Unreleased
+- Fixed support Location classes located in other non-location classes
+- Fixed formatting of a custom SimpleSchema
 
 ### Added
 

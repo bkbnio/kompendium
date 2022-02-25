@@ -21,6 +21,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
 import java.math.BigDecimal
 import java.math.BigInteger
+import java.time.Instant
 import java.util.UUID
 
 data class TestSimpleModel(val a: String, val b: Int)
@@ -108,6 +109,10 @@ data class MinMaxString(
 data class RegexString(
   @Pattern("^\\d{3}-\\d{2}-\\d{4}\$")
   val a: String
+)
+
+data class DateTimeString(
+  val a: Instant
 )
 
 data class MinMaxArray(

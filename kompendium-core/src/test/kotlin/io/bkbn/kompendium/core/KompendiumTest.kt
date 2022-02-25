@@ -11,6 +11,7 @@ import io.bkbn.kompendium.core.fixtures.docs
 import io.bkbn.kompendium.core.util.complexType
 import io.bkbn.kompendium.core.util.constrainedDoubleInfo
 import io.bkbn.kompendium.core.util.constrainedIntInfo
+import io.bkbn.kompendium.core.util.dateTimeString
 import io.bkbn.kompendium.core.util.defaultField
 import io.bkbn.kompendium.core.util.defaultParameter
 import io.bkbn.kompendium.core.util.exampleParams
@@ -60,6 +61,8 @@ import io.bkbn.kompendium.core.util.uniqueArray
 import io.bkbn.kompendium.core.util.withDefaultParameter
 import io.bkbn.kompendium.core.util.withExamples
 import io.bkbn.kompendium.core.util.withOperationId
+import io.bkbn.kompendium.oas.schema.FormattedSchema
+import io.bkbn.kompendium.oas.schema.SimpleSchema
 import io.bkbn.kompendium.oas.serialization.KompendiumSerializersModule
 import io.kotest.core.spec.style.DescribeSpec
 import io.ktor.application.call
@@ -76,6 +79,7 @@ import io.ktor.serialization.json
 import io.ktor.server.testing.withTestApplication
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import java.time.Instant
 
 class KompendiumTest : DescribeSpec({
   describe("Notarized Open API Metadata Tests") {
@@ -277,6 +281,23 @@ class KompendiumTest : DescribeSpec({
     }
     it("Can add a custom format to a collection type") {
       openApiTestAllSerializers("formatted_array_item_type.json") { formattedType() }
+    }
+  }
+  describe("Formats") {
+    it("Can set a format on a simple type schema") {
+      openApiTestAllSerializers("formatted_date_time_string.json", { dateTimeString() }) {
+        addCustomTypeSchema(Instant::class, SimpleSchema("string", format = "date-time"))
+      }
+    }
+    it("Can set a format on formatted type schema") {
+      openApiTestAllSerializers("formatted_date_time_string.json", { dateTimeString() }) {
+        addCustomTypeSchema(Instant::class, FormattedSchema("date-time", "string"))
+      }
+    }
+    it("Can bypass a format on a simple type schema") {
+      openApiTestAllSerializers("formatted_no_format_string.json", { dateTimeString() }) {
+        addCustomTypeSchema(Instant::class, SimpleSchema("string"))
+      }
     }
   }
   describe("Free Form") {
