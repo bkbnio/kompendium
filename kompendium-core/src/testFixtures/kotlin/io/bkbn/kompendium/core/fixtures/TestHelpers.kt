@@ -1,5 +1,6 @@
 package io.bkbn.kompendium.core.fixtures
 
+import io.bkbn.kompendium.core.Kompendium
 import io.bkbn.kompendium.oas.serialization.KompendiumSerializersModule
 import io.kotest.assertions.json.shouldEqualJson
 import io.kotest.assertions.ktor.shouldHaveStatus
@@ -53,19 +54,27 @@ object TestHelpers {
    * @param moduleFunction Initializer for the application to allow tests to pass the required Ktor modules
    */
   fun openApiTestAllSerializers(snapshotName: String, moduleFunction: Application.() -> Unit) {
-    openApiTest(snapshotName, SupportedSerializer.KOTLINX, moduleFunction)
-    openApiTest(snapshotName, SupportedSerializer.JACKSON, moduleFunction)
-    openApiTest(snapshotName, SupportedSerializer.GSON, moduleFunction)
+    openApiTestAllSerializers(snapshotName, moduleFunction) {}
+  }
+
+  fun openApiTestAllSerializers(
+    snapshotName: String, moduleFunction: Application.() -> Unit,
+    kompendiumConfigurer: Kompendium.Configuration.() -> Unit
+  ) {
+    openApiTest(snapshotName, SupportedSerializer.KOTLINX, moduleFunction, kompendiumConfigurer)
+    openApiTest(snapshotName, SupportedSerializer.JACKSON, moduleFunction, kompendiumConfigurer)
+    openApiTest(snapshotName, SupportedSerializer.GSON, moduleFunction, kompendiumConfigurer)
   }
 
   private fun openApiTest(
     snapshotName: String,
     serializer: SupportedSerializer,
-    moduleFunction: Application.() -> Unit
+    moduleFunction: Application.() -> Unit,
+    kompendiumConfigurer: Kompendium.Configuration.() -> Unit
   ) {
     withApplication(createTestEnvironment()) {
       moduleFunction(application.apply {
-        kompendium()
+        kompendium(kompendiumConfigurer)
         docs()
         when (serializer) {
           SupportedSerializer.KOTLINX -> {

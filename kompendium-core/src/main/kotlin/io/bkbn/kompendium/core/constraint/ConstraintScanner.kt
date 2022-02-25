@@ -82,22 +82,18 @@ fun FormattedSchema.scanForConstraints(prop: KProperty1<*, *>): FormattedSchema 
 }
 
 fun SimpleSchema.scanForConstraints(prop: KProperty1<*, *>): SimpleSchema {
-  val minLength = prop.findAnnotation<MinLength>()
-  val maxLength = prop.findAnnotation<MaxLength>()
-  val pattern = prop.findAnnotation<Pattern>()
-  val format = prop.findAnnotation<Format>()
+  val minLength = prop.findAnnotation<MinLength>()?.length ?: this.minLength
+  val maxLength = prop.findAnnotation<MaxLength>()?.length ?: this.maxLength
+  val pattern = prop.findAnnotation<Pattern>()?.pattern ?: this.pattern
+  val format = prop.findAnnotation<Format>()?.format ?: this.format
+  val nullable = if (prop.returnType.isMarkedNullable) true else this.nullable
 
-  var schema = this
-
-  if (prop.returnType.isMarkedNullable) {
-    schema = schema.copy(nullable = true)
-  }
-
-  return schema.copy(
-    minLength = minLength?.length,
-    maxLength = maxLength?.length,
-    pattern = pattern?.pattern,
-    format = format?.format
+  return copy(
+    nullable = nullable,
+    minLength = minLength,
+    maxLength = maxLength,
+    pattern = pattern,
+    format = format
   )
 }
 

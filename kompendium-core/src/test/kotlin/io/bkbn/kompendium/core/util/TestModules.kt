@@ -9,6 +9,7 @@ import io.bkbn.kompendium.core.Notarized.notarizedPost
 import io.bkbn.kompendium.core.Notarized.notarizedPut
 import io.bkbn.kompendium.core.fixtures.Bibbity
 import io.bkbn.kompendium.core.fixtures.ComplexGibbit
+import io.bkbn.kompendium.core.fixtures.DateTimeString
 import io.bkbn.kompendium.core.fixtures.DefaultParameter
 import io.bkbn.kompendium.core.fixtures.Gibbity
 import io.bkbn.kompendium.core.fixtures.Mysterious
@@ -19,6 +20,7 @@ import io.bkbn.kompendium.core.fixtures.TestNested
 import io.bkbn.kompendium.core.fixtures.TestRequest
 import io.bkbn.kompendium.core.fixtures.TestResponse
 import io.bkbn.kompendium.core.fixtures.TestResponseInfo
+import io.bkbn.kompendium.core.fixtures.TestResponseInfo.dateTimeString
 import io.bkbn.kompendium.core.fixtures.TestResponseInfo.defaultField
 import io.bkbn.kompendium.core.fixtures.TestResponseInfo.defaultParam
 import io.bkbn.kompendium.core.fixtures.TestResponseInfo.formattedParam
@@ -38,6 +40,7 @@ import io.ktor.response.respond
 import io.ktor.response.respondText
 import io.ktor.routing.route
 import io.ktor.routing.routing
+import java.time.Instant
 
 fun Application.notarizedGetWithNotarizedException() {
   routing {
@@ -521,6 +524,16 @@ fun Application.regexString() {
     route("/test/required_param") {
       notarizedGet(regexString) {
         call.respond(HttpStatusCode.OK, TestResponse("hi"))
+      }
+    }
+  }
+}
+
+fun Application.dateTimeString() {
+  routing {
+    route("/test/date_time_format") {
+      notarizedGet(dateTimeString) {
+        call.respond(HttpStatusCode.OK, DateTimeString(Instant.now()))
       }
     }
   }
