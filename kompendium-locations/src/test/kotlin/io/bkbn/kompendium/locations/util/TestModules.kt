@@ -95,3 +95,13 @@ fun Application.notarizedDeleteNestedLocation() {
     }
   }
 }
+
+fun Application.notarizedGetNestedLocationFromNonLocationClass() {
+  routing {
+    route("/test") {
+      notarizedGet(TestResponseInfo.testGetNestedLocationFromNonLocationClass) {
+        call.respondText { "hey dude ‼️ congratz on the get request" }
+      }
+    }
+  }
+}
