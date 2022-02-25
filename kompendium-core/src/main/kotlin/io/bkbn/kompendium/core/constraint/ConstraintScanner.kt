@@ -51,7 +51,7 @@ fun AnyOfSchema.scanForConstraints(type: KType, prop: KProperty1<*, *>): AnyOfSc
 
 fun ArraySchema.scanForConstraints(type: KType, prop: KProperty1<*, *>): ArraySchema {
   val minItems = prop.findAnnotation<MinItems>()?.items ?: this.minItems
-  val maxItems = prop.findAnnotation<MaxItems>()?.items ?: this.minItems
+  val maxItems = prop.findAnnotation<MaxItems>()?.items ?: this.maxItems
   val uniqueItems = prop.findAnnotation<UniqueItems>()?.let { true } ?: this.uniqueItems
   val items = items.scanForConstraints(type, prop)
 
