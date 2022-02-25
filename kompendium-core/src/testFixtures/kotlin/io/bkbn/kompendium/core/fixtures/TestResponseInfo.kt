@@ -11,6 +11,7 @@ import io.bkbn.kompendium.core.metadata.method.OptionsInfo
 import io.bkbn.kompendium.core.metadata.method.PatchInfo
 import io.bkbn.kompendium.core.metadata.method.PostInfo
 import io.bkbn.kompendium.core.metadata.method.PutInfo
+import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import kotlin.reflect.typeOf
 
@@ -294,10 +295,11 @@ object TestResponseInfo {
   )
 
   val formattedArrayItemType = PostInfo<Unit, FormattedArrayItemType, TestResponse>(
-      summary = "formatted array item type",
-      description = "Cool stuff",
-      responseInfo = simpleOkResponse(),
-      requestInfo = RequestInfo("cool")
+    summary = "formatted array item type",
+    description = "Cool stuff",
+    responseInfo = simpleOkResponse(),
+    requestInfo = RequestInfo<FormattedArrayItemType>("cool")
+      .copy(mediaTypes = listOf(ContentType.MultiPart.FormData.toString()))
   )
 
   private fun <T> simpleOkResponse() = ResponseInfo<T>(HttpStatusCode.OK, "A successful endeavor")

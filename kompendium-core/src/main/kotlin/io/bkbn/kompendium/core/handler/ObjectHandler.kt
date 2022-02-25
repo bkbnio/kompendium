@@ -168,7 +168,7 @@ object ObjectHandler : SchemaHandler {
     when (typeMap.containsKey(prop.returnType.classifier)) {
       true -> handleGenericProperty(typeMap, clazz, type, prop.returnType.classifier, cache)
       false -> handleStandardProperty(clazz, fieldClazz, prop, type, cache)
-    }.scanForConstraints(clazz, prop)
+    }.scanForConstraints(type, prop)
 
   /**
    * If a field has type parameters, leverage the constructed [TypeMap] to construct the [ComponentSchema]

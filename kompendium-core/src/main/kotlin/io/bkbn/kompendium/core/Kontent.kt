@@ -83,10 +83,7 @@ object Kontent {
       Long::class -> cache[clazz.simpleName!!] = FormattedSchema("int64", "integer")
       Double::class -> cache[clazz.simpleName!!] = FormattedSchema("double", "number")
       Float::class -> cache[clazz.simpleName!!] = FormattedSchema("float", "number")
-      String::class -> cache[clazz.simpleName!!] = SimpleSchema(
-        "string",
-        format = type.findAnnotation<Format>()?.format
-      )
+      String::class -> cache[clazz.simpleName!!] = SimpleSchema("string")
       Boolean::class -> cache[clazz.simpleName!!] = SimpleSchema("boolean")
       UUID::class -> cache[clazz.simpleName!!] = FormattedSchema("uuid", "string")
       BigDecimal::class -> cache[clazz.simpleName!!] = FormattedSchema("double", "number")
