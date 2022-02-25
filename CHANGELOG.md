@@ -1,10 +1,6 @@
 # Changelog
 
 ## Unreleased
-- Fixed support Location classes located in other non-location classes
-- Fixed formatting of a custom SimpleSchema
-- Multipart form-data multiple file request support
-
 ### Added
 
 ### Changed
@@ -14,6 +10,12 @@
 ---
 
 ## Released
+
+## [2.2.0] - February 25th, 2022
+### Changed
+- Fixed support Location classes located in other non-location classes
+- Fixed formatting of a custom SimpleSchema
+- Multipart form-data multiple file request support
 
 ## [2.1.1] - February 19th, 2022
 ### Changed
