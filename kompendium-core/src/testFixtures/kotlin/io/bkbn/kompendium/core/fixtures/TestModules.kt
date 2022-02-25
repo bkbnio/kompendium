@@ -27,8 +27,9 @@ fun Application.jacksonConfigModule() {
   }
 }
 
-fun Application.kompendium() {
+fun Application.kompendium(configurer: Kompendium.Configuration.() -> Unit = {}) {
   install(Kompendium) {
     spec = defaultSpec()
+    configurer()
   }
 }
