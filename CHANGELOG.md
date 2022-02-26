@@ -1,7 +1,6 @@
 # Changelog
 
 ## Unreleased
-- Fix to support sealed class typed Maps
 
 ### Added
 
@@ -12,6 +11,9 @@
 ---
 
 ## Released
+
+## [2.2.1] - February 26th, 2022
+- Fix to support sealed class typed Maps
 
 ## [2.2.0] - February 25th, 2022
 ### Changed
