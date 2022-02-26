@@ -130,6 +130,9 @@
                 "properties": {
                   "a": {
                     "type": "string"
+                  },
+                  "z": {
+                    "type": "string"
                   }
                 },
                 "required": [
@@ -145,6 +148,9 @@
                   "c": {
                     "format": "int32",
                     "type": "integer"
+                  },
+                  "z": {
+                    "type": "string"
                   }
                 },
                 "required": [
@@ -165,6 +171,9 @@
         "properties": {
           "a": {
             "type": "string"
+          },
+          "z": {
+            "type": "string"
           }
         },
         "required": [
@@ -180,6 +189,9 @@
           "c": {
             "format": "int32",
             "type": "integer"
+          },
+          "z": {
+            "type": "string"
           }
         },
         "required": [
@@ -199,6 +211,9 @@
                 "properties": {
                   "a": {
                     "type": "string"
+                  },
+                  "z": {
+                    "type": "string"
                   }
                 },
                 "required": [
@@ -214,6 +229,9 @@
                   "c": {
                     "format": "int32",
                     "type": "integer"
+                  },
+                  "z": {
+                    "type": "string"
                   }
                 },
                 "required": [

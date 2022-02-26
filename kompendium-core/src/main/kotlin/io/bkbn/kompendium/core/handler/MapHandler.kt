@@ -28,8 +28,7 @@ object MapHandler : SchemaHandler {
     if (keyType?.classifier != String::class) {
       error("Invalid Map $type: OpenAPI dictionaries must have keys of type String")
     }
-    generateKTypeKontent(valType!!, cache)
-    val valClass = valType.classifier as KClass<*>
+    val valClass = valType!!.classifier as KClass<*>
     val valClassName = valClass.simpleName
     val referenceName = genericNameAdapter(type, clazz)
     val valueReference = when (valClass.isSealed) {
@@ -43,6 +42,7 @@ object MapHandler : SchemaHandler {
         })
       }
       false -> {
+        generateKTypeKontent(valType, cache)
         val schema = cache[valClassName] ?: error("$valClassName not found")
         postProcessSchema(schema, valClassName!!)
       }
