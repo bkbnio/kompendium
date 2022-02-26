@@ -1,7 +1,7 @@
 # Changelog
 
 ## Unreleased
-- Fix to support of sealed class type Maps
+- Fix to support sealed class typed Maps
 
 ### Added
 
