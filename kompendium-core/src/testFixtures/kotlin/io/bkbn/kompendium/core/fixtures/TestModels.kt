@@ -202,10 +202,12 @@ data class OptionalParams(
   @Param(ParamType.QUERY) val notRequired: String?
 )
 
-sealed class FlibbityGibbit
+sealed class FlibbityGibbit {
+  abstract val z: String
+}
 
-data class SimpleGibbit(val a: String) : FlibbityGibbit()
-data class ComplexGibbit(val b: String, val c: Int) : FlibbityGibbit()
+data class SimpleGibbit(val a: String, override val z: String = "z") : FlibbityGibbit()
+data class ComplexGibbit(val b: String, val c: Int, override val z: String = "z") : FlibbityGibbit()
 
 sealed interface SlammaJamma
 
