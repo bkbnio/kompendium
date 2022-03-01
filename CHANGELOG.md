@@ -3,10 +3,13 @@
 ## Unreleased
 
 ### Added
+- Brand new SwaggerUI support as a KTor plugin with WebJar under the hood and flexible configuration
 
 ### Changed
+- Playground example `SwaggerPlaygound` now demonstrates new SwaggerUI KTor plugin usage (including OAuth security)
 
 ### Remove
+- Deprecated Swagger Webjar approach was removed from codebase
 
 ---
 
@@ -18,7 +21,7 @@
 ## [2.2.0] - February 25th, 2022
 ### Changed
 - Fixed support Location classes located in other non-location classes
-- Fixed formatting of a custom SimpleSchema
+- Fixed formatting of a custom `SimpleSchema`
 - Multipart form-data multiple file request support
 
 ## [2.1.1] - February 19th, 2022

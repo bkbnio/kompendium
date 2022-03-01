@@ -14,6 +14,7 @@ dependencies {
   implementation(projects.kompendiumCore)
   implementation(projects.kompendiumAuth)
   implementation(projects.kompendiumLocations)
+  implementation(projects.kompendiumSwaggerUi)
 
   // Ktor
   val ktorVersion: String by project
@@ -26,7 +27,6 @@ dependencies {
   implementation(group = "io.ktor", name = "ktor-jackson", version = ktorVersion)
   implementation(group = "io.ktor", name = "ktor-gson", version = ktorVersion)
   implementation(group = "io.ktor", name = "ktor-locations", version = ktorVersion)
-  implementation(group = "io.ktor", name = "ktor-webjars", version = ktorVersion)
 
   // Logging
   implementation("org.apache.logging.log4j:log4j-api-kotlin:1.1.0")
