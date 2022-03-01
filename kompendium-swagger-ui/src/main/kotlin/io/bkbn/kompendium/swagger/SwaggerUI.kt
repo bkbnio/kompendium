@@ -11,45 +11,55 @@ import io.ktor.routing.get
 import io.ktor.routing.routing
 import io.ktor.util.AttributeKey
 import java.net.URI
+import org.webjars.WebJarAssetLocator
 
 @Suppress("unused")
 class SwaggerUI(val config: Configuration) {
 
-  data class SwaggerUIConfig(
-    val baseUrl: String,
-    val version: String,
-    val specs: Map<String, URI>,
-    val contextPath: String = "",
-    val jsInit: () -> String? = { null }
-  ) {
-    private val webJarsUrl = "/webjars"
-    val swaggerUiUrl = "$webJarsUrl/swagger-ui"
-    private val swaggerIndexUrl = "$swaggerUiUrl/index.html"
-    val redirectIndexUrl: String = "${contextPath}${swaggerIndexUrl}"
-  }
-
   class Configuration {
-    lateinit var config: SwaggerUIConfig
+    // The primary Swagger-UI page (will redirect to target page)
+    var swaggerUrl: String = "/swagger-ui"
+    // The Root path to Swagger resources (in most cases a path to the webjar resources)
+    var swaggerBaseUrl: String = "/webjars/swagger-ui"
+    // Configuration for SwaggerUI JS initialization
+    lateinit var jsConfig: JsConfig
+    // Application context path (for example if application have the following path: http://domain.com/app, use: "/app")
+    var contextPath: String = ""
   }
 
   companion object Feature: ApplicationFeature<Application, Configuration, SwaggerUI> {
-    private val installRoutes: Routing.(SwaggerUIConfig) -> Unit = { config ->
 
-      get(config.baseUrl) {
+    private fun Configuration.toInternal(): InternalConfiguration = InternalConfiguration(
+      swaggerUrl = URI(swaggerUrl),
+      swaggerBaseUrl = URI(swaggerBaseUrl),
+      jsConfig = jsConfig,
+      contextPath = contextPath
+    )
+
+    private data class InternalConfiguration(
+      val swaggerUrl: URI,
+      val swaggerBaseUrl: URI,
+      val jsConfig: JsConfig,
+      val contextPath: String
+    ) {
+      val redirectIndexUrl: String = "${contextPath}${swaggerBaseUrl}/index.html"
+    }
+
+    private val locator = WebJarAssetLocator()
+
+    private val installRoutes: Routing.(InternalConfiguration) -> Unit = { config ->
+
+      get(config.swaggerUrl.toString()) {
         call.respondRedirect(config.redirectIndexUrl)
       }
 
-      get("${config.swaggerUiUrl}/{filename}") {
+      get("${config.swaggerBaseUrl}/{filename}") {
         call.parameters["filename"]!!.let { filename ->
           when(filename) {
             "index.html" ->
-              getSwaggerIndexContent(
-                swaggerVersion = config.version,
-                specs = config.specs,
-                jsInit = config.jsInit,
-              )
+              locator.getSwaggerIndexContent(jsConfig = config.jsConfig)
             else ->
-              getSwaggerResourceContent(swaggerVersion = config.version, filePath = filename)
+              locator.getSwaggerResourceContent(path = filename)
           }
         }.let { call.respond(HttpStatusCode.OK, it) }
       }
@@ -59,8 +69,8 @@ class SwaggerUI(val config: Configuration) {
 
     override fun install(pipeline: Application, configure: Configuration.() -> Unit): SwaggerUI {
       pipeline.routing { }.let { routing ->
-        val configuration = Configuration().apply(configure)
-        installRoutes(routing, configuration.config)
+        val configuration: Configuration = Configuration().apply(configure)
+        installRoutes(routing, configuration.toInternal())
         return SwaggerUI(config = configuration)
       }
     }

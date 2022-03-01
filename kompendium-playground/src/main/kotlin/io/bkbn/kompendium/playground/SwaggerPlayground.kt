@@ -6,6 +6,7 @@ import io.bkbn.kompendium.oas.component.Components
 import io.bkbn.kompendium.oas.security.OAuth
 import io.bkbn.kompendium.oas.serialization.KompendiumSerializersModule
 import io.bkbn.kompendium.playground.util.Util
+import io.bkbn.kompendium.swagger.JsConfig
 import io.bkbn.kompendium.swagger.SwaggerUI
 import io.ktor.application.Application
 import io.ktor.application.call
@@ -61,28 +62,26 @@ private fun Application.mainModule() {
   }
 
   install(SwaggerUI) {
-    config = SwaggerUI.SwaggerUIConfig(
-      baseUrl = "/swagger-ui",
-      // This version must match to the version of SwaggerUI WebJar
-      version = "4.5.2",
-      specs = mapOf(
-        "My API v1" to URI("/openapi.json"),
-        "My API v2" to URI("/openapi.json")
-      ),
-      // This part will be inserted after Swagger UI is loaded in Browser.
-      // Example is prepared according to this documentation: https://swagger.io/docs/open-source-tools/swagger-ui/usage/oauth2/
-      jsInit = {
-        """
-    ui.initOAuth({
-        clientId: 'CLIENT_ID',
-        clientSecret: 'CLIENT_SECRET',
-        realm: 'MY REALM',
-        appName: 'TEST APP',
-        useBasicAuthenticationWithAccessCodeGrant: true
-    });  
-        """
-      }
-    )
+      swaggerUrl = "/swagger-ui"
+      jsConfig = JsConfig(
+        specs = mapOf(
+          "My API v1" to URI("/openapi.json"),
+          "My API v2" to URI("/openapi.json")
+        ),
+        // This part will be inserted after Swagger UI is loaded in Browser.
+        // Example is prepared according to this documentation: https://swagger.io/docs/open-source-tools/swagger-ui/usage/oauth2/
+        jsInit = {
+          """
+      ui.initOAuth({
+          clientId: 'CLIENT_ID',
+          clientSecret: 'CLIENT_SECRET',
+          realm: 'MY REALM',
+          appName: 'TEST APP',
+          useBasicAuthenticationWithAccessCodeGrant: true
+      });  
+      """
+        }
+      )
   }
 
   // Configures the routes for our API
