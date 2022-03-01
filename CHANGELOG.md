@@ -3,6 +3,17 @@
 ## Unreleased
 
 ### Added
+
+### Changed
+
+### Remove
+
+---
+
+## Released
+
+## [2.3.0] - March 1st, 2022
+### Added
 - Brand new SwaggerUI support as a KTor plugin with WebJar under the hood and flexible configuration
 
 ### Changed
@@ -10,10 +21,6 @@
 
 ### Remove
 - Deprecated Swagger Webjar approach was removed from codebase
-
----
-
-## Released
 
 ## [2.2.1] - February 26th, 2022
 - Fix to support sealed class typed Maps
