@@ -2,6 +2,8 @@ package io.bkbn.kompendium.swagger
 
 import java.net.URI
 
+// This class represents this specification:
+// https://swagger.io/docs/open-source-tools/swagger-ui/usage/configuration/
 data class JsConfig(
   val specs: Map<String, URI>,
   val deepLinking: Boolean = true,
