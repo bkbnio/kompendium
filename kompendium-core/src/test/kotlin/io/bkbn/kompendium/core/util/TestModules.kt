@@ -579,6 +579,16 @@ fun Application.multipleOfDouble() {
   }
 }
 
+fun Application.freeFormField() {
+  routing {
+    route("/test/required_param") {
+      notarizedGet(TestResponseInfo.freeFormField) {
+        call.respond(HttpStatusCode.OK, TestResponse("hi"))
+      }
+    }
+  }
+}
+
 fun Application.freeFormObject() {
   routing {
     route("/test/required_param") {

@@ -18,6 +18,7 @@ import io.bkbn.kompendium.core.util.exampleParams
 import io.bkbn.kompendium.core.util.exclusiveMinMax
 import io.bkbn.kompendium.core.util.formattedParam
 import io.bkbn.kompendium.core.util.formattedType
+import io.bkbn.kompendium.core.util.freeFormField
 import io.bkbn.kompendium.core.util.freeFormObject
 import io.bkbn.kompendium.core.util.genericPolymorphicResponse
 import io.bkbn.kompendium.core.util.genericPolymorphicResponseMultipleImpls
@@ -302,6 +303,9 @@ class KompendiumTest : DescribeSpec({
   }
   describe("Free Form") {
     it("Can create a free-form field") {
+      openApiTestAllSerializers("free_form_field.json") { freeFormField() }
+    }
+    it("Can create a top-level free form object") {
       openApiTestAllSerializers("free_form_object.json") { freeFormObject() }
     }
   }

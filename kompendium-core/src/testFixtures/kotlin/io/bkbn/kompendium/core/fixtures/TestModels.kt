@@ -141,6 +141,9 @@ data class FreeFormData(
   val data: JsonElement
 )
 
+@FreeFormObject
+object AnythingGoesMan
+
 data class MinMaxFreeForm(
   @FreeFormObject
   @MinProperties(5)
