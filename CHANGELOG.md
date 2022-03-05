@@ -12,6 +12,10 @@
 
 ## Released
 
+## [2.3.1] - March 5th, 2022
+### Changed
+- Can now apply `@FreeFormObject` to top level types
+
 ## [2.3.0] - March 1st, 2022
 ### Added
 - Brand new SwaggerUI support as a KTor plugin with WebJar under the hood and flexible configuration

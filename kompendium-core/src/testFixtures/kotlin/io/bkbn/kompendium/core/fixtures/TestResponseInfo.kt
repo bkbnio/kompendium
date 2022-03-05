@@ -258,7 +258,13 @@ object TestResponseInfo {
     responseInfo = simpleOkResponse()
   )
 
-  val freeFormObject = GetInfo<Unit, FreeFormData>(
+  val freeFormField = GetInfo<Unit, FreeFormData>(
+    summary = "required param",
+    description = "Cool stuff",
+    responseInfo = simpleOkResponse()
+  )
+
+  val freeFormObject = GetInfo<Unit, AnythingGoesMan>(
     summary = "required param",
     description = "Cool stuff",
     responseInfo = simpleOkResponse()
