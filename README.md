@@ -16,6 +16,8 @@ Kompendium is intended to be a minimally invasive OpenApi Specification generato
 that users will use only Ktor native functions when implementing their API, and will supplement with Kompendium code in
 order to generate the appropriate spec.
 
+🚨 Kompendium _only_ supports Ktor 1.x
+
 ## How to install
 
 Kompendium publishes all releases to Maven Central. As such, using the release versions of `Kompendium` is as simple as
