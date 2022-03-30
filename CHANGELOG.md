@@ -12,6 +12,10 @@
 
 ## Released
 
+## [2.3.2] - March 30th, 2022
+### Changed
+- Fixed bug where nullable enum fields caused runtime exceptions
+
 ## [2.3.1] - March 5th, 2022
 ### Changed
 - Can now apply `@FreeFormObject` to top level types

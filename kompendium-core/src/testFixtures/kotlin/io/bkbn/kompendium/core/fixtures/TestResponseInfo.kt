@@ -185,6 +185,12 @@ object TestResponseInfo {
     responseInfo = simpleOkResponse()
   )
 
+  val nullableEnumField = GetInfo<Unit, NullableEnum>(
+    summary = "Has a nullable enum field",
+    description = "should still work!",
+    responseInfo = simpleOkResponse()
+  )
+
   val minMaxInt = GetInfo<Unit, MinMaxInt>(
     summary = "Constrained int field",
     description = "Cool stuff",
