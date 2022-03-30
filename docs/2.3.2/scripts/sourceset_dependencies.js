@@ -1,0 +1,1 @@
+sourceset_dependencies = '{":kompendium-oas:dokkaHtmlPartial/main":[],":kompendium-annotations:dokkaHtmlPartial/main":[],":kompendium-auth:dokkaHtmlPartial/main":[],":kompendium-locations:dokkaHtmlPartial/main":[],":kompendium-core:dokkaHtmlPartial/main":[],":kompendium-swagger-ui:dokkaHtmlPartial/main":[]}'
