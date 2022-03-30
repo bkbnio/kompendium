@@ -41,6 +41,7 @@ import io.bkbn.kompendium.core.util.notarizedOptionsModule
 import io.bkbn.kompendium.core.util.notarizedPatchModule
 import io.bkbn.kompendium.core.util.notarizedPostModule
 import io.bkbn.kompendium.core.util.notarizedPutModule
+import io.bkbn.kompendium.core.util.nullableEnumField
 import io.bkbn.kompendium.core.util.nullableField
 import io.bkbn.kompendium.core.util.nullableNestedObject
 import io.bkbn.kompendium.core.util.overrideFieldInfo
@@ -244,6 +245,9 @@ class KompendiumTest : DescribeSpec({
     }
     it("Nullable fields do not lead to doom") {
       openApiTestAllSerializers("nullable_fields.json") { nullableNestedObject() }
+    }
+    it("Can have a nullable enum as a member field") {
+      openApiTestAllSerializers("nullable_enum_field.json") { nullableEnumField() }
     }
   }
   describe("Constraints") {

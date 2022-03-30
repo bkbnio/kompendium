@@ -40,8 +40,8 @@ private fun Application.mainModule() {
       notarizedPost(BasicPlaygroundToC.simplePostRequest) {
         val request = call.receive<BasicModels.BasicRequest>()
         when (request.d) {
-          true -> call.respond(HttpStatusCode.OK, BasicModels.BasicResponse(c = "So it is true!"))
-          false -> call.respond(HttpStatusCode.OK, BasicModels.BasicResponse(c = "Oh, I knew it!"))
+          true -> call.respond(HttpStatusCode.OK, BasicModels.BasicResponse(c = "So it is true!", null))
+          false -> call.respond(HttpStatusCode.OK, BasicModels.BasicResponse(c = "Oh, I knew it!", null))
         }
       }
     }

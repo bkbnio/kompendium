@@ -429,6 +429,16 @@ fun Application.nullableNestedObject() {
   }
 }
 
+fun Application.nullableEnumField() {
+  routing {
+    route("/nullable/enum") {
+      notarizedGet(TestResponseInfo.nullableEnumField) {
+        call.respond(HttpStatusCode.OK)
+      }
+    }
+  }
+}
+
 fun Application.constrainedIntInfo() {
   routing {
     route("/test/constrained_int") {
