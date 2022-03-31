@@ -3,13 +3,11 @@
 ## Unreleased
 
 ### Added
-- Brand new SwaggerUI support as a KTor plugin with WebJar under the hood and flexible configuration
 
 ### Changed
-- Playground example `SwaggerPlaygound` now demonstrates new SwaggerUI KTor plugin usage (including OAuth security)
+- Fixed issue: #236
 
 ### Remove
-- Deprecated Swagger Webjar approach was removed from codebase
 
 ---
 
