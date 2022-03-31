@@ -63,6 +63,15 @@ data class TestRequest(
 @Serializable
 data class TestResponse(val c: String)
 
+@Serializable
+enum class TestEnum {
+  YES,
+  NO
+}
+
+@Serializable
+data class NullableEnum(val a: TestEnum? = null)
+
 data class TestGeneric<T>(val messy: String, val potato: T)
 
 data class TestCreatedResponse(val id: Int, val c: String)
@@ -140,6 +149,9 @@ data class FreeFormData(
   @FreeFormObject
   val data: JsonElement
 )
+
+@FreeFormObject
+object AnythingGoesMan
 
 data class MinMaxFreeForm(
   @FreeFormObject

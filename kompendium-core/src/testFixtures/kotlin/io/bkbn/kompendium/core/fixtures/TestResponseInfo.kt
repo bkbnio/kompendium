@@ -185,6 +185,12 @@ object TestResponseInfo {
     responseInfo = simpleOkResponse()
   )
 
+  val nullableEnumField = GetInfo<Unit, NullableEnum>(
+    summary = "Has a nullable enum field",
+    description = "should still work!",
+    responseInfo = simpleOkResponse()
+  )
+
   val minMaxInt = GetInfo<Unit, MinMaxInt>(
     summary = "Constrained int field",
     description = "Cool stuff",
@@ -258,7 +264,13 @@ object TestResponseInfo {
     responseInfo = simpleOkResponse()
   )
 
-  val freeFormObject = GetInfo<Unit, FreeFormData>(
+  val freeFormField = GetInfo<Unit, FreeFormData>(
+    summary = "required param",
+    description = "Cool stuff",
+    responseInfo = simpleOkResponse()
+  )
+
+  val freeFormObject = GetInfo<Unit, AnythingGoesMan>(
     summary = "required param",
     description = "Cool stuff",
     responseInfo = simpleOkResponse()

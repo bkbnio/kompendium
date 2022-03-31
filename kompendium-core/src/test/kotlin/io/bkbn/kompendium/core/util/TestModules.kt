@@ -429,6 +429,16 @@ fun Application.nullableNestedObject() {
   }
 }
 
+fun Application.nullableEnumField() {
+  routing {
+    route("/nullable/enum") {
+      notarizedGet(TestResponseInfo.nullableEnumField) {
+        call.respond(HttpStatusCode.OK)
+      }
+    }
+  }
+}
+
 fun Application.constrainedIntInfo() {
   routing {
     route("/test/constrained_int") {
@@ -573,6 +583,16 @@ fun Application.multipleOfDouble() {
   routing {
     route("/test/required_param") {
       notarizedGet(TestResponseInfo.multipleOfDouble) {
+        call.respond(HttpStatusCode.OK, TestResponse("hi"))
+      }
+    }
+  }
+}
+
+fun Application.freeFormField() {
+  routing {
+    route("/test/required_param") {
+      notarizedGet(TestResponseInfo.freeFormField) {
         call.respond(HttpStatusCode.OK, TestResponse("hi"))
       }
     }

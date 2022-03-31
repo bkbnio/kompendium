@@ -24,6 +24,7 @@ import kotlin.reflect.KProperty1
 import kotlin.reflect.KType
 import kotlin.reflect.full.createType
 import kotlin.reflect.full.findAnnotation
+import kotlin.reflect.full.hasAnnotation
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.jvm.javaField
 import org.slf4j.LoggerFactory
@@ -44,19 +45,24 @@ object ObjectHandler : SchemaHandler {
     // Only analyze if component has not already been stored in the cache
     if (!cache.containsKey(slug)) {
       logger.debug("$slug was not found in cache, generating now")
-      // todo this should be some kind of empty schema at this point, then throw error if not updated eventually
-      cache[type.getSimpleSlug()] = ReferencedSchema(type.getReferenceSlug())
-      val typeMap: TypeMap = clazz.typeParameters.zip(type.arguments).toMap()
-      val fieldMap = clazz.generateFieldMap(typeMap, cache)
-        .plus(clazz.generateUndeclaredFieldMap(cache))
-        .mapValues { (_, fieldSchema) ->
-          val fieldSlug = cache.filter { (_, vv) -> vv == fieldSchema }.keys.firstOrNull()
-          postProcessSchema(fieldSchema, fieldSlug)
-        }
-      logger.debug("$slug contains $fieldMap")
-      val schema = ObjectSchema(fieldMap).adjustForRequiredParams(clazz)
-      logger.debug("$slug schema: $schema")
-      cache[slug] = schema
+      // check if free form object
+      if (clazz.hasAnnotation<FreeFormObject>()) {
+        cache[type.getSimpleSlug()] = FreeFormSchema()
+      } else {
+        // todo this should be some kind of empty schema at this point, then throw error if not updated eventually
+        cache[type.getSimpleSlug()] = ReferencedSchema(type.getReferenceSlug())
+        val typeMap: TypeMap = clazz.typeParameters.zip(type.arguments).toMap()
+        val fieldMap = clazz.generateFieldMap(typeMap, cache)
+          .plus(clazz.generateUndeclaredFieldMap(cache))
+          .mapValues { (_, fieldSchema) ->
+            val fieldSlug = cache.filter { (_, vv) -> vv == fieldSchema }.keys.firstOrNull()
+            postProcessSchema(fieldSchema, fieldSlug)
+          }
+        logger.debug("$slug contains $fieldMap")
+        val schema = ObjectSchema(fieldMap).adjustForRequiredParams(clazz)
+        logger.debug("$slug schema: $schema")
+        cache[slug] = schema
+      }
     }
   }
 

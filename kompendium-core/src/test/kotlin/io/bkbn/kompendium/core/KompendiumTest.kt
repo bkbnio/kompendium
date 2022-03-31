@@ -18,6 +18,7 @@ import io.bkbn.kompendium.core.util.exampleParams
 import io.bkbn.kompendium.core.util.exclusiveMinMax
 import io.bkbn.kompendium.core.util.formattedParam
 import io.bkbn.kompendium.core.util.formattedType
+import io.bkbn.kompendium.core.util.freeFormField
 import io.bkbn.kompendium.core.util.freeFormObject
 import io.bkbn.kompendium.core.util.genericPolymorphicResponse
 import io.bkbn.kompendium.core.util.genericPolymorphicResponseMultipleImpls
@@ -40,6 +41,7 @@ import io.bkbn.kompendium.core.util.notarizedOptionsModule
 import io.bkbn.kompendium.core.util.notarizedPatchModule
 import io.bkbn.kompendium.core.util.notarizedPostModule
 import io.bkbn.kompendium.core.util.notarizedPutModule
+import io.bkbn.kompendium.core.util.nullableEnumField
 import io.bkbn.kompendium.core.util.nullableField
 import io.bkbn.kompendium.core.util.nullableNestedObject
 import io.bkbn.kompendium.core.util.overrideFieldInfo
@@ -244,6 +246,9 @@ class KompendiumTest : DescribeSpec({
     it("Nullable fields do not lead to doom") {
       openApiTestAllSerializers("nullable_fields.json") { nullableNestedObject() }
     }
+    it("Can have a nullable enum as a member field") {
+      openApiTestAllSerializers("nullable_enum_field.json") { nullableEnumField() }
+    }
   }
   describe("Constraints") {
     it("Can set a minimum and maximum integer value") {
@@ -302,6 +307,9 @@ class KompendiumTest : DescribeSpec({
   }
   describe("Free Form") {
     it("Can create a free-form field") {
+      openApiTestAllSerializers("free_form_field.json") { freeFormField() }
+    }
+    it("Can create a top-level free form object") {
       openApiTestAllSerializers("free_form_object.json") { freeFormObject() }
     }
   }

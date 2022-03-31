@@ -77,7 +77,7 @@ private fun Application.mainModule() {
     swagger(pageTitle = "Swaggerlicious")
     // Kompendium infers the route path from the Ktor Route.  This will show up as the root path `/`
     notarizedGet(simpleGetExample) {
-      call.respond(HttpStatusCode.OK, BasicResponse(c = UUID.randomUUID().toString()))
+      call.respond(HttpStatusCode.OK, BasicResponse(c = UUID.randomUUID().toString(), d = null))
     }
     notarizedDelete(simpleDeleteRequest) {
       call.respond(HttpStatusCode.NoContent)
@@ -87,15 +87,15 @@ private fun Application.mainModule() {
       notarizedGet(simpleGetExampleWithParameters) {
         val a = call.parameters["a"] ?: error("Unable to read expected path parameter")
         val b = call.request.queryParameters["b"]?.toInt() ?: error("Unable to read expected query parameter")
-        call.respond(HttpStatusCode.OK, BasicResponse(c = "$a: $b"))
+        call.respond(HttpStatusCode.OK, BasicResponse(c = "$a: $b", d = BasicModels.BasicEnum.NO))
       }
     }
     route("/create") {
       notarizedPost(simplePostRequest) {
         val request = call.receive<BasicRequest>()
         when (request.d) {
-          true -> call.respond(HttpStatusCode.OK, BasicResponse(c = "So it is true!"))
-          false -> call.respond(HttpStatusCode.OK, BasicResponse(c = "Oh, I knew it!"))
+          true -> call.respond(HttpStatusCode.OK, BasicResponse(c = "So it is true!", d = null))
+          false -> call.respond(HttpStatusCode.OK, BasicResponse(c = "Oh, I knew it!", d = BasicModels.BasicEnum.YES))
         }
       }
     }
@@ -115,7 +115,7 @@ object BasicPlaygroundToC {
     responseInfo = ResponseInfo(
       status = HttpStatusCode.OK,
       description = "This means everything went as expected!",
-      examples = mapOf("demo" to BasicResponse(c = "52c099d7-8642-46cc-b34e-22f39b923cf4"))
+      examples = mapOf("demo" to BasicResponse(c = "52c099d7-8642-46cc-b34e-22f39b923cf4", BasicModels.BasicEnum.NO))
     ),
     tags = setOf("Simple")
   )
@@ -131,7 +131,7 @@ object BasicPlaygroundToC {
     responseInfo = ResponseInfo(
       status = HttpStatusCode.OK,
       description = "This means everything went as expected!",
-      examples = mapOf("demo" to BasicResponse(c = "52c099d7-8642-46cc-b34e-22f39b923cf4"))
+      examples = mapOf("demo" to BasicResponse(c = "52c099d7-8642-46cc-b34e-22f39b923cf4", BasicModels.BasicEnum.YES))
     ),
     tags = setOf("Parameters")
   )
@@ -149,7 +149,7 @@ object BasicPlaygroundToC {
     responseInfo = ResponseInfo(
       status = HttpStatusCode.OK,
       description = "This means everything went as expected!",
-      examples = mapOf("demo" to BasicResponse(c = "So it is true!"))
+      examples = mapOf("demo" to BasicResponse(c = "So it is true!", null))
     ),
     tags = setOf("Simple")
   )
@@ -169,8 +169,15 @@ object BasicPlaygroundToC {
 }
 
 object BasicModels {
+
   @Serializable
-  data class BasicResponse(val c: String)
+  enum class BasicEnum {
+    YES,
+    NO
+  }
+
+  @Serializable
+  data class BasicResponse(val c: String, val d: BasicEnum? = null)
 
   @Serializable
   data class BasicParameters(

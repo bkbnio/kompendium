@@ -38,7 +38,8 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/FreeFormData"
+                  "additionalProperties": true,
+                  "type": "object"
                 }
               }
             }
@@ -49,20 +50,7 @@
     }
   },
   "components": {
-    "schemas": {
-      "FreeFormData": {
-        "properties": {
-          "data": {
-            "additionalProperties": true,
-            "type": "object"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "type": "object"
-      }
-    },
+    "schemas": {},
     "securitySchemes": {}
   },
   "security": [],

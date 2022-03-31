@@ -18,7 +18,7 @@ dependencies {
   val ktorVersion: String by project
   implementation(group = "io.ktor", name = "ktor-server-core", version = ktorVersion)
   implementation(group = "org.webjars", name = "webjars-locator-core", version = "0.50")
-  implementation(group = "org.webjars", name = "swagger-ui", version = "4.5.2")
+  implementation(group = "org.webjars", name = "swagger-ui", version = "4.9.1")
 }
 
 testing {

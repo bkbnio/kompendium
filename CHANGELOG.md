@@ -15,6 +15,24 @@
 
 ## Released
 
+## [2.3.2] - March 30th, 2022
+### Changed
+- Fixed bug where nullable enum fields caused runtime exceptions
+
+## [2.3.1] - March 5th, 2022
+### Changed
+- Can now apply `@FreeFormObject` to top level types
+
+## [2.3.0] - March 1st, 2022
+### Added
+- Brand new SwaggerUI support as a KTor plugin with WebJar under the hood and flexible configuration
+
+### Changed
+- Playground example `SwaggerPlaygound` now demonstrates new SwaggerUI KTor plugin usage (including OAuth security)
+
+### Remove
+- Deprecated Swagger Webjar approach was removed from codebase
+
 ## [2.2.1] - February 26th, 2022
 - Fix to support sealed class typed Maps
 
