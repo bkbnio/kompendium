@@ -3,16 +3,22 @@
 ## Unreleased
 
 ### Added
-- Added tests for Swagger UI module that verify that plugin generates correct responses for Swagger UI WEB resources (tests should detect future incompatible changes in new versions of `org.webjars.swagger-ui`)
 
 ### Changed
-- Fixed broken Swagger UI plugin (`org.webjars.swagger-ui` WEB resources structure changed in version 4.9.X). Issue: https://github.com/bkbnio/kompendium/issues/236
 
 ### Remove
 
 ---
 
 ## Released
+
+## [2.3.3] - April 1st, 2022
+### Added
+- Added tests for Swagger UI module that verify that plugin generates correct responses for Swagger UI WEB resources (tests should detect future incompatible changes in new versions of `org.webjars.swagger-ui`)
+
+### Changed
+- Fixed broken Swagger UI plugin (`org.webjars.swagger-ui` WEB resources structure changed in version 4.9.X). Issue: https://github.com/bkbnio/kompendium/issues/236
+
 
 ## [2.3.2] - March 30th, 2022
 ### Changed
