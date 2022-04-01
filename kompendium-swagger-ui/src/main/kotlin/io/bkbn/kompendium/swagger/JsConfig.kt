@@ -23,7 +23,7 @@ data class JsConfig(
 internal fun JsConfig.toJsProps(): String = asMap()
   .filterKeys { !setOf("specs", "jsInit").contains(it) }
   .map{ "${it.key}: ${it.value.toJs()}" }
-  .joinToString(separator = ",\n\t\t")
+  .joinToString(separator = ",\n    ")
 
 internal fun JsConfig.getSpecUrlsProps(): String =
   if (specs.isEmpty()) "[]" else specs.map { "{url: ${it.value.toJs()}, name: ${it.key.toJs()}}" }.toString()

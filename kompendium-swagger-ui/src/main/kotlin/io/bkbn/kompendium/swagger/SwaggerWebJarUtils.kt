@@ -12,13 +12,13 @@ internal fun WebJarAssetLocator.getSwaggerResource(path: String): URL =
 internal fun WebJarAssetLocator.getSwaggerResourceContent(path: String): ByteArrayContent =
   ByteArrayContent(getSwaggerResource(path).readBytes())
 
-internal fun WebJarAssetLocator.getSwaggerIndexContent(jsConfig: JsConfig): ByteArrayContent = ByteArrayContent(
-    getSwaggerResource(path = "index.html").readText()
+internal fun WebJarAssetLocator.getSwaggerInitializerContent(jsConfig: JsConfig): ByteArrayContent = ByteArrayContent(
+    getSwaggerResource(path = "swagger-initializer.js").readText()
       .replaceFirst("url: \"https://petstore.swagger.io/v2/swagger.json\",", "urls: ${jsConfig.getSpecUrlsProps()},")
       .replaceFirst("deepLinking: true", jsConfig.toJsProps())
       .let { content ->
         jsConfig.jsInit()?.let {
-          content.replaceFirst("window.ui = ui", "$it\n\twindow.ui = ui")
+          content.replaceFirst("});", "});\n$it")
         } ?: content
       }.toByteArray()
   )

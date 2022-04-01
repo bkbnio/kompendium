@@ -56,8 +56,8 @@ class SwaggerUI(val config: Configuration) {
       get("${config.swaggerBaseUrl}/{filename}") {
         call.parameters["filename"]!!.let { filename ->
           when(filename) {
-            "index.html" ->
-              locator.getSwaggerIndexContent(jsConfig = config.jsConfig)
+            "swagger-initializer.js" ->
+              locator.getSwaggerInitializerContent(jsConfig = config.jsConfig)
             else ->
               locator.getSwaggerResourceContent(path = filename)
           }

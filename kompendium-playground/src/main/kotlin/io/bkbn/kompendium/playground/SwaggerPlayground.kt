@@ -72,13 +72,13 @@ private fun Application.mainModule() {
         // Example is prepared according to this documentation: https://swagger.io/docs/open-source-tools/swagger-ui/usage/oauth2/
         jsInit = {
           """
-      ui.initOAuth({
-          clientId: 'CLIENT_ID',
-          clientSecret: 'CLIENT_SECRET',
-          realm: 'MY REALM',
-          appName: 'TEST APP',
-          useBasicAuthenticationWithAccessCodeGrant: true
-      });  
+  window.ui.initOAuth({
+      clientId: 'CLIENT_ID',
+      clientSecret: 'CLIENT_SECRET',
+      realm: 'MY REALM',
+      appName: 'TEST APP',
+      useBasicAuthenticationWithAccessCodeGrant: true
+  });  
       """
         }
       )

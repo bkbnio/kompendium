@@ -1,6 +1,5 @@
 package io.bkbn.kompendium.core
 
-import io.bkbn.kompendium.annotations.constraint.Format
 import io.bkbn.kompendium.core.handler.CollectionHandler
 import io.bkbn.kompendium.core.handler.EnumHandler
 import io.bkbn.kompendium.core.handler.MapHandler
@@ -12,7 +11,6 @@ import io.bkbn.kompendium.oas.schema.SimpleSchema
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.full.createType
-import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.typeOf
 import org.slf4j.LoggerFactory
