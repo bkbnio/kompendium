@@ -7,6 +7,7 @@ plugins {
   id("maven-publish")
   id("java-library")
   id("signing")
+  id("java-test-fixtures")
 }
 
 sourdough {
@@ -16,9 +17,13 @@ sourdough {
 
 dependencies {
   val ktorVersion: String by project
+
+  implementation(projects.kompendiumCore)
   implementation(group = "io.ktor", name = "ktor-server-core", version = ktorVersion)
   implementation(group = "org.webjars", name = "webjars-locator-core", version = "0.50")
   implementation(group = "org.webjars", name = "swagger-ui", version = "4.9.1")
+
+  testImplementation(testFixtures(projects.kompendiumCore))
 }
 
 testing {
