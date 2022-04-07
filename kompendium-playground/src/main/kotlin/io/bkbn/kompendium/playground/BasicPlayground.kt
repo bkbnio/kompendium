@@ -9,11 +9,13 @@ import io.bkbn.kompendium.core.Kompendium
 import io.bkbn.kompendium.core.Notarized.notarizedDelete
 import io.bkbn.kompendium.core.Notarized.notarizedGet
 import io.bkbn.kompendium.core.Notarized.notarizedPost
+import io.bkbn.kompendium.core.Notarized.notarizedPut
 import io.bkbn.kompendium.core.metadata.RequestInfo
 import io.bkbn.kompendium.core.metadata.ResponseInfo
 import io.bkbn.kompendium.core.metadata.method.DeleteInfo
 import io.bkbn.kompendium.core.metadata.method.GetInfo
 import io.bkbn.kompendium.core.metadata.method.PostInfo
+import io.bkbn.kompendium.core.metadata.method.PutInfo
 import io.bkbn.kompendium.core.routes.redoc
 import io.bkbn.kompendium.core.routes.swagger
 import io.bkbn.kompendium.oas.serialization.KompendiumSerializersModule
@@ -24,6 +26,7 @@ import io.bkbn.kompendium.playground.BasicPlaygroundToC.simpleDeleteRequest
 import io.bkbn.kompendium.playground.BasicPlaygroundToC.simpleGetExample
 import io.bkbn.kompendium.playground.BasicPlaygroundToC.simpleGetExampleWithParameters
 import io.bkbn.kompendium.playground.BasicPlaygroundToC.simplePostRequest
+import io.bkbn.kompendium.playground.BasicPlaygroundToC.simplePutInfo
 import io.bkbn.kompendium.playground.util.Util
 import io.ktor.application.Application
 import io.ktor.application.call
@@ -99,6 +102,11 @@ private fun Application.mainModule() {
         }
       }
     }
+    route("/update") {
+      notarizedPut(simplePutInfo) {
+        call.respond(HttpStatusCode.NoContent)
+      }
+    }
   }
 }
 
@@ -146,6 +154,18 @@ object BasicPlaygroundToC {
       description = "This is the required info for this request!",
       examples = mapOf("demo" to BasicRequest(true))
     ),
+    responseInfo = ResponseInfo(
+      status = HttpStatusCode.OK,
+      description = "This means everything went as expected!",
+      examples = mapOf("demo" to BasicResponse(c = "So it is true!", null))
+    ),
+    tags = setOf("Simple")
+  )
+
+  val simplePutInfo = PutInfo<Unit, Unit, BasicResponse>(
+    summary = "Simple, Documented POST Request",
+    description = "Showcases how easy it is to document a post request!",
+    requestInfo = null,
     responseInfo = ResponseInfo(
       status = HttpStatusCode.OK,
       description = "This means everything went as expected!",

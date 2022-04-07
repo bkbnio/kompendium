@@ -12,6 +12,10 @@
 
 ## Released
 
+## [2.3.4] - April 7th, 2022
+### Changed
+- Put request body info now nullable
+
 ## [2.3.3] - April 1st, 2022
 ### Added
 - Added tests for Swagger UI module that verify that plugin generates correct responses for Swagger UI WEB resources (tests should detect future incompatible changes in new versions of `org.webjars.swagger-ui`)

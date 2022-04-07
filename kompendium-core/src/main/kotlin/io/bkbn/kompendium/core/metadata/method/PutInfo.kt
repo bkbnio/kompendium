@@ -6,7 +6,7 @@ import io.bkbn.kompendium.core.metadata.RequestInfo
 import io.bkbn.kompendium.core.metadata.ResponseInfo
 
 data class PutInfo<TParam, TReq, TResp>(
-  val requestInfo: RequestInfo<TReq>,
+  val requestInfo: RequestInfo<TReq>?,
   override val responseInfo: ResponseInfo<TResp>,
   override val summary: String,
   override val description: String? = null,
