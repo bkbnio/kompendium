@@ -7,9 +7,6 @@ complexity:
     constructorThreshold: 10
   ComplexMethod:
     threshold: 20
-formatting:
-  ParameterListWrapping:
-    active: false
 style:
   MaxLineLength:
     excludes: ['**/test/**/*']

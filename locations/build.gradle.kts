@@ -9,7 +9,7 @@ plugins {
   id("signing")
 }
 
-sourdough {
+sourdoughLibrary {
   libraryName.set("Kompendium Locations")
   libraryDescription.set("Supplemental library for Kompendium offering support for Ktor's Location API")
   compilerArgs.set(listOf("-opt-in=kotlin.RequiresOptIn"))

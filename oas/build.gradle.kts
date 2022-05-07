@@ -10,7 +10,7 @@ plugins {
   id("signing")
 }
 
-sourdough {
+sourdoughLibrary {
   libraryName.set("Kompendium OpenAPI Spec")
   libraryDescription.set("Collections of kotlin data classes modeling the OpenAPI specification")
   compilerArgs.set(listOf("-opt-in=kotlin.RequiresOptIn"))

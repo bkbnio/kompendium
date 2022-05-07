@@ -9,7 +9,7 @@ plugins {
   id("signing")
 }
 
-sourdough {
+sourdoughLibrary {
   libraryName.set("Kompendium Authentication")
   libraryDescription.set("Kompendium library to pair with Ktor Auth to provide authorization info to OpenAPI")
 }

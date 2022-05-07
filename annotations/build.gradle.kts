@@ -9,7 +9,7 @@ plugins {
   id("signing")
 }
 
-sourdough {
+sourdoughLibrary {
   libraryName.set("Kompendium Annotations")
   libraryDescription.set("A set of annotations used by Kompendium to generate OpenAPI Specifications")
 }

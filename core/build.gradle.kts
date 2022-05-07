@@ -11,7 +11,7 @@ plugins {
   id("java-test-fixtures")
 }
 
-sourdough {
+sourdoughLibrary {
   libraryName.set("Kompendium Core")
   libraryDescription.set("Core functionality for the Kompendium library")
   compilerArgs.set(listOf("-opt-in=kotlin.RequiresOptIn"))

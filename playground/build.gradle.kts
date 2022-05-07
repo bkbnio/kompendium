@@ -5,7 +5,7 @@ plugins {
   id("application")
 }
 
-sourdough {
+sourdoughApp {
   compilerArgs.set(listOf("-opt-in=kotlin.RequiresOptIn"))
 }
 
