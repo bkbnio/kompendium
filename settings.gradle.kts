@@ -1,12 +1,15 @@
 rootProject.name = "kompendium"
 
-include("kompendium-annotations")
-include("kompendium-core")
-include("kompendium-oas")
-include("kompendium-auth")
-include("kompendium-swagger-ui")
-include("kompendium-playground")
-include("kompendium-locations")
+include("annotations")
+include("core")
+include("oas")
+include("auth")
+include("playground")
+include("locations")
+
+run {
+  rootProject.children.forEach { it.name = "${rootProject.name}-${it.name}" }
+}
 
 // Feature Previews
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
