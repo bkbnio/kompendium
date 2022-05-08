@@ -2,7 +2,6 @@ rootProject.name = "kompendium"
 
 include("annotations")
 include("core")
-include("core2") // FIXME will become core once implemented
 include("oas")
 include("auth")
 include("playground")

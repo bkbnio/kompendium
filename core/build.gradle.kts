@@ -19,7 +19,7 @@ sourdoughLibrary {
 
 dependencies {
   // VERSIONS
-  val ktorVersion: String by project
+  val ktorVersion = "2.0.1"
   val kotestVersion: String by project
 
   // IMPLEMENTATION
@@ -27,8 +27,11 @@ dependencies {
   api(projects.kompendiumOas)
   api(projects.kompendiumAnnotations)
 
-  implementation(group = "io.ktor", name = "ktor-server-core", version = ktorVersion)
-  implementation(group = "io.ktor", name = "ktor-html-builder", version = ktorVersion)
+  implementation("io.ktor:ktor-server-core:$ktorVersion")
+  implementation("io.ktor:ktor-server-cio:$ktorVersion")
+  implementation("io.ktor:ktor-server-content-negotiation:$ktorVersion")
+  implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
+  implementation("ch.qos.logback:logback-classic:1.2.11")
 
   // TEST FIXTURES
 
@@ -38,11 +41,11 @@ dependencies {
   testFixturesApi(group = "io.kotest", name = "kotest-assertions-json-jvm", version = kotestVersion)
   testFixturesApi(group = "io.kotest", name = "kotest-assertions-ktor-jvm", version = "4.4.3")
 
-  testFixturesApi(group = "io.ktor", name = "ktor-server-core", version = ktorVersion)
-  testFixturesApi(group = "io.ktor", name = "ktor-server-test-host", version = ktorVersion)
-  testFixturesApi(group = "io.ktor", name = "ktor-jackson", version = ktorVersion)
-  testFixturesApi(group = "io.ktor", name = "ktor-gson", version = ktorVersion)
-  testFixturesApi(group = "io.ktor", name = "ktor-serialization", version = ktorVersion)
+//  testFixturesApi(group = "io.ktor", name = "ktor-server-core", version = ktorVersion)
+//  testFixturesApi(group = "io.ktor", name = "ktor-server-test-host", version = ktorVersion)
+//  testFixturesApi(group = "io.ktor", name = "ktor-jackson", version = ktorVersion)
+//  testFixturesApi(group = "io.ktor", name = "ktor-gson", version = ktorVersion)
+//  testFixturesApi(group = "io.ktor", name = "ktor-serialization", version = ktorVersion)
 
   testFixturesApi(group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version = "1.3.2")
 }

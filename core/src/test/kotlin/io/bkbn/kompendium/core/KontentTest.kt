@@ -12,7 +12,7 @@ import io.bkbn.kompendium.core.fixtures.TestSimpleWithEnums
 import io.bkbn.kompendium.core.fixtures.TestSimpleWithList
 import io.bkbn.kompendium.core.fixtures.TestSimpleWithMap
 import io.bkbn.kompendium.core.fixtures.TestWithUUID
-import io.bkbn.kompendium.core.metadata.SchemaMap
+import io.bkbn.kompendium.core.legacy.metadata.SchemaMap
 import io.bkbn.kompendium.oas.schema.DictionarySchema
 import io.bkbn.kompendium.oas.schema.FormattedSchema
 import io.bkbn.kompendium.oas.schema.ObjectSchema

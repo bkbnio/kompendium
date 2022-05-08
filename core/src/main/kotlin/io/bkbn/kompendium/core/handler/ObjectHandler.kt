@@ -9,8 +9,8 @@ import io.bkbn.kompendium.core.Kontent
 import io.bkbn.kompendium.core.Kontent.generateKontent
 import io.bkbn.kompendium.core.constraint.adjustForRequiredParams
 import io.bkbn.kompendium.core.constraint.scanForConstraints
-import io.bkbn.kompendium.core.metadata.SchemaMap
-import io.bkbn.kompendium.core.metadata.TypeMap
+import io.bkbn.kompendium.core.legacy.metadata.SchemaMap
+import io.bkbn.kompendium.core.legacy.metadata.TypeMap
 import io.bkbn.kompendium.core.util.Helpers.getReferenceSlug
 import io.bkbn.kompendium.core.util.Helpers.getSimpleSlug
 import io.bkbn.kompendium.oas.schema.AnyOfSchema

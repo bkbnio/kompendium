@@ -1,4 +1,4 @@
-package io.bkbn.kompendium.core.metadata
+package io.bkbn.kompendium.core.legacy.metadata
 
 data class RequestInfo<TReq>(
   val description: String,

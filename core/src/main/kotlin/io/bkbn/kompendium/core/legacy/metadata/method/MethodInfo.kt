@@ -1,8 +1,8 @@
-package io.bkbn.kompendium.core.metadata.method
+package io.bkbn.kompendium.core.legacy.metadata.method
 
-import io.bkbn.kompendium.core.metadata.ExceptionInfo
-import io.bkbn.kompendium.core.metadata.ParameterExample
-import io.bkbn.kompendium.core.metadata.ResponseInfo
+import io.bkbn.kompendium.core.legacy.metadata.ExceptionInfo
+import io.bkbn.kompendium.core.legacy.metadata.ParameterExample
+import io.bkbn.kompendium.core.legacy.metadata.ResponseInfo
 
 sealed interface MethodInfo<TParam, TResp> {
   val summary: String

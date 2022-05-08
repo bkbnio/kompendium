@@ -1,4 +1,4 @@
-package io.bkbn.kompendium.core.metadata
+package io.bkbn.kompendium.core.legacy.metadata
 
 import io.ktor.http.HttpStatusCode
 import kotlin.reflect.KType

@@ -1,6 +1,6 @@
 package io.bkbn.kompendium.core.handler
 
-import io.bkbn.kompendium.core.metadata.SchemaMap
+import io.bkbn.kompendium.core.legacy.metadata.SchemaMap
 import io.bkbn.kompendium.core.util.Helpers.COMPONENT_SLUG
 import io.bkbn.kompendium.oas.schema.ComponentSchema
 import io.bkbn.kompendium.oas.schema.EnumSchema

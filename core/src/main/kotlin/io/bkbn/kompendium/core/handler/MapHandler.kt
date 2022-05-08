@@ -2,7 +2,7 @@ package io.bkbn.kompendium.core.handler
 
 import io.bkbn.kompendium.core.Kontent.generateKTypeKontent
 import io.bkbn.kompendium.core.Kontent.generateKontent
-import io.bkbn.kompendium.core.metadata.SchemaMap
+import io.bkbn.kompendium.core.legacy.metadata.SchemaMap
 import io.bkbn.kompendium.core.util.Helpers.genericNameAdapter
 import io.bkbn.kompendium.core.util.Helpers.getSimpleSlug
 import io.bkbn.kompendium.oas.schema.AnyOfSchema
