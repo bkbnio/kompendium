@@ -107,7 +107,7 @@ fun Route.nestyDocumentation() {
       parameters(
         Parameter(
           name = "something",
-          `in` = "query",
+          `in` = Parameter.Location.query,
           schema = SimpleSchema("string")
         )
       )
@@ -121,7 +121,7 @@ fun Route.testPathParamDocs() {
     parameters = listOf(
       Parameter(
         name = "a",
-        `in` = "path",
+        `in` = Parameter.Location.path,
         schema = FormattedSchema("int32", "integer")
       )
     )
