@@ -1,10 +1,13 @@
 package io.bkbn.kompendium.core.plugin
 
-import io.bkbn.kompendium.core.metadata.GetInfo
 import io.bkbn.kompendium.core.attribute.KompendiumAttributes
+import io.bkbn.kompendium.core.metadata.GetInfo
+import io.bkbn.kompendium.json.schema.SchemaGenerator
 import io.bkbn.kompendium.oas.path.Path
 import io.bkbn.kompendium.oas.path.PathOperation
+import io.bkbn.kompendium.oas.payload.MediaType
 import io.bkbn.kompendium.oas.payload.Parameter
+import io.bkbn.kompendium.oas.payload.Response
 import io.ktor.server.application.createRouteScopedPlugin
 
 object NotarizedRoute {
@@ -42,7 +45,13 @@ object NotarizedRoute {
         externalDocs = get.externalDocumentation,
         operationId = get.operationId,
         deprecated = get.deprecated,
-        parameters = get.parameters
+        parameters = get.parameters,
+        responses = mapOf(200 to Response(
+          description = "todo",
+          content = mapOf("application/json" to MediaType(
+            schema = SchemaGenerator.fromType(get.responseType)
+          ))
+        ))
       )
     }
 

@@ -3,13 +3,13 @@ package io.bkbn.kompendium.core
 import io.bkbn.kompendium.core.metadata.GetInfo
 import io.bkbn.kompendium.core.plugin.NotarizedApplication
 import io.bkbn.kompendium.core.plugin.NotarizedRoute
+import io.bkbn.kompendium.core.routes.redoc
+import io.bkbn.kompendium.json.schema.JsonSchema
 import io.bkbn.kompendium.oas.OpenApiSpec
 import io.bkbn.kompendium.oas.info.Contact
 import io.bkbn.kompendium.oas.info.Info
 import io.bkbn.kompendium.oas.info.License
 import io.bkbn.kompendium.oas.payload.Parameter
-import io.bkbn.kompendium.oas.schema.FormattedSchema
-import io.bkbn.kompendium.oas.schema.SimpleSchema
 import io.bkbn.kompendium.oas.server.Server
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.call
@@ -25,6 +25,7 @@ import io.ktor.server.routing.routing
 import kotlinx.serialization.json.Json
 import java.net.URI
 
+// 🚨 FIXME delete prior to merge!
 fun main() {
   embeddedServer(CIO, port = 8080) {
     install(ContentNegotiation) {
@@ -63,6 +64,7 @@ fun main() {
       )
     }
     routing {
+      redoc()
       route("/") {
         rootDocumentation()
         get {
@@ -85,12 +87,16 @@ fun main() {
   }.start(wait = true)
 }
 
+data class Dumbo(val a: String, val b: String)
+
+data class Nesty(val c: Boolean, val d: Dumbo)
+
 fun Route.rootDocumentation() {
   install(NotarizedRoute()) {
     path = "/"
     tags = setOf("Neato")
     get = GetInfo.builder {
-      responseType<String>()
+      responseType<Nesty>()
       summary("Cool API Response")
       description("Cool Description")
       tags("Cool", "Stuff")
@@ -108,7 +114,7 @@ fun Route.nestyDocumentation() {
         Parameter(
           name = "something",
           `in` = Parameter.Location.query,
-          schema = SimpleSchema("string")
+          schema = JsonSchema.STRING
         )
       )
     }
@@ -122,7 +128,7 @@ fun Route.testPathParamDocs() {
       Parameter(
         name = "a",
         `in` = Parameter.Location.path,
-        schema = FormattedSchema("int32", "integer")
+        schema = JsonSchema.INT
       )
     )
     get = GetInfo.builder {

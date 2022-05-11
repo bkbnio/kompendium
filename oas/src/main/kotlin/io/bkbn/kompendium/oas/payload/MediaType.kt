@@ -1,6 +1,6 @@
 package io.bkbn.kompendium.oas.payload
 
-import io.bkbn.kompendium.oas.schema.ComponentSchema
+import io.bkbn.kompendium.json.schema.JsonSchema
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 
@@ -11,12 +11,13 @@ import kotlinx.serialization.Serializable
  *
  * @param schema The schema defining the content of the request, response, or parameter.
  * @param examples Examples of the media type. Each example object SHOULD match the media type and specified schema if present.
+ * @param encoding A map between a property name and its encoding information.
  */
 @Serializable
 data class MediaType(
-  val schema: ComponentSchema,
+  val schema: JsonSchema,
   val examples: Map<String, Example>? = null,
-  val encoding: Map<String, Encoding>
+  val encoding: Map<String, Encoding>? = null,
 ) {
   @Serializable
   data class Example(val value: @Contextual Any)

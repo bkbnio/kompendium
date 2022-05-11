@@ -11,13 +11,13 @@ plugins {
 }
 
 sourdoughLibrary {
-  libraryName.set("Kompendium OpenAPI Spec")
-  libraryDescription.set("Collections of kotlin data classes modeling the OpenAPI specification")
+  libraryName.set("Kompendium JSON Schema")
+  libraryDescription.set("Json Schema Generator")
   compilerArgs.set(listOf("-opt-in=kotlin.RequiresOptIn"))
 }
 
 dependencies {
-  api(projects.kompendiumJsonSchema)
+  implementation("org.jetbrains.kotlin:kotlin-reflect:1.6.21")
   implementation(group = "org.jetbrains.kotlinx", "kotlinx-serialization-json", version = "1.3.2")
 }
 

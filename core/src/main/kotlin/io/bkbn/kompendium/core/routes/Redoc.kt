@@ -1,10 +1,11 @@
 package io.bkbn.kompendium.core.routes
 
-import io.ktor.application.call
-import io.ktor.html.respondHtml
-import io.ktor.routing.Routing
-import io.ktor.routing.get
-import io.ktor.routing.route
+import io.ktor.http.HttpStatusCode
+import io.ktor.server.application.call
+import io.ktor.server.html.respondHtml
+import io.ktor.server.routing.Routing
+import io.ktor.server.routing.get
+import io.ktor.server.routing.route
 import kotlinx.html.body
 import kotlinx.html.head
 import kotlinx.html.link
@@ -22,7 +23,7 @@ import kotlinx.html.unsafe
 fun Routing.redoc(pageTitle: String = "Docs", specUrl: String = "/openapi.json") {
   route("/docs") {
     get {
-      call.respondHtml {
+      call.respondHtml(HttpStatusCode.OK) {
         head {
           title {
             +pageTitle

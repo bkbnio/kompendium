@@ -1,6 +1,6 @@
 package io.bkbn.kompendium.oas.payload
 
-import io.bkbn.kompendium.oas.schema.ComponentSchema
+import io.bkbn.kompendium.json.schema.JsonSchema
 import kotlinx.serialization.Serializable
 
 /**
@@ -20,7 +20,7 @@ import kotlinx.serialization.Serializable
 data class Parameter(
   val name: String,
   val `in`: Location,
-  val schema: ComponentSchema,
+  val schema: JsonSchema,
   val description: String? = null,
   val required: Boolean = true,
   val deprecated: Boolean = false,
