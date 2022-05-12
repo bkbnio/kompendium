@@ -1,5 +1,18 @@
 package io.bkbn.kompendium.core.util
 
+import io.bkbn.kompendium.core.fixtures.TestResponse
+import io.bkbn.kompendium.core.metadata.GetInfo
+import io.bkbn.kompendium.core.plugin.NotarizedRoute
+import io.bkbn.kompendium.json.schema.TypeDefinition
+import io.bkbn.kompendium.oas.payload.Parameter
+import io.ktor.http.HttpStatusCode
+import io.ktor.server.application.call
+import io.ktor.server.application.install
+import io.ktor.server.response.respondText
+import io.ktor.server.routing.Routing
+import io.ktor.server.routing.get
+import io.ktor.server.routing.route
+
 //import io.bkbn.kompendium.core.Notarized.notarizedDelete
 //import io.bkbn.kompendium.core.Notarized.notarizedGet
 //import io.bkbn.kompendium.core.Notarized.notarizedHead
@@ -81,17 +94,39 @@ package io.bkbn.kompendium.core.util
 //    }
 //  }
 //}
-//
-//fun Application.notarizedGetModule() {
-//  routing {
-//    route("/test") {
-//      notarizedGet(TestResponseInfo.testGetInfo) {
-//        call.respondText { "hey dude ‼️ congratz on the get request" }
-//      }
-//    }
-//  }
-//}
-//
+
+fun Routing.notarizedGetModule() {
+  route("/test/{a}") {
+    install(NotarizedRoute()) {
+      path = "/test"
+      parameters = listOf(
+        Parameter(
+          name = "a",
+          `in` = Parameter.Location.path,
+          schema = TypeDefinition.STRING,
+        ),
+        Parameter(
+          name = "aa",
+          `in` = Parameter.Location.query,
+          schema = TypeDefinition.INT
+        )
+      )
+      get = GetInfo.builder {
+        response {
+          responseCode(HttpStatusCode.OK)
+          responseType<TestResponse>()
+          description("A Successful Endeavor")
+        }
+        summary("Another get test")
+        description("testing more")
+      }
+    }
+    get {
+      call.respondText { "hey dude ‼️ congrats on the get request" }
+    }
+  }
+}
+
 //fun Application.notarizedPostModule() {
 //  routing {
 //    route("/test") {

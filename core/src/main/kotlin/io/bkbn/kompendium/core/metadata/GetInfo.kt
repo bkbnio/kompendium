@@ -2,11 +2,9 @@ package io.bkbn.kompendium.core.metadata
 
 import io.bkbn.kompendium.oas.common.ExternalDocumentation
 import io.bkbn.kompendium.oas.payload.Parameter
-import kotlin.reflect.KType
-import kotlin.reflect.typeOf
 
 class GetInfo private constructor(
-  val responseType: KType,
+  val response: ResponseInfo,
   val tags: Set<String>,
   val summary: String,
   val description: String?,
@@ -25,7 +23,7 @@ class GetInfo private constructor(
   }
 
   class Builder {
-    private var responseType: KType? = null
+    private var response: ResponseInfo? = null
     private var summary: String? = null
     private var description: String? = null
     private var externalDocumentation: ExternalDocumentation? = null
@@ -34,11 +32,11 @@ class GetInfo private constructor(
     private var tags: Set<String> = emptySet()
     private var parameters: List<Parameter> = emptyList()
 
-    fun responseType(t: KType) = apply {
-      this.responseType = t
+    fun response(init: ResponseInfo.Builder.() -> Unit) = apply {
+      val builder = ResponseInfo.Builder()
+      builder.init()
+      this.response = builder.build()
     }
-
-    inline fun <reified T> responseType() = apply { responseType(typeOf<T>()) }
 
     fun summary(s: String) = apply { this.summary = s }
 
@@ -55,7 +53,7 @@ class GetInfo private constructor(
     fun parameters(vararg parameters: Parameter) = apply { this.parameters = parameters.toList() }
 
     fun build() = GetInfo(
-      responseType = responseType!!,
+      response = response!!,
       summary = summary!!,
       description = description,
       externalDocumentation = externalDocumentation,

@@ -13,11 +13,10 @@ import kotlinx.serialization.Serializable
  *
  * https://spec.openapis.org/oas/v3.1.0#openapi-object
  *
- * @property openapi This string MUST be the version number of the OpenAPI Specification that the OpenAPI document uses.
+ * @param openapi This string MUST be the version number of the OpenAPI Specification that the OpenAPI document uses.
  * Kompendium only supports OpenAPI 3.1
- * @property jsonSchemaDialect The default value for the $schema keyword within Schema Objects contained within this OAS document.
+ * @param jsonSchemaDialect The default value for the $schema keyword within Schema Objects contained within this OAS document.
  * Kompendium only supports the 2020 draft
- *
  * @param info Provides metadata about the API.
  * @param servers An array of Server Objects, which provide connectivity information to a target server.
  * If the property is not provided, or is an empty array, the default value would be a Server Object with a url value of /.
@@ -30,6 +29,8 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class OpenApiSpec(
+  val openapi: String = "3.1.0",
+  val jsonSchemaDialect: String = "https://json-schema.org/draft/2020-12/schema",
   val info: Info,
   val servers: MutableList<Server> = mutableListOf(),
   val paths: MutableMap<String, Path> = mutableMapOf(),
@@ -38,7 +39,4 @@ data class OpenApiSpec(
   val security: MutableList<Map<String, List<String>>> = mutableListOf(),
   val tags: MutableList<Tag> = mutableListOf(),
   val externalDocs: ExternalDocumentation? = null
-) {
-  val openapi = "3.1.0"
-  val jsonSchemaDialect = "https://json-schema.org/draft/2020-12/schema"
-}
+)

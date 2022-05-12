@@ -42,13 +42,15 @@ dependencies {
   testFixturesApi("io.kotest:kotest-assertions-json-jvm:5.3.0")
   testFixturesApi("io.kotest:kotest-assertions-ktor-jvm:4.4.3")
 
-//  testFixturesApi("io.ktor:ktor-server-core", version = ktorVersion)
-//  testFixturesApi("io.ktor:ktor-server-test-host", version = ktorVersion)
-//  testFixturesApi("io.ktor:ktor-jackson", version = ktorVersion)
-//  testFixturesApi("io.ktor:ktor-gson", version = ktorVersion)
-//  testFixturesApi("io.ktor:ktor-serialization", version = ktorVersion)
+  testFixturesApi("io.ktor:ktor-server-core:2.0.1")
+  testFixturesApi("io.ktor:ktor-server-test-host:2.0.1")
+  testFixturesApi("io.ktor:ktor-serialization:2.0.1")
+  testFixturesApi("io.ktor:ktor-serialization-jackson:2.0.1")
+  testFixturesApi("io.ktor:ktor-serialization-gson:2.0.1")
+  testFixturesApi("io.ktor:ktor-serialization-kotlinx-json:2.0.1")
+  testFixturesApi("io.ktor:ktor-server-content-negotiation:2.0.1")
 
-  testFixturesApi("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
+  testFixturesApi("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
 }
 
 testing {

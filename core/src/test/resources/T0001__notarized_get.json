@@ -1,5 +1,6 @@
 {
-  "openapi": "3.0.3",
+  "openapi": "3.1.0",
+  "jsonSchemaDialect": "https://json-schema.org/draft/2020-12/schema",
   "info": {
     "title": "Test API",
     "version": "1.33.7",
@@ -31,27 +32,7 @@
         "tags": [],
         "summary": "Another get test",
         "description": "testing more",
-        "parameters": [
-          {
-            "name": "a",
-            "in": "path",
-            "schema": {
-              "type": "string"
-            },
-            "required": true,
-            "deprecated": false
-          },
-          {
-            "name": "aa",
-            "in": "query",
-            "schema": {
-              "format": "int32",
-              "type": "integer"
-            },
-            "required": true,
-            "deprecated": false
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
             "description": "A Successful Endeavor",
@@ -65,12 +46,35 @@
           }
         },
         "deprecated": false
-      }
+      },
+      "parameters": [
+        {
+          "name": "a",
+          "in": "path",
+          "schema": {
+            "type": "string"
+          },
+          "required": true,
+          "deprecated": false
+        },
+        {
+          "name": "aa",
+          "in": "query",
+          "schema": {
+            "type": "number",
+            "format": "int32"
+          },
+          "required": true,
+          "deprecated": false
+        }
+      ]
     }
   },
+  "webhooks": {},
   "components": {
     "schemas": {
       "TestResponse": {
+        "type": "object",
         "properties": {
           "c": {
             "type": "string"
@@ -78,8 +82,7 @@
         },
         "required": [
           "c"
-        ],
-        "type": "object"
+        ]
       }
     },
     "securitySchemes": {}

@@ -1,5 +1,9 @@
 package io.bkbn.kompendium.core
 
+import io.bkbn.kompendium.core.fixtures.TestHelpers.openApiTestAllSerializers
+import io.bkbn.kompendium.core.util.notarizedGetModule
+import io.kotest.core.spec.style.DescribeSpec
+
 //import com.fasterxml.jackson.annotation.JsonInclude
 //import com.fasterxml.jackson.databind.ObjectMapper
 //import io.bkbn.kompendium.core.fixtures.TestHelpers.apiFunctionalityTest
@@ -83,11 +87,12 @@ package io.bkbn.kompendium.core
 //import kotlinx.serialization.json.Json
 //import java.time.Instant
 //
-//class KompendiumTest : DescribeSpec({
-//  describe("Notarized Open API Metadata Tests") {
-//    it("Can notarize a get request") {
-//      openApiTestAllSerializers("notarized_get.json") { notarizedGetModule() }
-//    }
+class KompendiumTest : DescribeSpec({
+  describe("Notarized Open API Metadata Tests") {
+    it("Can notarize a get request") {
+      openApiTestAllSerializers("T0001__notarized_get.json") { notarizedGetModule() }
+    }
+  }
 //    it("Can notarize a post request") {
 //      openApiTestAllSerializers("notarized_post.json") { notarizedPostModule() }
 //    }
@@ -368,4 +373,4 @@ package io.bkbn.kompendium.core
 //      }
 //    }
 //  }
-//})
+})

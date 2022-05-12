@@ -2,6 +2,9 @@ package io.bkbn.kompendium.core.plugin
 
 import io.bkbn.kompendium.core.attribute.KompendiumAttributes
 import io.bkbn.kompendium.core.metadata.GetInfo
+import io.bkbn.kompendium.core.util.Helpers.getReferenceSlug
+import io.bkbn.kompendium.core.util.Helpers.getSimpleSlug
+import io.bkbn.kompendium.json.schema.ReferenceSchema
 import io.bkbn.kompendium.json.schema.SchemaGenerator
 import io.bkbn.kompendium.oas.path.Path
 import io.bkbn.kompendium.oas.path.PathOperation
@@ -39,6 +42,8 @@ object NotarizedRoute {
     path.parameters = pluginConfig.parameters
 
     pluginConfig.get?.let { get ->
+      spec.components.schemas[get.response.responseType.getSimpleSlug()] =
+        SchemaGenerator.fromType(get.response.responseType)
       path.get = PathOperation(
         tags = pluginConfig.tags.plus(get.tags),
         summary = get.summary,
@@ -47,12 +52,16 @@ object NotarizedRoute {
         operationId = get.operationId,
         deprecated = get.deprecated,
         parameters = get.parameters,
-        responses = mapOf(200 to Response(
-          description = "todo",
-          content = mapOf("application/json" to MediaType(
-            schema = SchemaGenerator.fromType(get.responseType)
-          ))
-        ))
+        responses = mapOf(
+          get.response.responseCode.value to Response(
+            description = get.response.description,
+            content = mapOf(
+              "application/json" to MediaType(
+                schema = ReferenceSchema(get.response.responseType.getReferenceSlug())
+              )
+            )
+          )
+        )
       )
     }
 

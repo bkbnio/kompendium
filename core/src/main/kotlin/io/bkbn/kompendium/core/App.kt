@@ -4,13 +4,14 @@ import io.bkbn.kompendium.core.metadata.GetInfo
 import io.bkbn.kompendium.core.plugin.NotarizedApplication
 import io.bkbn.kompendium.core.plugin.NotarizedRoute
 import io.bkbn.kompendium.core.routes.redoc
-import io.bkbn.kompendium.json.schema.JsonSchema
+import io.bkbn.kompendium.json.schema.TypeDefinition
 import io.bkbn.kompendium.oas.OpenApiSpec
 import io.bkbn.kompendium.oas.info.Contact
 import io.bkbn.kompendium.oas.info.Info
 import io.bkbn.kompendium.oas.info.License
 import io.bkbn.kompendium.oas.payload.Parameter
 import io.bkbn.kompendium.oas.server.Server
+import io.ktor.http.HttpStatusCode
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.call
 import io.ktor.server.application.install
@@ -97,7 +98,11 @@ fun Route.rootDocumentation() {
     path = "/"
     tags = setOf("Neato")
     get = GetInfo.builder {
-      responseType<Nesty>()
+      response {
+        responseType<Nesty>()
+        responseCode(HttpStatusCode.OK)
+        description("Neat nested!")
+      }
       summary("Cool API Response")
       description("Cool Description")
       tags("Cool", "Stuff")
@@ -109,13 +114,17 @@ fun Route.nestyDocumentation() {
   install(NotarizedRoute()) {
     path = "/nesty"
     get = GetInfo.builder {
-      responseType<String>()
+      response {
+        responseType<String>()
+        responseCode(HttpStatusCode.OK)
+        description("Simple")
+      }
       summary("Cool API Response")
       parameters(
         Parameter(
           name = "something",
           `in` = Parameter.Location.query,
-          schema = JsonSchema.STRING
+          schema = TypeDefinition.STRING
         )
       )
     }
@@ -129,11 +138,15 @@ fun Route.testPathParamDocs() {
       Parameter(
         name = "a",
         `in` = Parameter.Location.path,
-        schema = JsonSchema.INT
+        schema = TypeDefinition.INT
       )
     )
     get = GetInfo.builder {
-      responseType<String>()
+      response {
+        responseType<String>()
+        responseCode(HttpStatusCode.OK)
+        description("Simple")
+      }
       summary("Cool API Response")
     }
   }

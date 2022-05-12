@@ -1,38 +1,27 @@
 package io.bkbn.kompendium.json.schema
 
+import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.descriptors.PrimitiveKind
+import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
 
-//data class JsonSchema(
-//  val `$schema`: String = "https://json-schema.org/draft/2020-12/schema",
-//  val `$id`: String,
-//  val title: String,
-//  val type: String,
-//  val format: String? = null,
-//  val description: String? = null,
-//  val properties: Map<String, JsonSchemaProperty>? = null,
-//  val required: Set<String>? = null
-//)
+@Serializable(with = JsonSchema.Serializer::class)
+sealed interface JsonSchema {
+  object Serializer : KSerializer<JsonSchema> {
+    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("JsonSchema", PrimitiveKind.STRING)
+    override fun deserialize(decoder: Decoder): JsonSchema {
+      error("Abandon all hope ye who enter 💀")
+    }
 
-@Serializable
-data class JsonSchema(
-  val type: String,
-  val format: String? = null,
-  val description: String? = null,
-  val properties: Map<String, JsonSchema>? = null,
-  val required: Set<String>? = null
-) {
-  companion object {
-    val INT = JsonSchema(
-      type = "number",
-      format = "int32"
-    )
+    override fun serialize(encoder: Encoder, value: JsonSchema) {
+      when (value) {
+        is ReferenceSchema -> ReferenceSchema.serializer().serialize(encoder, value)
+        is TypeDefinition -> TypeDefinition.serializer().serialize(encoder, value)
+      }
+    }
 
-    val STRING = JsonSchema(
-      type = "string"
-    )
-
-    val BOOLEAN = JsonSchema(
-      type = "boolean"
-    )
   }
 }
