@@ -44,7 +44,7 @@ dependencies {
   testFixturesApi(group = "io.ktor", name = "ktor-gson", version = ktorVersion)
   testFixturesApi(group = "io.ktor", name = "ktor-serialization", version = ktorVersion)
 
-  testFixturesApi(group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version = "1.3.2")
+  testFixturesApi(group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version = "1.3.3")
 }
 
 testing {
