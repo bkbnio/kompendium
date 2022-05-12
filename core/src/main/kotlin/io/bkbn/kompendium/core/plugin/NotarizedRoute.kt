@@ -10,6 +10,7 @@ import io.bkbn.kompendium.oas.payload.Parameter
 import io.bkbn.kompendium.oas.payload.Response
 import io.ktor.server.application.createRouteScopedPlugin
 
+@Suppress("MagicNumber") // 🚨 obviously remove
 object NotarizedRoute {
 
   class Config {

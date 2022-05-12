@@ -26,6 +26,7 @@ import kotlinx.serialization.json.Json
 import java.net.URI
 
 // 🚨 FIXME delete prior to merge!
+@Suppress("LongMethod")
 fun main() {
   embeddedServer(CIO, port = 8080) {
     install(ContentNegotiation) {

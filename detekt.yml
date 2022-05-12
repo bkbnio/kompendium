@@ -12,6 +12,7 @@ style:
     excludes: ['**/test/**/*']
     active: true
     maxLineLength: 120
+    excludeCommentStatements: true
   MagicNumber:
     excludes: ['**/kompendium-playground/**/*', '**/test/**/*']
 naming:

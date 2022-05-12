@@ -30,6 +30,7 @@ data class Parameter(
   @Serializable
   data class Example<T>(val value: T)
 
+  @Suppress("EnumNaming")
   @Serializable
   enum class Location {
     query,
