@@ -18,14 +18,14 @@ dependencies {
   // Ktor
   val ktorVersion: String by project
 
-  implementation(group = "io.ktor", name = "ktor-server-core", version = ktorVersion)
-  implementation(group = "io.ktor", name = "ktor-server-netty", version = ktorVersion)
-  implementation(group = "io.ktor", name = "ktor-auth", version = ktorVersion)
-  implementation(group = "io.ktor", name = "ktor-auth-jwt", version = ktorVersion)
-  implementation(group = "io.ktor", name = "ktor-serialization", version = ktorVersion)
-  implementation(group = "io.ktor", name = "ktor-jackson", version = ktorVersion)
-  implementation(group = "io.ktor", name = "ktor-gson", version = ktorVersion)
-  implementation(group = "io.ktor", name = "ktor-locations", version = ktorVersion)
+  implementation("io.ktor:ktor-server-core:2.0.1")
+  implementation("io.ktor:ktor-server-netty:2.0.1")
+  implementation("io.ktor:ktor-server-auth:2.0.1")
+  implementation("io.ktor:ktor-server-auth-jwt:2.0.1")
+  implementation("io.ktor:ktor-serialization:2.0.1")
+  implementation("io.ktor:ktor-serialization-jackson:2.0.1")
+  implementation("io.ktor:ktor-serialization-gson:2.0.1")
+  implementation("io.ktor:ktor-server-locations:2.0.1")
 
   // Logging
   implementation("org.apache.logging.log4j:log4j-api-kotlin:1.1.0")
@@ -35,10 +35,10 @@ dependencies {
   implementation("org.slf4j:slf4j-simple:1.7.36")
 
 
-  implementation(group = "org.jetbrains.kotlinx", "kotlinx-serialization-json", version = "1.3.2")
-  implementation(group = "org.jetbrains.kotlinx", "kotlinx-datetime", version = "0.3.2")
+  implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
+  implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.3.2")
 
-  implementation(group = "joda-time", name = "joda-time", version = "2.10.14")
+  implementation("joda-time:joda-time:2.10.14")
 }
 repositories {
   mavenCentral()

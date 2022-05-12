@@ -17,11 +17,10 @@ sourdoughLibrary {
 dependencies {
   // IMPLEMENTATION
 
-  val ktorVersion: String by project
   implementation(projects.kompendiumCore)
-  implementation(group = "io.ktor", name = "ktor-server-core", version = ktorVersion)
-  implementation(group = "io.ktor", name = "ktor-auth", version = ktorVersion)
-  implementation(group = "io.ktor", name = "ktor-auth-jwt", version = ktorVersion)
+  implementation("io.ktor:ktor-server-core:2.0.1")
+  implementation("io.ktor:ktor-server-auth:2.0.1")
+  implementation("io.ktor:ktor-server-auth-jwt:2.0.1")
 
   // TESTING
 
