@@ -2,6 +2,7 @@ package io.bkbn.kompendium.core
 
 import io.bkbn.kompendium.core.fixtures.TestHelpers.openApiTestAllSerializers
 import io.bkbn.kompendium.core.util.notarizedGetModule
+import io.bkbn.kompendium.core.util.notarizedPostModule
 import io.kotest.core.spec.style.DescribeSpec
 
 //import com.fasterxml.jackson.annotation.JsonInclude
@@ -92,9 +93,12 @@ class KompendiumTest : DescribeSpec({
     it("Can notarize a get request") {
       openApiTestAllSerializers("T0001__notarized_get.json") { notarizedGetModule() }
     }
+    it("Can notarize a post request") {
+      openApiTestAllSerializers("T0002__notarized_post.json") { notarizedPostModule() }
+    }
   }
 //    it("Can notarize a post request") {
-//      openApiTestAllSerializers("notarized_post.json") { notarizedPostModule() }
+//      openApiTestAllSerializers("T0002__notarized_post.json") { notarizedPostModule() }
 //    }
 //    it("Can notarize a put request") {
 //      openApiTestAllSerializers("notarized_put.json") { notarizedPutModule() }

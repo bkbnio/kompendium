@@ -2,6 +2,7 @@ package io.bkbn.kompendium.core.plugin
 
 import io.bkbn.kompendium.core.attribute.KompendiumAttributes
 import io.bkbn.kompendium.core.metadata.GetInfo
+import io.bkbn.kompendium.core.metadata.PostInfo
 import io.bkbn.kompendium.core.util.Helpers.getReferenceSlug
 import io.bkbn.kompendium.core.util.Helpers.getSimpleSlug
 import io.bkbn.kompendium.json.schema.ReferenceSchema
@@ -10,6 +11,7 @@ import io.bkbn.kompendium.oas.path.Path
 import io.bkbn.kompendium.oas.path.PathOperation
 import io.bkbn.kompendium.oas.payload.MediaType
 import io.bkbn.kompendium.oas.payload.Parameter
+import io.bkbn.kompendium.oas.payload.Request
 import io.bkbn.kompendium.oas.payload.Response
 import io.ktor.server.application.createRouteScopedPlugin
 
@@ -22,6 +24,7 @@ object NotarizedRoute {
     var tags: Set<String> = emptySet()
     var parameters: List<Parameter> = emptyList()
     var get: GetInfo? = null
+    var post: PostInfo? = null
     // todo get, post, put, etc.
   }
 
@@ -65,9 +68,47 @@ object NotarizedRoute {
       )
     }
 
+    pluginConfig.post?.let { post ->
+      spec.components.schemas[post.response.responseType.getSimpleSlug()] =
+        SchemaGenerator.fromType(post.response.responseType)
+      spec.components.schemas[post.request.requestType.getSimpleSlug()] =
+        SchemaGenerator.fromType(post.request.requestType)
+
+      path.post = PathOperation(
+        tags = pluginConfig.tags.plus(post.tags),
+        summary = post.summary,
+        description = post.description,
+        externalDocs = post.externalDocumentation,
+        operationId = post.operationId,
+        deprecated = post.deprecated,
+        parameters = post.parameters,
+        requestBody = Request(
+          description = post.request.description,
+          content = mapOf(
+            "application/json" to MediaType(
+              schema = ReferenceSchema(post.request.requestType.getReferenceSlug())
+            )
+          ),
+          required = true
+        ),
+        responses = mapOf(
+          post.response.responseCode.value to Response(
+            description = post.response.description,
+            content = mapOf(
+              "application/json" to MediaType(
+                schema = ReferenceSchema(post.response.responseType.getReferenceSlug())
+              )
+            )
+          )
+        )
+      )
+    }
+
     // todo handle get, post, put, etc.
 
     spec.paths[pluginConfig.path] = path
   }
+
+
 
 }

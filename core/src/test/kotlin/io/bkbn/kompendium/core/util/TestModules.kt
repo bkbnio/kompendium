@@ -1,7 +1,10 @@
 package io.bkbn.kompendium.core.util
 
+import io.bkbn.kompendium.core.fixtures.TestCreatedResponse
 import io.bkbn.kompendium.core.fixtures.TestResponse
+import io.bkbn.kompendium.core.fixtures.TestSimpleRequest
 import io.bkbn.kompendium.core.metadata.GetInfo
+import io.bkbn.kompendium.core.metadata.PostInfo
 import io.bkbn.kompendium.core.plugin.NotarizedRoute
 import io.bkbn.kompendium.json.schema.TypeDefinition
 import io.bkbn.kompendium.oas.payload.Parameter
@@ -11,6 +14,7 @@ import io.ktor.server.application.install
 import io.ktor.server.response.respondText
 import io.ktor.server.routing.Routing
 import io.ktor.server.routing.get
+import io.ktor.server.routing.post
 import io.ktor.server.routing.route
 
 //import io.bkbn.kompendium.core.Notarized.notarizedDelete
@@ -98,7 +102,7 @@ import io.ktor.server.routing.route
 fun Routing.notarizedGetModule() {
   route("/test/{a}") {
     install(NotarizedRoute()) {
-      path = "/test"
+      path = "/test/{a}"
       parameters = listOf(
         Parameter(
           name = "a",
@@ -123,6 +127,42 @@ fun Routing.notarizedGetModule() {
     }
     get {
       call.respondText { "hey dude ‼️ congrats on the get request" }
+    }
+  }
+}
+
+fun Routing.notarizedPostModule() {
+  route("/test/{a}") {
+    install(NotarizedRoute()) {
+      path = "/test/{a}"
+      parameters = listOf(
+        Parameter(
+          name = "a",
+          `in` = Parameter.Location.path,
+          schema = TypeDefinition.STRING,
+        ),
+        Parameter(
+          name = "aa",
+          `in` = Parameter.Location.query,
+          schema = TypeDefinition.INT
+        )
+      )
+      post = PostInfo.builder {
+        summary("Test post endpoint")
+        description("Post your tests here!")
+        request {
+          requestType<TestSimpleRequest>()
+          description("A Test request")
+        }
+        response {
+          responseCode(HttpStatusCode.Created)
+          responseType<TestCreatedResponse>()
+          description("A Successful Endeavor")
+        }
+      }
+    }
+    post {
+      call.respondText { "hey dude ‼️ congrats on the post request" }
     }
   }
 }

@@ -61,6 +61,12 @@ data class TestRequest(
 )
 
 @Serializable
+data class TestSimpleRequest(
+  val a: String,
+  val b: Int
+)
+
+@Serializable
 data class TestResponse(val c: String)
 
 @Serializable
