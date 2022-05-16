@@ -108,7 +108,4 @@ object NotarizedRoute {
 
     spec.paths[pluginConfig.path] = path
   }
-
-
-
 }
