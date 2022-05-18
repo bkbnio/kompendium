@@ -3,6 +3,7 @@ package io.bkbn.kompendium.core.plugin
 import io.bkbn.kompendium.core.attribute.KompendiumAttributes
 import io.bkbn.kompendium.core.metadata.GetInfo
 import io.bkbn.kompendium.core.metadata.PostInfo
+import io.bkbn.kompendium.core.metadata.PutInfo
 import io.bkbn.kompendium.core.util.Helpers.getReferenceSlug
 import io.bkbn.kompendium.core.util.Helpers.getSimpleSlug
 import io.bkbn.kompendium.json.schema.ReferenceSchema
@@ -25,6 +26,7 @@ object NotarizedRoute {
     var parameters: List<Parameter> = emptyList()
     var get: GetInfo? = null
     var post: PostInfo? = null
+    var put: PutInfo? = null
     // todo get, post, put, etc.
   }
 
@@ -97,6 +99,42 @@ object NotarizedRoute {
             content = mapOf(
               "application/json" to MediaType(
                 schema = ReferenceSchema(post.response.responseType.getReferenceSlug())
+              )
+            )
+          )
+        )
+      )
+    }
+
+    pluginConfig.put?.let { put ->
+      spec.components.schemas[put.response.responseType.getSimpleSlug()] =
+        SchemaGenerator.fromType(put.response.responseType)
+      spec.components.schemas[put.request.requestType.getSimpleSlug()] =
+        SchemaGenerator.fromType(put.request.requestType)
+
+      path.put = PathOperation(
+        tags = pluginConfig.tags.plus(put.tags),
+        summary = put.summary,
+        description = put.description,
+        externalDocs = put.externalDocumentation,
+        operationId = put.operationId,
+        deprecated = put.deprecated,
+        parameters = put.parameters,
+        requestBody = Request(
+          description = put.request.description,
+          content = mapOf(
+            "application/json" to MediaType(
+              schema = ReferenceSchema(put.request.requestType.getReferenceSlug())
+            )
+          ),
+          required = true
+        ),
+        responses = mapOf(
+          put.response.responseCode.value to Response(
+            description = put.response.description,
+            content = mapOf(
+              "application/json" to MediaType(
+                schema = ReferenceSchema(put.response.responseType.getReferenceSlug())
               )
             )
           )

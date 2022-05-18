@@ -1,5 +1,6 @@
 {
-  "openapi": "3.0.3",
+  "openapi": "3.1.0",
+  "jsonSchemaDialect": "https://json-schema.org/draft/2020-12/schema",
   "info": {
     "title": "Test API",
     "version": "1.33.7",
@@ -26,38 +27,18 @@
     }
   ],
   "paths": {
-    "/test": {
+    "/test/{a}": {
       "put": {
         "tags": [],
-        "summary": "Test put endpoint",
-        "description": "Put your tests here!",
-        "parameters": [
-          {
-            "name": "a",
-            "in": "path",
-            "schema": {
-              "type": "string"
-            },
-            "required": true,
-            "deprecated": false
-          },
-          {
-            "name": "aa",
-            "in": "query",
-            "schema": {
-              "format": "int32",
-              "type": "integer"
-            },
-            "required": true,
-            "deprecated": false
-          }
-        ],
+        "summary": "Test post endpoint",
+        "description": "Post your tests here!",
+        "parameters": [],
         "requestBody": {
           "description": "A Test request",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/TestRequest"
+                "$ref": "#/components/schemas/TestSimpleRequest"
               }
             }
           },
@@ -76,61 +57,64 @@
           }
         },
         "deprecated": false
-      }
+      },
+      "parameters": [
+        {
+          "name": "a",
+          "in": "path",
+          "schema": {
+            "type": "string"
+          },
+          "required": true,
+          "deprecated": false
+        },
+        {
+          "name": "aa",
+          "in": "query",
+          "schema": {
+            "type": "number",
+            "format": "int32"
+          },
+          "required": true,
+          "deprecated": false
+        }
+      ]
     }
   },
+  "webhooks": {},
   "components": {
     "schemas": {
-      "TestRequest": {
-        "properties": {
-          "aaa": {
-            "items": {
-              "format": "int64",
-              "type": "integer"
-            },
-            "type": "array"
-          },
-          "b": {
-            "format": "double",
-            "type": "number"
-          },
-          "field_name": {
-            "$ref": "#/components/schemas/TestNested"
-          }
-        },
-        "required": [
-          "field_name",
-          "b",
-          "aaa"
-        ],
-        "type": "object"
-      },
-      "TestNested": {
-        "properties": {
-          "nesty": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "nesty"
-        ],
-        "type": "object"
-      },
       "TestCreatedResponse": {
+        "type": "object",
         "properties": {
           "c": {
             "type": "string"
           },
           "id": {
-            "format": "int32",
-            "type": "integer"
+            "type": "number",
+            "format": "int32"
           }
         },
         "required": [
-          "id",
-          "c"
-        ],
-        "type": "object"
+          "c",
+          "id"
+        ]
+      },
+      "TestSimpleRequest": {
+        "type": "object",
+        "properties": {
+          "a": {
+            "type": "string"
+          },
+          "b": {
+            "type": "number",
+            "format": "int32"
+          }
+        },
+        "required": [
+          "a",
+          "b"
+        ]
       }
     },
     "securitySchemes": {}

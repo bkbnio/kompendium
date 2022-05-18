@@ -3,91 +3,9 @@ package io.bkbn.kompendium.core
 import io.bkbn.kompendium.core.fixtures.TestHelpers.openApiTestAllSerializers
 import io.bkbn.kompendium.core.util.notarizedGetModule
 import io.bkbn.kompendium.core.util.notarizedPostModule
+import io.bkbn.kompendium.core.util.notarizedPutModule
 import io.kotest.core.spec.style.DescribeSpec
 
-//import com.fasterxml.jackson.annotation.JsonInclude
-//import com.fasterxml.jackson.databind.ObjectMapper
-//import io.bkbn.kompendium.core.fixtures.TestHelpers.apiFunctionalityTest
-//import io.bkbn.kompendium.core.fixtures.TestHelpers.compareOpenAPISpec
-//import io.bkbn.kompendium.core.fixtures.TestHelpers.getFileSnapshot
-//import io.bkbn.kompendium.core.fixtures.TestHelpers.openApiTestAllSerializers
-//import io.bkbn.kompendium.core.fixtures.TestSpecs.defaultSpec
-//import io.bkbn.kompendium.core.fixtures.docs
-//import io.bkbn.kompendium.core.util.complexType
-//import io.bkbn.kompendium.core.util.constrainedDoubleInfo
-//import io.bkbn.kompendium.core.util.constrainedIntInfo
-//import io.bkbn.kompendium.core.util.dateTimeString
-//import io.bkbn.kompendium.core.util.defaultField
-//import io.bkbn.kompendium.core.util.defaultParameter
-//import io.bkbn.kompendium.core.util.exampleParams
-//import io.bkbn.kompendium.core.util.exclusiveMinMax
-//import io.bkbn.kompendium.core.util.formattedParam
-//import io.bkbn.kompendium.core.util.formattedType
-//import io.bkbn.kompendium.core.util.freeFormField
-//import io.bkbn.kompendium.core.util.freeFormObject
-//import io.bkbn.kompendium.core.util.genericPolymorphicResponse
-//import io.bkbn.kompendium.core.util.genericPolymorphicResponseMultipleImpls
-//import io.bkbn.kompendium.core.util.headerParameter
-//import io.bkbn.kompendium.core.util.minMaxArray
-//import io.bkbn.kompendium.core.util.minMaxFreeForm
-//import io.bkbn.kompendium.core.util.minMaxString
-//import io.bkbn.kompendium.core.util.multipleOfDouble
-//import io.bkbn.kompendium.core.util.multipleOfInt
-//import io.bkbn.kompendium.core.util.nestedUnderRootModule
-//import io.bkbn.kompendium.core.util.nonRequiredParamsGet
-//import io.bkbn.kompendium.core.util.notarizedDeleteModule
-//import io.bkbn.kompendium.core.util.notarizedGetModule
-//import io.bkbn.kompendium.core.util.notarizedGetWithGenericErrorResponse
-//import io.bkbn.kompendium.core.util.notarizedGetWithMultipleThrowables
-//import io.bkbn.kompendium.core.util.notarizedGetWithNotarizedException
-//import io.bkbn.kompendium.core.util.notarizedGetWithPolymorphicErrorResponse
-//import io.bkbn.kompendium.core.util.notarizedHeadModule
-//import io.bkbn.kompendium.core.util.notarizedOptionsModule
-//import io.bkbn.kompendium.core.util.notarizedPatchModule
-//import io.bkbn.kompendium.core.util.notarizedPostModule
-//import io.bkbn.kompendium.core.util.notarizedPutModule
-//import io.bkbn.kompendium.core.util.nullableEnumField
-//import io.bkbn.kompendium.core.util.nullableField
-//import io.bkbn.kompendium.core.util.nullableNestedObject
-//import io.bkbn.kompendium.core.util.overrideFieldInfo
-//import io.bkbn.kompendium.core.util.pathParsingTestModule
-//import io.bkbn.kompendium.core.util.polymorphicCollectionResponse
-//import io.bkbn.kompendium.core.util.polymorphicInterfaceResponse
-//import io.bkbn.kompendium.core.util.polymorphicMapResponse
-//import io.bkbn.kompendium.core.util.polymorphicResponse
-//import io.bkbn.kompendium.core.util.primitives
-//import io.bkbn.kompendium.core.util.regexString
-//import io.bkbn.kompendium.core.util.requiredParameter
-//import io.bkbn.kompendium.core.util.returnsList
-//import io.bkbn.kompendium.core.util.rootModule
-//import io.bkbn.kompendium.core.util.simpleGenericResponse
-//import io.bkbn.kompendium.core.util.simpleRecursive
-//import io.bkbn.kompendium.core.util.trailingSlash
-//import io.bkbn.kompendium.core.util.undeclaredType
-//import io.bkbn.kompendium.core.util.uniqueArray
-//import io.bkbn.kompendium.core.util.withDefaultParameter
-//import io.bkbn.kompendium.core.util.withExamples
-//import io.bkbn.kompendium.core.util.withOperationId
-//import io.bkbn.kompendium.oas.schema.FormattedSchema
-//import io.bkbn.kompendium.oas.schema.SimpleSchema
-//import io.bkbn.kompendium.oas.serialization.KompendiumSerializersModule
-//import io.kotest.core.spec.style.DescribeSpec
-//import io.ktor.application.call
-//import io.ktor.application.install
-//import io.ktor.features.ContentNegotiation
-//import io.ktor.http.ContentType
-//import io.ktor.http.HttpMethod
-//import io.ktor.http.HttpStatusCode
-//import io.ktor.jackson.jackson
-//import io.ktor.response.respondText
-//import io.ktor.routing.get
-//import io.ktor.routing.route
-//import io.ktor.serialization.json
-//import io.ktor.server.testing.withTestApplication
-//import kotlinx.serialization.encodeToString
-//import kotlinx.serialization.json.Json
-//import java.time.Instant
-//
 class KompendiumTest : DescribeSpec({
   describe("Notarized Open API Metadata Tests") {
     it("Can notarize a get request") {
@@ -96,12 +14,12 @@ class KompendiumTest : DescribeSpec({
     it("Can notarize a post request") {
       openApiTestAllSerializers("T0002__notarized_post.json") { notarizedPostModule() }
     }
+    it("Can notarize a put request") {
+      openApiTestAllSerializers("T0003__notarized_put.json") { notarizedPutModule() }
+    }
   }
-//    it("Can notarize a post request") {
-//      openApiTestAllSerializers("T0002__notarized_post.json") { notarizedPostModule() }
-//    }
 //    it("Can notarize a put request") {
-//      openApiTestAllSerializers("notarized_put.json") { notarizedPutModule() }
+//      openApiTestAllSerializers("T0003__notarized_put.json") { notarizedPutModule() }
 //    }
 //    it("Can notarize a delete request") {
 //      openApiTestAllSerializers("notarized_delete.json") { notarizedDeleteModule() }
