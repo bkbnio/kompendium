@@ -3,6 +3,7 @@ package io.bkbn.kompendium.core.plugin
 import io.bkbn.kompendium.core.attribute.KompendiumAttributes
 import io.bkbn.kompendium.core.metadata.DeleteInfo
 import io.bkbn.kompendium.core.metadata.GetInfo
+import io.bkbn.kompendium.core.metadata.HeadInfo
 import io.bkbn.kompendium.core.metadata.MethodInfo
 import io.bkbn.kompendium.core.metadata.PatchInfo
 import io.bkbn.kompendium.core.metadata.PostInfo
@@ -34,6 +35,7 @@ object NotarizedRoute {
     var put: PutInfo? = null
     var delete: DeleteInfo? = null
     var patch: PatchInfo? = null
+    var head: HeadInfo? = null
   }
 
   operator fun invoke() = createRouteScopedPlugin(
@@ -97,6 +99,14 @@ object NotarizedRoute {
       path.patch = patch.toPathOperation(pluginConfig)
     }
 
+    pluginConfig.head?.let { head ->
+      SchemaGenerator.fromType(head.response.responseType)?.let { schema ->
+        spec.components.schemas[head.response.responseType.getSimpleSlug()] = schema
+      }
+
+      path.head = head.toPathOperation(pluginConfig)
+    }
+
     spec.paths[pluginConfig.path] = path
   }
 
@@ -111,6 +121,7 @@ object NotarizedRoute {
     requestBody = when (this) {
       is DeleteInfo -> null
       is GetInfo -> null
+      is HeadInfo -> null
       is PatchInfo -> Request(
         description = this.request.description,
         content = this.request.requestType.toReferenceContent(),

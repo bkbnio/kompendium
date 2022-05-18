@@ -5,6 +5,7 @@ import io.bkbn.kompendium.core.fixtures.TestResponse
 import io.bkbn.kompendium.core.fixtures.TestSimpleRequest
 import io.bkbn.kompendium.core.metadata.DeleteInfo
 import io.bkbn.kompendium.core.metadata.GetInfo
+import io.bkbn.kompendium.core.metadata.HeadInfo
 import io.bkbn.kompendium.core.metadata.PatchInfo
 import io.bkbn.kompendium.core.metadata.PostInfo
 import io.bkbn.kompendium.core.metadata.PutInfo
@@ -146,6 +147,25 @@ fun Routing.notarizedPatch() {
           responseCode(HttpStatusCode.Created)
           responseType<TestCreatedResponse>()
           description("A Successful Endeavor")
+        }
+      }
+    }
+  }
+}
+
+fun Routing.notarizedHead() {
+  route(defaultPath) {
+    install(NotarizedRoute()) {
+      path = defaultPath
+      parameters = defaultParams
+      head = HeadInfo.builder {
+        summary("Test head endpoint")
+        description("head test 💀")
+
+        response {
+          description("great!")
+          responseCode(HttpStatusCode.Created)
+          responseType<Unit>()
         }
       }
     }
