@@ -3,6 +3,8 @@ package io.bkbn.kompendium.json.schema.handler
 import io.bkbn.kompendium.json.schema.SchemaGenerator
 import io.bkbn.kompendium.json.schema.definition.JsonSchema
 import io.bkbn.kompendium.json.schema.definition.MapDefinition
+import io.bkbn.kompendium.json.schema.definition.NullableDefinition
+import io.bkbn.kompendium.json.schema.definition.OneOfDefinition
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 
@@ -14,7 +16,11 @@ object MapHandler {
     }
     val valueType = type.arguments[1].type!!
     val valueSchema = SchemaGenerator.fromType(valueType)
-    return MapDefinition(valueSchema)
+    val definition = MapDefinition(valueSchema)
+    return when (type.isMarkedNullable) {
+      true -> OneOfDefinition(NullableDefinition(), definition)
+      false -> definition
+    }
   }
 
 }

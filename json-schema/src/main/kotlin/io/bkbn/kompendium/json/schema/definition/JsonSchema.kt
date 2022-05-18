@@ -18,11 +18,13 @@ sealed interface JsonSchema {
 
     override fun serialize(encoder: Encoder, value: JsonSchema) {
       when (value) {
-        is ReferenceSchema -> ReferenceSchema.serializer().serialize(encoder, value)
+        is ReferenceDefinition -> ReferenceDefinition.serializer().serialize(encoder, value)
         is TypeDefinition -> TypeDefinition.serializer().serialize(encoder, value)
         is EnumDefinition -> EnumDefinition.serializer().serialize(encoder, value)
         is ArrayDefinition -> ArrayDefinition.serializer().serialize(encoder, value)
         is MapDefinition -> MapDefinition.serializer().serialize(encoder, value)
+        is NullableDefinition -> NullableDefinition.serializer().serialize(encoder, value)
+        is OneOfDefinition -> OneOfDefinition.serializer().serialize(encoder, value)
       }
     }
   }

@@ -12,7 +12,7 @@ import io.bkbn.kompendium.core.metadata.PutInfo
 import io.bkbn.kompendium.core.util.Helpers.getReferenceSlug
 import io.bkbn.kompendium.core.util.Helpers.getSimpleSlug
 import io.bkbn.kompendium.json.schema.SchemaGenerator
-import io.bkbn.kompendium.json.schema.definition.ReferenceSchema
+import io.bkbn.kompendium.json.schema.definition.ReferenceDefinition
 import io.bkbn.kompendium.oas.path.Path
 import io.bkbn.kompendium.oas.path.PathOperation
 import io.bkbn.kompendium.oas.payload.MediaType
@@ -57,14 +57,14 @@ object NotarizedRoute {
     path.parameters = pluginConfig.parameters
 
     pluginConfig.get?.let { get ->
-      SchemaGenerator.fromTypeNullable(get.response.responseType)?.let { schema ->
+      SchemaGenerator.fromTypeOrUnit(get.response.responseType)?.let { schema ->
         spec.components.schemas[get.response.responseType.getSimpleSlug()] = schema
       }
       path.get = get.toPathOperation(pluginConfig)
     }
 
     pluginConfig.delete?.let { delete ->
-      SchemaGenerator.fromTypeNullable(delete.response.responseType)?.let { schema ->
+      SchemaGenerator.fromTypeOrUnit(delete.response.responseType)?.let { schema ->
         spec.components.schemas[delete.response.responseType.getSimpleSlug()] = schema
       }
 
@@ -72,7 +72,7 @@ object NotarizedRoute {
     }
 
     pluginConfig.head?.let { head ->
-      SchemaGenerator.fromTypeNullable(head.response.responseType)?.let { schema ->
+      SchemaGenerator.fromTypeOrUnit(head.response.responseType)?.let { schema ->
         spec.components.schemas[head.response.responseType.getSimpleSlug()] = schema
       }
 
@@ -80,37 +80,37 @@ object NotarizedRoute {
     }
 
     pluginConfig.options?.let { options ->
-      SchemaGenerator.fromTypeNullable(options.response.responseType)?.let { schema ->
+      SchemaGenerator.fromTypeOrUnit(options.response.responseType)?.let { schema ->
         spec.components.schemas[options.response.responseType.getSimpleSlug()] = schema
       }
       path.options = options.toPathOperation(pluginConfig)
     }
 
     pluginConfig.post?.let { post ->
-      SchemaGenerator.fromTypeNullable(post.response.responseType)?.let { schema ->
+      SchemaGenerator.fromTypeOrUnit(post.response.responseType)?.let { schema ->
         spec.components.schemas[post.response.responseType.getSimpleSlug()] = schema
       }
-      SchemaGenerator.fromTypeNullable(post.request.requestType)?.let { schema ->
+      SchemaGenerator.fromTypeOrUnit(post.request.requestType)?.let { schema ->
         spec.components.schemas[post.request.requestType.getSimpleSlug()] = schema
       }
       path.post = post.toPathOperation(pluginConfig)
     }
 
     pluginConfig.put?.let { put ->
-      SchemaGenerator.fromTypeNullable(put.response.responseType)?.let { schema ->
+      SchemaGenerator.fromTypeOrUnit(put.response.responseType)?.let { schema ->
         spec.components.schemas[put.response.responseType.getSimpleSlug()] = schema
       }
-      SchemaGenerator.fromTypeNullable(put.request.requestType)?.let { schema ->
+      SchemaGenerator.fromTypeOrUnit(put.request.requestType)?.let { schema ->
         spec.components.schemas[put.request.requestType.getSimpleSlug()] = schema
       }
       path.put = put.toPathOperation(pluginConfig)
     }
 
     pluginConfig.patch?.let { patch ->
-      SchemaGenerator.fromTypeNullable(patch.response.responseType)?.let { schema ->
+      SchemaGenerator.fromTypeOrUnit(patch.response.responseType)?.let { schema ->
         spec.components.schemas[patch.response.responseType.getSimpleSlug()] = schema
       }
-      SchemaGenerator.fromTypeNullable(patch.request.requestType)?.let { schema ->
+      SchemaGenerator.fromTypeOrUnit(patch.request.requestType)?.let { schema ->
         spec.components.schemas[patch.request.requestType.getSimpleSlug()] = schema
       }
       path.patch = patch.toPathOperation(pluginConfig)
@@ -160,7 +160,7 @@ object NotarizedRoute {
     Unit::class -> null
     else -> mapOf(
       "application/json" to MediaType(
-        schema = ReferenceSchema(this.getReferenceSlug())
+        schema = ReferenceDefinition(this.getReferenceSlug())
       )
     )
   }

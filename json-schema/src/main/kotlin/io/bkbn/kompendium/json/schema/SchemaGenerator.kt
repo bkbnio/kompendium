@@ -13,23 +13,26 @@ import kotlin.reflect.typeOf
 
 object SchemaGenerator {
 
-  inline fun <reified T> fromType() = fromType(typeOf<T>())
+  inline fun <reified T : Any?> fromType() = fromType(typeOf<T>())
 
   fun fromType(type: KType): JsonSchema = when (val clazz = type.classifier as KClass<*>) {
-    // TODO Make this an error instead, then can get rid of null checks.. makes sense to delegate this to client
-    Unit::class -> error("Unit cannot be converted to JsonSchema")
+    Unit::class -> error("""
+      Unit cannot be converted to JsonSchema.
+      If you are looking for a method will return null when called with Unit,
+      please call SchemaGenerator.fromTypeOrUnit()
+    """.trimIndent())
     Int::class -> TypeDefinition.INT
     String::class -> TypeDefinition.STRING
     Boolean::class -> TypeDefinition.BOOLEAN
     else -> when {
-      clazz.isSubclassOf(Enum::class) -> EnumHandler.handle(clazz)
+      clazz.isSubclassOf(Enum::class) -> EnumHandler.handle(type, clazz)
       clazz.isSubclassOf(Collection::class) -> CollectionHandler.handle(type)
       clazz.isSubclassOf(Map::class) -> MapHandler.handle(type)
-      else -> ObjectHandler.handle(clazz)
+      else -> ObjectHandler.handle(type, clazz)
     }
   }
 
-  fun fromTypeNullable(type: KType): JsonSchema? = when (type.classifier as KClass<*>) {
+  fun fromTypeOrUnit(type: KType): JsonSchema? = when (type.classifier as KClass<*>) {
     Unit::class -> null
     else -> fromType(type)
   }

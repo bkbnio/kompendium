@@ -3,6 +3,7 @@ package io.bkbn.kompendium.json.schema
 import io.bkbn.kompendium.core.fixtures.ComplexRequest
 import io.bkbn.kompendium.core.fixtures.SimpleEnum
 import io.bkbn.kompendium.core.fixtures.TestResponse
+import io.bkbn.kompendium.core.fixtures.TestSimpleRequest
 import io.bkbn.kompendium.json.schema.definition.JsonSchema
 import io.kotest.assertions.json.shouldEqualJson
 import io.kotest.assertions.throwables.shouldThrow
@@ -26,8 +27,60 @@ class SchemaGeneratorTest : DescribeSpec({
         """.trimIndent()
       )
     }
+    it("Can generate the schema for a Boolean") {
+      // act
+      val schema = SchemaGenerator.fromType<Boolean>()
+
+      // assert
+      schema.serialize() shouldEqualJson asJson(
+        """
+          {
+            "type": "boolean"
+          }
+        """.trimIndent()
+      )
+    }
+    it("Can generate the schema for a String") {
+      // act
+      val schema = SchemaGenerator.fromType<String>()
+
+      // assert
+      schema.serialize() shouldEqualJson asJson(
+        """
+          {
+            "type": "string"
+          }
+        """.trimIndent()
+      )
+    }
   }
   describe("Objects") {
+    it("Can generate the schema for a simple object") {
+      // act
+      val schema = SchemaGenerator.fromType<TestSimpleRequest>()
+
+      // assert
+      schema.serialize() shouldEqualJson asJson(
+        """
+          {
+            "type": "object",
+            "properties": {
+              "a": {
+                "type": "string"
+              },
+              "b": {
+                "type": "number",
+                "format": "int32"
+              }
+            },
+            "required": [
+              "a",
+              "b"
+            ]
+          }
+        """.trimIndent()
+      )
+    }
     it("Can generate the schema for a complex object") {
       // act
       val schema = SchemaGenerator.fromType<ComplexRequest>()
@@ -86,6 +139,39 @@ class SchemaGeneratorTest : DescribeSpec({
         """.trimIndent()
       )
     }
+    it("Can generate the schema for a nullable object") {
+      // act
+      val schema = SchemaGenerator.fromType<TestSimpleRequest?>()
+
+      // assert
+      schema.serialize() shouldEqualJson asJson(
+        """
+          {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "a": {
+                    "type": "string"
+                  },
+                  "b": {
+                    "type": "number",
+                    "format": "int32"
+                  }
+                },
+                "required": [
+                  "a",
+                  "b"
+                ]
+              }
+            ]
+          }
+        """.trimIndent()
+      )
+    }
   }
   describe("Enums") {
     it("Can generate the schema for a simple enum") {
@@ -97,6 +183,29 @@ class SchemaGeneratorTest : DescribeSpec({
         """
           {
             "enum": [ "ONE", "TWO" ]
+          }
+        """.trimIndent()
+      )
+    }
+    it("Can generate the schema for a nullable enum") {
+      // act
+      val schema = SchemaGenerator.fromType<SimpleEnum?>()
+
+      // assert
+      schema.serialize() shouldEqualJson asJson(
+        """
+          {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "enum": [
+                  "ONE",
+                  "TWO"
+                ]
+              }
+            ]
           }
         """.trimIndent()
       )
@@ -144,6 +253,30 @@ class SchemaGeneratorTest : DescribeSpec({
         """.trimIndent()
       )
     }
+    it("Can generate the schema for a nullable array") {
+      // act
+      val schema = SchemaGenerator.fromType<List<Int>?>()
+
+      // assert
+      schema.serialize() shouldEqualJson asJson(
+        """
+          {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "items": {
+                  "type": "number",
+                  "format": "int32"
+                },
+                "type": "array"
+              }
+            ]
+          }
+        """.trimIndent()
+      )
+    }
   }
   describe("Maps") {
     it("Can generate the schema for a map of scalars") {
@@ -187,6 +320,30 @@ class SchemaGeneratorTest : DescribeSpec({
               ]
             },
             "type": "object"
+          }
+        """.trimIndent()
+      )
+    }
+    it("Can generate the schema for a nullable map") {
+      // act
+      val schema = SchemaGenerator.fromType<Map<String, Int>?>()
+
+      // assert
+      schema.serialize() shouldEqualJson asJson(
+        """
+          {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "additionalProperties": {
+                  "type": "number",
+                  "format": "int32"
+                },
+                "type": "object"
+              }
+            ]
           }
         """.trimIndent()
       )
