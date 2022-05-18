@@ -115,7 +115,7 @@ class SchemaGeneratorTest : DescribeSpec({
               "type": "number",
               "format": "int32"
             },
-            "type": [ "array" ]
+            "type": "array"
           }
         """.trimIndent()
       )
@@ -139,24 +139,7 @@ class SchemaGeneratorTest : DescribeSpec({
                 "c"
               ]
             },
-            "type": [ "array" ]
-          }
-        """.trimIndent()
-      )
-    }
-    it("Can generate the schema for a nullable array") {
-      // act
-      val schema = SchemaGenerator.fromType<List<Int>?>()
-
-      // assert
-      schema.serialize() shouldEqualJson asJson(
-        """
-          {
-            "items": {
-              "type": "number",
-              "format": "int32"
-            },
-            "type": [ "null", "array" ]
+            "type": "array"
           }
         """.trimIndent()
       )
@@ -204,23 +187,6 @@ class SchemaGeneratorTest : DescribeSpec({
               ]
             },
             "type": "object"
-          }
-        """.trimIndent()
-      )
-    }
-    it("Can generate the schema for a nullable map") {
-      // act
-      val schema = SchemaGenerator.fromType<Map<String, Int>?>()
-
-      // assert
-      schema.serialize() shouldEqualJson asJson(
-        """
-          {
-            "additionalProperties": {
-              "type": "number",
-              "format": "int32"
-            },
-            "type": [ "null","object"]
           }
         """.trimIndent()
       )

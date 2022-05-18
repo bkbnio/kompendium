@@ -14,10 +14,7 @@ object MapHandler {
     }
     val valueType = type.arguments[1].type!!
     val valueSchema = SchemaGenerator.fromType(valueType)
-    return when (type.isMarkedNullable) {
-      true -> MapDefinition.nullable(valueSchema)
-      false -> MapDefinition(valueSchema)
-    }
+    return MapDefinition(valueSchema)
   }
 
 }
