@@ -5,6 +5,7 @@ import io.bkbn.kompendium.core.metadata.DeleteInfo
 import io.bkbn.kompendium.core.metadata.GetInfo
 import io.bkbn.kompendium.core.metadata.HeadInfo
 import io.bkbn.kompendium.core.metadata.MethodInfo
+import io.bkbn.kompendium.core.metadata.OptionsInfo
 import io.bkbn.kompendium.core.metadata.PatchInfo
 import io.bkbn.kompendium.core.metadata.PostInfo
 import io.bkbn.kompendium.core.metadata.PutInfo
@@ -36,6 +37,7 @@ object NotarizedRoute {
     var delete: DeleteInfo? = null
     var patch: PatchInfo? = null
     var head: HeadInfo? = null
+    var options: OptionsInfo? = null
   }
 
   operator fun invoke() = createRouteScopedPlugin(
@@ -61,6 +63,29 @@ object NotarizedRoute {
       path.get = get.toPathOperation(pluginConfig)
     }
 
+    pluginConfig.delete?.let { delete ->
+      SchemaGenerator.fromType(delete.response.responseType)?.let { schema ->
+        spec.components.schemas[delete.response.responseType.getSimpleSlug()] = schema
+      }
+
+      path.delete = delete.toPathOperation(pluginConfig)
+    }
+
+    pluginConfig.head?.let { head ->
+      SchemaGenerator.fromType(head.response.responseType)?.let { schema ->
+        spec.components.schemas[head.response.responseType.getSimpleSlug()] = schema
+      }
+
+      path.head = head.toPathOperation(pluginConfig)
+    }
+
+    pluginConfig.options?.let { options ->
+      SchemaGenerator.fromType(options.response.responseType)?.let { schema ->
+        spec.components.schemas[options.response.responseType.getSimpleSlug()] = schema
+      }
+      path.options = options.toPathOperation(pluginConfig)
+    }
+
     pluginConfig.post?.let { post ->
       SchemaGenerator.fromType(post.response.responseType)?.let { schema ->
         spec.components.schemas[post.response.responseType.getSimpleSlug()] = schema
@@ -81,14 +106,6 @@ object NotarizedRoute {
       path.put = put.toPathOperation(pluginConfig)
     }
 
-    pluginConfig.delete?.let { delete ->
-      SchemaGenerator.fromType(delete.response.responseType)?.let { schema ->
-        spec.components.schemas[delete.response.responseType.getSimpleSlug()] = schema
-      }
-
-      path.delete = delete.toPathOperation(pluginConfig)
-    }
-
     pluginConfig.patch?.let { patch ->
       SchemaGenerator.fromType(patch.response.responseType)?.let { schema ->
         spec.components.schemas[patch.response.responseType.getSimpleSlug()] = schema
@@ -97,14 +114,6 @@ object NotarizedRoute {
         spec.components.schemas[patch.request.requestType.getSimpleSlug()] = schema
       }
       path.patch = patch.toPathOperation(pluginConfig)
-    }
-
-    pluginConfig.head?.let { head ->
-      SchemaGenerator.fromType(head.response.responseType)?.let { schema ->
-        spec.components.schemas[head.response.responseType.getSimpleSlug()] = schema
-      }
-
-      path.head = head.toPathOperation(pluginConfig)
     }
 
     spec.paths[pluginConfig.path] = path
@@ -122,6 +131,7 @@ object NotarizedRoute {
       is DeleteInfo -> null
       is GetInfo -> null
       is HeadInfo -> null
+      is OptionsInfo -> null
       is PatchInfo -> Request(
         description = this.request.description,
         content = this.request.requestType.toReferenceContent(),

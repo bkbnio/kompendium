@@ -4,6 +4,7 @@ import io.bkbn.kompendium.core.fixtures.TestHelpers.openApiTestAllSerializers
 import io.bkbn.kompendium.core.util.notarizedDelete
 import io.bkbn.kompendium.core.util.notarizedGet
 import io.bkbn.kompendium.core.util.notarizedHead
+import io.bkbn.kompendium.core.util.notarizedOptions
 import io.bkbn.kompendium.core.util.notarizedPatch
 import io.bkbn.kompendium.core.util.notarizedPost
 import io.bkbn.kompendium.core.util.notarizedPut
@@ -27,15 +28,12 @@ class KompendiumTest : DescribeSpec({
       openApiTestAllSerializers("T0005__notarized_patch.json") { notarizedPatch() }
     }
     it("Can notarize a head request") {
-      openApiTestAllSerializers("T0006_notarized_head.json") { notarizedHead() }
+      openApiTestAllSerializers("T0006__notarized_head.json") { notarizedHead() }
+    }
+    it("Can notarize an options request") {
+      openApiTestAllSerializers("T0007__notarized_options.json") { notarizedOptions() }
     }
   }
-//    it("Can notarize a head request") {
-//      openApiTestAllSerializers("T0006_notarized_head.json") { notarizedHeadModule() }
-//    }
-//    it("Can notarize an options request") {
-//      openApiTestAllSerializers("notarized_options.json") { notarizedOptionsModule() }
-//    }
 //    it("Can notarize a complex type") {
 //      openApiTestAllSerializers("complex_type.json") { complexType() }
 //    }

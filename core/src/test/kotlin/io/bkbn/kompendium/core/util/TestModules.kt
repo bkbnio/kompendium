@@ -6,6 +6,7 @@ import io.bkbn.kompendium.core.fixtures.TestSimpleRequest
 import io.bkbn.kompendium.core.metadata.DeleteInfo
 import io.bkbn.kompendium.core.metadata.GetInfo
 import io.bkbn.kompendium.core.metadata.HeadInfo
+import io.bkbn.kompendium.core.metadata.OptionsInfo
 import io.bkbn.kompendium.core.metadata.PatchInfo
 import io.bkbn.kompendium.core.metadata.PostInfo
 import io.bkbn.kompendium.core.metadata.PutInfo
@@ -20,6 +21,9 @@ import io.ktor.server.response.respondText
 import io.ktor.server.routing.Routing
 import io.ktor.server.routing.delete
 import io.ktor.server.routing.get
+import io.ktor.server.routing.head
+import io.ktor.server.routing.options
+import io.ktor.server.routing.patch
 import io.ktor.server.routing.post
 import io.ktor.server.routing.put
 import io.ktor.server.routing.route
@@ -150,6 +154,9 @@ fun Routing.notarizedPatch() {
         }
       }
     }
+    patch {
+      call.respond(HttpStatusCode.Created) { TestCreatedResponse(123, "Nice!") }
+    }
   }
 }
 
@@ -168,6 +175,30 @@ fun Routing.notarizedHead() {
           responseType<Unit>()
         }
       }
+    }
+    head {
+      call.respond(HttpStatusCode.OK)
+    }
+  }
+}
+
+fun Routing.notarizedOptions() {
+  route(defaultPath) {
+    install(NotarizedRoute()) {
+      path = defaultPath
+      parameters = defaultParams
+      options = OptionsInfo.builder {
+        summary("Test options")
+        description("endpoint of options")
+        response {
+          responseCode(HttpStatusCode.OK)
+          responseType<TestResponse>()
+          description("nice")
+        }
+      }
+    }
+    options {
+      call.respond(HttpStatusCode.NoContent)
     }
   }
 }

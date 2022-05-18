@@ -27,7 +27,7 @@
     }
   ],
   "paths": {
-    "/test": {
+    "/test/{a}": {
       "get": {
         "tags": [],
         "summary": "Another get test",
