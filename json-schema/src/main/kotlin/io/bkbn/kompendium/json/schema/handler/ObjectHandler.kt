@@ -10,7 +10,9 @@ object ObjectHandler {
 
   fun handle(clazz: KClass<*>): JsonSchema {
     val props = clazz.memberProperties.associate { prop ->
-      prop.name to SchemaGenerator.fromType(prop.returnType)
+      val schema = SchemaGenerator.fromType(prop.returnType)
+        ?: error("Could not generate schema for ${prop.returnType}")
+      prop.name to schema
     }
     val required = clazz.memberProperties.filterNot { prop -> prop.returnType.isMarkedNullable }
       .map { it.name }

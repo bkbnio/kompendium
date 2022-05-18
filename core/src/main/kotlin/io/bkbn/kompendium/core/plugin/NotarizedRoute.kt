@@ -17,6 +17,8 @@ import io.bkbn.kompendium.oas.payload.Parameter
 import io.bkbn.kompendium.oas.payload.Request
 import io.bkbn.kompendium.oas.payload.Response
 import io.ktor.server.application.createRouteScopedPlugin
+import kotlin.reflect.KClass
+import kotlin.reflect.KType
 
 @Suppress("MagicNumber") // 🚨 obviously remove
 object NotarizedRoute {
@@ -49,32 +51,36 @@ object NotarizedRoute {
     path.parameters = pluginConfig.parameters
 
     pluginConfig.get?.let { get ->
-      spec.components.schemas[get.response.responseType.getSimpleSlug()] =
-        SchemaGenerator.fromType(get.response.responseType)
+      SchemaGenerator.fromType(get.response.responseType)?.let { schema ->
+        spec.components.schemas[get.response.responseType.getSimpleSlug()] = schema
+      }
       path.get = get.toPathOperation(pluginConfig)
     }
 
     pluginConfig.post?.let { post ->
-      spec.components.schemas[post.response.responseType.getSimpleSlug()] =
-        SchemaGenerator.fromType(post.response.responseType)
-      spec.components.schemas[post.request.requestType.getSimpleSlug()] =
-        SchemaGenerator.fromType(post.request.requestType)
-
+      SchemaGenerator.fromType(post.response.responseType)?.let { schema ->
+        spec.components.schemas[post.response.responseType.getSimpleSlug()] = schema
+      }
+      SchemaGenerator.fromType(post.request.requestType)?.let { schema ->
+        spec.components.schemas[post.request.requestType.getSimpleSlug()] = schema
+      }
       path.post = post.toPathOperation(pluginConfig)
     }
 
     pluginConfig.put?.let { put ->
-      spec.components.schemas[put.response.responseType.getSimpleSlug()] =
-        SchemaGenerator.fromType(put.response.responseType)
-      spec.components.schemas[put.request.requestType.getSimpleSlug()] =
-        SchemaGenerator.fromType(put.request.requestType)
-
+      SchemaGenerator.fromType(put.response.responseType)?.let { schema ->
+        spec.components.schemas[put.response.responseType.getSimpleSlug()] = schema
+      }
+      SchemaGenerator.fromType(put.request.requestType)?.let { schema ->
+        spec.components.schemas[put.request.requestType.getSimpleSlug()] = schema
+      }
       path.put = put.toPathOperation(pluginConfig)
     }
 
     pluginConfig.delete?.let { delete ->
-      spec.components.schemas[delete.response.responseType.getSimpleSlug()] =
-        SchemaGenerator.fromType(delete.response.responseType)
+      SchemaGenerator.fromType(delete.response.responseType)?.let { schema ->
+        spec.components.schemas[delete.response.responseType.getSimpleSlug()] = schema
+      }
 
       path.delete = delete.toPathOperation(pluginConfig)
     }
@@ -95,32 +101,29 @@ object NotarizedRoute {
       is GetInfo -> null
       is PostInfo -> Request(
         description = this.request.description,
-        content = mapOf(
-          "application/json" to MediaType(
-            schema = ReferenceSchema(this.request.requestType.getReferenceSlug())
-          )
-        ),
+        content = this.request.requestType.toReferenceContent(),
         required = true
       )
       is PutInfo -> Request(
         description = this.request.description,
-        content = mapOf(
-          "application/json" to MediaType(
-            schema = ReferenceSchema(this.request.requestType.getReferenceSlug())
-          )
-        ),
+        content = this.request.requestType.toReferenceContent(),
         required = true
       )
     },
     responses = mapOf(
       this.response.responseCode.value to Response(
         description = this.response.description,
-        content = mapOf(
-          "application/json" to MediaType(
-            schema = ReferenceSchema(this.response.responseType.getReferenceSlug())
-          )
-        )
+        content = this.response.responseType.toReferenceContent()
       )
     )
   )
+
+  private fun KType.toReferenceContent(): Map<String, MediaType>? = when (this.classifier as KClass<*>) {
+    Unit::class -> null
+    else -> mapOf(
+      "application/json" to MediaType(
+        schema = ReferenceSchema(this.getReferenceSlug())
+      )
+    )
+  }
 }

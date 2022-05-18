@@ -14,6 +14,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Request(
   val description: String?,
-  val content: Map<String, MediaType>,
+  val content: Map<String, MediaType>?, // todo maybe this needs to be required?? 👀
   val required: Boolean = false
 )
