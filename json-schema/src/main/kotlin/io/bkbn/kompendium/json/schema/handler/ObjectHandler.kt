@@ -1,8 +1,8 @@
 package io.bkbn.kompendium.json.schema.handler
 
-import io.bkbn.kompendium.json.schema.JsonSchema
+import io.bkbn.kompendium.json.schema.definition.JsonSchema
 import io.bkbn.kompendium.json.schema.SchemaGenerator
-import io.bkbn.kompendium.json.schema.TypeDefinition
+import io.bkbn.kompendium.json.schema.definition.TypeDefinition
 import kotlin.reflect.KClass
 import kotlin.reflect.full.memberProperties
 

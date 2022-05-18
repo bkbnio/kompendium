@@ -11,7 +11,7 @@ import io.bkbn.kompendium.core.metadata.PostInfo
 import io.bkbn.kompendium.core.metadata.PutInfo
 import io.bkbn.kompendium.core.util.Helpers.getReferenceSlug
 import io.bkbn.kompendium.core.util.Helpers.getSimpleSlug
-import io.bkbn.kompendium.json.schema.ReferenceSchema
+import io.bkbn.kompendium.json.schema.definition.ReferenceSchema
 import io.bkbn.kompendium.json.schema.SchemaGenerator
 import io.bkbn.kompendium.oas.path.Path
 import io.bkbn.kompendium.oas.path.PathOperation

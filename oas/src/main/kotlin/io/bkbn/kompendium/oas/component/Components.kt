@@ -1,6 +1,6 @@
 package io.bkbn.kompendium.oas.component
 
-import io.bkbn.kompendium.json.schema.JsonSchema
+import io.bkbn.kompendium.json.schema.definition.JsonSchema
 import io.bkbn.kompendium.oas.security.SecuritySchema
 import kotlinx.serialization.Serializable
 
@@ -12,6 +12,6 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class Components(
-  val schemas: MutableMap<String, JsonSchema> = mutableMapOf(),
-  val securitySchemes: MutableMap<String, SecuritySchema> = mutableMapOf()
+    val schemas: MutableMap<String, JsonSchema> = mutableMapOf(),
+    val securitySchemes: MutableMap<String, SecuritySchema> = mutableMapOf()
 )

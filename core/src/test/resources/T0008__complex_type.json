@@ -1,5 +1,6 @@
 {
-  "openapi": "3.0.3",
+  "openapi": "3.1.0",
+  "jsonSchemaDialect": "https://json-schema.org/draft/2020-12/schema",
   "info": {
     "title": "Test API",
     "version": "1.33.7",
@@ -26,11 +27,11 @@
     }
   ],
   "paths": {
-    "/test": {
+    "/": {
       "put": {
         "tags": [],
-        "summary": "Test put endpoint",
-        "description": "Put your tests here!",
+        "summary": "Test complex request",
+        "description": "A more advanced request",
         "parameters": [],
         "requestBody": {
           "description": "A Complex request",
@@ -56,9 +57,11 @@
           }
         },
         "deprecated": false
-      }
+      },
+      "parameters": []
     }
   },
+  "webhooks": {},
   "components": {
     "schemas": {
       "ComplexRequest": {

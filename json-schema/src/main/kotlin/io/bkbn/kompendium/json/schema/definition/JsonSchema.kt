@@ -1,4 +1,4 @@
-package io.bkbn.kompendium.json.schema
+package io.bkbn.kompendium.json.schema.definition
 
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
@@ -20,8 +20,10 @@ sealed interface JsonSchema {
       when (value) {
         is ReferenceSchema -> ReferenceSchema.serializer().serialize(encoder, value)
         is TypeDefinition -> TypeDefinition.serializer().serialize(encoder, value)
+        is EnumDefinition -> EnumDefinition.serializer().serialize(encoder, value)
+        is ArrayDefinition -> ArrayDefinition.serializer().serialize(encoder, value)
+        is MapDefinition -> MapDefinition.serializer().serialize(encoder, value)
       }
     }
-
   }
 }

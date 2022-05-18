@@ -1,6 +1,6 @@
 package io.bkbn.kompendium.core.attribute
 
-import io.bkbn.kompendium.json.schema.JsonSchema
+import io.bkbn.kompendium.json.schema.definition.JsonSchema
 import io.bkbn.kompendium.oas.OpenApiSpec
 import io.ktor.util.AttributeKey
 import kotlin.reflect.KClass

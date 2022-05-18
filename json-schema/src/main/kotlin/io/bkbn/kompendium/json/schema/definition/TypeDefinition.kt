@@ -1,4 +1,4 @@
-package io.bkbn.kompendium.json.schema
+package io.bkbn.kompendium.json.schema.definition
 
 import kotlinx.serialization.Serializable
 

@@ -1,6 +1,6 @@
 package io.bkbn.kompendium.oas.payload
 
-import io.bkbn.kompendium.json.schema.JsonSchema
+import io.bkbn.kompendium.json.schema.definition.JsonSchema
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 
@@ -15,9 +15,9 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class MediaType(
-  val schema: JsonSchema,
-  val examples: Map<String, Example>? = null,
-  val encoding: Map<String, Encoding>? = null,
+    val schema: JsonSchema,
+    val examples: Map<String, Example>? = null,
+    val encoding: Map<String, Encoding>? = null,
 ) {
   @Serializable
   data class Example(val value: @Contextual Any)

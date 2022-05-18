@@ -1,5 +1,6 @@
 package io.bkbn.kompendium.core.util
 
+import io.bkbn.kompendium.core.fixtures.ComplexRequest
 import io.bkbn.kompendium.core.fixtures.TestCreatedResponse
 import io.bkbn.kompendium.core.fixtures.TestResponse
 import io.bkbn.kompendium.core.fixtures.TestSimpleRequest
@@ -11,7 +12,7 @@ import io.bkbn.kompendium.core.metadata.PatchInfo
 import io.bkbn.kompendium.core.metadata.PostInfo
 import io.bkbn.kompendium.core.metadata.PutInfo
 import io.bkbn.kompendium.core.plugin.NotarizedRoute
-import io.bkbn.kompendium.json.schema.TypeDefinition
+import io.bkbn.kompendium.json.schema.definition.TypeDefinition
 import io.bkbn.kompendium.oas.payload.Parameter
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.call
@@ -29,6 +30,7 @@ import io.ktor.server.routing.put
 import io.ktor.server.routing.route
 
 const val defaultPath = "/test/{a}"
+const val rootPath = "/"
 
 val defaultParams = listOf(
   Parameter(
@@ -203,36 +205,30 @@ fun Routing.notarizedOptions() {
   }
 }
 
-//fun Application.notarizedPatchModule() {
-//  routing {
-//    route("/test") {
-//      notarizedPatch(TestResponseInfo.testPatchInfo) {
-//        call.respondText { "hey dude ✌️ congratz on the patch request" }
-//      }
-//    }
-//  }
-//}
-//
-//fun Application.notarizedHeadModule() {
-//  routing {
-//    route("/test") {
-//      notarizedHead(TestResponseInfo.testHeadInfo) {
-//        call.response.status(HttpStatusCode.OK)
-//      }
-//    }
-//  }
-//}
-//
-//fun Application.notarizedOptionsModule() {
-//  routing {
-//    route("/test") {
-//      notarizedOptions(TestResponseInfo.testOptionsInfo) {
-//        call.response.status(HttpStatusCode.OK)
-//      }
-//    }
-//  }
-//}
-//
+fun Routing.complexRequest() {
+  route(rootPath) {
+    install(NotarizedRoute()) {
+      path = rootPath
+      put = PutInfo.builder {
+        summary("Test complex request")
+        description("A more advanced request")
+        request {
+          requestType<ComplexRequest>()
+          description("A Complex request")
+        }
+        response {
+          responseCode(HttpStatusCode.Created)
+          responseType<TestCreatedResponse>()
+          description("A Successful Endeavor")
+        }
+      }
+    }
+    patch {
+      call.respond(HttpStatusCode.Created, TestCreatedResponse(123, "nice!"))
+    }
+  }
+}
+
 //fun Application.notarizedPutModule() {
 //  routing {
 //    route("/test") {

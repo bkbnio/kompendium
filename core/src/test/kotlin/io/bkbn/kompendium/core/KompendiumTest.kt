@@ -1,6 +1,7 @@
 package io.bkbn.kompendium.core
 
 import io.bkbn.kompendium.core.fixtures.TestHelpers.openApiTestAllSerializers
+import io.bkbn.kompendium.core.util.complexRequest
 import io.bkbn.kompendium.core.util.notarizedDelete
 import io.bkbn.kompendium.core.util.notarizedGet
 import io.bkbn.kompendium.core.util.notarizedHead
@@ -33,9 +34,12 @@ class KompendiumTest : DescribeSpec({
     it("Can notarize an options request") {
       openApiTestAllSerializers("T0007__notarized_options.json") { notarizedOptions() }
     }
+    it("Can notarize a complex type") {
+      openApiTestAllSerializers("T0008__complex_type.json") { complexRequest() }
+    }
   }
 //    it("Can notarize a complex type") {
-//      openApiTestAllSerializers("complex_type.json") { complexType() }
+//      openApiTestAllSerializers("T0008__complex_type.json") { complexType() }
 //    }
 //    it("Can notarize primitives") {
 //      openApiTestAllSerializers("notarized_primitives.json") { primitives() }
