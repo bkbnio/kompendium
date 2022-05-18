@@ -4,7 +4,13 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ArrayDefinition(
-  val items: JsonSchema
+  val items: JsonSchema,
+  val type: Set<String> = setOf("array")
 ) : JsonSchema {
-  val type: String = "array"
+  companion object {
+    fun nullable(items: JsonSchema) = ArrayDefinition(
+      items = items,
+      type = setOf("null", "array")
+    )
+  }
 }
