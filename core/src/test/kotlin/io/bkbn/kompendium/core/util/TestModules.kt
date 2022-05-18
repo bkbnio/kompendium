@@ -5,6 +5,7 @@ import io.bkbn.kompendium.core.fixtures.TestResponse
 import io.bkbn.kompendium.core.fixtures.TestSimpleRequest
 import io.bkbn.kompendium.core.metadata.DeleteInfo
 import io.bkbn.kompendium.core.metadata.GetInfo
+import io.bkbn.kompendium.core.metadata.PatchInfo
 import io.bkbn.kompendium.core.metadata.PostInfo
 import io.bkbn.kompendium.core.metadata.PutInfo
 import io.bkbn.kompendium.core.plugin.NotarizedRoute
@@ -38,7 +39,7 @@ val defaultParams = listOf(
 )
 
 fun Routing.notarizedGet() {
-  route("/test/{a}") {
+  route(defaultPath) {
     install(NotarizedRoute()) {
       path = defaultPath
       parameters = defaultParams
@@ -59,7 +60,7 @@ fun Routing.notarizedGet() {
 }
 
 fun Routing.notarizedPost() {
-  route("/test/{a}") {
+  route(defaultPath) {
     install(NotarizedRoute()) {
       path = defaultPath
       parameters = defaultParams
@@ -84,7 +85,7 @@ fun Routing.notarizedPost() {
 }
 
 fun Routing.notarizedPut() {
-  route("/test/{a}") {
+  route(defaultPath) {
     install(NotarizedRoute()) {
       path = defaultPath
       parameters = defaultParams
@@ -109,7 +110,7 @@ fun Routing.notarizedPut() {
 }
 
 fun Routing.notarizedDelete() {
-  route("/test/{a}") {
+  route(defaultPath) {
     install(NotarizedRoute()) {
       path = defaultPath
       parameters = defaultParams
@@ -129,16 +130,28 @@ fun Routing.notarizedDelete() {
   }
 }
 
-//fun Application.notarizedDeleteModule() {
-//  routing {
-//    route("/test") {
-//      notarizedDelete(TestResponseInfo.testDeleteInfo) {
-//        call.respond(HttpStatusCode.NoContent)
-//      }
-//    }
-//  }
-//}
-//
+fun Routing.notarizedPatch() {
+  route(defaultPath) {
+    install(NotarizedRoute()) {
+      path = defaultPath
+      parameters = defaultParams
+      patch = PatchInfo.builder {
+        summary("Test patch endpoint")
+        description("patch your tests here!")
+        request {
+          description("A Test request")
+          requestType<TestSimpleRequest>()
+        }
+        response {
+          responseCode(HttpStatusCode.Created)
+          responseType<TestCreatedResponse>()
+          description("A Successful Endeavor")
+        }
+      }
+    }
+  }
+}
+
 //fun Application.notarizedPatchModule() {
 //  routing {
 //    route("/test") {

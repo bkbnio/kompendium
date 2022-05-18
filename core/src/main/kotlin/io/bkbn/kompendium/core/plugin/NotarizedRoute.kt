@@ -4,6 +4,7 @@ import io.bkbn.kompendium.core.attribute.KompendiumAttributes
 import io.bkbn.kompendium.core.metadata.DeleteInfo
 import io.bkbn.kompendium.core.metadata.GetInfo
 import io.bkbn.kompendium.core.metadata.MethodInfo
+import io.bkbn.kompendium.core.metadata.PatchInfo
 import io.bkbn.kompendium.core.metadata.PostInfo
 import io.bkbn.kompendium.core.metadata.PutInfo
 import io.bkbn.kompendium.core.util.Helpers.getReferenceSlug
@@ -32,6 +33,7 @@ object NotarizedRoute {
     var post: PostInfo? = null
     var put: PutInfo? = null
     var delete: DeleteInfo? = null
+    var patch: PatchInfo? = null
   }
 
   operator fun invoke() = createRouteScopedPlugin(
@@ -85,6 +87,16 @@ object NotarizedRoute {
       path.delete = delete.toPathOperation(pluginConfig)
     }
 
+    pluginConfig.patch?.let { patch ->
+      SchemaGenerator.fromType(patch.response.responseType)?.let { schema ->
+        spec.components.schemas[patch.response.responseType.getSimpleSlug()] = schema
+      }
+      SchemaGenerator.fromType(patch.request.requestType)?.let { schema ->
+        spec.components.schemas[patch.request.requestType.getSimpleSlug()] = schema
+      }
+      path.patch = patch.toPathOperation(pluginConfig)
+    }
+
     spec.paths[pluginConfig.path] = path
   }
 
@@ -99,6 +111,11 @@ object NotarizedRoute {
     requestBody = when (this) {
       is DeleteInfo -> null
       is GetInfo -> null
+      is PatchInfo -> Request(
+        description = this.request.description,
+        content = this.request.requestType.toReferenceContent(),
+        required = true
+      )
       is PostInfo -> Request(
         description = this.request.description,
         content = this.request.requestType.toReferenceContent(),

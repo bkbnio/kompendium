@@ -3,6 +3,7 @@ package io.bkbn.kompendium.core
 import io.bkbn.kompendium.core.fixtures.TestHelpers.openApiTestAllSerializers
 import io.bkbn.kompendium.core.util.notarizedDelete
 import io.bkbn.kompendium.core.util.notarizedGet
+import io.bkbn.kompendium.core.util.notarizedPatch
 import io.bkbn.kompendium.core.util.notarizedPost
 import io.bkbn.kompendium.core.util.notarizedPut
 import io.kotest.core.spec.style.DescribeSpec
@@ -21,9 +22,12 @@ class KompendiumTest : DescribeSpec({
     it("Can notarize a delete request") {
       openApiTestAllSerializers("T0004__notarized_delete.json") { notarizedDelete() }
     }
+    it("Can notarize a patch request") {
+      openApiTestAllSerializers("T0005__notarized_patch.json") { notarizedPatch() }
+    }
   }
 //    it("Can notarize a patch request") {
-//      openApiTestAllSerializers("notarized_patch.json") { notarizedPatchModule() }
+//      openApiTestAllSerializers("T0005__notarized_patch.json") { notarizedPatchModule() }
 //    }
 //    it("Can notarize a head request") {
 //      openApiTestAllSerializers("notarized_head.json") { notarizedHeadModule() }
