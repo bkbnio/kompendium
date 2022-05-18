@@ -1,7 +1,7 @@
 package io.bkbn.kompendium.json.schema.handler
 
-import io.bkbn.kompendium.json.schema.definition.JsonSchema
 import io.bkbn.kompendium.json.schema.SchemaGenerator
+import io.bkbn.kompendium.json.schema.definition.JsonSchema
 import io.bkbn.kompendium.json.schema.definition.NullableDefinition
 import io.bkbn.kompendium.json.schema.definition.OneOfDefinition
 import io.bkbn.kompendium.json.schema.definition.TypeDefinition
@@ -14,7 +14,6 @@ object ObjectHandler {
   fun handle(type: KType, clazz: KClass<*>): JsonSchema {
     val props = clazz.memberProperties.associate { prop ->
       val schema = SchemaGenerator.fromType(prop.returnType)
-        ?: error("Could not generate schema for ${prop.returnType}")
       prop.name to schema
     }
     val required = clazz.memberProperties.filterNot { prop -> prop.returnType.isMarkedNullable }
