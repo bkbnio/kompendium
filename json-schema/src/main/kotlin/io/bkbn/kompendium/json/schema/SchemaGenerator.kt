@@ -15,9 +15,9 @@ object SchemaGenerator {
 
   inline fun <reified T> fromType() = fromType(typeOf<T>())
 
-  fun fromType(type: KType): JsonSchema? = when (val clazz = type.classifier as KClass<*>) {
+  fun fromType(type: KType): JsonSchema = when (val clazz = type.classifier as KClass<*>) {
     // TODO Make this an error instead, then can get rid of null checks.. makes sense to delegate this to client
-    Unit::class -> null
+    Unit::class -> error("Unit cannot be converted to JsonSchema")
     Int::class -> TypeDefinition.INT
     String::class -> TypeDefinition.STRING
     Boolean::class -> TypeDefinition.BOOLEAN
@@ -29,4 +29,8 @@ object SchemaGenerator {
     }
   }
 
+  fun fromTypeNullable(type: KType): JsonSchema? = when (type.classifier as KClass<*>) {
+    Unit::class -> null
+    else -> fromType(type)
+  }
 }

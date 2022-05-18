@@ -11,8 +11,8 @@ import io.bkbn.kompendium.core.metadata.PostInfo
 import io.bkbn.kompendium.core.metadata.PutInfo
 import io.bkbn.kompendium.core.util.Helpers.getReferenceSlug
 import io.bkbn.kompendium.core.util.Helpers.getSimpleSlug
-import io.bkbn.kompendium.json.schema.definition.ReferenceSchema
 import io.bkbn.kompendium.json.schema.SchemaGenerator
+import io.bkbn.kompendium.json.schema.definition.ReferenceSchema
 import io.bkbn.kompendium.oas.path.Path
 import io.bkbn.kompendium.oas.path.PathOperation
 import io.bkbn.kompendium.oas.payload.MediaType
@@ -57,14 +57,14 @@ object NotarizedRoute {
     path.parameters = pluginConfig.parameters
 
     pluginConfig.get?.let { get ->
-      SchemaGenerator.fromType(get.response.responseType)?.let { schema ->
+      SchemaGenerator.fromTypeNullable(get.response.responseType)?.let { schema ->
         spec.components.schemas[get.response.responseType.getSimpleSlug()] = schema
       }
       path.get = get.toPathOperation(pluginConfig)
     }
 
     pluginConfig.delete?.let { delete ->
-      SchemaGenerator.fromType(delete.response.responseType)?.let { schema ->
+      SchemaGenerator.fromTypeNullable(delete.response.responseType)?.let { schema ->
         spec.components.schemas[delete.response.responseType.getSimpleSlug()] = schema
       }
 
@@ -72,7 +72,7 @@ object NotarizedRoute {
     }
 
     pluginConfig.head?.let { head ->
-      SchemaGenerator.fromType(head.response.responseType)?.let { schema ->
+      SchemaGenerator.fromTypeNullable(head.response.responseType)?.let { schema ->
         spec.components.schemas[head.response.responseType.getSimpleSlug()] = schema
       }
 
@@ -80,37 +80,37 @@ object NotarizedRoute {
     }
 
     pluginConfig.options?.let { options ->
-      SchemaGenerator.fromType(options.response.responseType)?.let { schema ->
+      SchemaGenerator.fromTypeNullable(options.response.responseType)?.let { schema ->
         spec.components.schemas[options.response.responseType.getSimpleSlug()] = schema
       }
       path.options = options.toPathOperation(pluginConfig)
     }
 
     pluginConfig.post?.let { post ->
-      SchemaGenerator.fromType(post.response.responseType)?.let { schema ->
+      SchemaGenerator.fromTypeNullable(post.response.responseType)?.let { schema ->
         spec.components.schemas[post.response.responseType.getSimpleSlug()] = schema
       }
-      SchemaGenerator.fromType(post.request.requestType)?.let { schema ->
+      SchemaGenerator.fromTypeNullable(post.request.requestType)?.let { schema ->
         spec.components.schemas[post.request.requestType.getSimpleSlug()] = schema
       }
       path.post = post.toPathOperation(pluginConfig)
     }
 
     pluginConfig.put?.let { put ->
-      SchemaGenerator.fromType(put.response.responseType)?.let { schema ->
+      SchemaGenerator.fromTypeNullable(put.response.responseType)?.let { schema ->
         spec.components.schemas[put.response.responseType.getSimpleSlug()] = schema
       }
-      SchemaGenerator.fromType(put.request.requestType)?.let { schema ->
+      SchemaGenerator.fromTypeNullable(put.request.requestType)?.let { schema ->
         spec.components.schemas[put.request.requestType.getSimpleSlug()] = schema
       }
       path.put = put.toPathOperation(pluginConfig)
     }
 
     pluginConfig.patch?.let { patch ->
-      SchemaGenerator.fromType(patch.response.responseType)?.let { schema ->
+      SchemaGenerator.fromTypeNullable(patch.response.responseType)?.let { schema ->
         spec.components.schemas[patch.response.responseType.getSimpleSlug()] = schema
       }
-      SchemaGenerator.fromType(patch.request.requestType)?.let { schema ->
+      SchemaGenerator.fromTypeNullable(patch.request.requestType)?.let { schema ->
         spec.components.schemas[patch.request.requestType.getSimpleSlug()] = schema
       }
       path.patch = patch.toPathOperation(pluginConfig)

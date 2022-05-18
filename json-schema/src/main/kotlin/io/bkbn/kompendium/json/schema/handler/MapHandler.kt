@@ -13,7 +13,7 @@ object MapHandler {
       "JSON requires that map keys MUST be Strings.  You provided ${type.arguments.first().type}"
     }
     val valueType = type.arguments[1].type!!
-    val valueSchema = SchemaGenerator.fromType(valueType)!!
+    val valueSchema = SchemaGenerator.fromType(valueType)
     return MapDefinition(valueSchema)
   }
 

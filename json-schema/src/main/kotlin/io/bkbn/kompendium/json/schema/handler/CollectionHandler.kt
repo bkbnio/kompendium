@@ -9,7 +9,7 @@ object CollectionHandler {
 
   fun handle(type: KType): JsonSchema {
     val collectionType = type.arguments.first().type!!
-    val typeSchema = SchemaGenerator.fromType(collectionType)!!
+    val typeSchema = SchemaGenerator.fromType(collectionType)
     return ArrayDefinition(typeSchema)
   }
 
