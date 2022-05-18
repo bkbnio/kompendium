@@ -3,7 +3,7 @@ package io.bkbn.kompendium.core.metadata
 import io.bkbn.kompendium.oas.common.ExternalDocumentation
 import io.bkbn.kompendium.oas.payload.Parameter
 
-interface MethodInfo {
+sealed interface MethodInfo {
   val response: ResponseInfo
   val tags: Set<String>
   val summary: String

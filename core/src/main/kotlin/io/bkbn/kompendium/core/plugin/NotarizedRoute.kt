@@ -1,7 +1,9 @@
 package io.bkbn.kompendium.core.plugin
 
 import io.bkbn.kompendium.core.attribute.KompendiumAttributes
+import io.bkbn.kompendium.core.metadata.DeleteInfo
 import io.bkbn.kompendium.core.metadata.GetInfo
+import io.bkbn.kompendium.core.metadata.MethodInfo
 import io.bkbn.kompendium.core.metadata.PostInfo
 import io.bkbn.kompendium.core.metadata.PutInfo
 import io.bkbn.kompendium.core.util.Helpers.getReferenceSlug
@@ -27,7 +29,7 @@ object NotarizedRoute {
     var get: GetInfo? = null
     var post: PostInfo? = null
     var put: PutInfo? = null
-    // todo get, post, put, etc.
+    var delete: DeleteInfo? = null
   }
 
   operator fun invoke() = createRouteScopedPlugin(
@@ -49,25 +51,7 @@ object NotarizedRoute {
     pluginConfig.get?.let { get ->
       spec.components.schemas[get.response.responseType.getSimpleSlug()] =
         SchemaGenerator.fromType(get.response.responseType)
-      path.get = PathOperation(
-        tags = pluginConfig.tags.plus(get.tags),
-        summary = get.summary,
-        description = get.description,
-        externalDocs = get.externalDocumentation,
-        operationId = get.operationId,
-        deprecated = get.deprecated,
-        parameters = get.parameters,
-        responses = mapOf(
-          get.response.responseCode.value to Response(
-            description = get.response.description,
-            content = mapOf(
-              "application/json" to MediaType(
-                schema = ReferenceSchema(get.response.responseType.getReferenceSlug())
-              )
-            )
-          )
-        )
-      )
+      path.get = get.toPathOperation(pluginConfig)
     }
 
     pluginConfig.post?.let { post ->
@@ -76,34 +60,7 @@ object NotarizedRoute {
       spec.components.schemas[post.request.requestType.getSimpleSlug()] =
         SchemaGenerator.fromType(post.request.requestType)
 
-      path.post = PathOperation(
-        tags = pluginConfig.tags.plus(post.tags),
-        summary = post.summary,
-        description = post.description,
-        externalDocs = post.externalDocumentation,
-        operationId = post.operationId,
-        deprecated = post.deprecated,
-        parameters = post.parameters,
-        requestBody = Request(
-          description = post.request.description,
-          content = mapOf(
-            "application/json" to MediaType(
-              schema = ReferenceSchema(post.request.requestType.getReferenceSlug())
-            )
-          ),
-          required = true
-        ),
-        responses = mapOf(
-          post.response.responseCode.value to Response(
-            description = post.response.description,
-            content = mapOf(
-              "application/json" to MediaType(
-                schema = ReferenceSchema(post.response.responseType.getReferenceSlug())
-              )
-            )
-          )
-        )
-      )
+      path.post = post.toPathOperation(pluginConfig)
     }
 
     pluginConfig.put?.let { put ->
@@ -112,38 +69,58 @@ object NotarizedRoute {
       spec.components.schemas[put.request.requestType.getSimpleSlug()] =
         SchemaGenerator.fromType(put.request.requestType)
 
-      path.put = PathOperation(
-        tags = pluginConfig.tags.plus(put.tags),
-        summary = put.summary,
-        description = put.description,
-        externalDocs = put.externalDocumentation,
-        operationId = put.operationId,
-        deprecated = put.deprecated,
-        parameters = put.parameters,
-        requestBody = Request(
-          description = put.request.description,
-          content = mapOf(
-            "application/json" to MediaType(
-              schema = ReferenceSchema(put.request.requestType.getReferenceSlug())
-            )
-          ),
-          required = true
-        ),
-        responses = mapOf(
-          put.response.responseCode.value to Response(
-            description = put.response.description,
-            content = mapOf(
-              "application/json" to MediaType(
-                schema = ReferenceSchema(put.response.responseType.getReferenceSlug())
-              )
-            )
-          )
-        )
-      )
+      path.put = put.toPathOperation(pluginConfig)
     }
 
-    // todo handle get, post, put, etc.
+    pluginConfig.delete?.let { delete ->
+      spec.components.schemas[delete.response.responseType.getSimpleSlug()] =
+        SchemaGenerator.fromType(delete.response.responseType)
+
+      path.delete = delete.toPathOperation(pluginConfig)
+    }
 
     spec.paths[pluginConfig.path] = path
   }
+
+  private fun MethodInfo.toPathOperation(config: Config) = PathOperation(
+    tags = config.tags.plus(this.tags),
+    summary = this.summary,
+    description = this.description,
+    externalDocs = this.externalDocumentation,
+    operationId = this.operationId,
+    deprecated = this.deprecated,
+    parameters = this.parameters,
+    requestBody = when (this) {
+      is DeleteInfo -> null
+      is GetInfo -> null
+      is PostInfo -> Request(
+        description = this.request.description,
+        content = mapOf(
+          "application/json" to MediaType(
+            schema = ReferenceSchema(this.request.requestType.getReferenceSlug())
+          )
+        ),
+        required = true
+      )
+      is PutInfo -> Request(
+        description = this.request.description,
+        content = mapOf(
+          "application/json" to MediaType(
+            schema = ReferenceSchema(this.request.requestType.getReferenceSlug())
+          )
+        ),
+        required = true
+      )
+    },
+    responses = mapOf(
+      this.response.responseCode.value to Response(
+        description = this.response.description,
+        content = mapOf(
+          "application/json" to MediaType(
+            schema = ReferenceSchema(this.response.responseType.getReferenceSlug())
+          )
+        )
+      )
+    )
+  )
 }

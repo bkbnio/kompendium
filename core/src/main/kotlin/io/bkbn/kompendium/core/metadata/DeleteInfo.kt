@@ -3,7 +3,7 @@ package io.bkbn.kompendium.core.metadata
 import io.bkbn.kompendium.oas.common.ExternalDocumentation
 import io.bkbn.kompendium.oas.payload.Parameter
 
-class GetInfo private constructor(
+class DeleteInfo private constructor(
   override val response: ResponseInfo,
   override val tags: Set<String>,
   override val summary: String,
@@ -15,15 +15,15 @@ class GetInfo private constructor(
 ): MethodInfo {
 
   companion object {
-    fun builder(init: Builder.() -> Unit): GetInfo {
+    fun builder(init: Builder.() -> Unit): DeleteInfo {
       val builder = Builder()
       builder.init()
       return builder.build()
     }
   }
 
-  class Builder : MethodInfo.Builder<GetInfo>() {
-    override fun build() = GetInfo(
+  class Builder : MethodInfo.Builder<DeleteInfo>() {
+    override fun build() = DeleteInfo(
       response = response!!,
       tags = tags,
       summary = summary!!,

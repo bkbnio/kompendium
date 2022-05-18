@@ -1,29 +1,27 @@
 package io.bkbn.kompendium.core
 
 import io.bkbn.kompendium.core.fixtures.TestHelpers.openApiTestAllSerializers
-import io.bkbn.kompendium.core.util.notarizedGetModule
-import io.bkbn.kompendium.core.util.notarizedPostModule
-import io.bkbn.kompendium.core.util.notarizedPutModule
+import io.bkbn.kompendium.core.util.notarizedDelete
+import io.bkbn.kompendium.core.util.notarizedGet
+import io.bkbn.kompendium.core.util.notarizedPost
+import io.bkbn.kompendium.core.util.notarizedPut
 import io.kotest.core.spec.style.DescribeSpec
 
 class KompendiumTest : DescribeSpec({
   describe("Notarized Open API Metadata Tests") {
     it("Can notarize a get request") {
-      openApiTestAllSerializers("T0001__notarized_get.json") { notarizedGetModule() }
+      openApiTestAllSerializers("T0001__notarized_get.json") { notarizedGet() }
     }
     it("Can notarize a post request") {
-      openApiTestAllSerializers("T0002__notarized_post.json") { notarizedPostModule() }
+      openApiTestAllSerializers("T0002__notarized_post.json") { notarizedPost() }
     }
     it("Can notarize a put request") {
-      openApiTestAllSerializers("T0003__notarized_put.json") { notarizedPutModule() }
+      openApiTestAllSerializers("T0003__notarized_put.json") { notarizedPut() }
+    }
+    it("Can notarize a delete request") {
+      openApiTestAllSerializers("T0004__notarized_delete.json") { notarizedDelete() }
     }
   }
-//    it("Can notarize a put request") {
-//      openApiTestAllSerializers("T0003__notarized_put.json") { notarizedPutModule() }
-//    }
-//    it("Can notarize a delete request") {
-//      openApiTestAllSerializers("notarized_delete.json") { notarizedDeleteModule() }
-//    }
 //    it("Can notarize a patch request") {
 //      openApiTestAllSerializers("notarized_patch.json") { notarizedPatchModule() }
 //    }

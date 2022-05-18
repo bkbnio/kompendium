@@ -3,6 +3,7 @@ package io.bkbn.kompendium.core.util
 import io.bkbn.kompendium.core.fixtures.TestCreatedResponse
 import io.bkbn.kompendium.core.fixtures.TestResponse
 import io.bkbn.kompendium.core.fixtures.TestSimpleRequest
+import io.bkbn.kompendium.core.metadata.DeleteInfo
 import io.bkbn.kompendium.core.metadata.GetInfo
 import io.bkbn.kompendium.core.metadata.PostInfo
 import io.bkbn.kompendium.core.metadata.PutInfo
@@ -12,96 +13,16 @@ import io.bkbn.kompendium.oas.payload.Parameter
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.call
 import io.ktor.server.application.install
+import io.ktor.server.response.respond
 import io.ktor.server.response.respondText
 import io.ktor.server.routing.Routing
+import io.ktor.server.routing.delete
 import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import io.ktor.server.routing.put
 import io.ktor.server.routing.route
 
-//import io.bkbn.kompendium.core.Notarized.notarizedDelete
-//import io.bkbn.kompendium.core.Notarized.notarizedGet
-//import io.bkbn.kompendium.core.Notarized.notarizedHead
-//import io.bkbn.kompendium.core.Notarized.notarizedOptions
-//import io.bkbn.kompendium.core.Notarized.notarizedPatch
-//import io.bkbn.kompendium.core.Notarized.notarizedPost
-//import io.bkbn.kompendium.core.Notarized.notarizedPut
-//import io.bkbn.kompendium.core.fixtures.Bibbity
-//import io.bkbn.kompendium.core.fixtures.ComplexGibbit
-//import io.bkbn.kompendium.core.fixtures.DateTimeString
-//import io.bkbn.kompendium.core.fixtures.DefaultParameter
-//import io.bkbn.kompendium.core.fixtures.Gibbity
-//import io.bkbn.kompendium.core.fixtures.Mysterious
-//import io.bkbn.kompendium.core.fixtures.SimpleGibbit
-//import io.bkbn.kompendium.core.fixtures.TestFieldOverride
-//import io.bkbn.kompendium.core.fixtures.TestHelpers.DEFAULT_TEST_ENDPOINT
-//import io.bkbn.kompendium.core.fixtures.TestNested
-//import io.bkbn.kompendium.core.fixtures.TestRequest
-//import io.bkbn.kompendium.core.fixtures.TestResponse
-//import io.bkbn.kompendium.core.fixtures.TestResponseInfo
-//import io.bkbn.kompendium.core.fixtures.TestResponseInfo.dateTimeString
-//import io.bkbn.kompendium.core.fixtures.TestResponseInfo.defaultField
-//import io.bkbn.kompendium.core.fixtures.TestResponseInfo.defaultParam
-//import io.bkbn.kompendium.core.fixtures.TestResponseInfo.formattedParam
-//import io.bkbn.kompendium.core.fixtures.TestResponseInfo.minMaxString
-//import io.bkbn.kompendium.core.fixtures.TestResponseInfo.nullableField
-//import io.bkbn.kompendium.core.fixtures.TestResponseInfo.nullableNested
-//import io.bkbn.kompendium.core.fixtures.TestResponseInfo.regexString
-//import io.bkbn.kompendium.core.fixtures.TestResponseInfo.requiredParam
-//import io.bkbn.kompendium.core.metadata.RequestInfo
-//import io.bkbn.kompendium.core.metadata.ResponseInfo
-//import io.bkbn.kompendium.core.metadata.method.GetInfo
-//import io.bkbn.kompendium.core.metadata.method.PostInfo
-//import io.ktor.application.Application
-//import io.ktor.application.call
-//import io.ktor.http.HttpStatusCode
-//import io.ktor.response.respond
-//import io.ktor.response.respondText
-//import io.ktor.routing.route
-//import io.ktor.routing.routing
-//import java.time.Instant
-//
-//fun Application.notarizedGetWithNotarizedException() {
-//  routing {
-//    route("/test") {
-//      notarizedGet(TestResponseInfo.testGetWithException) {
-//        error("something terrible has happened!")
-//      }
-//    }
-//  }
-//}
-//
-//fun Application.notarizedGetWithMultipleThrowables() {
-//  routing {
-//    route("/test") {
-//      notarizedGet(TestResponseInfo.testGetWithMultipleExceptions) {
-//        error("something terrible has happened!")
-//      }
-//    }
-//  }
-//}
-//
-//fun Application.notarizedGetWithPolymorphicErrorResponse() {
-//  routing {
-//    route(DEFAULT_TEST_ENDPOINT) {
-//      notarizedGet(TestResponseInfo.testGetWithPolymorphicException) {
-//        error("something terrible has happened!")
-//      }
-//    }
-//  }
-//}
-//
-//fun Application.notarizedGetWithGenericErrorResponse() {
-//  routing {
-//    route(DEFAULT_TEST_ENDPOINT) {
-//      notarizedGet(TestResponseInfo.testGetWithGenericException) {
-//        error("something terrible has happened!")
-//      }
-//    }
-//  }
-//}
-
-val defaultPath = "/test/{a}"
+const val defaultPath = "/test/{a}"
 
 val defaultParams = listOf(
   Parameter(
@@ -116,7 +37,7 @@ val defaultParams = listOf(
   )
 )
 
-fun Routing.notarizedGetModule() {
+fun Routing.notarizedGet() {
   route("/test/{a}") {
     install(NotarizedRoute()) {
       path = defaultPath
@@ -137,7 +58,7 @@ fun Routing.notarizedGetModule() {
   }
 }
 
-fun Routing.notarizedPostModule() {
+fun Routing.notarizedPost() {
   route("/test/{a}") {
     install(NotarizedRoute()) {
       path = defaultPath
@@ -162,7 +83,7 @@ fun Routing.notarizedPostModule() {
   }
 }
 
-fun Routing.notarizedPutModule() {
+fun Routing.notarizedPut() {
   route("/test/{a}") {
     install(NotarizedRoute()) {
       path = defaultPath
@@ -184,6 +105,27 @@ fun Routing.notarizedPutModule() {
     put {
       call.respondText { "hey dude ‼️ congrats on the post request" }
     }
+  }
+}
+
+fun Routing.notarizedDelete() {
+  route("/test/{a}") {
+    install(NotarizedRoute()) {
+      path = defaultPath
+      parameters = defaultParams
+      delete = DeleteInfo.builder {
+        summary("Test delete endpoint")
+        description("testing my deletes")
+        response {
+          responseCode(HttpStatusCode.NoContent)
+          responseType<Unit>()
+          description("A Successful Endeavor")
+        }
+      }
+    }
+  }
+  delete {
+    call.respond(HttpStatusCode.NoContent)
   }
 }
 
