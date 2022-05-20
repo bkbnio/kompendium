@@ -36,9 +36,9 @@ class ResponseInfo private constructor(
     fun description(s: String) = apply { this.description = s }
 
     fun build() = ResponseInfo(
-      responseCode = responseCode!!,
-      responseType = responseType!!,
-      description = description!!
+      responseCode = responseCode ?: error("You must provide a response code in order to build a Response!"),
+      responseType = responseType ?: error("You must provide a response type in order to build a Response!"),
+      description = description ?: error("You must provide a description in order to build a Response!"),
     )
   }
 }

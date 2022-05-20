@@ -221,6 +221,26 @@ object TestModules {
       }
     }
   }
+
+  fun Routing.primitives() {
+    route(rootPath) {
+      install(NotarizedRoute()) {
+        put = PutInfo.builder {
+          summary("Test put endpoint")
+          description("Put your tests here!")
+          request {
+            requestType<Int>()
+            description("A Test Request")
+          }
+          response {
+            responseCode(HttpStatusCode.Created)
+            responseType<Boolean>()
+            description("A Successful Endeavor")
+          }
+        }
+      }
+    }
+  }
 }
 
 //fun Application.notarizedPutModule() {

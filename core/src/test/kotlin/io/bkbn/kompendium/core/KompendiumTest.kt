@@ -9,6 +9,7 @@ import io.bkbn.kompendium.core.util.TestModules.notarizedOptions
 import io.bkbn.kompendium.core.util.TestModules.notarizedPatch
 import io.bkbn.kompendium.core.util.TestModules.notarizedPost
 import io.bkbn.kompendium.core.util.TestModules.notarizedPut
+import io.bkbn.kompendium.core.util.TestModules.primitives
 import io.kotest.core.spec.style.DescribeSpec
 
 class KompendiumTest : DescribeSpec({
@@ -35,15 +36,13 @@ class KompendiumTest : DescribeSpec({
       openApiTestAllSerializers("T0007__notarized_options.json") { notarizedOptions() }
     }
     it("Can notarize a complex type") {
+      // FIXME Need to adjust this to leverage $ref
       openApiTestAllSerializers("T0008__complex_type.json") { complexRequest() }
     }
+    it("Can notarize primitives") {
+      openApiTestAllSerializers("T0009__notarized_primitives.json") { primitives() }
+    }
   }
-//    it("Can notarize a complex type") {
-//      openApiTestAllSerializers("T0008__complex_type.json") { complexType() }
-//    }
-//    it("Can notarize primitives") {
-//      openApiTestAllSerializers("notarized_primitives.json") { primitives() }
-//    }
 //    it("Can notarize a top level list response") {
 //      openApiTestAllSerializers("response_list.json") { returnsList() }
 //    }

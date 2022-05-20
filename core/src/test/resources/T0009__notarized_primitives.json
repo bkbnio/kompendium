@@ -1,5 +1,6 @@
 {
-  "openapi": "3.0.3",
+  "openapi": "3.1.0",
+  "jsonSchemaDialect": "https://json-schema.org/draft/2020-12/schema",
   "info": {
     "title": "Test API",
     "version": "1.33.7",
@@ -26,19 +27,18 @@
     }
   ],
   "paths": {
-    "/test": {
+    "/": {
       "put": {
         "tags": [],
         "summary": "Test put endpoint",
         "description": "Put your tests here!",
         "parameters": [],
         "requestBody": {
-          "description": "A Test request",
+          "description": "A Test Request",
           "content": {
             "application/json": {
               "schema": {
-                "format": "int32",
-                "type": "integer"
+                "$ref": "#/components/schemas/Int"
               }
             }
           },
@@ -50,18 +50,28 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "boolean"
+                  "$ref": "#/components/schemas/Boolean"
                 }
               }
             }
           }
         },
         "deprecated": false
-      }
+      },
+      "parameters": []
     }
   },
+  "webhooks": {},
   "components": {
-    "schemas": {},
+    "schemas": {
+      "Boolean": {
+        "type": "boolean"
+      },
+      "Int": {
+        "type": "number",
+        "format": "int32"
+      }
+    },
     "securitySchemes": {}
   },
   "security": [],
