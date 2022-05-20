@@ -24,10 +24,10 @@ class GetInfo private constructor(
 
   class Builder : MethodInfo.Builder<GetInfo>() {
     override fun build() = GetInfo(
-      response = response!!,
+      response = response ?: error("You must provide a response in order to notarize a GET"),
       tags = tags,
-      summary = summary!!,
-      description = description!!,
+      summary = summary ?: error("You must provide a summary in order to notarize a GET"),
+      description = description ?: error("You must provide a description in order to notarize a GET"),
       externalDocumentation = externalDocumentation,
       operationId = operationId,
       deprecated = deprecated,

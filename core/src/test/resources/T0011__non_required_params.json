@@ -1,5 +1,6 @@
 {
-  "openapi": "3.0.3",
+  "openapi": "3.1.0",
+  "jsonSchemaDialect": "https://json-schema.org/draft/2020-12/schema",
   "info": {
     "title": "Test API",
     "version": "1.33.7",
@@ -26,41 +27,42 @@
     }
   ],
   "paths": {
-    "/test/optional": {
+    "/optional": {
       "get": {
         "tags": [],
-        "summary": "No request params and response body",
+        "summary": "Optional param",
         "description": "testing more",
-        "parameters": [
-          {
-            "name": "notRequired",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "nullable": true
-            },
-            "required": false,
-            "deprecated": false
-          },
-          {
-            "name": "required",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            },
-            "required": true,
-            "deprecated": false
-          }
-        ],
+        "parameters": [],
         "responses": {
           "204": {
             "description": "Empty"
           }
         },
         "deprecated": false
-      }
+      },
+      "parameters": [
+        {
+          "name": "notRequired",
+          "in": "query",
+          "schema": {
+            "type": "string"
+          },
+          "required": false,
+          "deprecated": false
+        },
+        {
+          "name": "required",
+          "in": "query",
+          "schema": {
+            "type": "string"
+          },
+          "required": true,
+          "deprecated": false
+        }
+      ]
     }
   },
+  "webhooks": {},
   "components": {
     "schemas": {},
     "securitySchemes": {}

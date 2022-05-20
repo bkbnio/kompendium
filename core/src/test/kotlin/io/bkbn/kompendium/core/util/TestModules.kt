@@ -258,6 +258,35 @@ object TestModules {
       }
     }
   }
+
+  fun Routing.nonRequiredParams() {
+    route("/optional") {
+      install(NotarizedRoute()) {
+        parameters = listOf(
+          Parameter(
+            name = "notRequired",
+            `in` = Parameter.Location.query,
+            schema = TypeDefinition.STRING,
+            required = false,
+          ),
+          Parameter(
+            name = "required",
+            `in` = Parameter.Location.query,
+            schema = TypeDefinition.STRING
+          )
+        )
+        get = GetInfo.builder {
+          summary("Optional param")
+          description("testing more")
+          response {
+            responseType<Unit>()
+            description("Empty")
+            responseCode(HttpStatusCode.NoContent)
+          }
+        }
+      }
+    }
+  }
 }
 
 //fun Application.notarizedPutModule() {

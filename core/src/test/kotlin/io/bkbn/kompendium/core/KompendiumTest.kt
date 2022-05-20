@@ -2,6 +2,7 @@ package io.bkbn.kompendium.core
 
 import io.bkbn.kompendium.core.fixtures.TestHelpers.openApiTestAllSerializers
 import io.bkbn.kompendium.core.util.TestModules.complexRequest
+import io.bkbn.kompendium.core.util.TestModules.nonRequiredParams
 import io.bkbn.kompendium.core.util.TestModules.notarizedDelete
 import io.bkbn.kompendium.core.util.TestModules.notarizedGet
 import io.bkbn.kompendium.core.util.TestModules.notarizedHead
@@ -46,40 +47,14 @@ class KompendiumTest : DescribeSpec({
       openApiTestAllSerializers("T0010__response_list.json") { returnsList() }
     }
     it("Can notarize a route with non-required params") {
+      openApiTestAllSerializers("T0011__non_required_params.json") { nonRequiredParams() }
+    }
+  }
+  describe("Route Parsing") {
+    it("Can parse a simple path and store it under the expected route") {
       // TODO
     }
   }
-//    it("Can notarize a route with non-required params") {
-//      openApiTestAllSerializers("non_required_params.json") { nonRequiredParamsGet() }
-//    }
-//  }
-//  describe("Notarized Ktor Functionality Tests") {
-//    it("Can notarized a get request and return the expected result") {
-//      apiFunctionalityTest("hey dude ‼️ congratz on the get request") { notarizedGetModule() }
-//    }
-//    it("Can notarize a post request and return the expected result") {
-//      apiFunctionalityTest(
-//        "hey dude ✌️ congratz on the post request",
-//        httpMethod = HttpMethod.Post
-//      ) { notarizedPostModule() }
-//    }
-//    it("Can notarize a put request and return the expected result") {
-//      apiFunctionalityTest("hey pal 🌝 whatcha doin' here?", httpMethod = HttpMethod.Put) { notarizedPutModule() }
-//    }
-//    it("Can notarize a delete request and return the expected result") {
-//      apiFunctionalityTest(
-//        null,
-//        httpMethod = HttpMethod.Delete,
-//        expectedStatusCode = HttpStatusCode.NoContent
-//      ) { notarizedDeleteModule() }
-//    }
-//    it("Can notarize the root route and return the expected result") {
-//      apiFunctionalityTest("☎️🏠🌲", "/") { rootModule() }
-//    }
-//    it("Can notarize a trailing slash route and return the expected result") {
-//      apiFunctionalityTest("🙀👾", "/test/") { trailingSlash() }
-//    }
-//  }
 //  describe("Route Parsing") {
 //    it("Can parse a simple path and store it under the expected route") {
 //      openApiTestAllSerializers("path_parser.json") { pathParsingTestModule() }
