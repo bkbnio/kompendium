@@ -314,6 +314,23 @@ object TestModules {
       }
     }
   }
+
+  fun Routing.rootRoute() {
+    route(rootPath) {
+      install(NotarizedRoute()) {
+        parameters = defaultParams
+        get = GetInfo.builder {
+          summary("Root")
+          description("Can parse the root route")
+          response {
+            description(defaultResponseDescription)
+            responseCode(HttpStatusCode.OK)
+            responseType<TestResponse>()
+          }
+        }
+      }
+    }
+  }
 }
 
 //fun Application.notarizedPutModule() {

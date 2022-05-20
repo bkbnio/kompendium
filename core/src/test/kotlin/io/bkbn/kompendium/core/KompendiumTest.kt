@@ -12,6 +12,7 @@ import io.bkbn.kompendium.core.util.TestModules.notarizedPost
 import io.bkbn.kompendium.core.util.TestModules.notarizedPut
 import io.bkbn.kompendium.core.util.TestModules.primitives
 import io.bkbn.kompendium.core.util.TestModules.returnsList
+import io.bkbn.kompendium.core.util.TestModules.rootRoute
 import io.bkbn.kompendium.core.util.TestModules.simplePathParsing
 import io.kotest.core.spec.style.DescribeSpec
 
@@ -55,13 +56,13 @@ class KompendiumTest : DescribeSpec({
     it("Can parse a simple path and store it under the expected route") {
       openApiTestAllSerializers("T0012__path_parser.json") { simplePathParsing() }
     }
+    it("Can notarize the root route") {
+      openApiTestAllSerializers("T0013__root_route.json") { rootRoute() }
+    }
   }
 //  describe("Route Parsing") {
-//    it("Can parse a simple path and store it under the expected route") {
-//      openApiTestAllSerializers("T0012__path_parser.json") { pathParsingTestModule() }
-//    }
 //    it("Can notarize the root route") {
-//      openApiTestAllSerializers("root_route.json") { rootModule() }
+//      openApiTestAllSerializers("T0013__root_route.json") { rootModule() }
 //    }
 //    it("Can notarize a route under the root module without appending trailing slash") {
 //      openApiTestAllSerializers("nested_under_root.json") { nestedUnderRootModule() }
