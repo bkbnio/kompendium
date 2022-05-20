@@ -36,7 +36,6 @@ class KompendiumTest : DescribeSpec({
       openApiTestAllSerializers("T0007__notarized_options.json") { notarizedOptions() }
     }
     it("Can notarize a complex type") {
-      // FIXME Need to adjust this to leverage $ref
       openApiTestAllSerializers("T0008__complex_type.json") { complexRequest() }
     }
     it("Can notarize primitives") {
