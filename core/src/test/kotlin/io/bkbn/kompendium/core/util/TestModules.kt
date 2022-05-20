@@ -32,6 +32,7 @@ import io.ktor.server.routing.route
 object TestModules {
   private const val defaultPath = "/test/{a}"
   private const val rootPath = "/"
+  private const val defaultResponseDescription = "A Successful Endeavor"
 
   private val defaultParams = listOf(
     Parameter(
@@ -54,7 +55,7 @@ object TestModules {
           response {
             responseCode(HttpStatusCode.OK)
             responseType<TestResponse>()
-            description("A Successful Endeavor")
+            description(defaultResponseDescription)
           }
           summary("Another get test")
           description("testing more")
@@ -80,7 +81,7 @@ object TestModules {
           response {
             responseCode(HttpStatusCode.Created)
             responseType<TestCreatedResponse>()
-            description("A Successful Endeavor")
+            description(defaultResponseDescription)
           }
         }
       }
@@ -104,7 +105,7 @@ object TestModules {
           response {
             responseCode(HttpStatusCode.Created)
             responseType<TestCreatedResponse>()
-            description("A Successful Endeavor")
+            description(defaultResponseDescription)
           }
         }
       }
@@ -124,7 +125,7 @@ object TestModules {
           response {
             responseCode(HttpStatusCode.NoContent)
             responseType<Unit>()
-            description("A Successful Endeavor")
+            description(defaultResponseDescription)
           }
         }
       }
@@ -148,7 +149,7 @@ object TestModules {
           response {
             responseCode(HttpStatusCode.Created)
             responseType<TestCreatedResponse>()
-            description("A Successful Endeavor")
+            description(defaultResponseDescription)
           }
         }
       }
@@ -212,7 +213,7 @@ object TestModules {
           response {
             responseCode(HttpStatusCode.Created)
             responseType<TestCreatedResponse>()
-            description("A Successful Endeavor")
+            description(defaultResponseDescription)
           }
         }
       }
@@ -235,7 +236,7 @@ object TestModules {
           response {
             responseCode(HttpStatusCode.Created)
             responseType<Boolean>()
-            description("A Successful Endeavor")
+            description(defaultResponseDescription)
           }
         }
       }
@@ -282,6 +283,32 @@ object TestModules {
             responseType<Unit>()
             description("Empty")
             responseCode(HttpStatusCode.NoContent)
+          }
+        }
+      }
+    }
+  }
+
+  fun Routing.simplePathParsing() {
+    route("/this") {
+      route("/is") {
+        route("/a") {
+          route("/complex") {
+            route("path") {
+              route("with/an/{id}") {
+                install(NotarizedRoute()) {
+                  get = GetInfo.builder {
+                    summary("Path Parsing Test")
+                    description("testing more")
+                    response {
+                      description(defaultResponseDescription)
+                      responseCode(HttpStatusCode.OK)
+                      responseType<TestResponse>()
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
