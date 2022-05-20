@@ -4,7 +4,7 @@ import io.bkbn.kompendium.oas.common.ExternalDocumentation
 import io.bkbn.kompendium.oas.payload.Parameter
 
 class PutInfo private constructor(
-  val request: RequestInfo,
+  override val request: RequestInfo,
   override val response: ResponseInfo,
   override val tags: Set<String>,
   override val summary: String,
@@ -13,7 +13,7 @@ class PutInfo private constructor(
   override val operationId: String?,
   override val deprecated: Boolean,
   override val parameters: List<Parameter>
-): MethodInfo {
+): MethodInfoWithRequest {
 
   companion object {
     fun builder(init: Builder.() -> Unit): PutInfo {
@@ -23,15 +23,7 @@ class PutInfo private constructor(
     }
   }
 
-  class Builder : MethodInfo.Builder<PutInfo>() {
-    private var request: RequestInfo? = null
-
-    fun request(init: RequestInfo.Builder.() -> Unit) = apply {
-      val builder = RequestInfo.Builder()
-      builder.init()
-      this.request = builder.build()
-    }
-
+  class Builder : MethodInfoWithRequest.Builder<PutInfo>() {
     override fun build() = PutInfo(
       request = request!!,
       response = response!!,

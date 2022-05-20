@@ -5,6 +5,7 @@ import io.bkbn.kompendium.core.metadata.DeleteInfo
 import io.bkbn.kompendium.core.metadata.GetInfo
 import io.bkbn.kompendium.core.metadata.HeadInfo
 import io.bkbn.kompendium.core.metadata.MethodInfo
+import io.bkbn.kompendium.core.metadata.MethodInfoWithRequest
 import io.bkbn.kompendium.core.metadata.OptionsInfo
 import io.bkbn.kompendium.core.metadata.PatchInfo
 import io.bkbn.kompendium.core.metadata.PostInfo
@@ -13,6 +14,7 @@ import io.bkbn.kompendium.core.util.Helpers.getReferenceSlug
 import io.bkbn.kompendium.core.util.Helpers.getSimpleSlug
 import io.bkbn.kompendium.json.schema.SchemaGenerator
 import io.bkbn.kompendium.json.schema.definition.ReferenceDefinition
+import io.bkbn.kompendium.oas.OpenApiSpec
 import io.bkbn.kompendium.oas.path.Path
 import io.bkbn.kompendium.oas.path.PathOperation
 import io.bkbn.kompendium.oas.payload.MediaType
@@ -72,67 +74,42 @@ object NotarizedRoute {
     val path = Path()
     path.parameters = pluginConfig.parameters
 
-    pluginConfig.get?.let { get ->
-      SchemaGenerator.fromTypeOrUnit(get.response.responseType)?.let { schema ->
-        spec.components.schemas[get.response.responseType.getSimpleSlug()] = schema
-      }
-      path.get = get.toPathOperation(pluginConfig)
-    }
-
-    pluginConfig.delete?.let { delete ->
-      SchemaGenerator.fromTypeOrUnit(delete.response.responseType)?.let { schema ->
-        spec.components.schemas[delete.response.responseType.getSimpleSlug()] = schema
-      }
-
-      path.delete = delete.toPathOperation(pluginConfig)
-    }
-
-    pluginConfig.head?.let { head ->
-      SchemaGenerator.fromTypeOrUnit(head.response.responseType)?.let { schema ->
-        spec.components.schemas[head.response.responseType.getSimpleSlug()] = schema
-      }
-
-      path.head = head.toPathOperation(pluginConfig)
-    }
-
-    pluginConfig.options?.let { options ->
-      SchemaGenerator.fromTypeOrUnit(options.response.responseType)?.let { schema ->
-        spec.components.schemas[options.response.responseType.getSimpleSlug()] = schema
-      }
-      path.options = options.toPathOperation(pluginConfig)
-    }
-
-    pluginConfig.post?.let { post ->
-      SchemaGenerator.fromTypeOrUnit(post.response.responseType)?.let { schema ->
-        spec.components.schemas[post.response.responseType.getSimpleSlug()] = schema
-      }
-      SchemaGenerator.fromTypeOrUnit(post.request.requestType)?.let { schema ->
-        spec.components.schemas[post.request.requestType.getSimpleSlug()] = schema
-      }
-      path.post = post.toPathOperation(pluginConfig)
-    }
-
-    pluginConfig.put?.let { put ->
-      SchemaGenerator.fromTypeOrUnit(put.response.responseType)?.let { schema ->
-        spec.components.schemas[put.response.responseType.getSimpleSlug()] = schema
-      }
-      SchemaGenerator.fromTypeOrUnit(put.request.requestType)?.let { schema ->
-        spec.components.schemas[put.request.requestType.getSimpleSlug()] = schema
-      }
-      path.put = put.toPathOperation(pluginConfig)
-    }
-
-    pluginConfig.patch?.let { patch ->
-      SchemaGenerator.fromTypeOrUnit(patch.response.responseType)?.let { schema ->
-        spec.components.schemas[patch.response.responseType.getSimpleSlug()] = schema
-      }
-      SchemaGenerator.fromTypeOrUnit(patch.request.requestType)?.let { schema ->
-        spec.components.schemas[patch.request.requestType.getSimpleSlug()] = schema
-      }
-      path.patch = patch.toPathOperation(pluginConfig)
-    }
+    pluginConfig.get?.addToSpec(path, spec, pluginConfig)
+    pluginConfig.delete?.addToSpec(path, spec, pluginConfig)
+    pluginConfig.head?.addToSpec(path, spec, pluginConfig)
+    pluginConfig.options?.addToSpec(path, spec, pluginConfig)
+    pluginConfig.post?.addToSpec(path, spec, pluginConfig)
+    pluginConfig.put?.addToSpec(path, spec, pluginConfig)
+    pluginConfig.patch?.addToSpec(path, spec, pluginConfig)
 
     pluginConfig.path = path
+  }
+
+  private fun MethodInfo.addToSpec(path: Path, spec: OpenApiSpec, config: Config) {
+    SchemaGenerator.fromTypeOrUnit(this.response.responseType)?.let { schema ->
+      spec.components.schemas[this.response.responseType.getSimpleSlug()] = schema
+    }
+
+    when (this) {
+      is MethodInfoWithRequest -> {
+        SchemaGenerator.fromTypeOrUnit(this.request.requestType)?.let { schema ->
+          spec.components.schemas[this.request.requestType.getSimpleSlug()] = schema
+        }
+      }
+      else -> {}
+    }
+
+    val operations = this.toPathOperation(config)
+
+    when (this) {
+      is DeleteInfo -> path.delete = operations
+      is GetInfo -> path.get = operations
+      is HeadInfo -> path.head = operations
+      is PatchInfo -> path.patch= operations
+      is PostInfo -> path.post = operations
+      is PutInfo -> path.put = operations
+      is OptionsInfo -> path.options = operations
+    }
   }
 
   private fun MethodInfo.toPathOperation(config: Config) = PathOperation(
@@ -144,25 +121,12 @@ object NotarizedRoute {
     deprecated = this.deprecated,
     parameters = this.parameters,
     requestBody = when (this) {
-      is DeleteInfo -> null
-      is GetInfo -> null
-      is HeadInfo -> null
-      is OptionsInfo -> null
-      is PatchInfo -> Request(
+      is MethodInfoWithRequest -> Request(
         description = this.request.description,
         content = this.request.requestType.toReferenceContent(),
         required = true
       )
-      is PostInfo -> Request(
-        description = this.request.description,
-        content = this.request.requestType.toReferenceContent(),
-        required = true
-      )
-      is PutInfo -> Request(
-        description = this.request.description,
-        content = this.request.requestType.toReferenceContent(),
-        required = true
-      )
+      else -> null
     },
     responses = mapOf(
       this.response.responseCode.value to Response(

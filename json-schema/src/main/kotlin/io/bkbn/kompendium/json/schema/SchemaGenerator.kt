@@ -12,11 +12,6 @@ import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.typeOf
 
 object SchemaGenerator {
-
-  inline fun <reified T: Any?> fromTypeToReferences(referenceRoot: String): MutableMap<KType, JsonSchema> {
-    TODO()
-  }
-
   inline fun <reified T : Any?> fromTypeToSchema() = fromTypeToSchema(typeOf<T>())
 
   fun fromTypeToSchema(type: KType): JsonSchema = when (val clazz = type.classifier as KClass<*>) {
