@@ -1,14 +1,14 @@
 package io.bkbn.kompendium.core
 
 import io.bkbn.kompendium.core.fixtures.TestHelpers.openApiTestAllSerializers
-import io.bkbn.kompendium.core.util.complexRequest
-import io.bkbn.kompendium.core.util.notarizedDelete
-import io.bkbn.kompendium.core.util.notarizedGet
-import io.bkbn.kompendium.core.util.notarizedHead
-import io.bkbn.kompendium.core.util.notarizedOptions
-import io.bkbn.kompendium.core.util.notarizedPatch
-import io.bkbn.kompendium.core.util.notarizedPost
-import io.bkbn.kompendium.core.util.notarizedPut
+import io.bkbn.kompendium.core.util.TestModules.complexRequest
+import io.bkbn.kompendium.core.util.TestModules.notarizedDelete
+import io.bkbn.kompendium.core.util.TestModules.notarizedGet
+import io.bkbn.kompendium.core.util.TestModules.notarizedHead
+import io.bkbn.kompendium.core.util.TestModules.notarizedOptions
+import io.bkbn.kompendium.core.util.TestModules.notarizedPatch
+import io.bkbn.kompendium.core.util.TestModules.notarizedPost
+import io.bkbn.kompendium.core.util.TestModules.notarizedPut
 import io.kotest.core.spec.style.DescribeSpec
 
 class KompendiumTest : DescribeSpec({

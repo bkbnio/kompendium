@@ -29,194 +29,196 @@ import io.ktor.server.routing.post
 import io.ktor.server.routing.put
 import io.ktor.server.routing.route
 
-const val defaultPath = "/test/{a}"
-const val rootPath = "/"
+object TestModules {
+  const val defaultPath = "/test/{a}"
+  const val rootPath = "/"
 
-val defaultParams = listOf(
-  Parameter(
-    name = "a",
-    `in` = Parameter.Location.path,
-    schema = TypeDefinition.STRING,
-  ),
-  Parameter(
-    name = "aa",
-    `in` = Parameter.Location.query,
-    schema = TypeDefinition.INT
+  val defaultParams = listOf(
+    Parameter(
+      name = "a",
+      `in` = Parameter.Location.path,
+      schema = TypeDefinition.STRING,
+    ),
+    Parameter(
+      name = "aa",
+      `in` = Parameter.Location.query,
+      schema = TypeDefinition.INT
+    )
   )
-)
 
-fun Routing.notarizedGet() {
-  route(defaultPath) {
-    install(NotarizedRoute()) {
-      parameters = defaultParams
-      get = GetInfo.builder {
-        response {
-          responseCode(HttpStatusCode.OK)
-          responseType<TestResponse>()
-          description("A Successful Endeavor")
-        }
-        summary("Another get test")
-        description("testing more")
-      }
-    }
-    get {
-      call.respondText { "hey dude ‼️ congrats on the get request" }
-    }
-  }
-}
-
-fun Routing.notarizedPost() {
-  route(defaultPath) {
-    install(NotarizedRoute()) {
-      parameters = defaultParams
-      post = PostInfo.builder {
-        summary("Test post endpoint")
-        description("Post your tests here!")
-        request {
-          requestType<TestSimpleRequest>()
-          description("A Test request")
-        }
-        response {
-          responseCode(HttpStatusCode.Created)
-          responseType<TestCreatedResponse>()
-          description("A Successful Endeavor")
+  fun Routing.notarizedGet() {
+    route(defaultPath) {
+      install(NotarizedRoute()) {
+        parameters = defaultParams
+        get = GetInfo.builder {
+          response {
+            responseCode(HttpStatusCode.OK)
+            responseType<TestResponse>()
+            description("A Successful Endeavor")
+          }
+          summary("Another get test")
+          description("testing more")
         }
       }
-    }
-    post {
-      call.respondText { "hey dude ‼️ congrats on the post request" }
-    }
-  }
-}
-
-fun Routing.notarizedPut() {
-  route(defaultPath) {
-    install(NotarizedRoute()) {
-      parameters = defaultParams
-      put = PutInfo.builder {
-        summary("Test post endpoint")
-        description("Post your tests here!")
-        request {
-          requestType<TestSimpleRequest>()
-          description("A Test request")
-        }
-        response {
-          responseCode(HttpStatusCode.Created)
-          responseType<TestCreatedResponse>()
-          description("A Successful Endeavor")
-        }
-      }
-    }
-    put {
-      call.respondText { "hey dude ‼️ congrats on the post request" }
-    }
-  }
-}
-
-fun Routing.notarizedDelete() {
-  route(defaultPath) {
-    install(NotarizedRoute()) {
-      parameters = defaultParams
-      delete = DeleteInfo.builder {
-        summary("Test delete endpoint")
-        description("testing my deletes")
-        response {
-          responseCode(HttpStatusCode.NoContent)
-          responseType<Unit>()
-          description("A Successful Endeavor")
-        }
+      get {
+        call.respondText { "hey dude ‼️ congrats on the get request" }
       }
     }
   }
-  delete {
-    call.respond(HttpStatusCode.NoContent)
-  }
-}
 
-fun Routing.notarizedPatch() {
-  route(defaultPath) {
-    install(NotarizedRoute()) {
-      parameters = defaultParams
-      patch = PatchInfo.builder {
-        summary("Test patch endpoint")
-        description("patch your tests here!")
-        request {
-          description("A Test request")
-          requestType<TestSimpleRequest>()
+  fun Routing.notarizedPost() {
+    route(defaultPath) {
+      install(NotarizedRoute()) {
+        parameters = defaultParams
+        post = PostInfo.builder {
+          summary("Test post endpoint")
+          description("Post your tests here!")
+          request {
+            requestType<TestSimpleRequest>()
+            description("A Test request")
+          }
+          response {
+            responseCode(HttpStatusCode.Created)
+            responseType<TestCreatedResponse>()
+            description("A Successful Endeavor")
+          }
         }
-        response {
-          responseCode(HttpStatusCode.Created)
-          responseType<TestCreatedResponse>()
-          description("A Successful Endeavor")
+      }
+      post {
+        call.respondText { "hey dude ‼️ congrats on the post request" }
+      }
+    }
+  }
+
+  fun Routing.notarizedPut() {
+    route(defaultPath) {
+      install(NotarizedRoute()) {
+        parameters = defaultParams
+        put = PutInfo.builder {
+          summary("Test post endpoint")
+          description("Post your tests here!")
+          request {
+            requestType<TestSimpleRequest>()
+            description("A Test request")
+          }
+          response {
+            responseCode(HttpStatusCode.Created)
+            responseType<TestCreatedResponse>()
+            description("A Successful Endeavor")
+          }
+        }
+      }
+      put {
+        call.respondText { "hey dude ‼️ congrats on the post request" }
+      }
+    }
+  }
+
+  fun Routing.notarizedDelete() {
+    route(defaultPath) {
+      install(NotarizedRoute()) {
+        parameters = defaultParams
+        delete = DeleteInfo.builder {
+          summary("Test delete endpoint")
+          description("testing my deletes")
+          response {
+            responseCode(HttpStatusCode.NoContent)
+            responseType<Unit>()
+            description("A Successful Endeavor")
+          }
         }
       }
     }
-    patch {
-      call.respond(HttpStatusCode.Created) { TestCreatedResponse(123, "Nice!") }
-    }
-  }
-}
-
-fun Routing.notarizedHead() {
-  route(defaultPath) {
-    install(NotarizedRoute()) {
-      parameters = defaultParams
-      head = HeadInfo.builder {
-        summary("Test head endpoint")
-        description("head test 💀")
-
-        response {
-          description("great!")
-          responseCode(HttpStatusCode.Created)
-          responseType<Unit>()
-        }
-      }
-    }
-    head {
-      call.respond(HttpStatusCode.OK)
-    }
-  }
-}
-
-fun Routing.notarizedOptions() {
-  route(defaultPath) {
-    install(NotarizedRoute()) {
-      parameters = defaultParams
-      options = OptionsInfo.builder {
-        summary("Test options")
-        description("endpoint of options")
-        response {
-          responseCode(HttpStatusCode.OK)
-          responseType<TestResponse>()
-          description("nice")
-        }
-      }
-    }
-    options {
+    delete {
       call.respond(HttpStatusCode.NoContent)
     }
   }
-}
 
-fun Routing.complexRequest() {
-  route(rootPath) {
-    install(NotarizedRoute()) {
-      put = PutInfo.builder {
-        summary("Test complex request")
-        description("A more advanced request")
-        request {
-          requestType<ComplexRequest>()
-          description("A Complex request")
-        }
-        response {
-          responseCode(HttpStatusCode.Created)
-          responseType<TestCreatedResponse>()
-          description("A Successful Endeavor")
+  fun Routing.notarizedPatch() {
+    route(defaultPath) {
+      install(NotarizedRoute()) {
+        parameters = defaultParams
+        patch = PatchInfo.builder {
+          summary("Test patch endpoint")
+          description("patch your tests here!")
+          request {
+            description("A Test request")
+            requestType<TestSimpleRequest>()
+          }
+          response {
+            responseCode(HttpStatusCode.Created)
+            responseType<TestCreatedResponse>()
+            description("A Successful Endeavor")
+          }
         }
       }
+      patch {
+        call.respond(HttpStatusCode.Created) { TestCreatedResponse(123, "Nice!") }
+      }
     }
-    patch {
-      call.respond(HttpStatusCode.Created, TestCreatedResponse(123, "nice!"))
+  }
+
+  fun Routing.notarizedHead() {
+    route(defaultPath) {
+      install(NotarizedRoute()) {
+        parameters = defaultParams
+        head = HeadInfo.builder {
+          summary("Test head endpoint")
+          description("head test 💀")
+
+          response {
+            description("great!")
+            responseCode(HttpStatusCode.Created)
+            responseType<Unit>()
+          }
+        }
+      }
+      head {
+        call.respond(HttpStatusCode.OK)
+      }
+    }
+  }
+
+  fun Routing.notarizedOptions() {
+    route(defaultPath) {
+      install(NotarizedRoute()) {
+        parameters = defaultParams
+        options = OptionsInfo.builder {
+          summary("Test options")
+          description("endpoint of options")
+          response {
+            responseCode(HttpStatusCode.OK)
+            responseType<TestResponse>()
+            description("nice")
+          }
+        }
+      }
+      options {
+        call.respond(HttpStatusCode.NoContent)
+      }
+    }
+  }
+
+  fun Routing.complexRequest() {
+    route(rootPath) {
+      install(NotarizedRoute()) {
+        put = PutInfo.builder {
+          summary("Test complex request")
+          description("A more advanced request")
+          request {
+            requestType<ComplexRequest>()
+            description("A Complex request")
+          }
+          response {
+            responseCode(HttpStatusCode.Created)
+            responseType<TestCreatedResponse>()
+            description("A Successful Endeavor")
+          }
+        }
+      }
+      patch {
+        call.respond(HttpStatusCode.Created, TestCreatedResponse(123, "nice!"))
+      }
     }
   }
 }
