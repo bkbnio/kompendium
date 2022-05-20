@@ -349,6 +349,24 @@ object TestModules {
       }
     }
   }
+
+  fun Routing.trailingSlash() {
+    route("/test") {
+      route("/") {
+        install(NotarizedRoute()) {
+          get = GetInfo.builder {
+            summary("Trailing Slash")
+            description("testing more")
+            response {
+              description(defaultResponseDescription)
+              responseCode(HttpStatusCode.OK)
+              responseType<TestResponse>()
+            }
+          }
+        }
+      }
+    }
+  }
 }
 
 //fun Application.notarizedPutModule() {

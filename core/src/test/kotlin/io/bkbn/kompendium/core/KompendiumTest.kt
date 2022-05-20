@@ -15,6 +15,7 @@ import io.bkbn.kompendium.core.util.TestModules.primitives
 import io.bkbn.kompendium.core.util.TestModules.returnsList
 import io.bkbn.kompendium.core.util.TestModules.rootRoute
 import io.bkbn.kompendium.core.util.TestModules.simplePathParsing
+import io.bkbn.kompendium.core.util.TestModules.trailingSlash
 import io.kotest.core.spec.style.DescribeSpec
 
 class KompendiumTest : DescribeSpec({
@@ -63,15 +64,10 @@ class KompendiumTest : DescribeSpec({
     it("Can notarize a route under the root module without appending trailing slash") {
       openApiTestAllSerializers("T0014__nested_under_root.json") { nestedUnderRoot() }
     }
+    it("Can notarize a route with a trailing slash") {
+      openApiTestAllSerializers("T0015__trailing_slash.json") { trailingSlash() }
+    }
   }
-//  describe("Route Parsing") {
-//    it("Can notarize a route under the root module without appending trailing slash") {
-//      openApiTestAllSerializers("T0014__nested_under_root.json") { nestedUnderRootModule() }
-//    }
-//    it("Can notarize a route with a trailing slash") {
-//      openApiTestAllSerializers("trailing_slash.json") { trailingSlash() }
-//    }
-//  }
 //  describe("Exceptions") {
 //    it("Can add an exception status code to a response") {
 //      openApiTestAllSerializers("notarized_get_with_exception_response.json") { notarizedGetWithNotarizedException() }
