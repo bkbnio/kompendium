@@ -1,5 +1,6 @@
 {
-  "openapi": "3.0.3",
+  "openapi": "3.1.0",
+  "jsonSchemaDialect": "https://json-schema.org/draft/2020-12/schema",
   "info": {
     "title": "Test API",
     "version": "1.33.7",
@@ -26,32 +27,12 @@
     }
   ],
   "paths": {
-    "/test": {
+    "/": {
       "get": {
         "tags": [],
-        "summary": "Another get test",
+        "summary": "Multiple exception test",
         "description": "testing more",
-        "parameters": [
-          {
-            "name": "a",
-            "in": "path",
-            "schema": {
-              "type": "string"
-            },
-            "required": true,
-            "deprecated": false
-          },
-          {
-            "name": "aa",
-            "in": "query",
-            "schema": {
-              "format": "int32",
-              "type": "integer"
-            },
-            "required": true,
-            "deprecated": false
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
             "description": "A Successful Endeavor",
@@ -59,16 +40,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/TestResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Access Denied",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ExceptionResponse"
                 }
               }
             }
@@ -82,15 +53,28 @@
                 }
               }
             }
+          },
+          "403": {
+            "description": "Access Denied",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
           }
         },
         "deprecated": false
-      }
+      },
+      "parameters": []
     }
   },
+  "webhooks": {},
   "components": {
     "schemas": {
       "TestResponse": {
+        "type": "object",
         "properties": {
           "c": {
             "type": "string"
@@ -98,10 +82,10 @@
         },
         "required": [
           "c"
-        ],
-        "type": "object"
+        ]
       },
       "ExceptionResponse": {
+        "type": "object",
         "properties": {
           "message": {
             "type": "string"
@@ -109,8 +93,7 @@
         },
         "required": [
           "message"
-        ],
-        "type": "object"
+        ]
       }
     },
     "securitySchemes": {}

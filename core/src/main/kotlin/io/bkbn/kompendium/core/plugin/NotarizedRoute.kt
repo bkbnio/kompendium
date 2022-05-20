@@ -10,6 +10,7 @@ import io.bkbn.kompendium.core.metadata.OptionsInfo
 import io.bkbn.kompendium.core.metadata.PatchInfo
 import io.bkbn.kompendium.core.metadata.PostInfo
 import io.bkbn.kompendium.core.metadata.PutInfo
+import io.bkbn.kompendium.core.metadata.ResponseInfo
 import io.bkbn.kompendium.core.util.Helpers.getReferenceSlug
 import io.bkbn.kompendium.core.util.Helpers.getSimpleSlug
 import io.bkbn.kompendium.json.schema.SchemaGenerator
@@ -90,6 +91,12 @@ object NotarizedRoute {
       spec.components.schemas[this.response.responseType.getSimpleSlug()] = schema
     }
 
+    errors.forEach { error ->
+      SchemaGenerator.fromTypeOrUnit(error.responseType)?.let { schema ->
+        spec.components.schemas[error.responseType.getSimpleSlug()] = schema
+      }
+    }
+
     when (this) {
       is MethodInfoWithRequest -> {
         SchemaGenerator.fromTypeOrUnit(this.request.requestType)?.let { schema ->
@@ -105,7 +112,7 @@ object NotarizedRoute {
       is DeleteInfo -> path.delete = operations
       is GetInfo -> path.get = operations
       is HeadInfo -> path.head = operations
-      is PatchInfo -> path.patch= operations
+      is PatchInfo -> path.patch = operations
       is PostInfo -> path.post = operations
       is PutInfo -> path.put = operations
       is OptionsInfo -> path.options = operations
@@ -133,8 +140,15 @@ object NotarizedRoute {
         description = this.response.description,
         content = this.response.responseType.toReferenceContent()
       )
-    )
+    ).plus(this.errors.toResponseMap())
   )
+
+  private fun List<ResponseInfo>.toResponseMap(): Map<Int, Response> = associate { error ->
+    error.responseCode.value to Response(
+      description = error.description,
+      content = error.responseType.toReferenceContent()
+    )
+  }
 
   private fun KType.toReferenceContent(): Map<String, MediaType>? = when (this.classifier as KClass<*>) {
     Unit::class -> null

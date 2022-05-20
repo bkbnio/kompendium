@@ -5,6 +5,7 @@ import io.bkbn.kompendium.oas.payload.Parameter
 
 class PutInfo private constructor(
   override val request: RequestInfo,
+  override val errors: MutableList<ResponseInfo>,
   override val response: ResponseInfo,
   override val tags: Set<String>,
   override val summary: String,
@@ -26,6 +27,7 @@ class PutInfo private constructor(
   class Builder : MethodInfoWithRequest.Builder<PutInfo>() {
     override fun build() = PutInfo(
       request = request!!,
+      errors = errors,
       response = response!!,
       tags = tags,
       summary = summary!!,

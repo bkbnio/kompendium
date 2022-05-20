@@ -5,6 +5,7 @@ import io.bkbn.kompendium.oas.payload.Parameter
 
 class PatchInfo private constructor(
   override val request: RequestInfo,
+  override val errors: MutableList<ResponseInfo>,
   override val response: ResponseInfo,
   override val tags: Set<String>,
   override val summary: String,
@@ -26,6 +27,7 @@ class PatchInfo private constructor(
   class Builder : MethodInfoWithRequest.Builder<PatchInfo>() {
     override fun build() = PatchInfo(
       request = request!!,
+      errors = errors,
       response = response!!,
       tags = tags,
       summary = summary!!,

@@ -5,6 +5,7 @@ import io.bkbn.kompendium.oas.payload.Parameter
 
 class HeadInfo private constructor(
   override val response: ResponseInfo,
+  override val errors: MutableList<ResponseInfo>,
   override val tags: Set<String>,
   override val summary: String,
   override val description: String,
@@ -25,6 +26,7 @@ class HeadInfo private constructor(
   class Builder : MethodInfo.Builder<HeadInfo>() {
     override fun build() = HeadInfo(
       response = response!!,
+      errors = errors,
       tags = tags,
       summary = summary!!,
       description = description!!,

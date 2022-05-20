@@ -4,7 +4,7 @@ complexity:
   LongParameterList:
     active: true
     functionThreshold: 10
-    constructorThreshold: 10
+    constructorThreshold: 15
   ComplexMethod:
     threshold: 20
 style:

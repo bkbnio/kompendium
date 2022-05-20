@@ -6,6 +6,8 @@ import io.bkbn.kompendium.core.util.TestModules.nestedUnderRoot
 import io.bkbn.kompendium.core.util.TestModules.nonRequiredParams
 import io.bkbn.kompendium.core.util.TestModules.notarizedDelete
 import io.bkbn.kompendium.core.util.TestModules.notarizedGet
+import io.bkbn.kompendium.core.util.TestModules.notarizedGetWithException
+import io.bkbn.kompendium.core.util.TestModules.notarizedGetWithMultipleExceptions
 import io.bkbn.kompendium.core.util.TestModules.notarizedHead
 import io.bkbn.kompendium.core.util.TestModules.notarizedOptions
 import io.bkbn.kompendium.core.util.TestModules.notarizedPatch
@@ -68,13 +70,15 @@ class KompendiumTest : DescribeSpec({
       openApiTestAllSerializers("T0015__trailing_slash.json") { trailingSlash() }
     }
   }
+  describe("Exceptions") {
+    it("Can add an exception status code to a response") {
+      openApiTestAllSerializers("T0016__notarized_get_with_exception_response.json") { notarizedGetWithException() }
+    }
+    it("Can support multiple response codes") {
+      openApiTestAllSerializers("T0017__notarized_get_with_multiple_exception_responses.json") { notarizedGetWithMultipleExceptions() }
+    }
+  }
 //  describe("Exceptions") {
-//    it("Can add an exception status code to a response") {
-//      openApiTestAllSerializers("notarized_get_with_exception_response.json") { notarizedGetWithNotarizedException() }
-//    }
-//    it("Can support multiple response codes") {
-//      openApiTestAllSerializers("notarized_get_with_multiple_exception_responses.json") { notarizedGetWithMultipleThrowables() }
-//    }
 //    it("Can add a polymorphic exception response") {
 //      openApiTestAllSerializers("polymorphic_error_status_codes.json") { notarizedGetWithPolymorphicErrorResponse() }
 //    }

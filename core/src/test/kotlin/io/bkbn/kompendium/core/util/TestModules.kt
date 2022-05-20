@@ -1,6 +1,7 @@
 package io.bkbn.kompendium.core.util
 
 import io.bkbn.kompendium.core.fixtures.ComplexRequest
+import io.bkbn.kompendium.core.fixtures.ExceptionResponse
 import io.bkbn.kompendium.core.fixtures.TestCreatedResponse
 import io.bkbn.kompendium.core.fixtures.TestResponse
 import io.bkbn.kompendium.core.fixtures.TestSimpleRequest
@@ -362,6 +363,53 @@ object TestModules {
               responseCode(HttpStatusCode.OK)
               responseType<TestResponse>()
             }
+          }
+        }
+      }
+    }
+  }
+
+  fun Routing.notarizedGetWithException() {
+    route(rootPath) {
+      install(NotarizedRoute()) {
+        get = GetInfo.builder {
+          summary("Simple exception test")
+          description("testing more")
+          response {
+            description(defaultResponseDescription)
+            responseCode(HttpStatusCode.OK)
+            responseType<TestResponse>()
+          }
+          canRespond {
+            description("Bad Things Happened")
+            responseCode(HttpStatusCode.BadRequest)
+            responseType<ExceptionResponse>()
+          }
+        }
+      }
+    }
+  }
+
+  fun Routing.notarizedGetWithMultipleExceptions() {
+    route(rootPath) {
+      install(NotarizedRoute()) {
+        get = GetInfo.builder {
+          summary("Multiple exception test")
+          description("testing more")
+          response {
+            description(defaultResponseDescription)
+            responseCode(HttpStatusCode.OK)
+            responseType<TestResponse>()
+          }
+          canRespond {
+            description("Bad Things Happened")
+            responseCode(HttpStatusCode.BadRequest)
+            responseType<ExceptionResponse>()
+          }
+          canRespond {
+            description("Access Denied")
+            responseCode(HttpStatusCode.Forbidden)
+            responseType<ExceptionResponse>()
           }
         }
       }

@@ -5,6 +5,7 @@ import io.bkbn.kompendium.oas.payload.Parameter
 
 sealed interface MethodInfo {
   val response: ResponseInfo
+  val errors: List<ResponseInfo>
   val tags: Set<String>
   val summary: String
   val description: String
@@ -17,7 +18,7 @@ sealed interface MethodInfo {
   val parameters: List<Parameter>
     get() = emptyList()
 
-  abstract class Builder<T: MethodInfo> {
+  abstract class Builder<T : MethodInfo> {
     internal var response: ResponseInfo? = null
     internal var summary: String? = null
     internal var description: String? = null
@@ -26,11 +27,22 @@ sealed interface MethodInfo {
     internal var deprecated: Boolean = false
     internal var tags: Set<String> = emptySet()
     internal var parameters: List<Parameter> = emptyList()
+    internal var errors: MutableList<ResponseInfo> = mutableListOf()
 
     fun response(init: ResponseInfo.Builder.() -> Unit) = apply {
       val builder = ResponseInfo.Builder()
       builder.init()
       this.response = builder.build()
+    }
+
+    fun canRespond(init: ResponseInfo.Builder.() -> Unit) = apply {
+      val builder = ResponseInfo.Builder()
+      builder.init()
+      errors.add(builder.build())
+    }
+
+    fun canRespond(responses: List<ResponseInfo>) = apply {
+      errors.addAll(responses)
     }
 
     fun summary(s: String) = apply { this.summary = s }

@@ -5,6 +5,7 @@ import io.bkbn.kompendium.oas.payload.Parameter
 
 class GetInfo private constructor(
   override val response: ResponseInfo,
+  override val errors: MutableList<ResponseInfo>,
   override val tags: Set<String>,
   override val summary: String,
   override val description: String,
@@ -25,6 +26,7 @@ class GetInfo private constructor(
   class Builder : MethodInfo.Builder<GetInfo>() {
     override fun build() = GetInfo(
       response = response ?: error("You must provide a response in order to notarize a GET"),
+      errors = errors,
       tags = tags,
       summary = summary ?: error("You must provide a summary in order to notarize a GET"),
       description = description ?: error("You must provide a description in order to notarize a GET"),

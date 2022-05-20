@@ -5,6 +5,7 @@ import io.bkbn.kompendium.oas.payload.Parameter
 
 class DeleteInfo private constructor(
   override val response: ResponseInfo,
+  override val errors: MutableList<ResponseInfo>,
   override val tags: Set<String>,
   override val summary: String,
   override val description: String,
@@ -25,6 +26,7 @@ class DeleteInfo private constructor(
   class Builder : MethodInfo.Builder<DeleteInfo>() {
     override fun build() = DeleteInfo(
       response = response!!,
+      errors = errors,
       tags = tags,
       summary = summary!!,
       description = description!!,
