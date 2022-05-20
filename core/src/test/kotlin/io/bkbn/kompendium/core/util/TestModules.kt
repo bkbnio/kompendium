@@ -331,6 +331,24 @@ object TestModules {
       }
     }
   }
+
+  fun Routing.nestedUnderRoot() {
+    route("/") {
+      route("/testerino") {
+        install(NotarizedRoute()) {
+          get = GetInfo.builder {
+            summary("Nested under Root")
+            description("testing more")
+            response {
+              description(defaultResponseDescription)
+              responseCode(HttpStatusCode.OK)
+              responseType<TestResponse>()
+            }
+          }
+        }
+      }
+    }
+  }
 }
 
 //fun Application.notarizedPutModule() {

@@ -2,6 +2,7 @@ package io.bkbn.kompendium.core
 
 import io.bkbn.kompendium.core.fixtures.TestHelpers.openApiTestAllSerializers
 import io.bkbn.kompendium.core.util.TestModules.complexRequest
+import io.bkbn.kompendium.core.util.TestModules.nestedUnderRoot
 import io.bkbn.kompendium.core.util.TestModules.nonRequiredParams
 import io.bkbn.kompendium.core.util.TestModules.notarizedDelete
 import io.bkbn.kompendium.core.util.TestModules.notarizedGet
@@ -59,13 +60,13 @@ class KompendiumTest : DescribeSpec({
     it("Can notarize the root route") {
       openApiTestAllSerializers("T0013__root_route.json") { rootRoute() }
     }
+    it("Can notarize a route under the root module without appending trailing slash") {
+      openApiTestAllSerializers("T0014__nested_under_root.json") { nestedUnderRoot() }
+    }
   }
 //  describe("Route Parsing") {
-//    it("Can notarize the root route") {
-//      openApiTestAllSerializers("T0013__root_route.json") { rootModule() }
-//    }
 //    it("Can notarize a route under the root module without appending trailing slash") {
-//      openApiTestAllSerializers("nested_under_root.json") { nestedUnderRootModule() }
+//      openApiTestAllSerializers("T0014__nested_under_root.json") { nestedUnderRootModule() }
 //    }
 //    it("Can notarize a route with a trailing slash") {
 //      openApiTestAllSerializers("trailing_slash.json") { trailingSlash() }
