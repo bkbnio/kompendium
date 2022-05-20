@@ -15,7 +15,7 @@ object MapHandler {
       "JSON requires that map keys MUST be Strings.  You provided ${type.arguments.first().type}"
     }
     val valueType = type.arguments[1].type!!
-    val valueSchema = SchemaGenerator.fromType(valueType)
+    val valueSchema = SchemaGenerator.fromTypeToSchema(valueType)
     val definition = MapDefinition(valueSchema)
     return when (type.isMarkedNullable) {
       true -> OneOfDefinition(NullableDefinition(), definition)

@@ -95,7 +95,6 @@ data class Nesty(val c: Boolean, val d: Dumbo)
 
 fun Route.rootDocumentation() {
   install(NotarizedRoute()) {
-    path = "/"
     tags = setOf("Neato")
     get = GetInfo.builder {
       response {
@@ -112,7 +111,6 @@ fun Route.rootDocumentation() {
 
 fun Route.nestyDocumentation() {
   install(NotarizedRoute()) {
-    path = "/nesty"
     get = GetInfo.builder {
       response {
         responseType<String>()
@@ -120,6 +118,7 @@ fun Route.nestyDocumentation() {
         description("Simple")
       }
       summary("Cool API Response")
+      description("Test")
       parameters(
         Parameter(
           name = "something",
@@ -133,7 +132,6 @@ fun Route.nestyDocumentation() {
 
 fun Route.testPathParamDocs() {
   install(NotarizedRoute()) {
-    path = "/nesty/{a}"
     parameters = listOf(
       Parameter(
         name = "a",
@@ -148,6 +146,7 @@ fun Route.testPathParamDocs() {
         description("Simple")
       }
       summary("Cool API Response")
+      description("Test")
     }
   }
 }

@@ -15,7 +15,7 @@ class SchemaGeneratorTest : DescribeSpec({
   describe("Scalars") {
     it("Can generate the schema for an Int") {
       // act
-      val schema = SchemaGenerator.fromType<Int>()
+      val schema = SchemaGenerator.fromTypeToSchema<Int>()
 
       // assert
       schema.serialize() shouldEqualJson asJson(
@@ -29,7 +29,7 @@ class SchemaGeneratorTest : DescribeSpec({
     }
     it("Can generate the schema for a Boolean") {
       // act
-      val schema = SchemaGenerator.fromType<Boolean>()
+      val schema = SchemaGenerator.fromTypeToSchema<Boolean>()
 
       // assert
       schema.serialize() shouldEqualJson asJson(
@@ -42,7 +42,7 @@ class SchemaGeneratorTest : DescribeSpec({
     }
     it("Can generate the schema for a String") {
       // act
-      val schema = SchemaGenerator.fromType<String>()
+      val schema = SchemaGenerator.fromTypeToSchema<String>()
 
       // assert
       schema.serialize() shouldEqualJson asJson(
@@ -57,7 +57,7 @@ class SchemaGeneratorTest : DescribeSpec({
   describe("Objects") {
     it("Can generate the schema for a simple object") {
       // act
-      val schema = SchemaGenerator.fromType<TestSimpleRequest>()
+      val schema = SchemaGenerator.fromTypeToSchema<TestSimpleRequest>()
 
       // assert
       schema.serialize() shouldEqualJson asJson(
@@ -83,7 +83,7 @@ class SchemaGeneratorTest : DescribeSpec({
     }
     it("Can generate the schema for a complex object") {
       // act
-      val schema = SchemaGenerator.fromType<ComplexRequest>()
+      val schema = SchemaGenerator.fromTypeToSchema<ComplexRequest>()
 
       // assert
       schema.serialize() shouldEqualJson asJson(
@@ -141,7 +141,7 @@ class SchemaGeneratorTest : DescribeSpec({
     }
     it("Can generate the schema for a nullable object") {
       // act
-      val schema = SchemaGenerator.fromType<TestSimpleRequest?>()
+      val schema = SchemaGenerator.fromTypeToSchema<TestSimpleRequest?>()
 
       // assert
       schema.serialize() shouldEqualJson asJson(
@@ -176,7 +176,7 @@ class SchemaGeneratorTest : DescribeSpec({
   describe("Enums") {
     it("Can generate the schema for a simple enum") {
       // act
-      val schema = SchemaGenerator.fromType<SimpleEnum>()
+      val schema = SchemaGenerator.fromTypeToSchema<SimpleEnum>()
 
       // assert
       schema.serialize() shouldEqualJson asJson(
@@ -189,7 +189,7 @@ class SchemaGeneratorTest : DescribeSpec({
     }
     it("Can generate the schema for a nullable enum") {
       // act
-      val schema = SchemaGenerator.fromType<SimpleEnum?>()
+      val schema = SchemaGenerator.fromTypeToSchema<SimpleEnum?>()
 
       // assert
       schema.serialize() shouldEqualJson asJson(
@@ -214,7 +214,7 @@ class SchemaGeneratorTest : DescribeSpec({
   describe("Arrays") {
     it("Can generate the schema for an array of scalars") {
       // act
-      val schema = SchemaGenerator.fromType<List<Int>>()
+      val schema = SchemaGenerator.fromTypeToSchema<List<Int>>()
 
       // assert
       schema.serialize() shouldEqualJson asJson(
@@ -231,7 +231,7 @@ class SchemaGeneratorTest : DescribeSpec({
     }
     it("Can generate the schema for an array of objects") {
       // act
-      val schema = SchemaGenerator.fromType<List<TestResponse>>()
+      val schema = SchemaGenerator.fromTypeToSchema<List<TestResponse>>()
 
       // assert
       schema.serialize() shouldEqualJson asJson(
@@ -255,7 +255,7 @@ class SchemaGeneratorTest : DescribeSpec({
     }
     it("Can generate the schema for a nullable array") {
       // act
-      val schema = SchemaGenerator.fromType<List<Int>?>()
+      val schema = SchemaGenerator.fromTypeToSchema<List<Int>?>()
 
       // assert
       schema.serialize() shouldEqualJson asJson(
@@ -281,7 +281,7 @@ class SchemaGeneratorTest : DescribeSpec({
   describe("Maps") {
     it("Can generate the schema for a map of scalars") {
       // act
-      val schema = SchemaGenerator.fromType<Map<String, Int>>()
+      val schema = SchemaGenerator.fromTypeToSchema<Map<String, Int>>()
 
       // assert
       schema.serialize() shouldEqualJson asJson(
@@ -298,11 +298,11 @@ class SchemaGeneratorTest : DescribeSpec({
     }
     it("Throws an error when map keys are not strings") {
       // assert
-      shouldThrow<IllegalArgumentException> { SchemaGenerator.fromType<Map<Int, Int>>() }
+      shouldThrow<IllegalArgumentException> { SchemaGenerator.fromTypeToSchema<Map<Int, Int>>() }
     }
     it("Can generate the schema for a map of objects") {
       // act
-      val schema = SchemaGenerator.fromType<Map<String, TestResponse>>()
+      val schema = SchemaGenerator.fromTypeToSchema<Map<String, TestResponse>>()
 
       // assert
       schema.serialize() shouldEqualJson asJson(
@@ -326,7 +326,7 @@ class SchemaGeneratorTest : DescribeSpec({
     }
     it("Can generate the schema for a nullable map") {
       // act
-      val schema = SchemaGenerator.fromType<Map<String, Int>?>()
+      val schema = SchemaGenerator.fromTypeToSchema<Map<String, Int>?>()
 
       // assert
       schema.serialize() shouldEqualJson asJson(

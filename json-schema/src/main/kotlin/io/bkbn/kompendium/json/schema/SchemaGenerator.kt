@@ -13,9 +13,13 @@ import kotlin.reflect.typeOf
 
 object SchemaGenerator {
 
-  inline fun <reified T : Any?> fromType() = fromType(typeOf<T>())
+  inline fun <reified T: Any?> fromTypeToReferences(referenceRoot: String): MutableMap<KType, JsonSchema> {
+    TODO()
+  }
 
-  fun fromType(type: KType): JsonSchema = when (val clazz = type.classifier as KClass<*>) {
+  inline fun <reified T : Any?> fromTypeToSchema() = fromTypeToSchema(typeOf<T>())
+
+  fun fromTypeToSchema(type: KType): JsonSchema = when (val clazz = type.classifier as KClass<*>) {
     Unit::class -> error("""
       Unit cannot be converted to JsonSchema.
       If you are looking for a method will return null when called with Unit,
@@ -34,6 +38,10 @@ object SchemaGenerator {
 
   fun fromTypeOrUnit(type: KType): JsonSchema? = when (type.classifier as KClass<*>) {
     Unit::class -> null
-    else -> fromType(type)
+    else -> fromTypeToSchema(type)
   }
+}
+
+fun main() {
+  println(typeOf<Map<String, Int>>())
 }

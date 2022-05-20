@@ -19,7 +19,10 @@ import io.bkbn.kompendium.oas.payload.MediaType
 import io.bkbn.kompendium.oas.payload.Parameter
 import io.bkbn.kompendium.oas.payload.Request
 import io.bkbn.kompendium.oas.payload.Response
+import io.ktor.server.application.ApplicationCallPipeline
+import io.ktor.server.application.Hook
 import io.ktor.server.application.createRouteScopedPlugin
+import io.ktor.server.routing.Route
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 
@@ -27,8 +30,6 @@ import kotlin.reflect.KType
 object NotarizedRoute {
 
   class Config {
-    // TODO Would be preferable to introspect from installation path
-    lateinit var path: String
     var tags: Set<String> = emptySet()
     var parameters: List<Parameter> = emptyList()
     var get: GetInfo? = null
@@ -38,20 +39,35 @@ object NotarizedRoute {
     var patch: PatchInfo? = null
     var head: HeadInfo? = null
     var options: OptionsInfo? = null
+    internal var path: Path? = null
+  }
+
+  private object InstallHook : Hook<(ApplicationCallPipeline) -> Unit> {
+    override fun install(pipeline: ApplicationCallPipeline, handler: (ApplicationCallPipeline) -> Unit) {
+      handler(pipeline)
+    }
   }
 
   operator fun invoke() = createRouteScopedPlugin(
     name = "NotarizedRoute",
     createConfiguration = ::Config
   ) {
-    val spec = application.attributes[KompendiumAttributes.openApiSpec]
 
-    require(spec.paths[pluginConfig.path] == null) {
-      """
-        The specified path ${pluginConfig.path} has already been documented!
+    // This is required in order to introspect the route path
+    on(InstallHook) {
+      val route = it as? Route ?: return@on
+      val spec = application.attributes[KompendiumAttributes.openApiSpec]
+      val routePath = route.calculateRoutePath()
+      require(spec.paths[routePath] == null) {
+        """
+        The specified path ${Parameter.Location.path} has already been documented!
         Please make sure that all notarized paths are unique
       """.trimIndent()
+      }
+      spec.paths[routePath] = pluginConfig.path!!
     }
+
+    val spec = application.attributes[KompendiumAttributes.openApiSpec]
 
     val path = Path()
     path.parameters = pluginConfig.parameters
@@ -116,7 +132,7 @@ object NotarizedRoute {
       path.patch = patch.toPathOperation(pluginConfig)
     }
 
-    spec.paths[pluginConfig.path] = path
+    pluginConfig.path = path
   }
 
   private fun MethodInfo.toPathOperation(config: Config) = PathOperation(
@@ -164,4 +180,6 @@ object NotarizedRoute {
       )
     )
   }
+
+  private fun Route.calculateRoutePath() = toString().replace(Regex("/\\(.+\\)"), "")
 }

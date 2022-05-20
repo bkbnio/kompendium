@@ -11,7 +11,7 @@ object CollectionHandler {
 
   fun handle(type: KType): JsonSchema {
     val collectionType = type.arguments.first().type!!
-    val typeSchema = SchemaGenerator.fromType(collectionType)
+    val typeSchema = SchemaGenerator.fromTypeToSchema(collectionType)
     val definition = ArrayDefinition(typeSchema)
     return when (type.isMarkedNullable) {
       true -> OneOfDefinition(NullableDefinition(), definition)

@@ -13,7 +13,7 @@ object ObjectHandler {
 
   fun handle(type: KType, clazz: KClass<*>): JsonSchema {
     val props = clazz.memberProperties.associate { prop ->
-      val schema = SchemaGenerator.fromType(prop.returnType)
+      val schema = SchemaGenerator.fromTypeToSchema(prop.returnType)
       prop.name to schema
     }
     val required = clazz.memberProperties.filterNot { prop -> prop.returnType.isMarkedNullable }

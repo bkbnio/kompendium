@@ -48,7 +48,6 @@ val defaultParams = listOf(
 fun Routing.notarizedGet() {
   route(defaultPath) {
     install(NotarizedRoute()) {
-      path = defaultPath
       parameters = defaultParams
       get = GetInfo.builder {
         response {
@@ -69,7 +68,6 @@ fun Routing.notarizedGet() {
 fun Routing.notarizedPost() {
   route(defaultPath) {
     install(NotarizedRoute()) {
-      path = defaultPath
       parameters = defaultParams
       post = PostInfo.builder {
         summary("Test post endpoint")
@@ -94,7 +92,6 @@ fun Routing.notarizedPost() {
 fun Routing.notarizedPut() {
   route(defaultPath) {
     install(NotarizedRoute()) {
-      path = defaultPath
       parameters = defaultParams
       put = PutInfo.builder {
         summary("Test post endpoint")
@@ -119,7 +116,6 @@ fun Routing.notarizedPut() {
 fun Routing.notarizedDelete() {
   route(defaultPath) {
     install(NotarizedRoute()) {
-      path = defaultPath
       parameters = defaultParams
       delete = DeleteInfo.builder {
         summary("Test delete endpoint")
@@ -140,7 +136,6 @@ fun Routing.notarizedDelete() {
 fun Routing.notarizedPatch() {
   route(defaultPath) {
     install(NotarizedRoute()) {
-      path = defaultPath
       parameters = defaultParams
       patch = PatchInfo.builder {
         summary("Test patch endpoint")
@@ -165,7 +160,6 @@ fun Routing.notarizedPatch() {
 fun Routing.notarizedHead() {
   route(defaultPath) {
     install(NotarizedRoute()) {
-      path = defaultPath
       parameters = defaultParams
       head = HeadInfo.builder {
         summary("Test head endpoint")
@@ -187,7 +181,6 @@ fun Routing.notarizedHead() {
 fun Routing.notarizedOptions() {
   route(defaultPath) {
     install(NotarizedRoute()) {
-      path = defaultPath
       parameters = defaultParams
       options = OptionsInfo.builder {
         summary("Test options")
@@ -208,7 +201,6 @@ fun Routing.notarizedOptions() {
 fun Routing.complexRequest() {
   route(rootPath) {
     install(NotarizedRoute()) {
-      path = rootPath
       put = PutInfo.builder {
         summary("Test complex request")
         description("A more advanced request")
