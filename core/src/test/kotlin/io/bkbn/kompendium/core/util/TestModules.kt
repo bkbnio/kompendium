@@ -241,6 +241,23 @@ object TestModules {
       }
     }
   }
+
+  fun Routing.returnsList() {
+    route(defaultPath) {
+      install(NotarizedRoute()) {
+        parameters = defaultParams
+        get = GetInfo.builder {
+          summary("Another get test")
+          description("testing more")
+          response {
+            description("A Successful List-y Endeavor")
+            responseCode(HttpStatusCode.OK)
+            responseType<List<TestResponse>>()
+          }
+        }
+      }
+    }
+  }
 }
 
 //fun Application.notarizedPutModule() {

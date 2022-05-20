@@ -10,6 +10,7 @@ import io.bkbn.kompendium.core.util.TestModules.notarizedPatch
 import io.bkbn.kompendium.core.util.TestModules.notarizedPost
 import io.bkbn.kompendium.core.util.TestModules.notarizedPut
 import io.bkbn.kompendium.core.util.TestModules.primitives
+import io.bkbn.kompendium.core.util.TestModules.returnsList
 import io.kotest.core.spec.style.DescribeSpec
 
 class KompendiumTest : DescribeSpec({
@@ -41,10 +42,13 @@ class KompendiumTest : DescribeSpec({
     it("Can notarize primitives") {
       openApiTestAllSerializers("T0009__notarized_primitives.json") { primitives() }
     }
+    it("Can notarize a top level list response") {
+      openApiTestAllSerializers("T0010__response_list.json") { returnsList() }
+    }
+    it("Can notarize a route with non-required params") {
+      // TODO
+    }
   }
-//    it("Can notarize a top level list response") {
-//      openApiTestAllSerializers("response_list.json") { returnsList() }
-//    }
 //    it("Can notarize a route with non-required params") {
 //      openApiTestAllSerializers("non_required_params.json") { nonRequiredParamsGet() }
 //    }
