@@ -36,7 +36,3 @@ object SchemaGenerator {
     else -> fromTypeToSchema(type)
   }
 }
-
-fun main() {
-  println(typeOf<Map<String, Int>>())
-}
