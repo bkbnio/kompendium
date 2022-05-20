@@ -30,10 +30,10 @@ import io.ktor.server.routing.put
 import io.ktor.server.routing.route
 
 object TestModules {
-  const val defaultPath = "/test/{a}"
-  const val rootPath = "/"
+  private const val defaultPath = "/test/{a}"
+  private const val rootPath = "/"
 
-  val defaultParams = listOf(
+  private val defaultParams = listOf(
     Parameter(
       name = "a",
       `in` = Parameter.Location.path,
