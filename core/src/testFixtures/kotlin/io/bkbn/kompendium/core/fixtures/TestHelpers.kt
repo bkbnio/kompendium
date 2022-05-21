@@ -65,7 +65,7 @@ object TestHelpers {
    * exists as expected, and that the content matches the expected blob found in the specified file
    * @param snapshotName The snapshot file to retrieve from the resources folder
    */
-  suspend fun ApplicationTestBuilder.compareOpenAPISpec(snapshotName: String) {
+  private suspend fun ApplicationTestBuilder.compareOpenAPISpec(snapshotName: String) {
     val response = client.get(OPEN_API_ENDPOINT)
     response shouldHaveStatus HttpStatusCode.OK
     response.bodyAsText() shouldNot beBlank()

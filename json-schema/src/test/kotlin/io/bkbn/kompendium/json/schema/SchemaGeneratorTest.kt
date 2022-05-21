@@ -2,6 +2,7 @@ package io.bkbn.kompendium.json.schema
 
 import io.bkbn.kompendium.core.fixtures.ComplexRequest
 import io.bkbn.kompendium.core.fixtures.SimpleEnum
+import io.bkbn.kompendium.core.fixtures.TestHelpers.getFileSnapshot
 import io.bkbn.kompendium.core.fixtures.TestResponse
 import io.bkbn.kompendium.core.fixtures.TestSimpleRequest
 import io.bkbn.kompendium.json.schema.definition.JsonSchema
@@ -9,344 +10,61 @@ import io.kotest.assertions.json.shouldEqualJson
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.DescribeSpec
 import kotlinx.serialization.json.Json
-import org.intellij.lang.annotations.Language
 
 class SchemaGeneratorTest : DescribeSpec({
   describe("Scalars") {
     it("Can generate the schema for an Int") {
-      // act
-      val schema = SchemaGenerator.fromTypeToSchema<Int>()
-
-      // assert
-      schema.serialize() shouldEqualJson asJson(
-        """
-          {
-            "type": "number",
-            "format": "int32"
-          }
-        """.trimIndent()
-      )
+      jsonSchemaTest<Int>("T0001__scalar_int.json")
     }
     it("Can generate the schema for a Boolean") {
-      // act
-      val schema = SchemaGenerator.fromTypeToSchema<Boolean>()
-
-      // assert
-      schema.serialize() shouldEqualJson asJson(
-        """
-          {
-            "type": "boolean"
-          }
-        """.trimIndent()
-      )
+      jsonSchemaTest<Boolean>("T0002__scalar_bool.json")
     }
     it("Can generate the schema for a String") {
-      // act
-      val schema = SchemaGenerator.fromTypeToSchema<String>()
-
-      // assert
-      schema.serialize() shouldEqualJson asJson(
-        """
-          {
-            "type": "string"
-          }
-        """.trimIndent()
-      )
+      jsonSchemaTest<String>("T0003__scalar_string.json")
     }
   }
   describe("Objects") {
     it("Can generate the schema for a simple object") {
-      // act
-      val schema = SchemaGenerator.fromTypeToSchema<TestSimpleRequest>()
-
-      // assert
-      schema.serialize() shouldEqualJson asJson(
-        """
-          {
-            "type": "object",
-            "properties": {
-              "a": {
-                "type": "string"
-              },
-              "b": {
-                "type": "number",
-                "format": "int32"
-              }
-            },
-            "required": [
-              "a",
-              "b"
-            ]
-          }
-        """.trimIndent()
-      )
+      jsonSchemaTest<TestSimpleRequest>("T0004__simple_object.json")
     }
     it("Can generate the schema for a complex object") {
-      // act
-      val schema = SchemaGenerator.fromTypeToSchema<ComplexRequest>()
-
-      // assert
-      schema.serialize() shouldEqualJson asJson(
-        """
-          {
-            "type": "object",
-            "properties": {
-              "amazingField": {
-                "type": "string"
-              },
-              "org": {
-                "type": "string"
-              },
-              "tables": {
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "alias": {
-                      "additionalProperties": {
-                        "type": "object",
-                        "properties": {
-                          "enumeration": {
-                            "enum": [
-                              "ONE",
-                              "TWO"
-                            ]
-                          }
-                        },
-                        "required": [
-                          "enumeration"
-                        ]
-                      },
-                      "type": "object"
-                    },
-                    "name": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "alias",
-                    "name"
-                  ]
-                },
-                "type": "array"
-              }
-            },
-            "required": [
-              "amazingField",
-              "org",
-              "tables"
-            ]
-          }
-        """.trimIndent()
-      )
+      jsonSchemaTest<ComplexRequest>("T0005__complex_object.json")
     }
     it("Can generate the schema for a nullable object") {
-      // act
-      val schema = SchemaGenerator.fromTypeToSchema<TestSimpleRequest?>()
-
-      // assert
-      schema.serialize() shouldEqualJson asJson(
-        """
-          {
-            "oneOf": [
-              {
-                "type": "null"
-              },
-              {
-                "type": "object",
-                "properties": {
-                  "a": {
-                    "type": "string"
-                  },
-                  "b": {
-                    "type": "number",
-                    "format": "int32"
-                  }
-                },
-                "required": [
-                  "a",
-                  "b"
-                ]
-              }
-            ]
-          }
-        """.trimIndent()
-      )
+      jsonSchemaTest<TestSimpleRequest?>("T0006__nullable_object.json")
     }
   }
   describe("Enums") {
     it("Can generate the schema for a simple enum") {
-      // act
-      val schema = SchemaGenerator.fromTypeToSchema<SimpleEnum>()
-
-      // assert
-      schema.serialize() shouldEqualJson asJson(
-        """
-          {
-            "enum": [ "ONE", "TWO" ]
-          }
-        """.trimIndent()
-      )
+      jsonSchemaTest<SimpleEnum>("T0007__simple_enum.json")
     }
     it("Can generate the schema for a nullable enum") {
-      // act
-      val schema = SchemaGenerator.fromTypeToSchema<SimpleEnum?>()
-
-      // assert
-      schema.serialize() shouldEqualJson asJson(
-        """
-          {
-            "oneOf": [
-              {
-                "type": "null"
-              },
-              {
-                "enum": [
-                  "ONE",
-                  "TWO"
-                ]
-              }
-            ]
-          }
-        """.trimIndent()
-      )
+      jsonSchemaTest<SimpleEnum?>("T0008__nullable_enum.json")
     }
   }
   describe("Arrays") {
     it("Can generate the schema for an array of scalars") {
-      // act
-      val schema = SchemaGenerator.fromTypeToSchema<List<Int>>()
-
-      // assert
-      schema.serialize() shouldEqualJson asJson(
-        """
-          {
-            "items": {
-              "type": "number",
-              "format": "int32"
-            },
-            "type": "array"
-          }
-        """.trimIndent()
-      )
+      jsonSchemaTest<List<Int>>("T0009__scalar_array.json")
     }
     it("Can generate the schema for an array of objects") {
-      // act
-      val schema = SchemaGenerator.fromTypeToSchema<List<TestResponse>>()
-
-      // assert
-      schema.serialize() shouldEqualJson asJson(
-        """
-          {
-            "items": {
-              "type": "object",
-              "properties": {
-                "c": {
-                  "type": "string"
-                }
-              },
-              "required": [
-                "c"
-              ]
-            },
-            "type": "array"
-          }
-        """.trimIndent()
-      )
+      jsonSchemaTest<List<TestResponse>>("T0010__object_array.json")
     }
     it("Can generate the schema for a nullable array") {
-      // act
-      val schema = SchemaGenerator.fromTypeToSchema<List<Int>?>()
-
-      // assert
-      schema.serialize() shouldEqualJson asJson(
-        """
-          {
-            "oneOf": [
-              {
-                "type": "null"
-              },
-              {
-                "items": {
-                  "type": "number",
-                  "format": "int32"
-                },
-                "type": "array"
-              }
-            ]
-          }
-        """.trimIndent()
-      )
+      jsonSchemaTest<List<Int>?>("T0011__nullable_array.json")
     }
   }
   describe("Maps") {
     it("Can generate the schema for a map of scalars") {
-      // act
-      val schema = SchemaGenerator.fromTypeToSchema<Map<String, Int>>()
-
-      // assert
-      schema.serialize() shouldEqualJson asJson(
-        """
-          {
-            "additionalProperties": {
-              "type": "number",
-              "format": "int32"
-            },
-            "type": "object"
-          }
-        """.trimIndent()
-      )
+      jsonSchemaTest<Map<String, Int>>("T0012__scalar_map.json")
     }
     it("Throws an error when map keys are not strings") {
-      // assert
       shouldThrow<IllegalArgumentException> { SchemaGenerator.fromTypeToSchema<Map<Int, Int>>() }
     }
     it("Can generate the schema for a map of objects") {
-      // act
-      val schema = SchemaGenerator.fromTypeToSchema<Map<String, TestResponse>>()
-
-      // assert
-      schema.serialize() shouldEqualJson asJson(
-        """
-          {
-            "additionalProperties": {
-              "type": "object",
-              "properties": {
-                "c": {
-                  "type": "string"
-                }
-              },
-              "required": [
-                "c"
-              ]
-            },
-            "type": "object"
-          }
-        """.trimIndent()
-      )
+      jsonSchemaTest<Map<String, TestResponse>>("T0013__object_map.json")
     }
     it("Can generate the schema for a nullable map") {
-      // act
-      val schema = SchemaGenerator.fromTypeToSchema<Map<String, Int>?>()
-
-      // assert
-      schema.serialize() shouldEqualJson asJson(
-        """
-          {
-            "oneOf": [
-              {
-                "type": "null"
-              },
-              {
-                "additionalProperties": {
-                  "type": "number",
-                  "format": "int32"
-                },
-                "type": "object"
-              }
-            ]
-          }
-        """.trimIndent()
-      )
+      jsonSchemaTest<Map<String, Int>?>("T0014__nullable_map.json")
     }
   }
 }) {
@@ -357,7 +75,14 @@ class SchemaGeneratorTest : DescribeSpec({
       prettyPrint = true
     }
 
-    fun asJson(@Language("json") input: String) = input
-    fun JsonSchema.serialize() = json.encodeToString(JsonSchema.serializer(), this)
+    private fun JsonSchema.serialize() = json.encodeToString(JsonSchema.serializer(), this)
+
+    private inline fun <reified T> jsonSchemaTest(snapshotName: String) {
+      // act
+      val schema = SchemaGenerator.fromTypeToSchema<T>()
+
+      // assert
+      schema.serialize() shouldEqualJson getFileSnapshot(snapshotName)
+    }
   }
 }

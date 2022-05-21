@@ -1,0 +1,16 @@
+{
+  "type": "object",
+  "properties": {
+    "a": {
+      "type": "string"
+    },
+    "b": {
+      "type": "number",
+      "format": "int32"
+    }
+  },
+  "required": [
+    "a",
+    "b"
+  ]
+}

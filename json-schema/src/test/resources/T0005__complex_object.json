@@ -1,0 +1,48 @@
+{
+  "type": "object",
+  "properties": {
+    "amazingField": {
+      "type": "string"
+    },
+    "org": {
+      "type": "string"
+    },
+    "tables": {
+      "items": {
+        "type": "object",
+        "properties": {
+          "alias": {
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "enumeration": {
+                  "enum": [
+                    "ONE",
+                    "TWO"
+                  ]
+                }
+              },
+              "required": [
+                "enumeration"
+              ]
+            },
+            "type": "object"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "alias",
+          "name"
+        ]
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "amazingField",
+    "org",
+    "tables"
+  ]
+}

@@ -77,10 +77,13 @@ class KompendiumTest : DescribeSpec({
     it("Can support multiple response codes") {
       openApiTestAllSerializers("T0017__notarized_get_with_multiple_exception_responses.json") { notarizedGetWithMultipleExceptions() }
     }
+    it("Can add a polymorphic exception response") {
+      openApiTestAllSerializers("T0018__polymorphic_error_status_codes.json") { }
+    }
   }
 //  describe("Exceptions") {
 //    it("Can add a polymorphic exception response") {
-//      openApiTestAllSerializers("polymorphic_error_status_codes.json") { notarizedGetWithPolymorphicErrorResponse() }
+//      openApiTestAllSerializers("T0018__polymorphic_error_status_codes.json") { notarizedGetWithPolymorphicErrorResponse() }
 //    }
 //    it("Can add a generic exception response") {
 //      openApiTestAllSerializers("generic_exception.json") { notarizedGetWithGenericErrorResponse() }
