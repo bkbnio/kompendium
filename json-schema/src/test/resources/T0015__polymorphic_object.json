@@ -1,0 +1,39 @@
+{
+  "anyOf": [
+    {
+      "type": "object",
+      "properties": {
+        "a": {
+          "type": "string"
+        },
+        "z": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "a",
+        "z"
+      ]
+    },
+    {
+      "type": "object",
+      "properties": {
+        "b": {
+          "type": "string"
+        },
+        "c": {
+          "type": "number",
+          "format": "int32"
+        },
+        "z": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "b",
+        "c",
+        "z"
+      ]
+    }
+  ]
+}

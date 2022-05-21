@@ -232,7 +232,7 @@ sealed interface SlammaJamma
 data class OneJamma(val a: Int) : SlammaJamma
 data class AnothaJamma(val b: Float) : SlammaJamma
 
-data class InsaneJamma(val c: SlammaJamma) : SlammaJamma
+//data class InsaneJamma(val c: SlammaJamma) : SlammaJamma
 
 sealed interface Flibbity<T>
 
