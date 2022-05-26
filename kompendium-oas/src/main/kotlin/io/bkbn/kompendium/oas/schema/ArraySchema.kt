@@ -12,7 +12,17 @@ data class ArraySchema(
   // constraints
   val minItems: Int? = null,
   val maxItems: Int? = null,
-  val uniqueItems: Boolean? = null
+  val uniqueItems: Boolean? = null,
+  val xml: Xml? = null,
 ) : TypedSchema {
   override val type: String = "array"
+
+  @Serializable
+  data class Xml(
+    val name: String? = null,
+    val namespace: String? = null,
+    val prefix: String? = null,
+    val attribute: Boolean? = null,
+    val wrapped: Boolean? = null,
+  )
 }

@@ -17,7 +17,15 @@ sourdough {
 }
 
 dependencies {
+  val kotestVersion: String by project
+
   implementation(group = "org.jetbrains.kotlinx", "kotlinx-serialization-json", version = "1.3.2")
+
+  testImplementation(group = "io.kotest", name = "kotest-runner-junit5-jvm", version = kotestVersion)
+  testImplementation(group = "io.kotest", name = "kotest-assertions-core-jvm", version = kotestVersion)
+  testImplementation(group = "io.kotest", name = "kotest-property-jvm", version = kotestVersion)
+  testImplementation(group = "io.kotest", name = "kotest-assertions-json-jvm", version = kotestVersion)
+  testImplementation(group = "io.kotest", name = "kotest-runner-junit5-jvm", version = kotestVersion)
 }
 
 testing {
