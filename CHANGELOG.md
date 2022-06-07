@@ -5,6 +5,7 @@
 ### Added
 
 ### Changed
+- Fix serialization for api key location in api key auth configuration
 
 ### Remove
 
