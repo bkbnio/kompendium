@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased
+- Fix content type of files served from swagger webjar
 
 ### Added
 
