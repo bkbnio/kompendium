@@ -1,7 +1,7 @@
 # Changelog
 
 ## Unreleased
-- Fix content type of files served from swagger webjar
+- Set content type of files served from swagger webjar
 
 ### Added
 
