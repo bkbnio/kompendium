@@ -90,8 +90,8 @@ object TestHelpers {
       override fun test(value: TestApplicationResponse): MatcherResult {
         return MatcherResult(
           value.contentType().match(contentType),
-          { "Response should have ContentType $contentType= but was ${value.contentType()}" },
-          { "Response should not have ContentType $contentType" }
+          { "Response should have ContentType matching $contentType but was ${value.contentType()}" },
+          { "Response should not have ContentType matching $contentType" }
         )
       }
     }
