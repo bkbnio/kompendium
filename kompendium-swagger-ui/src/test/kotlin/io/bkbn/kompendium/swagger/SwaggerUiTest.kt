@@ -7,6 +7,7 @@ import io.bkbn.kompendium.swagger.TestHelpers.compareRedirect
 import io.bkbn.kompendium.swagger.TestHelpers.compareResource
 import io.bkbn.kompendium.swagger.TestHelpers.withSwaggerApplication
 import io.kotest.core.spec.style.DescribeSpec
+import io.ktor.http.ContentType
 
 class SwaggerUiTest: DescribeSpec ({
 
@@ -20,7 +21,7 @@ class SwaggerUiTest: DescribeSpec ({
 
         it ("Can return original: index.html") {
             withSwaggerApplication {
-                compareResource(TEST_SWAGGER_UI_INDEX, listOf(
+                compareResource(TEST_SWAGGER_UI_INDEX, ContentType.Text.Html, listOf(
                     "<title>Swagger UI</title>",
                     "<div id=\"swagger-ui\"></div>",
                     "src=\"./swagger-initializer.js\""
@@ -30,7 +31,7 @@ class SwaggerUiTest: DescribeSpec ({
 
         it("Can return generated: swagger-initializer.js") {
             withSwaggerApplication {
-                compareResource(TEST_SWAGGER_UI_INIT_JS, listOf(
+                compareResource(TEST_SWAGGER_UI_INIT_JS, ContentType.Application.JavaScript, listOf(
                     "url: '/openapi.json', name: 'My API v1'",
                     "url: '/openapi.json', name: 'My API v2'",
                     "defaultModelExpandDepth: 4",
