@@ -21,7 +21,7 @@ dependencies {
   implementation(projects.kompendiumCore)
   implementation(group = "io.ktor", name = "ktor-server-core", version = ktorVersion)
   implementation(group = "org.webjars", name = "webjars-locator-core", version = "0.52")
-  implementation(group = "org.webjars", name = "swagger-ui", version = "4.11.1")
+  implementation(group = "org.webjars", name = "swagger-ui", version = "4.13.2")
 
   testImplementation(testFixtures(projects.kompendiumCore))
 }
