@@ -20,9 +20,12 @@ import kotlin.reflect.full.memberProperties
 
 object ObjectHandler {
 
-  fun handle(type: KType, clazz: KClass<*>, cache: MutableMap<String, JsonSchema>): JsonSchema = when (clazz.isSealed) {
-    true -> handleSealed(type, clazz, cache)
-    false -> handleUnsealed(type, clazz, cache)
+  fun handle(type: KType, clazz: KClass<*>, cache: MutableMap<String, JsonSchema>): JsonSchema {
+    cache[type.getSimpleSlug()] = ReferenceDefinition("RECURSION_PLACEHOLDER")
+    return when (clazz.isSealed) {
+      true -> handleSealed(type, clazz, cache)
+      false -> handleUnsealed(type, clazz, cache)
+    }
   }
 
   private fun handleSealed(type: KType, clazz: KClass<*>, cache: MutableMap<String, JsonSchema>): JsonSchema {

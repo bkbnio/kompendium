@@ -3,6 +3,7 @@ package io.bkbn.kompendium.json.schema
 import io.bkbn.kompendium.core.fixtures.ComplexRequest
 import io.bkbn.kompendium.core.fixtures.FlibbityGibbit
 import io.bkbn.kompendium.core.fixtures.SimpleEnum
+import io.bkbn.kompendium.core.fixtures.SlammaJamma
 import io.bkbn.kompendium.core.fixtures.TestHelpers.getFileSnapshot
 import io.bkbn.kompendium.core.fixtures.TestResponse
 import io.bkbn.kompendium.core.fixtures.TestSimpleRequest
@@ -38,7 +39,7 @@ class SchemaGeneratorTest : DescribeSpec({
       jsonSchemaTest<FlibbityGibbit>("T0015__polymorphic_object.json")
     }
     it("Can generate the schema for a recursive type") {
-      // TODO jsonSchemaTest<SlammaJamma>("T0016__recursive_object.json")
+       jsonSchemaTest<SlammaJamma>("T0016__recursive_object.json")
     }
   }
   describe("Enums") {

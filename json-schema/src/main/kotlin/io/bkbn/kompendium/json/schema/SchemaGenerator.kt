@@ -6,6 +6,7 @@ import io.bkbn.kompendium.json.schema.handler.CollectionHandler
 import io.bkbn.kompendium.json.schema.handler.EnumHandler
 import io.bkbn.kompendium.json.schema.handler.MapHandler
 import io.bkbn.kompendium.json.schema.handler.ObjectHandler
+import io.bkbn.kompendium.json.schema.util.Helpers.getSimpleSlug
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.full.isSubclassOf
@@ -15,8 +16,11 @@ object SchemaGenerator {
   inline fun <reified T : Any?> fromTypeToSchema(cache: MutableMap<String, JsonSchema> = mutableMapOf()) =
     fromTypeToSchema(typeOf<T>(), cache)
 
-  fun fromTypeToSchema(type: KType, cache: MutableMap<String, JsonSchema>): JsonSchema =
-    when (val clazz = type.classifier as KClass<*>) {
+  fun fromTypeToSchema(type: KType, cache: MutableMap<String, JsonSchema>): JsonSchema {
+    cache[type.getSimpleSlug()]?.let {
+      return it
+    }
+    return when (val clazz = type.classifier as KClass<*>) {
       Unit::class -> error(
         """
       Unit cannot be converted to JsonSchema.
@@ -35,6 +39,7 @@ object SchemaGenerator {
         else -> ObjectHandler.handle(type, clazz, cache)
       }
     }
+  }
 
   fun fromTypeOrUnit(type: KType, cache: MutableMap<String, JsonSchema> = mutableMapOf()): JsonSchema? =
     when (type.classifier as KClass<*>) {
