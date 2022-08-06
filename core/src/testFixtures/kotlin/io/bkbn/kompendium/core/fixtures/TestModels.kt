@@ -239,6 +239,10 @@ sealed interface Flibbity<T>
 data class Gibbity<T>(val a: T) : Flibbity<T>
 data class Bibbity<T>(val b: String, val f: T) : Flibbity<T>
 
+data class NestedFlibbity<T>(
+  val flibbity: Flibbity<T>
+)
+
 enum class Hehe {
   HAHA,
   HOHO

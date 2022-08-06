@@ -7,6 +7,7 @@ import io.bkbn.kompendium.core.util.TestModules.nonRequiredParams
 import io.bkbn.kompendium.core.util.TestModules.notarizedDelete
 import io.bkbn.kompendium.core.util.TestModules.notarizedGet
 import io.bkbn.kompendium.core.util.TestModules.notarizedGetWithException
+import io.bkbn.kompendium.core.util.TestModules.notarizedGetWithGenericException
 import io.bkbn.kompendium.core.util.TestModules.notarizedGetWithMultipleExceptions
 import io.bkbn.kompendium.core.util.TestModules.notarizedGetWithPolymorphicException
 import io.bkbn.kompendium.core.util.TestModules.notarizedHead
@@ -81,13 +82,13 @@ class KompendiumTest : DescribeSpec({
     it("Can add a polymorphic exception response") {
       openApiTestAllSerializers("T0018__polymorphic_error_status_codes.json") { notarizedGetWithPolymorphicException() }
     }
+    it("Can add a generic exception response") {
+      openApiTestAllSerializers("T0019__generic_exception.json") { notarizedGetWithGenericException() }
+    }
   }
 //  describe("Exceptions") {
-//    it("Can add a polymorphic exception response") {
-//      openApiTestAllSerializers("T0018__polymorphic_error_status_codes.json") { notarizedGetWithPolymorphicErrorResponse() }
-//    }
 //    it("Can add a generic exception response") {
-//      openApiTestAllSerializers("generic_exception.json") { notarizedGetWithGenericErrorResponse() }
+//      openApiTestAllSerializers("T0019__generic_exception.json") { notarizedGetWithGenericErrorResponse() }
 //    }
 //  }
 //  describe("Examples") {

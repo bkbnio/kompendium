@@ -2,6 +2,7 @@ package io.bkbn.kompendium.core.util
 
 import io.bkbn.kompendium.core.fixtures.ComplexRequest
 import io.bkbn.kompendium.core.fixtures.ExceptionResponse
+import io.bkbn.kompendium.core.fixtures.Flibbity
 import io.bkbn.kompendium.core.fixtures.FlibbityGibbit
 import io.bkbn.kompendium.core.fixtures.Gibbity
 import io.bkbn.kompendium.core.fixtures.TestCreatedResponse
@@ -440,6 +441,27 @@ object TestModules {
             description("Bad Things Happened")
             responseCode(HttpStatusCode.InternalServerError)
             responseType<FlibbityGibbit>()
+          }
+        }
+      }
+    }
+  }
+
+  fun Routing.notarizedGetWithGenericException() {
+    route(rootPath) {
+      install(NotarizedRoute()) {
+        get = GetInfo.builder {
+          summary("Polymorphic exception test")
+          description("testing more")
+          response {
+            description(defaultResponseDescription)
+            responseCode(HttpStatusCode.OK)
+            responseType<TestResponse>()
+          }
+          canRespond {
+            description("Bad Things Happened")
+            responseCode(HttpStatusCode.BadRequest)
+            responseType<Flibbity<String>>()
           }
         }
       }
