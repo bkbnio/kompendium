@@ -49,15 +49,6 @@
       },
       "parameters": [
         {
-          "name": "a",
-          "in": "path",
-          "schema": {
-            "type": "string"
-          },
-          "required": true,
-          "deprecated": false
-        },
-        {
           "name": "aa",
           "in": "query",
           "schema": {

@@ -2,6 +2,8 @@ package io.bkbn.kompendium.core.util
 
 import io.bkbn.kompendium.core.fixtures.ComplexRequest
 import io.bkbn.kompendium.core.fixtures.ExceptionResponse
+import io.bkbn.kompendium.core.fixtures.FlibbityGibbit
+import io.bkbn.kompendium.core.fixtures.Gibbity
 import io.bkbn.kompendium.core.fixtures.TestCreatedResponse
 import io.bkbn.kompendium.core.fixtures.TestResponse
 import io.bkbn.kompendium.core.fixtures.TestSimpleRequest
@@ -299,6 +301,13 @@ object TestModules {
               route("with/an/{id}") {
                 install(NotarizedRoute()) {
                   get = GetInfo.builder {
+                    parameters = listOf(
+                      Parameter(
+                        name = "id",
+                        `in` = Parameter.Location.path,
+                        schema = TypeDefinition.STRING
+                      )
+                    )
                     summary("Path Parsing Test")
                     description("testing more")
                     response {
@@ -319,7 +328,7 @@ object TestModules {
   fun Routing.rootRoute() {
     route(rootPath) {
       install(NotarizedRoute()) {
-        parameters = defaultParams
+        parameters = listOf(defaultParams.last())
         get = GetInfo.builder {
           summary("Root")
           description("Can parse the root route")
@@ -410,6 +419,27 @@ object TestModules {
             description("Access Denied")
             responseCode(HttpStatusCode.Forbidden)
             responseType<ExceptionResponse>()
+          }
+        }
+      }
+    }
+  }
+
+  fun Routing.notarizedGetWithPolymorphicException() {
+    route(rootPath) {
+      install(NotarizedRoute()) {
+        get = GetInfo.builder {
+          summary("Polymorphic exception test")
+          description("testing more")
+          response {
+            description(defaultResponseDescription)
+            responseCode(HttpStatusCode.OK)
+            responseType<TestResponse>()
+          }
+          canRespond {
+            description("Bad Things Happened")
+            responseCode(HttpStatusCode.InternalServerError)
+            responseType<FlibbityGibbit>()
           }
         }
       }

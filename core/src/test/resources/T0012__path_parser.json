@@ -32,7 +32,17 @@
         "tags": [],
         "summary": "Path Parsing Test",
         "description": "testing more",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "deprecated": false
+          }
+        ],
         "responses": {
           "200": {
             "description": "A Successful Endeavor",

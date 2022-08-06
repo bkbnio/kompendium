@@ -8,6 +8,7 @@ import io.bkbn.kompendium.core.util.TestModules.notarizedDelete
 import io.bkbn.kompendium.core.util.TestModules.notarizedGet
 import io.bkbn.kompendium.core.util.TestModules.notarizedGetWithException
 import io.bkbn.kompendium.core.util.TestModules.notarizedGetWithMultipleExceptions
+import io.bkbn.kompendium.core.util.TestModules.notarizedGetWithPolymorphicException
 import io.bkbn.kompendium.core.util.TestModules.notarizedHead
 import io.bkbn.kompendium.core.util.TestModules.notarizedOptions
 import io.bkbn.kompendium.core.util.TestModules.notarizedPatch
@@ -78,7 +79,7 @@ class KompendiumTest : DescribeSpec({
       openApiTestAllSerializers("T0017__notarized_get_with_multiple_exception_responses.json") { notarizedGetWithMultipleExceptions() }
     }
     it("Can add a polymorphic exception response") {
-      openApiTestAllSerializers("T0018__polymorphic_error_status_codes.json") { }
+      openApiTestAllSerializers("T0018__polymorphic_error_status_codes.json") { notarizedGetWithPolymorphicException() }
     }
   }
 //  describe("Exceptions") {
