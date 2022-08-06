@@ -12,27 +12,33 @@ import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.typeOf
 
 object SchemaGenerator {
-  inline fun <reified T : Any?> fromTypeToSchema() = fromTypeToSchema(typeOf<T>())
+  inline fun <reified T : Any?> fromTypeToSchema(cache: MutableMap<String, JsonSchema> = mutableMapOf()) =
+    fromTypeToSchema(typeOf<T>(), cache)
 
-  fun fromTypeToSchema(type: KType): JsonSchema = when (val clazz = type.classifier as KClass<*>) {
-    Unit::class -> error("""
+  fun fromTypeToSchema(type: KType, cache: MutableMap<String, JsonSchema>): JsonSchema =
+    when (val clazz = type.classifier as KClass<*>) {
+      Unit::class -> error(
+        """
       Unit cannot be converted to JsonSchema.
       If you are looking for a method will return null when called with Unit,
       please call SchemaGenerator.fromTypeOrUnit()
-    """.trimIndent())
-    Int::class -> TypeDefinition.INT
-    String::class -> TypeDefinition.STRING
-    Boolean::class -> TypeDefinition.BOOLEAN
-    else -> when {
-      clazz.isSubclassOf(Enum::class) -> EnumHandler.handle(type, clazz)
-      clazz.isSubclassOf(Collection::class) -> CollectionHandler.handle(type)
-      clazz.isSubclassOf(Map::class) -> MapHandler.handle(type)
-      else -> ObjectHandler.handle(type, clazz)
-    }
-  }
+    """.trimIndent()
+      )
 
-  fun fromTypeOrUnit(type: KType): JsonSchema? = when (type.classifier as KClass<*>) {
-    Unit::class -> null
-    else -> fromTypeToSchema(type)
-  }
+      Int::class -> TypeDefinition.INT
+      String::class -> TypeDefinition.STRING
+      Boolean::class -> TypeDefinition.BOOLEAN
+      else -> when {
+        clazz.isSubclassOf(Enum::class) -> EnumHandler.handle(type, clazz)
+        clazz.isSubclassOf(Collection::class) -> CollectionHandler.handle(type, cache)
+        clazz.isSubclassOf(Map::class) -> MapHandler.handle(type, cache)
+        else -> ObjectHandler.handle(type, clazz, cache)
+      }
+    }
+
+  fun fromTypeOrUnit(type: KType, cache: MutableMap<String, JsonSchema> = mutableMapOf()): JsonSchema? =
+    when (type.classifier as KClass<*>) {
+      Unit::class -> null
+      else -> fromTypeToSchema(type, cache)
+    }
 }

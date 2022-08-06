@@ -87,19 +87,19 @@ object NotarizedRoute {
   }
 
   private fun MethodInfo.addToSpec(path: Path, spec: OpenApiSpec, config: Config) {
-    SchemaGenerator.fromTypeOrUnit(this.response.responseType)?.let { schema ->
+    SchemaGenerator.fromTypeOrUnit(this.response.responseType, spec.components.schemas)?.let { schema ->
       spec.components.schemas[this.response.responseType.getSimpleSlug()] = schema
     }
 
     errors.forEach { error ->
-      SchemaGenerator.fromTypeOrUnit(error.responseType)?.let { schema ->
+      SchemaGenerator.fromTypeOrUnit(error.responseType, spec.components.schemas)?.let { schema ->
         spec.components.schemas[error.responseType.getSimpleSlug()] = schema
       }
     }
 
     when (this) {
       is MethodInfoWithRequest -> {
-        SchemaGenerator.fromTypeOrUnit(this.request.requestType)?.let { schema ->
+        SchemaGenerator.fromTypeOrUnit(this.request.requestType, spec.components.schemas)?.let { schema ->
           spec.components.schemas[this.request.requestType.getSimpleSlug()] = schema
         }
       }

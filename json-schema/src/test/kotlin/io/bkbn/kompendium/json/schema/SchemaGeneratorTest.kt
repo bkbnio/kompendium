@@ -88,6 +88,8 @@ class SchemaGeneratorTest : DescribeSpec({
       // act
       val schema = SchemaGenerator.fromTypeToSchema<T>()
 
+      // todo add cache assertions!!!
+
       // assert
       schema.serialize() shouldEqualJson getFileSnapshot(snapshotName)
     }

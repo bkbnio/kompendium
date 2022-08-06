@@ -64,9 +64,58 @@
   "webhooks": {},
   "components": {
     "schemas": {
-      "ComplexRequest": {
+      "TestCreatedResponse": {
+        "type": "object",
         "properties": {
-          "amazing_field": {
+          "c": {
+            "type": "string"
+          },
+          "id": {
+            "type": "number",
+            "format": "int32"
+          }
+        },
+        "required": [
+          "c",
+          "id"
+        ]
+      },
+      "CrazyItem": {
+        "type": "object",
+        "properties": {
+          "enumeration": {
+            "enum": [
+              "ONE",
+              "TWO"
+            ]
+          }
+        },
+        "required": [
+          "enumeration"
+        ]
+      },
+      "NestedComplexItem": {
+        "type": "object",
+        "properties": {
+          "alias": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/CrazyItem"
+            },
+            "type": "object"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "alias",
+          "name"
+        ]
+      },
+      "ComplexRequest": {
+        "type": "object",
+        "properties": {
+          "amazingField": {
             "type": "string"
           },
           "org": {
@@ -80,63 +129,10 @@
           }
         },
         "required": [
+          "amazingField",
           "org",
-          "amazing_field",
           "tables"
-        ],
-        "type": "object"
-      },
-      "NestedComplexItem": {
-        "properties": {
-          "alias": {
-            "additionalProperties": {
-              "$ref": "#/components/schemas/CrazyItem"
-            },
-            "type": "object"
-          },
-          "name": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "name",
-          "alias"
-        ],
-        "type": "object"
-      },
-      "CrazyItem": {
-        "properties": {
-          "enumeration": {
-            "$ref": "#/components/schemas/SimpleEnum"
-          }
-        },
-        "required": [
-          "enumeration"
-        ],
-        "type": "object"
-      },
-      "SimpleEnum": {
-        "enum": [
-          "ONE",
-          "TWO"
-        ],
-        "type": "string"
-      },
-      "TestCreatedResponse": {
-        "properties": {
-          "c": {
-            "type": "string"
-          },
-          "id": {
-            "format": "int32",
-            "type": "integer"
-          }
-        },
-        "required": [
-          "id",
-          "c"
-        ],
-        "type": "object"
+        ]
       }
     },
     "securitySchemes": {}

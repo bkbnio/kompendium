@@ -73,17 +73,20 @@
   "webhooks": {},
   "components": {
     "schemas": {
+      "TestResponse": {
+        "type": "object",
+        "properties": {
+          "c": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "c"
+        ]
+      },
       "List-TestResponse": {
         "items": {
-          "type": "object",
-          "properties": {
-            "c": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "c"
-          ]
+          "$ref": "#/components/schemas/TestResponse"
         },
         "type": "array"
       }
