@@ -1,5 +1,6 @@
 {
-  "openapi": "3.0.3",
+  "openapi": "3.1.0",
+  "jsonSchemaDialect": "https://json-schema.org/draft/2020-12/schema",
   "info": {
     "title": "Test API",
     "version": "1.33.7",
@@ -26,38 +27,27 @@
     }
   ],
   "paths": {
-    "/test/examples": {
+    "/": {
       "post": {
         "tags": [],
-        "summary": "Example Parameters",
-        "description": "A test for setting parameter examples",
+        "summary": "Polymorphic exception test",
+        "description": "testing more",
         "parameters": [],
         "requestBody": {
-          "description": "Test",
+          "description": "You gotta send it",
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/TestRequest"
               },
               "examples": {
-                "one": {
+                "Testerina": {
                   "value": {
                     "fieldName": {
-                      "nesty": "hey"
+                      "nesty": "asdf"
                     },
-                    "b": 4.0,
+                    "b": 1.5,
                     "aaa": []
-                  }
-                },
-                "two": {
-                  "value": {
-                    "fieldName": {
-                      "nesty": "hello"
-                    },
-                    "b": 3.8,
-                    "aaa": [
-                      31324234
-                    ]
                   }
                 }
               }
@@ -66,17 +56,17 @@
           "required": true
         },
         "responses": {
-          "201": {
-            "description": "nice",
+          "200": {
+            "description": "A Successful Endeavor",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/TestResponse"
                 },
                 "examples": {
-                  "test": {
+                  "Testerino": {
                     "value": {
-                      "c": "spud"
+                      "c": "Heya"
                     }
                   }
                 }
@@ -85,47 +75,15 @@
           }
         },
         "deprecated": false
-      }
+      },
+      "parameters": []
     }
   },
+  "webhooks": {},
   "components": {
     "schemas": {
-      "TestRequest": {
-        "properties": {
-          "aaa": {
-            "items": {
-              "format": "int64",
-              "type": "integer"
-            },
-            "type": "array"
-          },
-          "b": {
-            "format": "double",
-            "type": "number"
-          },
-          "field_name": {
-            "$ref": "#/components/schemas/TestNested"
-          }
-        },
-        "required": [
-          "field_name",
-          "b",
-          "aaa"
-        ],
-        "type": "object"
-      },
-      "TestNested": {
-        "properties": {
-          "nesty": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "nesty"
-        ],
-        "type": "object"
-      },
       "TestResponse": {
+        "type": "object",
         "properties": {
           "c": {
             "type": "string"
@@ -133,8 +91,42 @@
         },
         "required": [
           "c"
-        ],
-        "type": "object"
+        ]
+      },
+      "TestRequest": {
+        "type": "object",
+        "properties": {
+          "aaa": {
+            "items": {
+              "type": "number",
+              "format": "int64"
+            },
+            "type": "array"
+          },
+          "b": {
+            "type": "number",
+            "format": "double"
+          },
+          "fieldName": {
+            "$ref": "#/components/schemas/TestNested"
+          }
+        },
+        "required": [
+          "aaa",
+          "b",
+          "fieldName"
+        ]
+      },
+      "TestNested": {
+        "type": "object",
+        "properties": {
+          "nesty": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "nesty"
+        ]
       }
     },
     "securitySchemes": {}

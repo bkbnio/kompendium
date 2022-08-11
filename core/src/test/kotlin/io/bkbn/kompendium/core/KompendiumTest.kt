@@ -6,16 +6,17 @@ import io.bkbn.kompendium.core.util.TestModules.nestedUnderRoot
 import io.bkbn.kompendium.core.util.TestModules.nonRequiredParams
 import io.bkbn.kompendium.core.util.TestModules.notarizedDelete
 import io.bkbn.kompendium.core.util.TestModules.notarizedGet
-import io.bkbn.kompendium.core.util.TestModules.notarizedGetWithException
-import io.bkbn.kompendium.core.util.TestModules.notarizedGetWithGenericException
-import io.bkbn.kompendium.core.util.TestModules.notarizedGetWithMultipleExceptions
-import io.bkbn.kompendium.core.util.TestModules.notarizedGetWithPolymorphicException
+import io.bkbn.kompendium.core.util.TestModules.singleException
+import io.bkbn.kompendium.core.util.TestModules.genericException
+import io.bkbn.kompendium.core.util.TestModules.multipleExceptions
+import io.bkbn.kompendium.core.util.TestModules.polymorphicException
 import io.bkbn.kompendium.core.util.TestModules.notarizedHead
 import io.bkbn.kompendium.core.util.TestModules.notarizedOptions
 import io.bkbn.kompendium.core.util.TestModules.notarizedPatch
 import io.bkbn.kompendium.core.util.TestModules.notarizedPost
 import io.bkbn.kompendium.core.util.TestModules.notarizedPut
 import io.bkbn.kompendium.core.util.TestModules.primitives
+import io.bkbn.kompendium.core.util.TestModules.reqRespExamples
 import io.bkbn.kompendium.core.util.TestModules.returnsList
 import io.bkbn.kompendium.core.util.TestModules.rootRoute
 import io.bkbn.kompendium.core.util.TestModules.simplePathParsing
@@ -74,21 +75,26 @@ class KompendiumTest : DescribeSpec({
   }
   describe("Exceptions") {
     it("Can add an exception status code to a response") {
-      openApiTestAllSerializers("T0016__notarized_get_with_exception_response.json") { notarizedGetWithException() }
+      openApiTestAllSerializers("T0016__notarized_get_with_exception_response.json") { singleException() }
     }
     it("Can support multiple response codes") {
-      openApiTestAllSerializers("T0017__notarized_get_with_multiple_exception_responses.json") { notarizedGetWithMultipleExceptions() }
+      openApiTestAllSerializers("T0017__notarized_get_with_multiple_exception_responses.json") { multipleExceptions() }
     }
     it("Can add a polymorphic exception response") {
-      openApiTestAllSerializers("T0018__polymorphic_error_status_codes.json") { notarizedGetWithPolymorphicException() }
+      openApiTestAllSerializers("T0018__polymorphic_error_status_codes.json") { polymorphicException() }
     }
     it("Can add a generic exception response") {
-      openApiTestAllSerializers("T0019__generic_exception.json") { notarizedGetWithGenericException() }
+      openApiTestAllSerializers("T0019__generic_exception.json") { genericException() }
+    }
+  }
+  describe("Examples") {
+    it("Can generate example response and request bodies") {
+      openApiTestAllSerializers("T0020__example_req_and_resp.json") { reqRespExamples() }
     }
   }
 //  describe("Examples") {
 //    it("Can generate example response and request bodies") {
-//      openApiTestAllSerializers("example_req_and_resp.json") { withExamples() }
+//      openApiTestAllSerializers("T0020__example_req_and_resp.json") { withExamples() }
 //    }
 //    it("Can describe example parameters") {
 //      openApiTestAllSerializers("example_parameters.json") { exampleParams() }
@@ -247,7 +253,7 @@ class KompendiumTest : DescribeSpec({
 //        docs()
 //        withExamples()
 //      }) {
-//        compareOpenAPISpec("example_req_and_resp.json")
+//        compareOpenAPISpec("T0020__example_req_and_resp.json")
 //      }
 //    }
 //    it("Can override the kotlinx serializer") {
@@ -276,7 +282,7 @@ class KompendiumTest : DescribeSpec({
 //        docs()
 //        withExamples()
 //      }) {
-//        compareOpenAPISpec("example_req_and_resp.json")
+//        compareOpenAPISpec("T0020__example_req_and_resp.json")
 //      }
 //    }
 //  }

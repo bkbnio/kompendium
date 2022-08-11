@@ -24,13 +24,16 @@ object SchemaGenerator {
     return when (val clazz = type.classifier as KClass<*>) {
       Unit::class -> error(
         """
-      Unit cannot be converted to JsonSchema.
-      If you are looking for a method will return null when called with Unit,
-      please call SchemaGenerator.fromTypeOrUnit()
-    """.trimIndent()
+          Unit cannot be converted to JsonSchema.
+          If you are looking for a method will return null when called with Unit,
+          please call SchemaGenerator.fromTypeOrUnit()
+        """.trimIndent()
       )
 
       Int::class -> TypeDefinition.INT
+      Long::class -> TypeDefinition.LONG
+      Double::class -> TypeDefinition.DOUBLE
+      Float::class -> TypeDefinition.FLOAT
       String::class -> TypeDefinition.STRING
       Boolean::class -> TypeDefinition.BOOLEAN
       else -> when {
@@ -38,11 +41,11 @@ object SchemaGenerator {
         clazz.isSubclassOf(Collection::class) -> CollectionHandler.handle(type, cache)
         clazz.isSubclassOf(Map::class) -> MapHandler.handle(type, cache)
         else -> {
-         if (clazz.isSealed) {
-           SealedObjectHandler.handle(type, clazz, cache)
-         } else {
-           SimpleObjectHandler.handle(type, clazz, cache)
-         }
+          if (clazz.isSealed) {
+            SealedObjectHandler.handle(type, clazz, cache)
+          } else {
+            SimpleObjectHandler.handle(type, clazz, cache)
+          }
         }
       }
     }

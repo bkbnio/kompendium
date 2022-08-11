@@ -20,5 +20,5 @@ data class MediaType(
     val encoding: Map<String, Encoding>? = null,
 ) {
   @Serializable
-  data class Example(val value: @Contextual Any)
+  data class Example(@Contextual val value: Any)
 }

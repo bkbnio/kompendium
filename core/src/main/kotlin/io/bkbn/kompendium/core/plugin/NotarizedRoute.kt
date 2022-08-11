@@ -103,6 +103,7 @@ object NotarizedRoute {
           spec.components.schemas[this.request.requestType.getSimpleSlug()] = schema
         }
       }
+
       else -> {}
     }
 
@@ -130,15 +131,16 @@ object NotarizedRoute {
     requestBody = when (this) {
       is MethodInfoWithRequest -> Request(
         description = this.request.description,
-        content = this.request.requestType.toReferenceContent(),
+        content = this.request.requestType.toReferenceContent(this.request.examples),
         required = true
       )
+
       else -> null
     },
     responses = mapOf(
       this.response.responseCode.value to Response(
         description = this.response.description,
-        content = this.response.responseType.toReferenceContent()
+        content = this.response.responseType.toReferenceContent(this.response.examples)
       )
     ).plus(this.errors.toResponseMap())
   )
@@ -146,18 +148,20 @@ object NotarizedRoute {
   private fun List<ResponseInfo>.toResponseMap(): Map<Int, Response> = associate { error ->
     error.responseCode.value to Response(
       description = error.description,
-      content = error.responseType.toReferenceContent()
+      content = error.responseType.toReferenceContent(error.examples)
     )
   }
 
-  private fun KType.toReferenceContent(): Map<String, MediaType>? = when (this.classifier as KClass<*>) {
-    Unit::class -> null
-    else -> mapOf(
-      "application/json" to MediaType(
-        schema = ReferenceDefinition(this.getReferenceSlug())
+  private fun KType.toReferenceContent(examples: Map<String, MediaType.Example>?): Map<String, MediaType>? =
+    when (this.classifier as KClass<*>) {
+      Unit::class -> null
+      else -> mapOf(
+        "application/json" to MediaType(
+          schema = ReferenceDefinition(this.getReferenceSlug()),
+          examples = examples
+        )
       )
-    )
-  }
+    }
 
   private fun Route.calculateRoutePath() = toString().replace(Regex("/\\(.+\\)"), "")
 }

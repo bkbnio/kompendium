@@ -4,8 +4,9 @@ import io.bkbn.kompendium.core.fixtures.ComplexRequest
 import io.bkbn.kompendium.core.fixtures.ExceptionResponse
 import io.bkbn.kompendium.core.fixtures.Flibbity
 import io.bkbn.kompendium.core.fixtures.FlibbityGibbit
-import io.bkbn.kompendium.core.fixtures.Gibbity
 import io.bkbn.kompendium.core.fixtures.TestCreatedResponse
+import io.bkbn.kompendium.core.fixtures.TestNested
+import io.bkbn.kompendium.core.fixtures.TestRequest
 import io.bkbn.kompendium.core.fixtures.TestResponse
 import io.bkbn.kompendium.core.fixtures.TestSimpleRequest
 import io.bkbn.kompendium.core.metadata.DeleteInfo
@@ -37,6 +38,7 @@ object TestModules {
   private const val defaultPath = "/test/{a}"
   private const val rootPath = "/"
   private const val defaultResponseDescription = "A Successful Endeavor"
+  private const val defaultRequestDescription = "You gotta send it"
 
   private val defaultParams = listOf(
     Parameter(
@@ -379,7 +381,7 @@ object TestModules {
     }
   }
 
-  fun Routing.notarizedGetWithException() {
+  fun Routing.singleException() {
     route(rootPath) {
       install(NotarizedRoute()) {
         get = GetInfo.builder {
@@ -400,7 +402,7 @@ object TestModules {
     }
   }
 
-  fun Routing.notarizedGetWithMultipleExceptions() {
+  fun Routing.multipleExceptions() {
     route(rootPath) {
       install(NotarizedRoute()) {
         get = GetInfo.builder {
@@ -426,7 +428,7 @@ object TestModules {
     }
   }
 
-  fun Routing.notarizedGetWithPolymorphicException() {
+  fun Routing.polymorphicException() {
     route(rootPath) {
       install(NotarizedRoute()) {
         get = GetInfo.builder {
@@ -447,7 +449,7 @@ object TestModules {
     }
   }
 
-  fun Routing.notarizedGetWithGenericException() {
+  fun Routing.genericException() {
     route(rootPath) {
       install(NotarizedRoute()) {
         get = GetInfo.builder {
@@ -462,6 +464,32 @@ object TestModules {
             description("Bad Things Happened")
             responseCode(HttpStatusCode.BadRequest)
             responseType<Flibbity<String>>()
+          }
+        }
+      }
+    }
+  }
+
+  fun Routing.reqRespExamples() {
+    route(rootPath) {
+      install(NotarizedRoute()) {
+        post = PostInfo.builder {
+          summary("Polymorphic exception test")
+          description("testing more")
+          request {
+            description(defaultRequestDescription)
+            requestType<TestRequest>()
+            examples(
+              "Testerina" to TestRequest(TestNested("asdf"), 1.5, emptyList())
+            )
+          }
+          response {
+            description(defaultResponseDescription)
+            responseCode(HttpStatusCode.OK)
+            responseType<TestResponse>()
+            examples(
+              "Testerino" to TestResponse("Heya")
+            )
           }
         }
       }

@@ -16,6 +16,21 @@ data class TypeDefinition(
       format = "int32"
     )
 
+    val LONG = TypeDefinition(
+      type = "number",
+      format = "int64"
+    )
+
+    val DOUBLE = TypeDefinition(
+      type = "number",
+      format = "double"
+    )
+
+    val FLOAT = TypeDefinition(
+      type = "number",
+      format = "float"
+    )
+
     val STRING = TypeDefinition(
       type = "string"
     )
