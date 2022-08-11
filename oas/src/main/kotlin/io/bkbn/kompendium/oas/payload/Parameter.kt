@@ -1,6 +1,7 @@
 package io.bkbn.kompendium.oas.payload
 
 import io.bkbn.kompendium.json.schema.definition.JsonSchema
+import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 
 /**
@@ -18,17 +19,18 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class Parameter(
-    val name: String,
-    val `in`: Location,
-    val schema: JsonSchema,
-    val description: String? = null,
-    val required: Boolean = true,
-    val deprecated: Boolean = false,
-    val allowEmptyValue: Boolean? = null,
+  val name: String,
+  val `in`: Location,
+  val schema: JsonSchema,
+  val description: String? = null,
+  val required: Boolean = true,
+  val deprecated: Boolean = false,
+  val allowEmptyValue: Boolean? = null,
+  val examples: Map<String, Example>? = null,
   // todo support styling https://spec.openapis.org/oas/v3.1.0#style-values
 ) {
   @Serializable
-  data class Example<T>(val value: T)
+  data class Example(@Contextual val value: Any)
 
   @Suppress("EnumNaming")
   @Serializable

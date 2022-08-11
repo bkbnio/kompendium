@@ -2,6 +2,7 @@ package io.bkbn.kompendium.core
 
 import io.bkbn.kompendium.core.fixtures.TestHelpers.openApiTestAllSerializers
 import io.bkbn.kompendium.core.util.TestModules.complexRequest
+import io.bkbn.kompendium.core.util.TestModules.exampleParams
 import io.bkbn.kompendium.core.util.TestModules.nestedUnderRoot
 import io.bkbn.kompendium.core.util.TestModules.nonRequiredParams
 import io.bkbn.kompendium.core.util.TestModules.notarizedDelete
@@ -91,13 +92,13 @@ class KompendiumTest : DescribeSpec({
     it("Can generate example response and request bodies") {
       openApiTestAllSerializers("T0020__example_req_and_resp.json") { reqRespExamples() }
     }
+    it("Can describe example parameters") {
+      openApiTestAllSerializers("T0021__example_parameters.json") { exampleParams() }
+    }
   }
 //  describe("Examples") {
-//    it("Can generate example response and request bodies") {
-//      openApiTestAllSerializers("T0020__example_req_and_resp.json") { withExamples() }
-//    }
 //    it("Can describe example parameters") {
-//      openApiTestAllSerializers("example_parameters.json") { exampleParams() }
+//      openApiTestAllSerializers("T0021__example_parameters.json") { exampleParams() }
 //    }
 //  }
 //  describe("Defaults") {

@@ -1,5 +1,6 @@
 {
-  "openapi": "3.0.3",
+  "openapi": "3.1.0",
+  "jsonSchemaDialect": "https://json-schema.org/draft/2020-12/schema",
   "info": {
     "title": "Test API",
     "version": "1.33.7",
@@ -26,14 +27,14 @@
     }
   ],
   "paths": {
-    "/test/{a}": {
+    "/": {
       "get": {
         "tags": [],
-        "summary": "param stuff",
-        "description": "Cool stuff",
+        "summary": "Polymorphic exception test",
+        "description": "testing more",
         "parameters": [
           {
-            "name": "a",
+            "name": "id",
             "in": "path",
             "schema": {
               "type": "string"
@@ -41,33 +42,15 @@
             "required": true,
             "deprecated": false,
             "examples": {
-              "Testerino": {
-                "value": "a"
-              },
-              "Testerina": {
-                "value": "b"
-              }
-            }
-          },
-          {
-            "name": "aa",
-            "in": "query",
-            "schema": {
-              "format": "int32",
-              "type": "integer"
-            },
-            "required": true,
-            "deprecated": false,
-            "examples": {
-              "Wowza": {
-                "value": 6
+              "foo": {
+                "value": "testing"
               }
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "A successful endeavor",
+            "description": "A Successful Endeavor",
             "content": {
               "application/json": {
                 "schema": {
@@ -78,12 +61,15 @@
           }
         },
         "deprecated": false
-      }
+      },
+      "parameters": []
     }
   },
+  "webhooks": {},
   "components": {
     "schemas": {
       "TestResponse": {
+        "type": "object",
         "properties": {
           "c": {
             "type": "string"
@@ -91,8 +77,7 @@
         },
         "required": [
           "c"
-        ],
-        "type": "object"
+        ]
       }
     },
     "securitySchemes": {}

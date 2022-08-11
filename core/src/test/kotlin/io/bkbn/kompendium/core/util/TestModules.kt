@@ -495,6 +495,32 @@ object TestModules {
       }
     }
   }
+
+  fun Routing.exampleParams() {
+    route(rootPath) {
+      install(NotarizedRoute()) {
+        get = GetInfo.builder {
+          summary("Polymorphic exception test")
+          description("testing more")
+          parameters = listOf(
+            Parameter(
+              name = "id",
+              `in` = Parameter.Location.path,
+              schema = TypeDefinition.STRING,
+              examples = mapOf(
+                "foo" to Parameter.Example("testing")
+              )
+            )
+          )
+          response {
+            description(defaultResponseDescription)
+            responseCode(HttpStatusCode.OK)
+            responseType<TestResponse>()
+          }
+        }
+      }
+    }
+  }
 }
 
 //fun Application.notarizedPutModule() {
