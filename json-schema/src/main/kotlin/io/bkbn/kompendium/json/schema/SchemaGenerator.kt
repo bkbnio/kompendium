@@ -5,7 +5,8 @@ import io.bkbn.kompendium.json.schema.definition.TypeDefinition
 import io.bkbn.kompendium.json.schema.handler.CollectionHandler
 import io.bkbn.kompendium.json.schema.handler.EnumHandler
 import io.bkbn.kompendium.json.schema.handler.MapHandler
-import io.bkbn.kompendium.json.schema.handler.ObjectHandler
+import io.bkbn.kompendium.json.schema.handler.SimpleObjectHandler
+import io.bkbn.kompendium.json.schema.handler.SealedObjectHandler
 import io.bkbn.kompendium.json.schema.util.Helpers.getSimpleSlug
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
@@ -36,7 +37,13 @@ object SchemaGenerator {
         clazz.isSubclassOf(Enum::class) -> EnumHandler.handle(type, clazz)
         clazz.isSubclassOf(Collection::class) -> CollectionHandler.handle(type, cache)
         clazz.isSubclassOf(Map::class) -> MapHandler.handle(type, cache)
-        else -> ObjectHandler.handle(type, clazz, cache)
+        else -> {
+         if (clazz.isSealed) {
+           SealedObjectHandler.handle(type, clazz, cache)
+         } else {
+           SimpleObjectHandler.handle(type, clazz, cache)
+         }
+        }
       }
     }
   }

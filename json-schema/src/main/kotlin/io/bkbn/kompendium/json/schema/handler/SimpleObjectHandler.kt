@@ -1,7 +1,6 @@
 package io.bkbn.kompendium.json.schema.handler
 
 import io.bkbn.kompendium.json.schema.SchemaGenerator
-import io.bkbn.kompendium.json.schema.definition.AnyOfDefinition
 import io.bkbn.kompendium.json.schema.definition.JsonSchema
 import io.bkbn.kompendium.json.schema.definition.NullableDefinition
 import io.bkbn.kompendium.json.schema.definition.OneOfDefinition
@@ -11,41 +10,15 @@ import io.bkbn.kompendium.json.schema.util.Helpers.getReferenceSlug
 import io.bkbn.kompendium.json.schema.util.Helpers.getSimpleSlug
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
-import kotlin.reflect.KProperty1
 import kotlin.reflect.KType
 import kotlin.reflect.KTypeParameter
 import kotlin.reflect.KTypeProjection
-import kotlin.reflect.full.createType
 import kotlin.reflect.full.memberProperties
 
-object ObjectHandler {
+object SimpleObjectHandler {
 
   fun handle(type: KType, clazz: KClass<*>, cache: MutableMap<String, JsonSchema>): JsonSchema {
     cache[type.getSimpleSlug()] = ReferenceDefinition("RECURSION_PLACEHOLDER")
-    return when (clazz.isSealed) {
-      true -> handleSealed(type, clazz, cache)
-      false -> handleUnsealed(type, clazz, cache)
-    }
-  }
-
-  private fun handleSealed(type: KType, clazz: KClass<*>, cache: MutableMap<String, JsonSchema>): JsonSchema {
-    val subclasses = clazz.sealedSubclasses
-      .map { it.createType(type.arguments) }
-      .map { t ->
-        SchemaGenerator.fromTypeToSchema(t, cache).let { js ->
-          if (js is TypeDefinition && js.type == "object") {
-            cache[t.getSimpleSlug()] = js
-            ReferenceDefinition(t.getReferenceSlug())
-          } else {
-            js
-          }
-        }
-      }
-      .toSet()
-    return AnyOfDefinition(subclasses)
-  }
-
-  private fun handleUnsealed(type: KType, clazz: KClass<*>, cache: MutableMap<String, JsonSchema>): JsonSchema {
     val typeMap = clazz.typeParameters.zip(type.arguments).toMap()
     val props = clazz.memberProperties.associate { prop ->
       val schema = when (typeMap.containsKey(prop.returnType.classifier)) {

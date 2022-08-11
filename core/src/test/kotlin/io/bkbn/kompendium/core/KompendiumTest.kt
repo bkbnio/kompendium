@@ -86,11 +86,6 @@ class KompendiumTest : DescribeSpec({
       openApiTestAllSerializers("T0019__generic_exception.json") { notarizedGetWithGenericException() }
     }
   }
-//  describe("Exceptions") {
-//    it("Can add a generic exception response") {
-//      openApiTestAllSerializers("T0019__generic_exception.json") { notarizedGetWithGenericErrorResponse() }
-//    }
-//  }
 //  describe("Examples") {
 //    it("Can generate example response and request bodies") {
 //      openApiTestAllSerializers("example_req_and_resp.json") { withExamples() }
