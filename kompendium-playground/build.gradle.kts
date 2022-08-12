@@ -39,7 +39,7 @@ dependencies {
   implementation(group = "org.jetbrains.kotlinx", "kotlinx-serialization-json", version = "1.3.2")
   implementation(group = "org.jetbrains.kotlinx", "kotlinx-datetime", version = "0.3.2")
 
-  implementation(group = "joda-time", name = "joda-time", version = "2.10.14")
+  implementation(group = "joda-time", name = "joda-time", version = "2.11.0")
 }
 repositories {
   mavenCentral()
