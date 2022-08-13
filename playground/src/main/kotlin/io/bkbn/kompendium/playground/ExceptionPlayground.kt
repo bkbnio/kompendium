@@ -13,7 +13,6 @@ import io.bkbn.kompendium.playground.util.Util.baseSpec
 import io.ktor.http.HttpStatusCode
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.Application
-import io.ktor.server.application.call
 import io.ktor.server.application.install
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
@@ -55,7 +54,7 @@ private fun Application.mainModule() {
     redoc(pageTitle = "Simple API Docs")
 
     route("/{id}") {
-      idDocumentation()
+      locationDocumentation()
       get {
         throw RuntimeException("This wasn't your fault I promise <3")
       }
@@ -63,7 +62,7 @@ private fun Application.mainModule() {
   }
 }
 
-private fun Route.idDocumentation() {
+private fun Route.locationDocumentation() {
   install(NotarizedRoute()) {
     parameters = listOf(
       Parameter(
