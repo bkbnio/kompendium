@@ -13,7 +13,7 @@ object TestSpecs {
       info = Info(
         title = "Test API",
         version = "1.33.7",
-        description = "An amazing, fully-ish 😉 generated API spec",
+        description = "An amazing, fully-ish \uD83D\uDE09 generated API spec",
         termsOfService = URI("https://example.com"),
         contact = Contact(
           name = "Homer Simpson",
