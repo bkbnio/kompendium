@@ -30,7 +30,7 @@
     "/testerino": {
       "get": {
         "tags": [],
-        "summary": "Nested under Root",
+        "summary": "Great Summary!",
         "description": "testing more",
         "parameters": [],
         "responses": {

@@ -30,8 +30,8 @@
     "/": {
       "get": {
         "tags": [],
-        "summary": "Root",
-        "description": "Can parse the root route",
+        "summary": "Great Summary!",
+        "description": "testing more",
         "parameters": [],
         "responses": {
           "200": {

@@ -30,8 +30,8 @@
     "/": {
       "put": {
         "tags": [],
-        "summary": "Test complex request",
-        "description": "A more advanced request",
+        "summary": "Great Summary!",
+        "description": "testing more",
         "parameters": [],
         "requestBody": {
           "description": "A Complex request",
@@ -80,38 +80,6 @@
           "id"
         ]
       },
-      "CrazyItem": {
-        "type": "object",
-        "properties": {
-          "enumeration": {
-            "enum": [
-              "ONE",
-              "TWO"
-            ]
-          }
-        },
-        "required": [
-          "enumeration"
-        ]
-      },
-      "NestedComplexItem": {
-        "type": "object",
-        "properties": {
-          "alias": {
-            "additionalProperties": {
-              "$ref": "#/components/schemas/CrazyItem"
-            },
-            "type": "object"
-          },
-          "name": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "alias",
-          "name"
-        ]
-      },
       "ComplexRequest": {
         "type": "object",
         "properties": {
@@ -132,6 +100,38 @@
           "amazingField",
           "org",
           "tables"
+        ]
+      },
+      "NestedComplexItem": {
+        "type": "object",
+        "properties": {
+          "alias": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/CrazyItem"
+            },
+            "type": "object"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "alias",
+          "name"
+        ]
+      },
+      "CrazyItem": {
+        "type": "object",
+        "properties": {
+          "enumeration": {
+            "enum": [
+              "ONE",
+              "TWO"
+            ]
+          }
+        },
+        "required": [
+          "enumeration"
         ]
       }
     },

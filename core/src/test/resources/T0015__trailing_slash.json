@@ -30,7 +30,7 @@
     "/test/": {
       "get": {
         "tags": [],
-        "summary": "Trailing Slash",
+        "summary": "Great Summary!",
         "description": "testing more",
         "parameters": [],
         "responses": {

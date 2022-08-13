@@ -28,12 +28,12 @@ package io.bkbn.kompendium.core.fixtures
 //  private val testRequestAgain = RequestInfo<Int>("A Test request")
 //  private val complexRequest = RequestInfo<ComplexRequest>("A Complex request")
 //  val testGetInfo = GetInfo<TestParams, TestResponse>(
-//    summary = "Another get test",
+//    summary = "Great Summary!",
 //    description = "testing more",
 //    responseInfo = testGetResponse
 //  )
 //  val testGetInfoAgain = GetInfo<TestParams, List<TestResponse>>(
-//    summary = "Another get test",
+//    summary = "Great Summary!",
 //    description = "testing more",
 //    responseInfo = testGetListResponse
 //  )

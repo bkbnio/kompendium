@@ -30,8 +30,8 @@
     "/test/{a}": {
       "head": {
         "tags": [],
-        "summary": "Test head endpoint",
-        "description": "head test 💀",
+        "summary": "Great Summary!",
+        "description": "testing more",
         "parameters": [],
         "responses": {
           "201": {

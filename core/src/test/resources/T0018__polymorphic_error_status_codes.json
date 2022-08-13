@@ -30,7 +30,7 @@
     "/": {
       "get": {
         "tags": [],
-        "summary": "Polymorphic exception test",
+        "summary": "Great Summary!",
         "description": "testing more",
         "parameters": [],
         "responses": {
@@ -85,8 +85,7 @@
           }
         },
         "required": [
-          "a",
-          "z"
+          "a"
         ]
       },
       "ComplexGibbit": {
@@ -105,8 +104,7 @@
         },
         "required": [
           "b",
-          "c",
-          "z"
+          "c"
         ]
       },
       "FlibbityGibbit": {

@@ -30,7 +30,7 @@
     "/optional": {
       "get": {
         "tags": [],
-        "summary": "Optional param",
+        "summary": "Great Summary!",
         "description": "testing more",
         "parameters": [],
         "responses": {

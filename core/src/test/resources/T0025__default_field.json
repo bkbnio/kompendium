@@ -1,5 +1,6 @@
 {
-  "openapi": "3.0.3",
+  "openapi": "3.1.0",
+  "jsonSchemaDialect": "https://json-schema.org/draft/2020-12/schema",
   "info": {
     "title": "Test API",
     "version": "1.33.7",
@@ -26,66 +27,46 @@
     }
   ],
   "paths": {
-    "/test/required_param": {
-      "post": {
+    "/": {
+      "get": {
         "tags": [],
-        "summary": "default param",
-        "description": "Cool stuff",
+        "summary": "Great Summary!",
+        "description": "testing more",
         "parameters": [],
-        "requestBody": {
-          "description": "cool",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/DefaultField"
-              }
-            }
-          },
-          "required": true
-        },
         "responses": {
           "200": {
-            "description": "A successful endeavor",
+            "description": "A Successful Endeavor",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TestResponse"
+                  "$ref": "#/components/schemas/DefaultField"
                 }
               }
             }
           }
         },
         "deprecated": false
-      }
+      },
+      "parameters": []
     }
   },
+  "webhooks": {},
   "components": {
     "schemas": {
       "DefaultField": {
+        "type": "object",
         "properties": {
           "a": {
             "type": "string"
           },
           "b": {
-            "format": "int32",
-            "type": "integer"
+            "type": "number",
+            "format": "int32"
           }
         },
         "required": [
           "b"
-        ],
-        "type": "object"
-      },
-      "TestResponse": {
-        "properties": {
-          "c": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "c"
-        ],
-        "type": "object"
+        ]
       }
     },
     "securitySchemes": {}

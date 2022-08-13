@@ -30,8 +30,8 @@
     "/test/{a}": {
       "put": {
         "tags": [],
-        "summary": "Test post endpoint",
-        "description": "Post your tests here!",
+        "summary": "Great Summary!",
+        "description": "testing more",
         "parameters": [],
         "requestBody": {
           "description": "A Test request",

@@ -29,7 +29,7 @@
     "/test": {
       "get": {
         "tags": [],
-        "summary": "Another get test",
+        "summary": "Great Summary!",
         "description": "testing more",
         "parameters": [
           {

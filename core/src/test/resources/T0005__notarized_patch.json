@@ -30,8 +30,8 @@
     "/test/{a}": {
       "patch": {
         "tags": [],
-        "summary": "Test patch endpoint",
-        "description": "patch your tests here!",
+        "summary": "Great Summary!",
+        "description": "testing more",
         "parameters": [],
         "requestBody": {
           "description": "A Test request",

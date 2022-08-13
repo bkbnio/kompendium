@@ -79,7 +79,7 @@ package io.bkbn.kompendium.auth.util
 //
 //fun testGetInfo(vararg security: String) =
 //  GetInfo<TestParams, TestResponse>(
-//    summary = "Another get test",
+//    summary = "Great Summary!",
 //    description = "testing more",
 //    responseInfo = TestResponseInfo.testGetResponse,
 //    securitySchemes = security.toSet()

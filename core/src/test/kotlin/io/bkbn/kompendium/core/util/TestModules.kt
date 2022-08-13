@@ -1,6 +1,7 @@
 package io.bkbn.kompendium.core.util
 
 import io.bkbn.kompendium.core.fixtures.ComplexRequest
+import io.bkbn.kompendium.core.fixtures.DefaultField
 import io.bkbn.kompendium.core.fixtures.ExceptionResponse
 import io.bkbn.kompendium.core.fixtures.Flibbity
 import io.bkbn.kompendium.core.fixtures.FlibbityGibbit
@@ -39,6 +40,8 @@ object TestModules {
   private const val rootPath = "/"
   private const val defaultResponseDescription = "A Successful Endeavor"
   private const val defaultRequestDescription = "You gotta send it"
+  private const val defaultPathSummary = "Great Summary!"
+  private const val defaultPathDescription = "testing more"
 
   private val defaultParams = listOf(
     Parameter(
@@ -63,8 +66,8 @@ object TestModules {
             responseType<TestResponse>()
             description(defaultResponseDescription)
           }
-          summary("Another get test")
-          description("testing more")
+          summary(defaultPathSummary)
+          description(defaultPathDescription)
         }
       }
       get {
@@ -78,8 +81,8 @@ object TestModules {
       install(NotarizedRoute()) {
         parameters = defaultParams
         post = PostInfo.builder {
-          summary("Test post endpoint")
-          description("Post your tests here!")
+          summary(defaultPathSummary)
+          description(defaultPathDescription)
           request {
             requestType<TestSimpleRequest>()
             description("A Test request")
@@ -102,8 +105,8 @@ object TestModules {
       install(NotarizedRoute()) {
         parameters = defaultParams
         put = PutInfo.builder {
-          summary("Test post endpoint")
-          description("Post your tests here!")
+          summary(defaultPathSummary)
+          description(defaultPathDescription)
           request {
             requestType<TestSimpleRequest>()
             description("A Test request")
@@ -126,8 +129,8 @@ object TestModules {
       install(NotarizedRoute()) {
         parameters = defaultParams
         delete = DeleteInfo.builder {
-          summary("Test delete endpoint")
-          description("testing my deletes")
+          summary(defaultPathSummary)
+          description(defaultPathDescription)
           response {
             responseCode(HttpStatusCode.NoContent)
             responseType<Unit>()
@@ -146,8 +149,8 @@ object TestModules {
       install(NotarizedRoute()) {
         parameters = defaultParams
         patch = PatchInfo.builder {
-          summary("Test patch endpoint")
-          description("patch your tests here!")
+          summary(defaultPathSummary)
+          description(defaultPathDescription)
           request {
             description("A Test request")
             requestType<TestSimpleRequest>()
@@ -170,8 +173,8 @@ object TestModules {
       install(NotarizedRoute()) {
         parameters = defaultParams
         head = HeadInfo.builder {
-          summary("Test head endpoint")
-          description("head test 💀")
+          summary(defaultPathSummary)
+          description(defaultPathDescription)
 
           response {
             description("great!")
@@ -191,8 +194,8 @@ object TestModules {
       install(NotarizedRoute()) {
         parameters = defaultParams
         options = OptionsInfo.builder {
-          summary("Test options")
-          description("endpoint of options")
+          summary(defaultPathSummary)
+          description(defaultPathDescription)
           response {
             responseCode(HttpStatusCode.OK)
             responseType<TestResponse>()
@@ -210,8 +213,8 @@ object TestModules {
     route(rootPath) {
       install(NotarizedRoute()) {
         put = PutInfo.builder {
-          summary("Test complex request")
-          description("A more advanced request")
+          summary(defaultPathSummary)
+          description(defaultPathDescription)
           request {
             requestType<ComplexRequest>()
             description("A Complex request")
@@ -233,8 +236,8 @@ object TestModules {
     route(rootPath) {
       install(NotarizedRoute()) {
         put = PutInfo.builder {
-          summary("Test put endpoint")
-          description("Put your tests here!")
+          summary(defaultPathSummary)
+          description(defaultPathDescription)
           request {
             requestType<Int>()
             description("A Test Request")
@@ -254,8 +257,8 @@ object TestModules {
       install(NotarizedRoute()) {
         parameters = defaultParams
         get = GetInfo.builder {
-          summary("Another get test")
-          description("testing more")
+          summary(defaultPathSummary)
+          description(defaultPathDescription)
           response {
             description("A Successful List-y Endeavor")
             responseCode(HttpStatusCode.OK)
@@ -283,8 +286,8 @@ object TestModules {
           )
         )
         get = GetInfo.builder {
-          summary("Optional param")
-          description("testing more")
+          summary(defaultPathSummary)
+          description(defaultPathDescription)
           response {
             responseType<Unit>()
             description("Empty")
@@ -311,8 +314,8 @@ object TestModules {
                         schema = TypeDefinition.STRING
                       )
                     )
-                    summary("Path Parsing Test")
-                    description("testing more")
+                    summary(defaultPathSummary)
+                    description(defaultPathDescription)
                     response {
                       description(defaultResponseDescription)
                       responseCode(HttpStatusCode.OK)
@@ -333,8 +336,8 @@ object TestModules {
       install(NotarizedRoute()) {
         parameters = listOf(defaultParams.last())
         get = GetInfo.builder {
-          summary("Root")
-          description("Can parse the root route")
+          summary(defaultPathSummary)
+          description(defaultPathDescription)
           response {
             description(defaultResponseDescription)
             responseCode(HttpStatusCode.OK)
@@ -350,8 +353,8 @@ object TestModules {
       route("/testerino") {
         install(NotarizedRoute()) {
           get = GetInfo.builder {
-            summary("Nested under Root")
-            description("testing more")
+            summary(defaultPathSummary)
+            description(defaultPathDescription)
             response {
               description(defaultResponseDescription)
               responseCode(HttpStatusCode.OK)
@@ -368,8 +371,8 @@ object TestModules {
       route("/") {
         install(NotarizedRoute()) {
           get = GetInfo.builder {
-            summary("Trailing Slash")
-            description("testing more")
+            summary(defaultPathSummary)
+            description(defaultPathDescription)
             response {
               description(defaultResponseDescription)
               responseCode(HttpStatusCode.OK)
@@ -385,8 +388,8 @@ object TestModules {
     route(rootPath) {
       install(NotarizedRoute()) {
         get = GetInfo.builder {
-          summary("Simple exception test")
-          description("testing more")
+          summary(defaultPathSummary)
+          description(defaultPathDescription)
           response {
             description(defaultResponseDescription)
             responseCode(HttpStatusCode.OK)
@@ -406,8 +409,8 @@ object TestModules {
     route(rootPath) {
       install(NotarizedRoute()) {
         get = GetInfo.builder {
-          summary("Multiple exception test")
-          description("testing more")
+          summary(defaultPathSummary)
+          description(defaultPathDescription)
           response {
             description(defaultResponseDescription)
             responseCode(HttpStatusCode.OK)
@@ -432,8 +435,8 @@ object TestModules {
     route(rootPath) {
       install(NotarizedRoute()) {
         get = GetInfo.builder {
-          summary("Polymorphic exception test")
-          description("testing more")
+          summary(defaultPathSummary)
+          description(defaultPathDescription)
           response {
             description(defaultResponseDescription)
             responseCode(HttpStatusCode.OK)
@@ -453,8 +456,8 @@ object TestModules {
     route(rootPath) {
       install(NotarizedRoute()) {
         get = GetInfo.builder {
-          summary("Polymorphic exception test")
-          description("testing more")
+          summary(defaultPathSummary)
+          description(defaultPathDescription)
           response {
             description(defaultResponseDescription)
             responseCode(HttpStatusCode.OK)
@@ -474,8 +477,8 @@ object TestModules {
     route(rootPath) {
       install(NotarizedRoute()) {
         post = PostInfo.builder {
-          summary("Polymorphic exception test")
-          description("testing more")
+          summary(defaultPathSummary)
+          description(defaultPathDescription)
           request {
             description(defaultRequestDescription)
             requestType<TestRequest>()
@@ -500,8 +503,8 @@ object TestModules {
     route(rootPath) {
       install(NotarizedRoute()) {
         get = GetInfo.builder {
-          summary("Polymorphic exception test")
-          description("testing more")
+          summary(defaultPathSummary)
+          description(defaultPathDescription)
           parameters = listOf(
             Parameter(
               name = "id",
@@ -526,8 +529,8 @@ object TestModules {
     route(rootPath) {
       install(NotarizedRoute()) {
         get = GetInfo.builder {
-          summary("Polymorphic exception test")
-          description("testing more")
+          summary(defaultPathSummary)
+          description(defaultPathDescription)
           parameters = listOf(
             Parameter(
               name = "id",
@@ -549,8 +552,8 @@ object TestModules {
     route(rootPath) {
       install(NotarizedRoute()) {
         get = GetInfo.builder {
-          summary("Polymorphic exception test")
-          description("testing more")
+          summary(defaultPathSummary)
+          description(defaultPathDescription)
           parameters = listOf(
             Parameter(
               name = "id",
@@ -572,8 +575,8 @@ object TestModules {
     route(rootPath) {
       install(NotarizedRoute()) {
         get = GetInfo.builder {
-          summary("Polymorphic exception test")
-          description("testing more")
+          summary(defaultPathSummary)
+          description(defaultPathDescription)
           parameters = listOf(
             Parameter(
               name = "id",
@@ -586,6 +589,22 @@ object TestModules {
             description(defaultResponseDescription)
             responseCode(HttpStatusCode.OK)
             responseType<TestResponse>()
+          }
+        }
+      }
+    }
+  }
+
+  fun Routing.defaultField() {
+    route(rootPath) {
+      install(NotarizedRoute()) {
+        get = GetInfo.builder {
+          summary(defaultPathSummary)
+          description(defaultPathDescription)
+          response {
+            description(defaultResponseDescription)
+            responseCode(HttpStatusCode.OK)
+            responseType<DefaultField>()
           }
         }
       }

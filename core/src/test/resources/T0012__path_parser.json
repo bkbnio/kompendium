@@ -30,7 +30,7 @@
     "/this/is/a/complex/path/with/an/{id}": {
       "get": {
         "tags": [],
-        "summary": "Path Parsing Test",
+        "summary": "Great Summary!",
         "description": "testing more",
         "parameters": [
           {

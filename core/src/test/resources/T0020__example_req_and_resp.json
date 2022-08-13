@@ -30,7 +30,7 @@
     "/": {
       "post": {
         "tags": [],
-        "summary": "Polymorphic exception test",
+        "summary": "Great Summary!",
         "description": "testing more",
         "parameters": [],
         "requestBody": {

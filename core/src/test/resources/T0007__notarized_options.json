@@ -30,8 +30,8 @@
     "/test/{a}": {
       "options": {
         "tags": [],
-        "summary": "Test options",
-        "description": "endpoint of options",
+        "summary": "Great Summary!",
+        "description": "testing more",
         "parameters": [],
         "responses": {
           "200": {

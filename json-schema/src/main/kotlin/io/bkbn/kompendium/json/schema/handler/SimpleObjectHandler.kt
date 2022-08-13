@@ -14,6 +14,7 @@ import kotlin.reflect.KType
 import kotlin.reflect.KTypeParameter
 import kotlin.reflect.KTypeProjection
 import kotlin.reflect.full.memberProperties
+import kotlin.reflect.full.primaryConstructor
 
 object SimpleObjectHandler {
 
@@ -28,9 +29,13 @@ object SimpleObjectHandler {
 
       prop.name to schema
     }
+
     val required = clazz.memberProperties.filterNot { prop -> prop.returnType.isMarkedNullable }
+      .filterNot { prop -> clazz.primaryConstructor!!.parameters.find { it.name == prop.name }!!.isOptional }
       .map { it.name }
       .toSet()
+
+
     val definition = TypeDefinition(
       type = "object",
       properties = props,

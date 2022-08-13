@@ -2,6 +2,7 @@ package io.bkbn.kompendium.core
 
 import io.bkbn.kompendium.core.fixtures.TestHelpers.openApiTestAllSerializers
 import io.bkbn.kompendium.core.util.TestModules.complexRequest
+import io.bkbn.kompendium.core.util.TestModules.defaultField
 import io.bkbn.kompendium.core.util.TestModules.defaultParameter
 import io.bkbn.kompendium.core.util.TestModules.exampleParams
 import io.bkbn.kompendium.core.util.TestModules.nestedUnderRoot
@@ -112,12 +113,12 @@ class KompendiumTest : DescribeSpec({
       openApiTestAllSerializers("T0024__non_required_param.json") { nonRequiredParam() }
     }
     it("Does not mark a field as required if a default value is provided") {
-
+      openApiTestAllSerializers("T0025__default_field.json") { defaultField() }
     }
   }
 //  describe("Required Fields") {
 //    it("Does not mark a field as required if a default value is provided") {
-//      openApiTestAllSerializers("default_field.json") { defaultField() }
+//      openApiTestAllSerializers("T0025__default_field.json") { defaultField() }
 //    }
 //    it("Marks a field as nullable when expected") {
 //      openApiTestAllSerializers("nullable_field.json") { nullableField() }
