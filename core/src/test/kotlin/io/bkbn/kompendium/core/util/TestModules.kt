@@ -10,6 +10,7 @@ import io.bkbn.kompendium.core.fixtures.FlibbityGibbit
 import io.bkbn.kompendium.core.fixtures.Gibbity
 import io.bkbn.kompendium.core.fixtures.NullableEnum
 import io.bkbn.kompendium.core.fixtures.NullableField
+import io.bkbn.kompendium.core.fixtures.Page
 import io.bkbn.kompendium.core.fixtures.ProfileUpdateRequest
 import io.bkbn.kompendium.core.fixtures.TestCreatedResponse
 import io.bkbn.kompendium.core.fixtures.TestNested
@@ -566,6 +567,8 @@ object TestModules {
   fun Routing.genericPolymorphicResponse() = basicGetGenerator<Flibbity<Double>>()
 
   fun Routing.genericPolymorphicResponseMultipleImpls() = basicGetGenerator<Flibbity<FlibbityGibbit>>()
+
+  fun Routing.nestedGenericCollection() = basicGetGenerator<Page<Int>>()
 
   fun Routing.withOperationId() = basicGetGenerator<TestResponse>(operationId = "getThisDude")
 

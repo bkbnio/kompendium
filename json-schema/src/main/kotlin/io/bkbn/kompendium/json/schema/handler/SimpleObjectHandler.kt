@@ -13,6 +13,7 @@ import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.KTypeParameter
 import kotlin.reflect.KTypeProjection
+import kotlin.reflect.full.createType
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
 
@@ -22,9 +23,14 @@ object SimpleObjectHandler {
     // cache[type.getSimpleSlug()] = ReferenceDefinition("RECURSION_PLACEHOLDER")
     val typeMap = clazz.typeParameters.zip(type.arguments).toMap()
     val props = clazz.memberProperties.associate { prop ->
-      val schema = when (typeMap.containsKey(prop.returnType.classifier)) {
-        true -> handleGenericProperty(prop, typeMap, cache)
-        false -> handleProperty(prop, cache)
+      val propClass = prop.returnType.classifier as KClass<*>
+
+      val schema = when (propClass.typeParameters.isNotEmpty()) {
+        true -> handleNestedGenerics(typeMap, prop, propClass, cache)
+        false -> when (typeMap.containsKey(prop.returnType.classifier)) {
+          true -> handleGenericProperty(prop, typeMap, cache)
+          false -> handleProperty(prop, cache)
+        }
       }
 
       prop.name to schema
@@ -45,6 +51,27 @@ object SimpleObjectHandler {
     return when (type.isMarkedNullable) {
       true -> OneOfDefinition(NullableDefinition(), definition)
       false -> definition
+    }
+  }
+
+  private fun handleNestedGenerics(
+    typeMap: Map<KTypeParameter, KTypeProjection>,
+    prop: KProperty<*>,
+    propClass: KClass<*>,
+    cache: MutableMap<String, JsonSchema>
+  ): JsonSchema {
+    // todo breaks if > 1 param
+    val holyFuck = typeMap.filterKeys { k ->
+      k.name == prop.returnType.arguments.first().type.toString()
+    }.values.first()
+    val constructedType = propClass.createType(listOf(holyFuck))
+    return SchemaGenerator.fromTypeToSchema(constructedType, cache).let {
+      if (it is TypeDefinition && it.type == "object") {
+        cache[constructedType.getSimpleSlug()] = it
+        ReferenceDefinition(prop.returnType.getReferenceSlug())
+      } else {
+        it
+      }
     }
   }
 
