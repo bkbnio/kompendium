@@ -1,22 +1,10 @@
-package io.bkbn.kompendium.locations.util
+import io.ktor.server.locations.Location
 
-//import io.bkbn.kompendium.annotations.Param
-//import io.bkbn.kompendium.annotations.ParamType
-//import io.ktor.locations.Location
-//
-//@Location("/test/{name}")
-//data class SimpleLoc(@Param(ParamType.PATH) val name: String) {
-//  @Location("/nesty")
-//  data class NestedLoc(@Param(ParamType.QUERY) val isCool: Boolean, val parent: SimpleLoc)
-//}
-//
-//object NonLocationObject {
-//  @Location("/test/{name}")
-//  data class SimpleLoc(@Param(ParamType.PATH) val name: String) {
-//    @Location("/nesty")
-//    data class NestedLoc(@Param(ParamType.QUERY) val isCool: Boolean, val parent: SimpleLoc)
-//  }
-//}
-//
-//data class SimpleResponse(val result: Boolean)
-//data class SimpleRequest(val input: String)
+@Location("/list/{name}/page/{page}")
+data class Listing(val name: String, val page: Int)
+
+@Location("/type/{name}") data class Type(val name: String) {
+  // In these classes we have to include the `name` property matching the parent.
+  @Location("/edit") data class Edit(val parent: Type)
+  @Location("/other/{page}") data class Other(val parent: Type, val page: Int)
+}
