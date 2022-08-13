@@ -32,6 +32,7 @@ import io.ktor.server.routing.delete
 import io.ktor.server.routing.get
 import io.ktor.server.routing.head
 import io.ktor.server.routing.options
+import io.ktor.server.routing.param
 import io.ktor.server.routing.patch
 import io.ktor.server.routing.post
 import io.ktor.server.routing.put
@@ -501,101 +502,49 @@ object TestModules {
     }
   }
 
-  fun Routing.exampleParams() {
-    route(rootPath) {
-      install(NotarizedRoute()) {
-        get = GetInfo.builder {
-          summary(defaultPathSummary)
-          description(defaultPathDescription)
-          parameters = listOf(
-            Parameter(
-              name = "id",
-              `in` = Parameter.Location.path,
-              schema = TypeDefinition.STRING,
-              examples = mapOf(
-                "foo" to Parameter.Example("testing")
-              )
-            )
-          )
-          response {
-            description(defaultResponseDescription)
-            responseCode(HttpStatusCode.OK)
-            responseType<TestResponse>()
-          }
-        }
-      }
-    }
-  }
+  fun Routing.exampleParams() = basicGetGenerator<TestResponse>(
+    params = listOf(
+      Parameter(
+        name = "id",
+        `in` = Parameter.Location.path,
+        schema = TypeDefinition.STRING,
+        examples = mapOf(
+          "foo" to Parameter.Example("testing")
+        )
+      )
+    )
+  )
 
-  fun Routing.defaultParameter() {
-    route(rootPath) {
-      install(NotarizedRoute()) {
-        get = GetInfo.builder {
-          summary(defaultPathSummary)
-          description(defaultPathDescription)
-          parameters = listOf(
-            Parameter(
-              name = "id",
-              `in` = Parameter.Location.path,
-              schema = TypeDefinition.STRING.withDefault("IDK")
-            )
-          )
-          response {
-            description(defaultResponseDescription)
-            responseCode(HttpStatusCode.OK)
-            responseType<TestResponse>()
-          }
-        }
-      }
-    }
-  }
+  fun Routing.defaultParameter() = basicGetGenerator<TestResponse>(
+    params = listOf(
+      Parameter(
+        name = "id",
+        `in` = Parameter.Location.path,
+        schema = TypeDefinition.STRING.withDefault("IDK")
+      )
+    )
+  )
 
-  fun Routing.requiredParams() {
-    route(rootPath) {
-      install(NotarizedRoute()) {
-        get = GetInfo.builder {
-          summary(defaultPathSummary)
-          description(defaultPathDescription)
-          parameters = listOf(
-            Parameter(
-              name = "id",
-              `in` = Parameter.Location.path,
-              schema = TypeDefinition.STRING
-            )
-          )
-          response {
-            description(defaultResponseDescription)
-            responseCode(HttpStatusCode.OK)
-            responseType<TestResponse>()
-          }
-        }
-      }
-    }
-  }
+  fun Routing.requiredParams() = basicGetGenerator<TestResponse>(
+    params = listOf(
+      Parameter(
+        name = "id",
+        `in` = Parameter.Location.path,
+        schema = TypeDefinition.STRING
+      )
+    )
+  )
 
-  fun Routing.nonRequiredParam() {
-    route(rootPath) {
-      install(NotarizedRoute()) {
-        get = GetInfo.builder {
-          summary(defaultPathSummary)
-          description(defaultPathDescription)
-          parameters = listOf(
-            Parameter(
-              name = "id",
-              `in` = Parameter.Location.query,
-              schema = TypeDefinition.STRING,
-              required = false
-            )
-          )
-          response {
-            description(defaultResponseDescription)
-            responseCode(HttpStatusCode.OK)
-            responseType<TestResponse>()
-          }
-        }
-      }
-    }
-  }
+  fun Routing.nonRequiredParam() = basicGetGenerator<TestResponse>(
+    params = listOf(
+      Parameter(
+        name = "id",
+        `in` = Parameter.Location.query,
+        schema = TypeDefinition.STRING,
+        required = false
+      )
+    )
+  )
 
   fun Routing.defaultField() = basicGetGenerator<DefaultField>()
 
@@ -614,12 +563,13 @@ object TestModules {
   fun Routing.genericPolymorphicResponse() = basicGetGenerator<Flibbity<Double>>()
 
   fun Routing.genericPolymorphicResponseMultipleImpls() = basicGetGenerator<Flibbity<FlibbityGibbit>>()
-  private inline fun <reified T> Routing.basicGetGenerator() {
+  private inline fun <reified T> Routing.basicGetGenerator(params: List<Parameter> = emptyList()) {
     route(rootPath) {
       install(NotarizedRoute()) {
         get = GetInfo.builder {
           summary(defaultPathSummary)
           description(defaultPathDescription)
+          parameters = params
           response {
             description(defaultResponseDescription)
             responseCode(HttpStatusCode.OK)
