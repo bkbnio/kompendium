@@ -68,12 +68,12 @@ object NotarizedLocations {
       ?: error("Cannot notarize a location without annotating with @Location")
 
     val path = location.path
-    val parent = memberProperties.find { it.hasAnnotation<Location>() }
+    val parent = memberProperties.map { it.returnType.classifier as KClass<*> }.find { it.hasAnnotation<Location>() }
 
     return if (parent == null) {
       path
     } else {
-      (parent.returnType.classifier as KClass<*>).getLocationFromClass() + path
+      parent.getLocationFromClass() + path
     }
   }
 }

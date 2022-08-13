@@ -1,5 +1,6 @@
 {
-  "openapi": "3.0.3",
+  "openapi": "3.1.0",
+  "jsonSchemaDialect": "https://json-schema.org/draft/2020-12/schema",
   "info": {
     "title": "Test API",
     "version": "1.33.7",
@@ -26,59 +27,62 @@
     }
   ],
   "paths": {
-    "/test/test/{name}/nesty": {
-      "delete": {
+    "/list/{name}/page/{page}": {
+      "get": {
         "tags": [],
-        "summary": "Location Test",
-        "description": "A cool test",
-        "parameters": [
-          {
-            "name": "isCool",
-            "in": "query",
-            "schema": {
-              "type": "boolean"
-            },
-            "required": true,
-            "deprecated": false
-          },
-          {
-            "name": "name",
-            "in": "path",
-            "schema": {
-              "type": "string"
-            },
-            "required": true,
-            "deprecated": false
-          }
-        ],
+        "summary": "Location",
+        "description": "example location",
+        "parameters": [],
         "responses": {
           "200": {
-            "description": "A successful endeavor",
+            "description": "does great things",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SimpleResponse"
+                  "$ref": "#/components/schemas/TestResponse"
                 }
               }
             }
           }
         },
         "deprecated": false
-      }
+      },
+      "parameters": [
+        {
+          "name": "name",
+          "in": "path",
+          "schema": {
+            "type": "string"
+          },
+          "required": true,
+          "deprecated": false
+        },
+        {
+          "name": "page",
+          "in": "path",
+          "schema": {
+            "type": "number",
+            "format": "int32"
+          },
+          "required": true,
+          "deprecated": false
+        }
+      ]
     }
   },
+  "webhooks": {},
   "components": {
     "schemas": {
-      "SimpleResponse": {
+      "TestResponse": {
+        "type": "object",
         "properties": {
-          "result": {
-            "type": "boolean"
+          "c": {
+            "type": "string"
           }
         },
         "required": [
-          "result"
-        ],
-        "type": "object"
+          "c"
+        ]
       }
     },
     "securitySchemes": {}
