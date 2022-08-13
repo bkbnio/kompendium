@@ -31,7 +31,13 @@ object SimpleObjectHandler {
         }
       }
 
-      prop.name to schema
+      // TODO This is kinda hacky 👀 And might break in certain edge cases?
+      val nullCheckSchema = when (prop.returnType.isMarkedNullable && schema !is OneOfDefinition) {
+        true -> OneOfDefinition(NullableDefinition(), schema)
+        false -> schema
+      }
+
+      prop.name to nullCheckSchema
     }
 
     val required = clazz.memberProperties.filterNot { prop -> prop.returnType.isMarkedNullable }

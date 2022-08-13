@@ -29,6 +29,7 @@ import io.bkbn.kompendium.core.util.TestModules.notarizedPut
 import io.bkbn.kompendium.core.util.TestModules.nullableEnumField
 import io.bkbn.kompendium.core.util.TestModules.nullableField
 import io.bkbn.kompendium.core.util.TestModules.nullableNestedObject
+import io.bkbn.kompendium.core.util.TestModules.nullableReference
 import io.bkbn.kompendium.core.util.TestModules.polymorphicCollectionResponse
 import io.bkbn.kompendium.core.util.TestModules.polymorphicMapResponse
 import io.bkbn.kompendium.core.util.TestModules.polymorphicResponse
@@ -190,6 +191,9 @@ class KompendiumTest : DescribeSpec({
     }
     it("Can have a nullable enum as a member field") {
       openApiTestAllSerializers("T0037__nullable_enum_field.json") { nullableEnumField() }
+    }
+    it("Can have a nullable reference without impacting base type") {
+      openApiTestAllSerializers("T0041__nullable_reference.json") { nullableReference() }
     }
   }
   describe("Constraints") {
