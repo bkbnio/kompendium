@@ -563,12 +563,19 @@ object TestModules {
   fun Routing.genericPolymorphicResponse() = basicGetGenerator<Flibbity<Double>>()
 
   fun Routing.genericPolymorphicResponseMultipleImpls() = basicGetGenerator<Flibbity<FlibbityGibbit>>()
-  private inline fun <reified T> Routing.basicGetGenerator(params: List<Parameter> = emptyList()) {
+
+  fun Routing.withOperationId() = basicGetGenerator<TestResponse>(operationId = "getThisDude")
+
+  private inline fun <reified T> Routing.basicGetGenerator(
+    params: List<Parameter> = emptyList(),
+    operationId: String? = null
+  ) {
     route(rootPath) {
       install(NotarizedRoute()) {
         get = GetInfo.builder {
           summary(defaultPathSummary)
           description(defaultPathDescription)
+          operationId?.let { operationId(it) }
           parameters = params
           response {
             description(defaultResponseDescription)

@@ -34,6 +34,7 @@ import io.bkbn.kompendium.core.util.TestModules.rootRoute
 import io.bkbn.kompendium.core.util.TestModules.simpleGenericResponse
 import io.bkbn.kompendium.core.util.TestModules.simplePathParsing
 import io.bkbn.kompendium.core.util.TestModules.trailingSlash
+import io.bkbn.kompendium.core.util.TestModules.withOperationId
 import io.kotest.core.spec.style.DescribeSpec
 
 class KompendiumTest : DescribeSpec({
@@ -150,12 +151,20 @@ class KompendiumTest : DescribeSpec({
       openApiTestAllSerializers("T0033__crazy_polymorphic_example.json") { genericPolymorphicResponseMultipleImpls() }
     }
   }
+  describe("Miscellaneous") {
+    xit("Can generate the necessary ReDoc home page") {
+      // TODO apiFunctionalityTest(getFileSnapshot("redoc.html"), "/docs") { returnsList() }
+    }
+    it("Can add an operation id to a notarized route") {
+      openApiTestAllSerializers("T0034__notarized_get_with_operation_id.json") { withOperationId() }
+    }
+  }
 //  describe("Miscellaneous") {
 //    it("Can generate the necessary ReDoc home page") {
 //      apiFunctionalityTest(getFileSnapshot("redoc.html"), "/docs") { returnsList() }
 //    }
 //    it("Can add an operation id to a notarized route") {
-//      openApiTestAllSerializers("notarized_get_with_operation_id.json") { withOperationId() }
+//      openApiTestAllSerializers("T0034__notarized_get_with_operation_id.json") { withOperationId() }
 //    }
 //    it("Can add an undeclared field") {
 //      openApiTestAllSerializers("undeclared_field.json") { undeclaredType() }
