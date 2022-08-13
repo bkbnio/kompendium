@@ -8,7 +8,6 @@ import io.bkbn.kompendium.oas.server.Server
 import kotlinx.serialization.ExperimentalSerializationApi
 import java.net.URI
 
-@OptIn(ExperimentalSerializationApi::class)
 object Util {
   val baseSpec = OpenApiSpec(
     info = Info(
