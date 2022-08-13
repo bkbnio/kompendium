@@ -23,10 +23,8 @@ object SimpleObjectHandler {
     // cache[type.getSimpleSlug()] = ReferenceDefinition("RECURSION_PLACEHOLDER")
     val typeMap = clazz.typeParameters.zip(type.arguments).toMap()
     val props = clazz.memberProperties.associate { prop ->
-      val propClass = prop.returnType.classifier as KClass<*>
-
       val schema = when (prop.needsToInjectGenerics(typeMap)) {
-        true -> handleNestedGenerics(typeMap, prop, propClass, cache)
+        true -> handleNestedGenerics(typeMap, prop, cache)
         false -> when (typeMap.containsKey(prop.returnType.classifier)) {
           true -> handleGenericProperty(prop, typeMap, cache)
           false -> handleProperty(prop, cache)
@@ -64,9 +62,9 @@ object SimpleObjectHandler {
   private fun handleNestedGenerics(
     typeMap: Map<KTypeParameter, KTypeProjection>,
     prop: KProperty<*>,
-    propClass: KClass<*>,
     cache: MutableMap<String, JsonSchema>
   ): JsonSchema {
+    val propClass = prop.returnType.classifier as KClass<*>
     val types = prop.returnType.arguments.map {
       val typeSymbol = it.type.toString()
       typeMap.filterKeys { k -> k.name == typeSymbol }.values.first()
