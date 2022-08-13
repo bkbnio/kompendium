@@ -1,6 +1,5 @@
 rootProject.name = "kompendium"
 
-include("annotations")
 include("core")
 include("oas")
 include("auth")

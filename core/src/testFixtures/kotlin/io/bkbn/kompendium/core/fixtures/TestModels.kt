@@ -1,28 +1,7 @@
 package io.bkbn.kompendium.core.fixtures
 
-import io.bkbn.kompendium.annotations.Field
-import io.bkbn.kompendium.annotations.FreeFormObject
-import io.bkbn.kompendium.annotations.Param
-import io.bkbn.kompendium.annotations.ParamType
-import io.bkbn.kompendium.annotations.UndeclaredField
-import io.bkbn.kompendium.annotations.constraint.Format
-import io.bkbn.kompendium.annotations.constraint.MaxItems
-import io.bkbn.kompendium.annotations.constraint.MaxLength
-import io.bkbn.kompendium.annotations.constraint.MaxProperties
-import io.bkbn.kompendium.annotations.constraint.Maximum
-import io.bkbn.kompendium.annotations.constraint.MinItems
-import io.bkbn.kompendium.annotations.constraint.MinLength
-import io.bkbn.kompendium.annotations.constraint.MinProperties
-import io.bkbn.kompendium.annotations.constraint.Minimum
-import io.bkbn.kompendium.annotations.constraint.MultipleOf
-import io.bkbn.kompendium.annotations.constraint.Pattern
-import io.bkbn.kompendium.annotations.constraint.UniqueItems
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.JsonElement
-import java.math.BigDecimal
-import java.math.BigInteger
 import java.time.Instant
-import java.util.UUID
 
 @Serializable
 data class TestNested(val nesty: String)
@@ -69,7 +48,6 @@ data class NullableField(
 
 data class ComplexRequest(
   val org: String,
-  @Field("amazing_field")
   val amazingField: String,
   val tables: List<NestedComplexItem>
 )
