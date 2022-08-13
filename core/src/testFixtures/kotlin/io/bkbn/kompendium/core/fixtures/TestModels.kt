@@ -138,3 +138,6 @@ data class ManyThings(
   val someA: Something,
   val someB: Something?
 )
+
+data class Foosy<T, K>(val test: T, val otherThing: List<K>)
+data class Barzo<G>(val result: G)

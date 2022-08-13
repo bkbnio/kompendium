@@ -14,6 +14,7 @@ import io.bkbn.kompendium.core.util.TestModules.singleException
 import io.bkbn.kompendium.core.util.TestModules.genericException
 import io.bkbn.kompendium.core.util.TestModules.genericPolymorphicResponse
 import io.bkbn.kompendium.core.util.TestModules.genericPolymorphicResponseMultipleImpls
+import io.bkbn.kompendium.core.util.TestModules.gnarlyGenericResponse
 import io.bkbn.kompendium.core.util.TestModules.headerParameter
 import io.bkbn.kompendium.core.util.TestModules.multipleExceptions
 import io.bkbn.kompendium.core.util.TestModules.nestedGenericCollection
@@ -166,6 +167,9 @@ class KompendiumTest : DescribeSpec({
     }
     it("Can support nested generics with multiple type parameters") {
       openApiTestAllSerializers("T0040__nested_generic_multiple_type_params.json") { nestedGenericMultipleParamsCollection() }
+    }
+    it("Can handle a really gnarly generic example") {
+      openApiTestAllSerializers("T0043__gnarly_generic_example.json") { gnarlyGenericResponse() }
     }
   }
   describe("Miscellaneous") {

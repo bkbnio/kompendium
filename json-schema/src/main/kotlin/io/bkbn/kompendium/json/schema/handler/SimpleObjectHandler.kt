@@ -96,7 +96,7 @@ object SimpleObjectHandler {
     return SchemaGenerator.fromTypeToSchema(type, cache).let {
       if (it.isOrContainsObjectDef()) {
         cache[type.getSimpleSlug()] = it
-        ReferenceDefinition(prop.returnType.getReferenceSlug())
+        ReferenceDefinition(type.getReferenceSlug())
       } else {
         it
       }
