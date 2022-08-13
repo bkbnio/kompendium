@@ -1,6 +1,8 @@
 package io.bkbn.kompendium.json.schema
 
 import io.bkbn.kompendium.json.schema.definition.JsonSchema
+import io.bkbn.kompendium.json.schema.definition.NullableDefinition
+import io.bkbn.kompendium.json.schema.definition.OneOfDefinition
 import io.bkbn.kompendium.json.schema.definition.TypeDefinition
 import io.bkbn.kompendium.json.schema.handler.CollectionHandler
 import io.bkbn.kompendium.json.schema.handler.EnumHandler
@@ -29,13 +31,12 @@ object SchemaGenerator {
           please call SchemaGenerator.fromTypeOrUnit()
         """.trimIndent()
       )
-
-      Int::class -> TypeDefinition.INT
-      Long::class -> TypeDefinition.LONG
-      Double::class -> TypeDefinition.DOUBLE
-      Float::class -> TypeDefinition.FLOAT
-      String::class -> TypeDefinition.STRING
-      Boolean::class -> TypeDefinition.BOOLEAN
+      Int::class -> checkForNull(type, TypeDefinition.INT)
+      Long::class -> checkForNull(type, TypeDefinition.LONG)
+      Double::class -> checkForNull(type, TypeDefinition.DOUBLE)
+      Float::class -> checkForNull(type, TypeDefinition.FLOAT)
+      String::class -> checkForNull(type, TypeDefinition.STRING)
+      Boolean::class -> checkForNull(type, TypeDefinition.BOOLEAN)
       else -> when {
         clazz.isSubclassOf(Enum::class) -> EnumHandler.handle(type, clazz)
         clazz.isSubclassOf(Collection::class) -> CollectionHandler.handle(type, cache)
@@ -56,4 +57,9 @@ object SchemaGenerator {
       Unit::class -> null
       else -> fromTypeToSchema(type, cache)
     }
+
+  private fun checkForNull(type: KType, schema: JsonSchema): JsonSchema = when (type.isMarkedNullable) {
+    true -> OneOfDefinition(NullableDefinition(), schema)
+    false -> schema
+  }
 }

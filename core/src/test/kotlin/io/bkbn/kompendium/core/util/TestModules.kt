@@ -1,5 +1,6 @@
 package io.bkbn.kompendium.core.util
 
+import io.bkbn.kompendium.core.fixtures.ColumnSchema
 import io.bkbn.kompendium.core.fixtures.ComplexRequest
 import io.bkbn.kompendium.core.fixtures.DefaultField
 import io.bkbn.kompendium.core.fixtures.ExceptionResponse
@@ -7,6 +8,7 @@ import io.bkbn.kompendium.core.fixtures.Flibbity
 import io.bkbn.kompendium.core.fixtures.FlibbityGibbit
 import io.bkbn.kompendium.core.fixtures.Gibbity
 import io.bkbn.kompendium.core.fixtures.NullableField
+import io.bkbn.kompendium.core.fixtures.ProfileUpdateRequest
 import io.bkbn.kompendium.core.fixtures.TestCreatedResponse
 import io.bkbn.kompendium.core.fixtures.TestNested
 import io.bkbn.kompendium.core.fixtures.TestRequest
@@ -565,6 +567,19 @@ object TestModules {
   fun Routing.genericPolymorphicResponseMultipleImpls() = basicGetGenerator<Flibbity<FlibbityGibbit>>()
 
   fun Routing.withOperationId() = basicGetGenerator<TestResponse>(operationId = "getThisDude")
+
+  fun Routing.nullableNestedObject() = basicGetGenerator<ProfileUpdateRequest>()
+
+  fun Routing.headerParameter() = basicGetGenerator<TestResponse>( params = listOf(
+    Parameter(
+      name = "X-User-Email",
+      `in` = Parameter.Location.header,
+      schema = TypeDefinition.STRING,
+      required = true
+    )
+  ))
+
+  fun Routing.simpleRecursive() = basicGetGenerator<ColumnSchema>()
 
   private inline fun <reified T> Routing.basicGetGenerator(
     params: List<Parameter> = emptyList(),

@@ -13,6 +13,7 @@ import io.bkbn.kompendium.core.util.TestModules.singleException
 import io.bkbn.kompendium.core.util.TestModules.genericException
 import io.bkbn.kompendium.core.util.TestModules.genericPolymorphicResponse
 import io.bkbn.kompendium.core.util.TestModules.genericPolymorphicResponseMultipleImpls
+import io.bkbn.kompendium.core.util.TestModules.headerParameter
 import io.bkbn.kompendium.core.util.TestModules.multipleExceptions
 import io.bkbn.kompendium.core.util.TestModules.nestedGenericResponse
 import io.bkbn.kompendium.core.util.TestModules.nonRequiredParam
@@ -23,6 +24,7 @@ import io.bkbn.kompendium.core.util.TestModules.notarizedPatch
 import io.bkbn.kompendium.core.util.TestModules.notarizedPost
 import io.bkbn.kompendium.core.util.TestModules.notarizedPut
 import io.bkbn.kompendium.core.util.TestModules.nullableField
+import io.bkbn.kompendium.core.util.TestModules.nullableNestedObject
 import io.bkbn.kompendium.core.util.TestModules.polymorphicCollectionResponse
 import io.bkbn.kompendium.core.util.TestModules.polymorphicMapResponse
 import io.bkbn.kompendium.core.util.TestModules.polymorphicResponse
@@ -158,28 +160,25 @@ class KompendiumTest : DescribeSpec({
     it("Can add an operation id to a notarized route") {
       openApiTestAllSerializers("T0034__notarized_get_with_operation_id.json") { withOperationId() }
     }
+    xit("Can add an undeclared field") {
+      // TODO openApiTestAllSerializers("undeclared_field.json") { undeclaredType() }
+    }
+    it("Can add a custom header parameter with a name override") {
+      openApiTestAllSerializers("T0035__override_parameter_name.json") { headerParameter() }
+    }
+    xit("Can override field name") {
+      // TODO Assess strategies here
+    }
+    xit("Can serialize a recursive type") {
+      // TODO openApiTestAllSerializers("simple_recursive.json") { simpleRecursive() }
+    }
+    it("Nullable fields do not lead to doom") {
+      openApiTestAllSerializers("T0036__nullable_fields.json") { nullableNestedObject() }
+    }
   }
 //  describe("Miscellaneous") {
-//    it("Can generate the necessary ReDoc home page") {
-//      apiFunctionalityTest(getFileSnapshot("redoc.html"), "/docs") { returnsList() }
-//    }
-//    it("Can add an operation id to a notarized route") {
-//      openApiTestAllSerializers("T0034__notarized_get_with_operation_id.json") { withOperationId() }
-//    }
-//    it("Can add an undeclared field") {
-//      openApiTestAllSerializers("undeclared_field.json") { undeclaredType() }
-//    }
-//    it("Can add a custom header parameter with a name override") {
-//      openApiTestAllSerializers("override_parameter_name.json") { headerParameter() }
-//    }
-//    it("Can override field values via annotation") {
-//      openApiTestAllSerializers("field_override.json") { overrideFieldInfo() }
-//    }
-//    it("Can serialize a recursive type") {
-//      openApiTestAllSerializers("simple_recursive.json") { simpleRecursive() }
-//    }
 //    it("Nullable fields do not lead to doom") {
-//      openApiTestAllSerializers("nullable_fields.json") { nullableNestedObject() }
+//      openApiTestAllSerializers("T0036__nullable_fields.json") { nullableNestedObject() }
 //    }
 //    it("Can have a nullable enum as a member field") {
 //      openApiTestAllSerializers("nullable_enum_field.json") { nullableEnumField() }

@@ -39,7 +39,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/NullableField"
+                  "$ref": "#/components/schemas/ProfileUpdateRequest"
                 }
               }
             }
@@ -53,16 +53,60 @@
   "webhooks": {},
   "components": {
     "schemas": {
-      "NullableField": {
+      "ProfileUpdateRequest": {
         "type": "object",
         "properties": {
-          "a": {
+          "metadata": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "isPrivate": {
+                    "oneOf": [
+                      {
+                        "type": "null"
+                      },
+                      {
+                        "type": "boolean"
+                      }
+                    ]
+                  },
+                  "otherThing": {
+                    "oneOf": [
+                      {
+                        "type": "null"
+                      },
+                      {
+                        "type": "string"
+                      }
+                    ]
+                  }
+                },
+                "required": []
+              }
+            ]
+          },
+          "mood": {
             "oneOf": [
               {
                 "type": "null"
               },
               {
                 "type": "string"
+              }
+            ]
+          },
+          "viewCount": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "number",
+                "format": "int64"
               }
             ]
           }

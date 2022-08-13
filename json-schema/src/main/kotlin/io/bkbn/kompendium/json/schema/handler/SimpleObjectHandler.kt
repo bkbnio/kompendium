@@ -19,7 +19,7 @@ import kotlin.reflect.full.primaryConstructor
 object SimpleObjectHandler {
 
   fun handle(type: KType, clazz: KClass<*>, cache: MutableMap<String, JsonSchema>): JsonSchema {
-    cache[type.getSimpleSlug()] = ReferenceDefinition("RECURSION_PLACEHOLDER")
+    // cache[type.getSimpleSlug()] = ReferenceDefinition("RECURSION_PLACEHOLDER")
     val typeMap = clazz.typeParameters.zip(type.arguments).toMap()
     val props = clazz.memberProperties.associate { prop ->
       val schema = when (typeMap.containsKey(prop.returnType.classifier)) {
