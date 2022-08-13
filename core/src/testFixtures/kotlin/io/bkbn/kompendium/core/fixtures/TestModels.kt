@@ -225,7 +225,7 @@ sealed class FlibbityGibbit {
 }
 
 data class SimpleGibbit(val a: String, override val z: String = "z") : FlibbityGibbit()
-data class ComplexGibbit(val b: String, val c: Int, override val z: String = "z") : FlibbityGibbit()
+data class ComplexGibbit(val b: String, val c: Int, override val z: String) : FlibbityGibbit()
 
 sealed interface SlammaJamma
 

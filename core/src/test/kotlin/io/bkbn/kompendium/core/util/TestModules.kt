@@ -5,6 +5,7 @@ import io.bkbn.kompendium.core.fixtures.DefaultField
 import io.bkbn.kompendium.core.fixtures.ExceptionResponse
 import io.bkbn.kompendium.core.fixtures.Flibbity
 import io.bkbn.kompendium.core.fixtures.FlibbityGibbit
+import io.bkbn.kompendium.core.fixtures.NullableField
 import io.bkbn.kompendium.core.fixtures.TestCreatedResponse
 import io.bkbn.kompendium.core.fixtures.TestNested
 import io.bkbn.kompendium.core.fixtures.TestRequest
@@ -605,6 +606,70 @@ object TestModules {
             description(defaultResponseDescription)
             responseCode(HttpStatusCode.OK)
             responseType<DefaultField>()
+          }
+        }
+      }
+    }
+  }
+
+  fun Routing.nullableField() {
+    route(rootPath) {
+      install(NotarizedRoute()) {
+        get = GetInfo.builder {
+          summary(defaultPathSummary)
+          description(defaultPathDescription)
+          response {
+            description(defaultResponseDescription)
+            responseCode(HttpStatusCode.OK)
+            responseType<NullableField>()
+          }
+        }
+      }
+    }
+  }
+
+  fun Routing.polymorphicResponse() {
+    route(rootPath) {
+      install(NotarizedRoute()) {
+        get = GetInfo.builder {
+          summary(defaultPathSummary)
+          description(defaultPathDescription)
+          response {
+            description(defaultResponseDescription)
+            responseCode(HttpStatusCode.OK)
+            responseType<FlibbityGibbit>()
+          }
+        }
+      }
+    }
+  }
+
+  fun Routing.polymorphicCollectionResponse() {
+    route(rootPath) {
+      install(NotarizedRoute()) {
+        get = GetInfo.builder {
+          summary(defaultPathSummary)
+          description(defaultPathDescription)
+          response {
+            description(defaultResponseDescription)
+            responseCode(HttpStatusCode.OK)
+            responseType<List<FlibbityGibbit>>()
+          }
+        }
+      }
+    }
+  }
+
+  fun Routing.polymorphicMapResponse() {
+    route(rootPath) {
+      install(NotarizedRoute()) {
+        get = GetInfo.builder {
+          summary(defaultPathSummary)
+          description(defaultPathDescription)
+          response {
+            description(defaultResponseDescription)
+            responseCode(HttpStatusCode.OK)
+            responseType<Map<String, FlibbityGibbit>>()
           }
         }
       }

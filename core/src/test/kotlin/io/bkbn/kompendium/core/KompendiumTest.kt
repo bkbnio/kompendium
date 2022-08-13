@@ -19,6 +19,10 @@ import io.bkbn.kompendium.core.util.TestModules.notarizedOptions
 import io.bkbn.kompendium.core.util.TestModules.notarizedPatch
 import io.bkbn.kompendium.core.util.TestModules.notarizedPost
 import io.bkbn.kompendium.core.util.TestModules.notarizedPut
+import io.bkbn.kompendium.core.util.TestModules.nullableField
+import io.bkbn.kompendium.core.util.TestModules.polymorphicCollectionResponse
+import io.bkbn.kompendium.core.util.TestModules.polymorphicMapResponse
+import io.bkbn.kompendium.core.util.TestModules.polymorphicResponse
 import io.bkbn.kompendium.core.util.TestModules.primitives
 import io.bkbn.kompendium.core.util.TestModules.reqRespExamples
 import io.bkbn.kompendium.core.util.TestModules.requiredParams
@@ -115,25 +119,22 @@ class KompendiumTest : DescribeSpec({
     it("Does not mark a field as required if a default value is provided") {
       openApiTestAllSerializers("T0025__default_field.json") { defaultField() }
     }
+    it("Does not mark a nullable field as required") {
+      openApiTestAllSerializers("T0026__nullable_field.json") { nullableField() }
+    }
   }
-//  describe("Required Fields") {
-//    it("Does not mark a field as required if a default value is provided") {
-//      openApiTestAllSerializers("T0025__default_field.json") { defaultField() }
-//    }
-//    it("Marks a field as nullable when expected") {
-//      openApiTestAllSerializers("nullable_field.json") { nullableField() }
-//    }
-//  }
+  describe("Polymorphism and Generics") {
+    it("can generate a polymorphic response type") {
+      openApiTestAllSerializers("T0027__polymorphic_response.json") { polymorphicResponse() }
+    }
+    it("Can generate a collection with polymorphic response type") {
+      openApiTestAllSerializers("T0028__polymorphic_list_response.json") { polymorphicCollectionResponse() }
+    }
+    it("Can generate a map with a polymorphic response type") {
+      openApiTestAllSerializers("T0029__polymorphic_map_response.json") { polymorphicMapResponse() }
+    }
+  }
 //  describe("Polymorphism and Generics") {
-//    it("can generate a polymorphic response type") {
-//      openApiTestAllSerializers("polymorphic_response.json") { polymorphicResponse() }
-//    }
-//    it("Can generate a collection with polymorphic response type") {
-//      openApiTestAllSerializers("polymorphic_list_response.json") { polymorphicCollectionResponse() }
-//    }
-//    it("Can generate a map with a polymorphic response type") {
-//      openApiTestAllSerializers("polymorphic_map_response.json") { polymorphicMapResponse() }
-//    }
 //    it("Can generate a polymorphic response from a sealed interface") {
 //      openApiTestAllSerializers("sealed_interface_response.json") { polymorphicInterfaceResponse() }
 //    }

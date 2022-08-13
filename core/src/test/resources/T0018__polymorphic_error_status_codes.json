@@ -104,7 +104,8 @@
         },
         "required": [
           "b",
-          "c"
+          "c",
+          "z"
         ]
       },
       "FlibbityGibbit": {

@@ -1,5 +1,6 @@
 {
-  "openapi": "3.0.3",
+  "openapi": "3.1.0",
+  "jsonSchemaDialect": "https://json-schema.org/draft/2020-12/schema",
   "info": {
     "title": "Test API",
     "version": "1.33.7",
@@ -26,41 +27,34 @@
     }
   ],
   "paths": {
-    "/test/polymorphicmap": {
+    "/": {
       "get": {
         "tags": [],
-        "summary": "By gawd that's a lot of gibbits",
-        "description": "Polymorphic list response",
+        "summary": "Great Summary!",
+        "description": "testing more",
         "parameters": [],
         "responses": {
           "200": {
-            "description": "A successful endeavor",
+            "description": "A Successful Endeavor",
             "content": {
               "application/json": {
                 "schema": {
-                  "additionalProperties": {
-                    "anyOf": [
-                      {
-                        "$ref": "#/components/schemas/SimpleGibbit"
-                      },
-                      {
-                        "$ref": "#/components/schemas/ComplexGibbit"
-                      }
-                    ]
-                  },
-                  "type": "object"
+                  "$ref": "#/components/schemas/List-FlibbityGibbit"
                 }
               }
             }
           }
         },
         "deprecated": false
-      }
+      },
+      "parameters": []
     }
   },
+  "webhooks": {},
   "components": {
     "schemas": {
       "SimpleGibbit": {
+        "type": "object",
         "properties": {
           "a": {
             "type": "string"
@@ -71,17 +65,17 @@
         },
         "required": [
           "a"
-        ],
-        "type": "object"
+        ]
       },
       "ComplexGibbit": {
+        "type": "object",
         "properties": {
           "b": {
             "type": "string"
           },
           "c": {
-            "format": "int32",
-            "type": "integer"
+            "type": "number",
+            "format": "int32"
           },
           "z": {
             "type": "string"
@@ -89,9 +83,22 @@
         },
         "required": [
           "b",
-          "c"
-        ],
-        "type": "object"
+          "c",
+          "z"
+        ]
+      },
+      "List-FlibbityGibbit": {
+        "items": {
+          "anyOf": [
+            {
+              "$ref": "#/components/schemas/SimpleGibbit"
+            },
+            {
+              "$ref": "#/components/schemas/ComplexGibbit"
+            }
+          ]
+        },
+        "type": "array"
       }
     },
     "securitySchemes": {}
