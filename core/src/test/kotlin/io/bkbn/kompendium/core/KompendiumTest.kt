@@ -11,6 +11,7 @@ import io.bkbn.kompendium.core.util.TestModules.notarizedGet
 import io.bkbn.kompendium.core.util.TestModules.singleException
 import io.bkbn.kompendium.core.util.TestModules.genericException
 import io.bkbn.kompendium.core.util.TestModules.multipleExceptions
+import io.bkbn.kompendium.core.util.TestModules.nonRequiredParam
 import io.bkbn.kompendium.core.util.TestModules.polymorphicException
 import io.bkbn.kompendium.core.util.TestModules.notarizedHead
 import io.bkbn.kompendium.core.util.TestModules.notarizedOptions
@@ -19,6 +20,7 @@ import io.bkbn.kompendium.core.util.TestModules.notarizedPost
 import io.bkbn.kompendium.core.util.TestModules.notarizedPut
 import io.bkbn.kompendium.core.util.TestModules.primitives
 import io.bkbn.kompendium.core.util.TestModules.reqRespExamples
+import io.bkbn.kompendium.core.util.TestModules.requiredParams
 import io.bkbn.kompendium.core.util.TestModules.returnsList
 import io.bkbn.kompendium.core.util.TestModules.rootRoute
 import io.bkbn.kompendium.core.util.TestModules.simplePathParsing
@@ -102,17 +104,17 @@ class KompendiumTest : DescribeSpec({
       openApiTestAllSerializers("T0022__query_with_default_parameter.json") { defaultParameter() }
     }
   }
-//  describe("Defaults") {
-//    it("Can generate a default parameter values") {
-//      openApiTestAllSerializers("T0022__query_with_default_parameter.json") { withDefaultParameter() }
-//    }
-//  }
+  describe("Required Fields") {
+    it("Marks a parameter as required if there is no default and it is not marked nullable") {
+      openApiTestAllSerializers("T0023__required_param.json") { requiredParams() }
+    }
+    it("Can mark a parameter as not required") {
+      openApiTestAllSerializers("T0024__non_required_param.json") { nonRequiredParam() }
+    }
+  }
 //  describe("Required Fields") {
-//    it("Marks a parameter required if there is no default and it is not marked nullable") {
-//      openApiTestAllSerializers("required_param.json") { requiredParameter() }
-//    }
 //    it("Does not mark a parameter as required if a default value is provided") {
-//      openApiTestAllSerializers("default_param.json") { defaultParameter() }
+//      openApiTestAllSerializers("T0024__non_required_param.json") { defaultParameter() }
 //    }
 //    it("Does not mark a field as required if a default value is provided") {
 //      openApiTestAllSerializers("default_field.json") { defaultField() }

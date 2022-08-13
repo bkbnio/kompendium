@@ -544,6 +544,53 @@ object TestModules {
       }
     }
   }
+
+  fun Routing.requiredParams() {
+    route(rootPath) {
+      install(NotarizedRoute()) {
+        get = GetInfo.builder {
+          summary("Polymorphic exception test")
+          description("testing more")
+          parameters = listOf(
+            Parameter(
+              name = "id",
+              `in` = Parameter.Location.path,
+              schema = TypeDefinition.STRING
+            )
+          )
+          response {
+            description(defaultResponseDescription)
+            responseCode(HttpStatusCode.OK)
+            responseType<TestResponse>()
+          }
+        }
+      }
+    }
+  }
+
+  fun Routing.nonRequiredParam() {
+    route(rootPath) {
+      install(NotarizedRoute()) {
+        get = GetInfo.builder {
+          summary("Polymorphic exception test")
+          description("testing more")
+          parameters = listOf(
+            Parameter(
+              name = "id",
+              `in` = Parameter.Location.query,
+              schema = TypeDefinition.STRING,
+              required = false
+            )
+          )
+          response {
+            description(defaultResponseDescription)
+            responseCode(HttpStatusCode.OK)
+            responseType<TestResponse>()
+          }
+        }
+      }
+    }
+  }
 }
 
 //fun Application.notarizedPutModule() {
