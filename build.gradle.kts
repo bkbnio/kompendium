@@ -5,8 +5,8 @@ plugins {
   id("io.bkbn.sourdough.application.jvm") version "0.8.0" apply false
   id("io.bkbn.sourdough.root") version "0.8.0"
   id("com.github.jakemarsden.git-hooks") version "0.0.2"
-  id("org.jetbrains.dokka") version "1.6.21"
-  id("org.jetbrains.kotlinx.kover") version "0.5.0"
+  id("org.jetbrains.dokka") version "1.7.10"
+  id("org.jetbrains.kotlinx.kover") version "0.5.1"
   id("io.github.gradle-nexus.publish-plugin") version "1.1.0"
 }
 

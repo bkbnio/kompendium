@@ -12,6 +12,14 @@
 
 ## Released
 
+## [2.3.5] - June 7th, 2022
+### Added
+
+### Changed
+- Fix serialization for api key location in api key auth configuration
+
+### Remove
+
 ## [2.3.4] - April 7th, 2022
 ### Changed
 - Put request body info now nullable
