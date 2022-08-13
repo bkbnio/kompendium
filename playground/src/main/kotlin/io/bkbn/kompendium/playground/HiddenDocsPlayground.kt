@@ -80,7 +80,6 @@ private fun Application.mainModule() {
   }
   routing {
     authenticate("basic") {
-      // Put our API docs behind basic auth
       redoc(pageTitle = "Simple API Docs")
       route("/{id}") {
         idDocumentation()
