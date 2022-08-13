@@ -18,7 +18,9 @@ sourdoughLibrary {
 
 dependencies {
   api(projects.kompendiumJsonSchema)
-  implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
+  implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
+
+  testImplementation(testFixtures(projects.kompendiumCore))
 }
 
 testing {
