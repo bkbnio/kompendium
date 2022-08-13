@@ -611,6 +611,9 @@ object TestModules {
 
   fun Routing.nestedGenericResponse() = basicGetGenerator<Gibbity<Map<String, String>>>()
 
+  fun Routing.genericPolymorphicResponse() = basicGetGenerator<Flibbity<Double>>()
+
+  fun Routing.genericPolymorphicResponseMultipleImpls() = basicGetGenerator<Flibbity<FlibbityGibbit>>()
   private inline fun <reified T> Routing.basicGetGenerator() {
     route(rootPath) {
       install(NotarizedRoute()) {

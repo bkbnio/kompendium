@@ -11,6 +11,8 @@ import io.bkbn.kompendium.core.util.TestModules.notarizedDelete
 import io.bkbn.kompendium.core.util.TestModules.notarizedGet
 import io.bkbn.kompendium.core.util.TestModules.singleException
 import io.bkbn.kompendium.core.util.TestModules.genericException
+import io.bkbn.kompendium.core.util.TestModules.genericPolymorphicResponse
+import io.bkbn.kompendium.core.util.TestModules.genericPolymorphicResponseMultipleImpls
 import io.bkbn.kompendium.core.util.TestModules.multipleExceptions
 import io.bkbn.kompendium.core.util.TestModules.nestedGenericResponse
 import io.bkbn.kompendium.core.util.TestModules.nonRequiredParam
@@ -141,15 +143,13 @@ class KompendiumTest : DescribeSpec({
     it("Can generate a response type with a nested generic type") {
       openApiTestAllSerializers("T0031__nested_generic_response.json") { nestedGenericResponse() }
     }
+    it("Can generate a polymorphic response type with generics") {
+      openApiTestAllSerializers("T0032__polymorphic_response_with_generics.json") { genericPolymorphicResponse() }
+    }
+    it("Can handle an absolutely psycho inheritance test") {
+      openApiTestAllSerializers("T0033__crazy_polymorphic_example.json") { genericPolymorphicResponseMultipleImpls() }
+    }
   }
-//  describe("Polymorphism and Generics") {
-//    it("Can generate a polymorphic response type with generics") {
-//      openApiTestAllSerializers("polymorphic_response_with_generics.json") { genericPolymorphicResponse() }
-//    }
-//    it("Can handle an absolutely psycho inheritance test") {
-//      openApiTestAllSerializers("crazy_polymorphic_example.json") { genericPolymorphicResponseMultipleImpls() }
-//    }
-//  }
 //  describe("Miscellaneous") {
 //    it("Can generate the necessary ReDoc home page") {
 //      apiFunctionalityTest(getFileSnapshot("redoc.html"), "/docs") { returnsList() }

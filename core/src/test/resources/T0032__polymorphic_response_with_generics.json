@@ -1,5 +1,6 @@
 {
-  "openapi": "3.0.3",
+  "openapi": "3.1.0",
+  "jsonSchemaDialect": "https://json-schema.org/draft/2020-12/schema",
   "info": {
     "title": "Test API",
     "version": "1.33.7",
@@ -26,73 +27,69 @@
     }
   ],
   "paths": {
-    "/test/polymorphic": {
+    "/": {
       "get": {
         "tags": [],
-        "summary": "More flibbity",
-        "description": "Polymorphic with generics",
+        "summary": "Great Summary!",
+        "description": "testing more",
         "parameters": [],
         "responses": {
           "200": {
-            "description": "A successful endeavor",
+            "description": "A Successful Endeavor",
             "content": {
               "application/json": {
                 "schema": {
-                  "anyOf": [
-                    {
-                      "$ref": "#/components/schemas/Gibbity-TestNested"
-                    },
-                    {
-                      "$ref": "#/components/schemas/Bibbity-TestNested"
-                    }
-                  ]
+                  "$ref": "#/components/schemas/Flibbity-Double"
                 }
               }
             }
           }
         },
         "deprecated": false
-      }
+      },
+      "parameters": []
     }
   },
+  "webhooks": {},
   "components": {
     "schemas": {
-      "Gibbity-TestNested": {
+      "Gibbity-Double": {
+        "type": "object",
         "properties": {
           "a": {
-            "$ref": "#/components/schemas/TestNested"
+            "type": "number",
+            "format": "double"
           }
         },
         "required": [
           "a"
-        ],
-        "type": "object"
+        ]
       },
-      "TestNested": {
-        "properties": {
-          "nesty": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "nesty"
-        ],
-        "type": "object"
-      },
-      "Bibbity-TestNested": {
+      "Bibbity-Double": {
+        "type": "object",
         "properties": {
           "b": {
             "type": "string"
           },
           "f": {
-            "$ref": "#/components/schemas/TestNested"
+            "type": "number",
+            "format": "double"
           }
         },
         "required": [
           "b",
           "f"
-        ],
-        "type": "object"
+        ]
+      },
+      "Flibbity-Double": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/Gibbity-Double"
+          },
+          {
+            "$ref": "#/components/schemas/Bibbity-Double"
+          }
+        ]
       }
     },
     "securitySchemes": {}
