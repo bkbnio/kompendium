@@ -1,5 +1,6 @@
 {
-  "openapi": "3.0.3",
+  "openapi": "3.1.0",
+  "jsonSchemaDialect": "https://json-schema.org/draft/2020-12/schema",
   "info": {
     "title": "Test API",
     "version": "1.33.7",
@@ -26,45 +27,42 @@
     }
   ],
   "paths": {
-    "/test/polymorphic": {
+    "/": {
       "get": {
         "tags": [],
-        "summary": "Single Generic",
-        "description": "Simple generic data class",
+        "summary": "Great Summary!",
+        "description": "testing more",
         "parameters": [],
         "responses": {
           "200": {
-            "description": "A successful endeavor",
+            "description": "A Successful Endeavor",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TestGeneric-Int"
+                  "$ref": "#/components/schemas/Gibbity-String"
                 }
               }
             }
           }
         },
         "deprecated": false
-      }
+      },
+      "parameters": []
     }
   },
+  "webhooks": {},
   "components": {
     "schemas": {
-      "TestGeneric-Int": {
+      "Gibbity-String": {
+        "type": "object",
         "properties": {
-          "messy": {
+          "a": {
             "type": "string"
-          },
-          "potato": {
-            "format": "int32",
-            "type": "integer"
           }
         },
         "required": [
-          "messy",
-          "potato"
-        ],
-        "type": "object"
+          "a"
+        ]
       }
     },
     "securitySchemes": {}

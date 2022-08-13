@@ -12,6 +12,7 @@ import io.bkbn.kompendium.core.util.TestModules.notarizedGet
 import io.bkbn.kompendium.core.util.TestModules.singleException
 import io.bkbn.kompendium.core.util.TestModules.genericException
 import io.bkbn.kompendium.core.util.TestModules.multipleExceptions
+import io.bkbn.kompendium.core.util.TestModules.nestedGenericResponse
 import io.bkbn.kompendium.core.util.TestModules.nonRequiredParam
 import io.bkbn.kompendium.core.util.TestModules.polymorphicException
 import io.bkbn.kompendium.core.util.TestModules.notarizedHead
@@ -28,6 +29,7 @@ import io.bkbn.kompendium.core.util.TestModules.reqRespExamples
 import io.bkbn.kompendium.core.util.TestModules.requiredParams
 import io.bkbn.kompendium.core.util.TestModules.returnsList
 import io.bkbn.kompendium.core.util.TestModules.rootRoute
+import io.bkbn.kompendium.core.util.TestModules.simpleGenericResponse
 import io.bkbn.kompendium.core.util.TestModules.simplePathParsing
 import io.bkbn.kompendium.core.util.TestModules.trailingSlash
 import io.kotest.core.spec.style.DescribeSpec
@@ -133,14 +135,14 @@ class KompendiumTest : DescribeSpec({
     it("Can generate a map with a polymorphic response type") {
       openApiTestAllSerializers("T0029__polymorphic_map_response.json") { polymorphicMapResponse() }
     }
+    it("Can generate a response type with a generic type") {
+      openApiTestAllSerializers("T0030__simple_generic_response.json") { simpleGenericResponse() }
+    }
+    it("Can generate a response type with a nested generic type") {
+      openApiTestAllSerializers("T0031__nested_generic_response.json") { nestedGenericResponse() }
+    }
   }
 //  describe("Polymorphism and Generics") {
-//    it("Can generate a polymorphic response from a sealed interface") {
-//      openApiTestAllSerializers("sealed_interface_response.json") { polymorphicInterfaceResponse() }
-//    }
-//    it("Can generate a response type with a generic type") {
-//      openApiTestAllSerializers("generic_response.json") { simpleGenericResponse() }
-//    }
 //    it("Can generate a polymorphic response type with generics") {
 //      openApiTestAllSerializers("polymorphic_response_with_generics.json") { genericPolymorphicResponse() }
 //    }

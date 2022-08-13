@@ -5,6 +5,7 @@ import io.bkbn.kompendium.core.fixtures.DefaultField
 import io.bkbn.kompendium.core.fixtures.ExceptionResponse
 import io.bkbn.kompendium.core.fixtures.Flibbity
 import io.bkbn.kompendium.core.fixtures.FlibbityGibbit
+import io.bkbn.kompendium.core.fixtures.Gibbity
 import io.bkbn.kompendium.core.fixtures.NullableField
 import io.bkbn.kompendium.core.fixtures.TestCreatedResponse
 import io.bkbn.kompendium.core.fixtures.TestNested
@@ -596,71 +597,21 @@ object TestModules {
     }
   }
 
-  fun Routing.defaultField() {
-    route(rootPath) {
-      install(NotarizedRoute()) {
-        get = GetInfo.builder {
-          summary(defaultPathSummary)
-          description(defaultPathDescription)
-          response {
-            description(defaultResponseDescription)
-            responseCode(HttpStatusCode.OK)
-            responseType<DefaultField>()
-          }
-        }
-      }
-    }
-  }
+  fun Routing.defaultField() = basicGetGenerator<DefaultField>()
 
-  fun Routing.nullableField() {
-    route(rootPath) {
-      install(NotarizedRoute()) {
-        get = GetInfo.builder {
-          summary(defaultPathSummary)
-          description(defaultPathDescription)
-          response {
-            description(defaultResponseDescription)
-            responseCode(HttpStatusCode.OK)
-            responseType<NullableField>()
-          }
-        }
-      }
-    }
-  }
+  fun Routing.nullableField() = basicGetGenerator<NullableField>()
 
-  fun Routing.polymorphicResponse() {
-    route(rootPath) {
-      install(NotarizedRoute()) {
-        get = GetInfo.builder {
-          summary(defaultPathSummary)
-          description(defaultPathDescription)
-          response {
-            description(defaultResponseDescription)
-            responseCode(HttpStatusCode.OK)
-            responseType<FlibbityGibbit>()
-          }
-        }
-      }
-    }
-  }
+  fun Routing.polymorphicResponse() = basicGetGenerator<FlibbityGibbit>()
 
-  fun Routing.polymorphicCollectionResponse() {
-    route(rootPath) {
-      install(NotarizedRoute()) {
-        get = GetInfo.builder {
-          summary(defaultPathSummary)
-          description(defaultPathDescription)
-          response {
-            description(defaultResponseDescription)
-            responseCode(HttpStatusCode.OK)
-            responseType<List<FlibbityGibbit>>()
-          }
-        }
-      }
-    }
-  }
+  fun Routing.polymorphicCollectionResponse() = basicGetGenerator<List<FlibbityGibbit>>()
 
-  fun Routing.polymorphicMapResponse() {
+  fun Routing.polymorphicMapResponse() = basicGetGenerator<Map<String, FlibbityGibbit>>()
+
+  fun Routing.simpleGenericResponse() = basicGetGenerator<Gibbity<String>>()
+
+  fun Routing.nestedGenericResponse() = basicGetGenerator<Gibbity<Map<String, String>>>()
+
+  private inline fun <reified T> Routing.basicGetGenerator() {
     route(rootPath) {
       install(NotarizedRoute()) {
         get = GetInfo.builder {
@@ -669,7 +620,7 @@ object TestModules {
           response {
             description(defaultResponseDescription)
             responseCode(HttpStatusCode.OK)
-            responseType<Map<String, FlibbityGibbit>>()
+            responseType<T>()
           }
         }
       }
