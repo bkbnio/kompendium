@@ -29,7 +29,6 @@ import io.ktor.server.routing.Route
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 
-@Suppress("MagicNumber") // 🚨 obviously remove
 object NotarizedRoute {
 
   class Config {
