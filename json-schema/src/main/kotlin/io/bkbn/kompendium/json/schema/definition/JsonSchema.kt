@@ -10,6 +10,7 @@ import kotlinx.serialization.encoding.Encoder
 
 @Serializable(with = JsonSchema.Serializer::class)
 sealed interface JsonSchema {
+
   object Serializer : KSerializer<JsonSchema> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("JsonSchema", PrimitiveKind.STRING)
     override fun deserialize(decoder: Decoder): JsonSchema {

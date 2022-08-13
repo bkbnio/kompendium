@@ -1,5 +1,6 @@
 {
-  "openapi": "3.0.3",
+  "openapi": "3.1.0",
+  "jsonSchemaDialect": "https://json-schema.org/draft/2020-12/schema",
   "info": {
     "title": "Test API",
     "version": "1.33.7",
@@ -26,38 +27,18 @@
     }
   ],
   "paths": {
-    "/test": {
+    "/": {
       "get": {
         "tags": [],
-        "summary": "Testing Default Params",
-        "description": "Should have a default parameter value",
+        "summary": "Polymorphic exception test",
+        "description": "testing more",
         "parameters": [
           {
-            "name": "a",
-            "in": "query",
-            "schema": {
-              "format": "int32",
-              "type": "integer",
-              "default": 100
-            },
-            "required": false,
-            "deprecated": false
-          },
-          {
-            "name": "b",
+            "name": "id",
             "in": "path",
             "schema": {
               "type": "string",
-              "nullable": true
-            },
-            "required": false,
-            "deprecated": false
-          },
-          {
-            "name": "c",
-            "in": "path",
-            "schema": {
-              "type": "boolean"
+              "default": "IDK"
             },
             "required": true,
             "deprecated": false
@@ -65,7 +46,7 @@
         ],
         "responses": {
           "200": {
-            "description": "A good response",
+            "description": "A Successful Endeavor",
             "content": {
               "application/json": {
                 "schema": {
@@ -76,12 +57,15 @@
           }
         },
         "deprecated": false
-      }
+      },
+      "parameters": []
     }
   },
+  "webhooks": {},
   "components": {
     "schemas": {
       "TestResponse": {
+        "type": "object",
         "properties": {
           "c": {
             "type": "string"
@@ -89,8 +73,7 @@
         },
         "required": [
           "c"
-        ],
-        "type": "object"
+        ]
       }
     },
     "securitySchemes": {}

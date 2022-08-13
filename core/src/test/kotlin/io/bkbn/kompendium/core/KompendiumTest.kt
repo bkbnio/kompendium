@@ -2,6 +2,7 @@ package io.bkbn.kompendium.core
 
 import io.bkbn.kompendium.core.fixtures.TestHelpers.openApiTestAllSerializers
 import io.bkbn.kompendium.core.util.TestModules.complexRequest
+import io.bkbn.kompendium.core.util.TestModules.defaultParameter
 import io.bkbn.kompendium.core.util.TestModules.exampleParams
 import io.bkbn.kompendium.core.util.TestModules.nestedUnderRoot
 import io.bkbn.kompendium.core.util.TestModules.nonRequiredParams
@@ -96,14 +97,14 @@ class KompendiumTest : DescribeSpec({
       openApiTestAllSerializers("T0021__example_parameters.json") { exampleParams() }
     }
   }
-//  describe("Examples") {
-//    it("Can describe example parameters") {
-//      openApiTestAllSerializers("T0021__example_parameters.json") { exampleParams() }
-//    }
-//  }
+  describe("Defaults") {
+    it("Can generate a default parameter value") {
+      openApiTestAllSerializers("T0022__query_with_default_parameter.json") { defaultParameter() }
+    }
+  }
 //  describe("Defaults") {
 //    it("Can generate a default parameter values") {
-//      openApiTestAllSerializers("query_with_default_parameter.json") { withDefaultParameter() }
+//      openApiTestAllSerializers("T0022__query_with_default_parameter.json") { withDefaultParameter() }
 //    }
 //  }
 //  describe("Required Fields") {
