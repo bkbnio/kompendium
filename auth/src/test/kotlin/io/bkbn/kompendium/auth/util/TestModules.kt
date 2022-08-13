@@ -1,5 +1,11 @@
 package io.bkbn.kompendium.auth.util
 
+import io.ktor.server.application.Application
+import io.ktor.server.application.install
+import io.ktor.server.auth.Authentication
+import io.ktor.server.auth.UserIdPrincipal
+import io.ktor.server.auth.basic
+
 //import io.bkbn.kompendium.auth.Notarized.notarizedAuthenticate
 //import io.bkbn.kompendium.auth.configuration.SecurityConfiguration
 //import io.bkbn.kompendium.core.Notarized.notarizedGet
@@ -57,6 +63,22 @@ package io.bkbn.kompendium.auth.util
 //    }
 //  }
 //}
+
+fun Application.configBasicAuth() {
+  install(Authentication) {
+    basic(AuthConfigName.Basic) {
+      realm = "Ktor Server"
+      validate { credentials ->
+        if (credentials.name == credentials.password) {
+          UserIdPrincipal(credentials.name)
+        } else {
+          null
+        }
+      }
+    }
+  }
+}
+
 //
 //fun Application.notarizedAuthRoute(authConfig: SecurityConfiguration) {
 //  routing {
@@ -85,8 +107,8 @@ package io.bkbn.kompendium.auth.util
 //    securitySchemes = security.toSet()
 //  )
 //
-//object AuthConfigName {
-//  const val Basic = "basic"
-//  const val JWT = "jwt"
-//  const val OAuth = "oauth"
-//}
+object AuthConfigName {
+  const val Basic = "basic"
+  const val JWT = "jwt"
+  const val OAuth = "oauth"
+}

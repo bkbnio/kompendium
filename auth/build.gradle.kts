@@ -18,9 +18,9 @@ dependencies {
   // IMPLEMENTATION
 
   implementation(projects.kompendiumCore)
-  implementation("io.ktor:ktor-server-core:2.0.1")
-  implementation("io.ktor:ktor-server-auth:2.0.1")
-  implementation("io.ktor:ktor-server-auth-jwt:2.0.1")
+  implementation("io.ktor:ktor-server-core:2.1.0")
+  implementation("io.ktor:ktor-server-auth:2.1.0")
+  implementation("io.ktor:ktor-server-auth-jwt:2.1.0")
 
   // TESTING
 
