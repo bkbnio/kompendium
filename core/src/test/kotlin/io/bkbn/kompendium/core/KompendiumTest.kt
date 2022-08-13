@@ -2,6 +2,7 @@ package io.bkbn.kompendium.core
 
 import io.bkbn.kompendium.core.fixtures.TestHelpers.openApiTestAllSerializers
 import io.bkbn.kompendium.core.util.TestModules.complexRequest
+import io.bkbn.kompendium.core.util.TestModules.dateTimeString
 import io.bkbn.kompendium.core.util.TestModules.defaultField
 import io.bkbn.kompendium.core.util.TestModules.defaultParameter
 import io.bkbn.kompendium.core.util.TestModules.exampleParams
@@ -23,6 +24,7 @@ import io.bkbn.kompendium.core.util.TestModules.notarizedOptions
 import io.bkbn.kompendium.core.util.TestModules.notarizedPatch
 import io.bkbn.kompendium.core.util.TestModules.notarizedPost
 import io.bkbn.kompendium.core.util.TestModules.notarizedPut
+import io.bkbn.kompendium.core.util.TestModules.nullableEnumField
 import io.bkbn.kompendium.core.util.TestModules.nullableField
 import io.bkbn.kompendium.core.util.TestModules.nullableNestedObject
 import io.bkbn.kompendium.core.util.TestModules.polymorphicCollectionResponse
@@ -37,7 +39,10 @@ import io.bkbn.kompendium.core.util.TestModules.simpleGenericResponse
 import io.bkbn.kompendium.core.util.TestModules.simplePathParsing
 import io.bkbn.kompendium.core.util.TestModules.trailingSlash
 import io.bkbn.kompendium.core.util.TestModules.withOperationId
+import io.bkbn.kompendium.json.schema.definition.TypeDefinition
 import io.kotest.core.spec.style.DescribeSpec
+import kotlin.reflect.typeOf
+import java.time.Instant
 
 class KompendiumTest : DescribeSpec({
   describe("Notarized Open API Metadata Tests") {
@@ -175,131 +180,22 @@ class KompendiumTest : DescribeSpec({
     it("Nullable fields do not lead to doom") {
       openApiTestAllSerializers("T0036__nullable_fields.json") { nullableNestedObject() }
     }
+    it("Can have a nullable enum as a member field") {
+      openApiTestAllSerializers("T0037__nullable_enum_field.json") { nullableEnumField() }
+    }
   }
-//  describe("Miscellaneous") {
-//    it("Nullable fields do not lead to doom") {
-//      openApiTestAllSerializers("T0036__nullable_fields.json") { nullableNestedObject() }
-//    }
-//    it("Can have a nullable enum as a member field") {
-//      openApiTestAllSerializers("nullable_enum_field.json") { nullableEnumField() }
-//    }
-//  }
-//  describe("Constraints") {
-//    it("Can set a minimum and maximum integer value") {
-//      openApiTestAllSerializers("min_max_int_field.json") { constrainedIntInfo() }
-//    }
-//    it("Can set a minimum and maximum double value") {
-//      openApiTestAllSerializers("min_max_double_field.json") { constrainedDoubleInfo() }
-//    }
-//    it("Can set an exclusive min and exclusive max integer value") {
-//      openApiTestAllSerializers("exclusive_min_max.json") { exclusiveMinMax() }
-//    }
-//    it("Can add a custom format to a string field") {
-//      openApiTestAllSerializers("formatted_param_type.json") { formattedParam() }
-//    }
-//    it("Can set a minimum and maximum length on a string field") {
-//      openApiTestAllSerializers("min_max_string.json") { minMaxString() }
-//    }
-//    it("Can set a custom regex pattern on a string field") {
-//      openApiTestAllSerializers("regex_string.json") { regexString() }
-//    }
-//    it("Can set a minimum and maximum item count on an array field") {
-//      openApiTestAllSerializers("min_max_array.json") { minMaxArray() }
-//    }
-//    it("Can set a unique items constraint on an array field") {
-//      openApiTestAllSerializers("unique_array.json") { uniqueArray() }
-//    }
-//    it("Can set a multiple-of constraint on an int field") {
-//      openApiTestAllSerializers("multiple_of_int.json") { multipleOfInt() }
-//    }
-//    it("Can set a multiple of constraint on an double field") {
-//      openApiTestAllSerializers("multiple_of_double.json") { multipleOfDouble() }
-//    }
-//    it("Can set a minimum and maximum number of properties on a free-form type") {
-//      openApiTestAllSerializers("min_max_free_form.json") { minMaxFreeForm() }
-//    }
-//    it("Can add a custom format to a collection type") {
-//      openApiTestAllSerializers("formatted_array_item_type.json") { formattedType() }
-//    }
-//  }
-//  describe("Formats") {
-//    it("Can set a format on a simple type schema") {
-//      openApiTestAllSerializers("formatted_date_time_string.json", { dateTimeString() }) {
-//        addCustomTypeSchema(Instant::class, SimpleSchema("string", format = "date-time"))
-//      }
-//    }
-//    it("Can set a format on formatted type schema") {
-//      openApiTestAllSerializers("formatted_date_time_string.json", { dateTimeString() }) {
-//        addCustomTypeSchema(Instant::class, FormattedSchema("date-time", "string"))
-//      }
-//    }
-//    it("Can bypass a format on a simple type schema") {
-//      openApiTestAllSerializers("formatted_no_format_string.json", { dateTimeString() }) {
-//        addCustomTypeSchema(Instant::class, SimpleSchema("string"))
-//      }
-//    }
-//  }
-//  describe("Free Form") {
-//    it("Can create a free-form field") {
-//      openApiTestAllSerializers("free_form_field.json") { freeFormField() }
-//    }
-//    it("Can create a top-level free form object") {
-//      openApiTestAllSerializers("free_form_object.json") { freeFormObject() }
-//    }
-//  }
-//  describe("Serialization overrides") {
-//    it("Can override the jackson serializer") {
-//      withTestApplication({
-//        install(Kompendium) {
-//          spec = defaultSpec()
-//          openApiJson = { spec ->
-//            val om = ObjectMapper().apply {
-//              setSerializationInclusion(JsonInclude.Include.NON_NULL)
-//            }
-//            route("/openapi.json") {
-//              get {
-//                call.respondText { om.writeValueAsString(spec) }
-//              }
-//            }
-//          }
-//        }
-//        install(ContentNegotiation) {
-//          jackson(ContentType.Application.Json)
-//        }
-//        docs()
-//        withExamples()
-//      }) {
-//        compareOpenAPISpec("T0020__example_req_and_resp.json")
-//      }
-//    }
-//    it("Can override the kotlinx serializer") {
-//      withTestApplication({
-//        install(Kompendium) {
-//          spec = defaultSpec()
-//          openApiJson = { spec ->
-//            val om = ObjectMapper().apply {
-//              setSerializationInclusion(JsonInclude.Include.NON_NULL)
-//            }
-//            route("/openapi.json") {
-//              get {
-//                val customSerializer = Json {
-//                  serializersModule = KompendiumSerializersModule.module
-//                  encodeDefaults = true
-//                  explicitNulls = false
-//                }
-//                call.respondText { customSerializer.encodeToString(spec) }
-//              }
-//            }
-//          }
-//        }
-//        install(ContentNegotiation) {
-//          json()
-//        }
-//        docs()
-//        withExamples()
-//      }) {
-//        compareOpenAPISpec("T0020__example_req_and_resp.json")
-//      }
-//    }
-//  }
+  describe("Constraints") {
+    // TODO Assess strategies here
+  }
+  describe("Formats") {
+    it("Can set a format for a simple type schema") {
+      openApiTestAllSerializers(
+        snapshotName = "T0038__formatted_date_time_string.json",
+        customTypes = mapOf(typeOf<Instant>() to TypeDefinition(type = "string", format = "date"))
+      ) { dateTimeString() }
+    }
+  }
+  describe("Free Form") {
+    // todo Assess strategies here
+  }
 })

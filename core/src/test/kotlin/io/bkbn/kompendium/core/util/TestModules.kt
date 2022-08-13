@@ -2,11 +2,13 @@ package io.bkbn.kompendium.core.util
 
 import io.bkbn.kompendium.core.fixtures.ColumnSchema
 import io.bkbn.kompendium.core.fixtures.ComplexRequest
+import io.bkbn.kompendium.core.fixtures.DateTimeString
 import io.bkbn.kompendium.core.fixtures.DefaultField
 import io.bkbn.kompendium.core.fixtures.ExceptionResponse
 import io.bkbn.kompendium.core.fixtures.Flibbity
 import io.bkbn.kompendium.core.fixtures.FlibbityGibbit
 import io.bkbn.kompendium.core.fixtures.Gibbity
+import io.bkbn.kompendium.core.fixtures.NullableEnum
 import io.bkbn.kompendium.core.fixtures.NullableField
 import io.bkbn.kompendium.core.fixtures.ProfileUpdateRequest
 import io.bkbn.kompendium.core.fixtures.TestCreatedResponse
@@ -569,6 +571,10 @@ object TestModules {
   fun Routing.withOperationId() = basicGetGenerator<TestResponse>(operationId = "getThisDude")
 
   fun Routing.nullableNestedObject() = basicGetGenerator<ProfileUpdateRequest>()
+
+  fun Routing.nullableEnumField() = basicGetGenerator<NullableEnum>()
+
+  fun Routing.dateTimeString() = basicGetGenerator<DateTimeString>()
 
   fun Routing.headerParameter() = basicGetGenerator<TestResponse>( params = listOf(
     Parameter(

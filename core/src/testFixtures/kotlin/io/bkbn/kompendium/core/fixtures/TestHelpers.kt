@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.databind.SerializationFeature
 import io.bkbn.kompendium.core.plugin.NotarizedApplication
 import io.bkbn.kompendium.core.routes.redoc
+import io.bkbn.kompendium.json.schema.definition.JsonSchema
+import io.bkbn.kompendium.json.schema.definition.TypeDefinition
 import io.bkbn.kompendium.oas.OpenApiSpec
 import io.bkbn.kompendium.oas.info.Contact
 import io.bkbn.kompendium.oas.info.Info
@@ -26,9 +28,11 @@ import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.routing.Routing
 import io.ktor.server.testing.ApplicationTestBuilder
 import io.ktor.server.testing.testApplication
+import kotlin.reflect.KType
 import kotlinx.serialization.json.Json
 import java.io.File
 import java.net.URI
+import java.time.LocalDate
 
 //import io.bkbn.kompendium.core.Kompendium
 //import io.bkbn.kompendium.oas.serialization.KompendiumSerializersModule
@@ -80,18 +84,24 @@ object TestHelpers {
    * @param snapshotName The snapshot file to retrieve from the resources folder
    * @param moduleFunction Initializer for the application to allow tests to pass the required Ktor modules
    */
-  fun openApiTestAllSerializers(snapshotName: String, routeUnderTest: Routing.() -> Unit) {
-    openApiTest(snapshotName, SupportedSerializer.KOTLINX, routeUnderTest)
-    openApiTest(snapshotName, SupportedSerializer.JACKSON, routeUnderTest)
-    openApiTest(snapshotName, SupportedSerializer.GSON, routeUnderTest)
+  fun openApiTestAllSerializers(
+    snapshotName: String,
+    customTypes: Map<KType, JsonSchema> = emptyMap(),
+    routeUnderTest: Routing.() -> Unit
+  ) {
+    openApiTest(snapshotName, SupportedSerializer.KOTLINX, routeUnderTest, customTypes)
+    openApiTest(snapshotName, SupportedSerializer.JACKSON, routeUnderTest, customTypes)
+    openApiTest(snapshotName, SupportedSerializer.GSON, routeUnderTest, customTypes)
   }
 
   private fun openApiTest(
     snapshotName: String,
     serializer: SupportedSerializer,
-    routeUnderTest: Routing.() -> Unit
+    routeUnderTest: Routing.() -> Unit,
+    typeOverrides: Map<KType, JsonSchema> = emptyMap()
   ) = testApplication {
     install(NotarizedApplication()) {
+      customTypes = typeOverrides
       spec = OpenApiSpec(
         info = Info(
           title = "Test API",
@@ -127,6 +137,7 @@ object TestHelpers {
           explicitNulls = false
           serializersModule = KompendiumSerializersModule.module
         })
+
         SupportedSerializer.GSON -> gson()
         SupportedSerializer.JACKSON -> jackson(ContentType.Application.Json) {
           enable(SerializationFeature.INDENT_OUTPUT)

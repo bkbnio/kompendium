@@ -1,5 +1,6 @@
 {
-  "openapi": "3.0.3",
+  "openapi": "3.1.0",
+  "jsonSchemaDialect": "https://json-schema.org/draft/2020-12/schema",
   "info": {
     "title": "Test API",
     "version": "1.33.7",
@@ -26,50 +27,50 @@
     }
   ],
   "paths": {
-    "/test/polymorphic": {
+    "/": {
       "get": {
         "tags": [],
-        "summary": "spooky class",
-        "description": "break this glass in scenario of emergency",
+        "summary": "Great Summary!",
+        "description": "testing more",
         "parameters": [],
         "responses": {
           "200": {
-            "description": "A successful endeavor",
+            "description": "A Successful Endeavor",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Mysterious"
+                  "$ref": "#/components/schemas/NullableEnum"
                 }
               }
             }
           }
         },
         "deprecated": false
-      }
+      },
+      "parameters": []
     }
   },
+  "webhooks": {},
   "components": {
     "schemas": {
-      "Mysterious": {
+      "NullableEnum": {
+        "type": "object",
         "properties": {
-          "nowYouSeeMe": {
-            "type": "string"
-          },
-          "nowYouDont": {
-            "$ref": "#/components/schemas/Hehe"
+          "a": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "enum": [
+                  "YES",
+                  "NO"
+                ]
+              }
+            ]
           }
         },
-        "required": [
-          "nowYouSeeMe"
-        ],
-        "type": "object"
-      },
-      "Hehe": {
-        "enum": [
-          "HAHA",
-          "HOHO"
-        ],
-        "type": "string"
+        "required": []
       }
     },
     "securitySchemes": {}

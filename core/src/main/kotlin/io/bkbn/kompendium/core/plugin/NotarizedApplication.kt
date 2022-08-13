@@ -1,6 +1,8 @@
 package io.bkbn.kompendium.core.plugin
 
 import io.bkbn.kompendium.core.attribute.KompendiumAttributes
+import io.bkbn.kompendium.json.schema.definition.JsonSchema
+import io.bkbn.kompendium.json.schema.util.Helpers.getSimpleSlug
 import io.bkbn.kompendium.oas.OpenApiSpec
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.call
@@ -11,6 +13,8 @@ import io.ktor.server.routing.application
 import io.ktor.server.routing.get
 import io.ktor.server.routing.route
 import io.ktor.server.routing.routing
+import kotlin.reflect.KClass
+import kotlin.reflect.KType
 
 object NotarizedApplication {
 
@@ -23,6 +27,7 @@ object NotarizedApplication {
         }
       }
     }
+    var customTypes: Map<KType, JsonSchema> = emptyMap()
   }
 
   operator fun invoke() = createApplicationPlugin(
@@ -32,8 +37,9 @@ object NotarizedApplication {
     val spec = pluginConfig.spec
     val routing = application.routing { }
     pluginConfig.openApiJson(routing)
+    pluginConfig.customTypes.forEach { (type, schema) ->
+      spec.components.schemas[type.getSimpleSlug()] = schema
+    }
     application.attributes.put(KompendiumAttributes.openApiSpec, spec)
-    application.attributes.put(KompendiumAttributes.cache, mutableMapOf())
   }
-
 }
