@@ -1,16 +1,15 @@
 package io.bkbn.kompendium.playground
 
-import io.bkbn.kompendium.auth.NotarizedAuthentication
 import io.bkbn.kompendium.core.metadata.GetInfo
 import io.bkbn.kompendium.core.plugin.NotarizedApplication
 import io.bkbn.kompendium.core.plugin.NotarizedRoute
 import io.bkbn.kompendium.core.routes.redoc
 import io.bkbn.kompendium.json.schema.definition.TypeDefinition
+import io.bkbn.kompendium.oas.component.Components
 import io.bkbn.kompendium.oas.payload.Parameter
 import io.bkbn.kompendium.oas.security.BasicAuth
 import io.bkbn.kompendium.oas.serialization.KompendiumSerializersModule
 import io.bkbn.kompendium.playground.util.ExampleResponse
-import io.bkbn.kompendium.playground.util.Util
 import io.bkbn.kompendium.playground.util.Util.baseSpec
 import io.ktor.http.HttpStatusCode
 import io.ktor.serialization.kotlinx.json.json
@@ -65,26 +64,26 @@ private fun Application.mainModule() {
     }
   }
   install(NotarizedApplication()) {
-    spec = baseSpec
-  }
-  install(NotarizedAuthentication()) {
-    securitySchemes = mapOf(
-      "basic" to BasicAuth()
+    spec = baseSpec.copy(
+      components = Components(
+        securitySchemes = mutableMapOf(
+          "basic" to BasicAuth()
+        )
+      )
     )
   }
   routing {
-    authenticate("basic") {
-
-    }
-    // This adds ReDoc support at the `/docs` endpoint.
-    // By default, it will point at the `/openapi.json` created by Kompendium
     redoc(pageTitle = "Simple API Docs")
+    authenticate("basic") {
+      // This adds ReDoc support at the `/docs` endpoint.
+      // By default, it will point at the `/openapi.json` created by Kompendium
 
-    // Route with a get handler
-    route("/{id}") {
-      idDocumentation()
-      get {
-        call.respond(HttpStatusCode.OK, ExampleResponse(true))
+      // Route with a get handler
+      route("/{id}") {
+        idDocumentation()
+        get {
+          call.respond(HttpStatusCode.OK, ExampleResponse(true))
+        }
       }
     }
   }

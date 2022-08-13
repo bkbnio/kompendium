@@ -2,7 +2,6 @@ rootProject.name = "kompendium"
 
 include("core")
 include("oas")
-include("auth")
 include("playground")
 include("locations")
 include("json-schema")

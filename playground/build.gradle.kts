@@ -12,7 +12,6 @@ sourdoughApp {
 dependencies {
   // IMPLEMENTATION
   implementation(projects.kompendiumCore)
-  implementation(projects.kompendiumAuth)
   implementation(projects.kompendiumLocations)
 
   // Ktor
