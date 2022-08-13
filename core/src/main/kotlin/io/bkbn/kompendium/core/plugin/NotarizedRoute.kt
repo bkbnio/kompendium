@@ -42,6 +42,7 @@ object NotarizedRoute {
     var patch: PatchInfo? = null
     var head: HeadInfo? = null
     var options: OptionsInfo? = null
+    var security: Map<String, List<String>>? = null
     internal var path: Path? = null
   }
 
@@ -128,6 +129,10 @@ object NotarizedRoute {
     operationId = this.operationId,
     deprecated = this.deprecated,
     parameters = this.parameters,
+    security = config.security
+      ?.map { (k, v) -> k to v }
+      ?.map { listOf(it).toMap() }
+      ?.toList(),
     requestBody = when (this) {
       is MethodInfoWithRequest -> Request(
         description = this.request.description,

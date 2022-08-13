@@ -7,6 +7,7 @@ import io.bkbn.kompendium.core.routes.redoc
 import io.bkbn.kompendium.json.schema.definition.TypeDefinition
 import io.bkbn.kompendium.oas.payload.Parameter
 import io.bkbn.kompendium.oas.serialization.KompendiumSerializersModule
+import io.bkbn.kompendium.playground.util.ExampleResponse
 import io.bkbn.kompendium.playground.util.Util.baseSpec
 import io.ktor.http.HttpStatusCode
 import io.ktor.serialization.kotlinx.json.json
@@ -83,5 +84,3 @@ private fun Route.idDocumentation() {
     }
   }
 }
-
-data class ExampleResponse(val isReal: Boolean)

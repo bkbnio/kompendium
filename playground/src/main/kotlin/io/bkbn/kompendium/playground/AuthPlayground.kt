@@ -1,101 +1,116 @@
 package io.bkbn.kompendium.playground
 
-//import io.bkbn.kompendium.auth.Notarized.notarizedAuthenticate
-//import io.bkbn.kompendium.auth.configuration.BasicAuthConfiguration
-//import io.bkbn.kompendium.core.Kompendium
-//import io.bkbn.kompendium.core.Notarized.notarizedGet
-//import io.bkbn.kompendium.core.metadata.ResponseInfo
-//import io.bkbn.kompendium.core.metadata.method.GetInfo
-//import io.bkbn.kompendium.core.routes.redoc
-//import io.bkbn.kompendium.oas.serialization.KompendiumSerializersModule
-//import io.bkbn.kompendium.playground.AuthPlaygroundToC.simpleAuthenticatedGet
-//import io.bkbn.kompendium.playground.util.Util
-//import io.ktor.application.Application
-//import io.ktor.application.call
-//import io.ktor.application.install
-//import io.ktor.auth.Authentication
-//import io.ktor.auth.UserIdPrincipal
-//import io.ktor.auth.basic
-//import io.ktor.features.ContentNegotiation
-//import io.ktor.http.HttpStatusCode
-//import io.ktor.response.respond
-//import io.ktor.routing.routing
-//import io.ktor.serialization.json
-//import io.ktor.server.engine.embeddedServer
-//import io.ktor.server.netty.Netty
-//import kotlinx.serialization.Serializable
-//import kotlinx.serialization.json.Json
-//
-///**
-// * Application entrypoint.  Run this and head on over to `localhost:8081/docs`
-// * to see some documented, authenticated routes.
-// */
-//fun main() {
-//  embeddedServer(
-//    Netty,
-//    port = 8081,
-//    module = Application::mainModule
-//  ).start(wait = true)
-//}
-//
-//// Application Module
-//private fun Application.mainModule() {
-//  install(ContentNegotiation) {
-//    json(Json {
-//      serializersModule = KompendiumSerializersModule.module
-//      encodeDefaults = true
-//      explicitNulls = false
-//    })
-//  }
-//  install(Kompendium) {
-//    spec = Util.baseSpec
-//  }
-//  install(Authentication) {
-//    // We can leverage the security config name to prevent typos
-//    basic(SecurityConfigurations.basic.name) {
-//      realm = "Access to the '/' path"
-//      validate { credentials ->
-//        if (credentials.name == "admin" && credentials.password == "foobar") {
-//          UserIdPrincipal(credentials.name)
-//        } else {
-//          null
-//        }
-//      }
-//
-//    }
-//  }
-//  routing {
-//    redoc(pageTitle = "Authenticated API")
-//    notarizedAuthenticate(SecurityConfigurations.basic) {
-//      notarizedGet(simpleAuthenticatedGet) {
-//        call.respond(HttpStatusCode.OK, AuthModels.SimpleAuthResponse(true))
-//      }
-//    }
-//  }
-//}
-//
-//// This is where we define the available security configurations for our app
-//object SecurityConfigurations {
-//  val basic = object : BasicAuthConfiguration {
-//    override val name: String = "basic"
-//  }
-//}
-//
-//// This is a table of contents to hold all the metadata for our various API endpoints
-//object AuthPlaygroundToC {
-//  val simpleAuthenticatedGet = GetInfo<Unit, AuthModels.SimpleAuthResponse>(
-//    summary = "Simple GET Request behind authentication",
-//    description = "Can only make this request if you are a true OG",
-//    responseInfo = ResponseInfo(
-//      status = HttpStatusCode.OK,
-//      description = "Proves that you are in fact an OG"
-//    ),
-//    tags = setOf("Authenticated"),
-//    securitySchemes = setOf(SecurityConfigurations.basic.name)
-//  )
-//}
-//
-//object AuthModels {
-//  @Serializable
-//  data class SimpleAuthResponse(val isOG: Boolean)
-//}
+import io.bkbn.kompendium.auth.NotarizedAuthentication
+import io.bkbn.kompendium.core.metadata.GetInfo
+import io.bkbn.kompendium.core.plugin.NotarizedApplication
+import io.bkbn.kompendium.core.plugin.NotarizedRoute
+import io.bkbn.kompendium.core.routes.redoc
+import io.bkbn.kompendium.json.schema.definition.TypeDefinition
+import io.bkbn.kompendium.oas.payload.Parameter
+import io.bkbn.kompendium.oas.security.BasicAuth
+import io.bkbn.kompendium.oas.serialization.KompendiumSerializersModule
+import io.bkbn.kompendium.playground.util.ExampleResponse
+import io.bkbn.kompendium.playground.util.Util
+import io.bkbn.kompendium.playground.util.Util.baseSpec
+import io.ktor.http.HttpStatusCode
+import io.ktor.serialization.kotlinx.json.json
+import io.ktor.server.application.Application
+import io.ktor.server.application.call
+import io.ktor.server.application.install
+import io.ktor.server.auth.Authentication
+import io.ktor.server.auth.UserIdPrincipal
+import io.ktor.server.auth.authenticate
+import io.ktor.server.auth.basic
+import io.ktor.server.engine.embeddedServer
+import io.ktor.server.netty.Netty
+import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.server.response.respond
+import io.ktor.server.routing.Route
+import io.ktor.server.routing.get
+import io.ktor.server.routing.route
+import io.ktor.server.routing.routing
+import kotlinx.serialization.json.Json
+
+/**
+ * Application entrypoint.  Run this and head on over to `localhost:8081/docs`
+ * to see a very simple yet beautifully documented API
+ */
+fun main() {
+  embeddedServer(
+    Netty,
+    port = 8081,
+    module = Application::mainModule
+  ).start(wait = true)
+}
+
+private fun Application.mainModule() {
+  // Installs Simple JSON Content Negotiation
+  install(ContentNegotiation) {
+    json(Json {
+      serializersModule = KompendiumSerializersModule.module
+      encodeDefaults = true
+      explicitNulls = false
+    })
+  }
+  install(Authentication) {
+    basic("basic") {
+      realm = "Ktor Server"
+      validate { credentials ->
+        if (credentials.name == credentials.password) {
+          UserIdPrincipal(credentials.name)
+        } else {
+          null
+        }
+      }
+    }
+  }
+  install(NotarizedApplication()) {
+    spec = baseSpec
+  }
+  install(NotarizedAuthentication()) {
+    securitySchemes = mapOf(
+      "basic" to BasicAuth()
+    )
+  }
+  routing {
+    authenticate("basic") {
+
+    }
+    // This adds ReDoc support at the `/docs` endpoint.
+    // By default, it will point at the `/openapi.json` created by Kompendium
+    redoc(pageTitle = "Simple API Docs")
+
+    // Route with a get handler
+    route("/{id}") {
+      idDocumentation()
+      get {
+        call.respond(HttpStatusCode.OK, ExampleResponse(true))
+      }
+    }
+  }
+}
+
+// Documentation for our route
+private fun Route.idDocumentation() {
+  install(NotarizedRoute()) {
+    parameters = listOf(
+      Parameter(
+        name = "id",
+        `in` = Parameter.Location.path,
+        schema = TypeDefinition.STRING
+      )
+    )
+    get = GetInfo.builder {
+      summary("Get user by id")
+      description("A very neat endpoint!")
+      security = mapOf(
+        "basic" to emptyList()
+      )
+      response {
+        responseCode(HttpStatusCode.OK)
+        responseType<ExampleResponse>()
+        description("Will return whether or not the user is real 😱")
+      }
+    }
+  }
+}
