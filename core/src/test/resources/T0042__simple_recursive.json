@@ -39,7 +39,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProfileUpdateRequest"
+                  "$ref": "#/components/schemas/ColumnSchema"
                 }
               }
             }
@@ -53,74 +53,37 @@
   "webhooks": {},
   "components": {
     "schemas": {
-      "ProfileUpdateRequest": {
+      "ColumnSchema": {
         "type": "object",
         "properties": {
-          "metadata": {
-            "oneOf": [
-              {
-                "type": "null"
-              },
-              {
-                "$ref": "#/components/schemas/ProfileMetadataUpdateRequest"
-              }
+          "description": {
+            "type": "string"
+          },
+          "mode": {
+            "enum": [
+              "NULLABLE",
+              "REQUIRED",
+              "REPEATED"
             ]
           },
-          "mood": {
-            "oneOf": [
-              {
-                "type": "null"
-              },
-              {
-                "type": "string"
-              }
-            ]
+          "name": {
+            "type": "string"
           },
-          "viewCount": {
-            "oneOf": [
-              {
-                "type": "null"
-              },
-              {
-                "type": "number",
-                "format": "int64"
-              }
-            ]
+          "subColumns": {
+            "items": {
+              "$ref": "#/components/schemas/ColumnSchema"
+            },
+            "type": "array"
+          },
+          "type": {
+            "type": "string"
           }
         },
-        "required": []
-      },
-      "ProfileMetadataUpdateRequest": {
-        "oneOf": [
-          {
-            "type": "null"
-          },
-          {
-            "type": "object",
-            "properties": {
-              "isPrivate": {
-                "oneOf": [
-                  {
-                    "type": "null"
-                  },
-                  {
-                    "type": "boolean"
-                  }
-                ]
-              },
-              "otherThing": {
-                "oneOf": [
-                  {
-                    "type": "null"
-                  },
-                  {
-                    "type": "string"
-                  }
-                ]
-              }
-            },
-            "required": []
-          }
+        "required": [
+          "description",
+          "mode",
+          "name",
+          "type"
         ]
       }
     },

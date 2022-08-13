@@ -40,6 +40,7 @@ import io.bkbn.kompendium.core.util.TestModules.returnsList
 import io.bkbn.kompendium.core.util.TestModules.rootRoute
 import io.bkbn.kompendium.core.util.TestModules.simpleGenericResponse
 import io.bkbn.kompendium.core.util.TestModules.simplePathParsing
+import io.bkbn.kompendium.core.util.TestModules.simpleRecursive
 import io.bkbn.kompendium.core.util.TestModules.trailingSlash
 import io.bkbn.kompendium.core.util.TestModules.withOperationId
 import io.bkbn.kompendium.json.schema.definition.TypeDefinition
@@ -183,8 +184,8 @@ class KompendiumTest : DescribeSpec({
     xit("Can override field name") {
       // TODO Assess strategies here
     }
-    xit("Can serialize a recursive type") {
-      // TODO openApiTestAllSerializers("simple_recursive.json") { simpleRecursive() }
+    it("Can serialize a recursive type") {
+       openApiTestAllSerializers("T0042__simple_recursive.json") { simpleRecursive() }
     }
     it("Nullable fields do not lead to doom") {
       openApiTestAllSerializers("T0036__nullable_fields.json") { nullableNestedObject() }
