@@ -16,6 +16,8 @@ import io.bkbn.kompendium.core.util.TestModules.genericPolymorphicResponse
 import io.bkbn.kompendium.core.util.TestModules.genericPolymorphicResponseMultipleImpls
 import io.bkbn.kompendium.core.util.TestModules.headerParameter
 import io.bkbn.kompendium.core.util.TestModules.multipleExceptions
+import io.bkbn.kompendium.core.util.TestModules.nestedGenericCollection
+import io.bkbn.kompendium.core.util.TestModules.nestedGenericMultipleParamsCollection
 import io.bkbn.kompendium.core.util.TestModules.nestedGenericResponse
 import io.bkbn.kompendium.core.util.TestModules.nonRequiredParam
 import io.bkbn.kompendium.core.util.TestModules.polymorphicException
@@ -156,6 +158,12 @@ class KompendiumTest : DescribeSpec({
     }
     it("Can handle an absolutely psycho inheritance test") {
       openApiTestAllSerializers("T0033__crazy_polymorphic_example.json") { genericPolymorphicResponseMultipleImpls() }
+    }
+    it("Can support nested generic collections") {
+      openApiTestAllSerializers("T0039__nested_generic_collection.json") { nestedGenericCollection() }
+    }
+    it("Can support nested generics with multiple type parameters") {
+      openApiTestAllSerializers("T0040__nested_generic_multiple_type_params.json") { nestedGenericMultipleParamsCollection() }
     }
   }
   describe("Miscellaneous") {

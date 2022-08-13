@@ -118,3 +118,16 @@ public data class ProfileMetadataUpdateRequest(
   public val isPrivate: Boolean?,
   public val otherThing: String?
 )
+
+data class Page<T>(
+  val content: List<T>,
+  val totalElements: Long,
+  val totalPages: Int,
+  val numberOfElements: Int,
+  val number: Int,
+  val size: Int
+)
+
+data class MultiNestedGenerics<T, E>(
+  val content: Map<T, E>
+)
