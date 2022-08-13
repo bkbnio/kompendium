@@ -8,6 +8,7 @@ import io.bkbn.kompendium.core.fixtures.ExceptionResponse
 import io.bkbn.kompendium.core.fixtures.Flibbity
 import io.bkbn.kompendium.core.fixtures.FlibbityGibbit
 import io.bkbn.kompendium.core.fixtures.Gibbity
+import io.bkbn.kompendium.core.fixtures.ManyThings
 import io.bkbn.kompendium.core.fixtures.MultiNestedGenerics
 import io.bkbn.kompendium.core.fixtures.NullableEnum
 import io.bkbn.kompendium.core.fixtures.NullableField
@@ -578,6 +579,8 @@ object TestModules {
   fun Routing.nullableNestedObject() = basicGetGenerator<ProfileUpdateRequest>()
 
   fun Routing.nullableEnumField() = basicGetGenerator<NullableEnum>()
+
+  fun Routing.nullableReference() = basicGetGenerator<ManyThings>()
 
   fun Routing.dateTimeString() = basicGetGenerator<DateTimeString>()
 

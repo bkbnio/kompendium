@@ -131,3 +131,10 @@ data class Page<T>(
 data class MultiNestedGenerics<T, E>(
   val content: Map<T, E>
 )
+
+data class Something(val a: String, val b: Int)
+
+data class ManyThings(
+  val someA: Something,
+  val someB: Something?
+)
