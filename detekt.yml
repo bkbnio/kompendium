@@ -4,17 +4,15 @@ complexity:
   LongParameterList:
     active: true
     functionThreshold: 10
-    constructorThreshold: 10
+    constructorThreshold: 15
   ComplexMethod:
     threshold: 20
-formatting:
-  ParameterListWrapping:
-    active: false
 style:
   MaxLineLength:
     excludes: ['**/test/**/*']
     active: true
     maxLineLength: 120
+    excludeCommentStatements: true
   MagicNumber:
     excludes: ['**/kompendium-playground/**/*', '**/test/**/*']
 naming:

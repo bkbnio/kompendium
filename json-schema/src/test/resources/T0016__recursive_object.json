@@ -1,0 +1,13 @@
+{
+  "anyOf": [
+    {
+      "$ref": "#/components/schemas/OneJamma"
+    },
+    {
+      "$ref": "#/components/schemas/AnothaJamma"
+    },
+    {
+      "$ref": "#/components/schemas/InsaneJamma"
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "items": {
+    "type": "number",
+    "format": "int32"
+  },
+  "type": "array"
+}

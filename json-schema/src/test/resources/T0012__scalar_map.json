@@ -1,0 +1,7 @@
+{
+  "additionalProperties": {
+    "type": "number",
+    "format": "int32"
+  },
+  "type": "object"
+}

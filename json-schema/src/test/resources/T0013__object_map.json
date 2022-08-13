@@ -1,0 +1,6 @@
+{
+  "additionalProperties": {
+    "$ref": "#/components/schemas/TestResponse"
+  },
+  "type": "object"
+}
