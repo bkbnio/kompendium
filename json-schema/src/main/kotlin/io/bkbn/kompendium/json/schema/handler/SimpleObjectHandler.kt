@@ -25,7 +25,7 @@ object SimpleObjectHandler {
     val props = clazz.memberProperties.associate { prop ->
       val propClass = prop.returnType.classifier as KClass<*>
 
-      val schema = when (propClass.typeParameters.isNotEmpty()) {
+      val schema = when (prop.needsToInjectGenerics(typeMap)) {
         true -> handleNestedGenerics(typeMap, prop, propClass, cache)
         false -> when (typeMap.containsKey(prop.returnType.classifier)) {
           true -> handleGenericProperty(prop, typeMap, cache)
@@ -54,17 +54,24 @@ object SimpleObjectHandler {
     }
   }
 
+  private fun KProperty<*>.needsToInjectGenerics(
+    typeMap: Map<KTypeParameter, KTypeProjection>
+  ): Boolean {
+    val typeSymbols = returnType.arguments.map { it.type.toString() }
+    return typeMap.any { (k, _) -> typeSymbols.contains(k.name) }
+  }
+
   private fun handleNestedGenerics(
     typeMap: Map<KTypeParameter, KTypeProjection>,
     prop: KProperty<*>,
     propClass: KClass<*>,
     cache: MutableMap<String, JsonSchema>
   ): JsonSchema {
-    // todo breaks if > 1 param
-    val holyFuck = typeMap.filterKeys { k ->
-      k.name == prop.returnType.arguments.first().type.toString()
-    }.values.first()
-    val constructedType = propClass.createType(listOf(holyFuck))
+    val types = prop.returnType.arguments.map {
+      val typeSymbol = it.type.toString()
+      typeMap.filterKeys { k -> k.name == typeSymbol }.values.first()
+    }
+    val constructedType = propClass.createType(types)
     return SchemaGenerator.fromTypeToSchema(constructedType, cache).let {
       if (it is TypeDefinition && it.type == "object") {
         cache[constructedType.getSimpleSlug()] = it

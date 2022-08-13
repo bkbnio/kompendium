@@ -8,6 +8,7 @@ import io.bkbn.kompendium.core.fixtures.ExceptionResponse
 import io.bkbn.kompendium.core.fixtures.Flibbity
 import io.bkbn.kompendium.core.fixtures.FlibbityGibbit
 import io.bkbn.kompendium.core.fixtures.Gibbity
+import io.bkbn.kompendium.core.fixtures.MultiNestedGenerics
 import io.bkbn.kompendium.core.fixtures.NullableEnum
 import io.bkbn.kompendium.core.fixtures.NullableField
 import io.bkbn.kompendium.core.fixtures.Page
@@ -570,6 +571,8 @@ object TestModules {
 
   fun Routing.nestedGenericCollection() = basicGetGenerator<Page<Int>>()
 
+  fun Routing.nestedGenericMultipleParamsCollection() = basicGetGenerator<MultiNestedGenerics<String, ComplexRequest>>()
+
   fun Routing.withOperationId() = basicGetGenerator<TestResponse>(operationId = "getThisDude")
 
   fun Routing.nullableNestedObject() = basicGetGenerator<ProfileUpdateRequest>()
@@ -578,14 +581,16 @@ object TestModules {
 
   fun Routing.dateTimeString() = basicGetGenerator<DateTimeString>()
 
-  fun Routing.headerParameter() = basicGetGenerator<TestResponse>( params = listOf(
-    Parameter(
-      name = "X-User-Email",
-      `in` = Parameter.Location.header,
-      schema = TypeDefinition.STRING,
-      required = true
+  fun Routing.headerParameter() = basicGetGenerator<TestResponse>(
+    params = listOf(
+      Parameter(
+        name = "X-User-Email",
+        `in` = Parameter.Location.header,
+        schema = TypeDefinition.STRING,
+        required = true
+      )
     )
-  ))
+  )
 
   fun Routing.simpleRecursive() = basicGetGenerator<ColumnSchema>()
 

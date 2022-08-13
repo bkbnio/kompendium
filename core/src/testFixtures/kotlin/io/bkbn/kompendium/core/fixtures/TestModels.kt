@@ -127,3 +127,7 @@ data class Page<T>(
   val number: Int,
   val size: Int
 )
+
+data class MultiNestedGenerics<T, E>(
+  val content: Map<T, E>
+)
