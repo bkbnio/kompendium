@@ -111,11 +111,11 @@ class KompendiumTest : DescribeSpec({
     it("Can mark a parameter as not required") {
       openApiTestAllSerializers("T0024__non_required_param.json") { nonRequiredParam() }
     }
+    it("Does not mark a field as required if a default value is provided") {
+
+    }
   }
 //  describe("Required Fields") {
-//    it("Does not mark a parameter as required if a default value is provided") {
-//      openApiTestAllSerializers("T0024__non_required_param.json") { defaultParameter() }
-//    }
 //    it("Does not mark a field as required if a default value is provided") {
 //      openApiTestAllSerializers("default_field.json") { defaultField() }
 //    }
