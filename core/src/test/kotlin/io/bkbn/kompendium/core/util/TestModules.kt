@@ -1,5 +1,6 @@
 package io.bkbn.kompendium.core.util
 
+import io.bkbn.kompendium.core.fixtures.Barzo
 import io.bkbn.kompendium.core.fixtures.ColumnSchema
 import io.bkbn.kompendium.core.fixtures.ComplexRequest
 import io.bkbn.kompendium.core.fixtures.DateTimeString
@@ -7,6 +8,7 @@ import io.bkbn.kompendium.core.fixtures.DefaultField
 import io.bkbn.kompendium.core.fixtures.ExceptionResponse
 import io.bkbn.kompendium.core.fixtures.Flibbity
 import io.bkbn.kompendium.core.fixtures.FlibbityGibbit
+import io.bkbn.kompendium.core.fixtures.Foosy
 import io.bkbn.kompendium.core.fixtures.Gibbity
 import io.bkbn.kompendium.core.fixtures.ManyThings
 import io.bkbn.kompendium.core.fixtures.MultiNestedGenerics
@@ -563,6 +565,8 @@ object TestModules {
   fun Routing.polymorphicMapResponse() = basicGetGenerator<Map<String, FlibbityGibbit>>()
 
   fun Routing.simpleGenericResponse() = basicGetGenerator<Gibbity<String>>()
+
+  fun Routing.gnarlyGenericResponse() = basicGetGenerator<Foosy<Barzo<Int>, String>>()
 
   fun Routing.nestedGenericResponse() = basicGetGenerator<Gibbity<Map<String, String>>>()
 
