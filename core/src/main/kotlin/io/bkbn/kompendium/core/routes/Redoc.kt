@@ -3,7 +3,7 @@ package io.bkbn.kompendium.core.routes
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.call
 import io.ktor.server.html.respondHtml
-import io.ktor.server.routing.Routing
+import io.ktor.server.routing.Route
 import io.ktor.server.routing.get
 import io.ktor.server.routing.route
 import kotlinx.html.body
@@ -20,7 +20,7 @@ import kotlinx.html.unsafe
  * @param pageTitle Webpage title you wish to be displayed on your docs
  * @param specUrl url to point ReDoc to the OpenAPI json document
  */
-fun Routing.redoc(pageTitle: String = "Docs", specUrl: String = "/openapi.json") {
+fun Route.redoc(pageTitle: String = "Docs", specUrl: String = "/openapi.json") {
   route("/docs") {
     get {
       call.respondHtml(HttpStatusCode.OK) {

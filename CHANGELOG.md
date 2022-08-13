@@ -5,6 +5,7 @@
 ### Added
 
 ### Changed
+- Can now put redoc route behind authentication
 
 ### Remove
 

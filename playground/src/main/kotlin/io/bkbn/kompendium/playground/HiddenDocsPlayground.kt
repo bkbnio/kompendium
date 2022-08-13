@@ -68,8 +68,9 @@ private fun Application.mainModule() {
     )
   }
   routing {
-    redoc(pageTitle = "Simple API Docs")
     authenticate("basic") {
+      // Put our API docs behind basic auth
+      redoc(pageTitle = "Simple API Docs")
       route("/{id}") {
         idDocumentation()
         get {
