@@ -23,6 +23,7 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.serialization.gson.gson
 import io.ktor.serialization.jackson.jackson
 import io.ktor.serialization.kotlinx.json.json
+import io.ktor.server.application.Application
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.routing.Routing
 import io.ktor.server.testing.ApplicationTestBuilder
@@ -63,17 +64,19 @@ object TestHelpers {
   fun openApiTestAllSerializers(
     snapshotName: String,
     customTypes: Map<KType, JsonSchema> = emptyMap(),
+    applicationSetup: Application.() -> Unit = { },
     routeUnderTest: Routing.() -> Unit
   ) {
-    openApiTest(snapshotName, SupportedSerializer.KOTLINX, routeUnderTest, customTypes)
-    openApiTest(snapshotName, SupportedSerializer.JACKSON, routeUnderTest, customTypes)
-    openApiTest(snapshotName, SupportedSerializer.GSON, routeUnderTest, customTypes)
+    openApiTest(snapshotName, SupportedSerializer.KOTLINX, routeUnderTest, applicationSetup, customTypes)
+    openApiTest(snapshotName, SupportedSerializer.JACKSON, routeUnderTest, applicationSetup, customTypes)
+    openApiTest(snapshotName, SupportedSerializer.GSON, routeUnderTest, applicationSetup, customTypes)
   }
 
   private fun openApiTest(
     snapshotName: String,
     serializer: SupportedSerializer,
     routeUnderTest: Routing.() -> Unit,
+    applicationSetup: Application.() -> Unit,
     typeOverrides: Map<KType, JsonSchema> = emptyMap()
   ) = testApplication {
     install(NotarizedApplication()) {
@@ -95,6 +98,7 @@ object TestHelpers {
         }
       }
     }
+    application(applicationSetup)
     routing {
       redoc()
       routeUnderTest()

@@ -54,7 +54,7 @@ private fun Application.mainModule() {
     redoc(pageTitle = "Simple API Docs")
 
     route("/{id}") {
-      idDocumentation()
+      locationDocumentation()
       get {
         call.respond(
           HttpStatusCode.OK,
@@ -68,7 +68,7 @@ private fun Application.mainModule() {
   }
 }
 
-private fun Route.idDocumentation() {
+private fun Route.locationDocumentation() {
   install(NotarizedRoute()) {
     parameters = listOf(
       Parameter(
