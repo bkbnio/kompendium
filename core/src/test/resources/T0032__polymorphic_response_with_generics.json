@@ -53,18 +53,6 @@
   "webhooks": {},
   "components": {
     "schemas": {
-      "Gibbity-Double": {
-        "type": "object",
-        "properties": {
-          "a": {
-            "type": "number",
-            "format": "double"
-          }
-        },
-        "required": [
-          "a"
-        ]
-      },
       "Bibbity-Double": {
         "type": "object",
         "properties": {
@@ -81,13 +69,25 @@
           "f"
         ]
       },
+      "Gibbity-Double": {
+        "type": "object",
+        "properties": {
+          "a": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "required": [
+          "a"
+        ]
+      },
       "Flibbity-Double": {
         "anyOf": [
           {
-            "$ref": "#/components/schemas/Gibbity-Double"
+            "$ref": "#/components/schemas/Bibbity-Double"
           },
           {
-            "$ref": "#/components/schemas/Bibbity-Double"
+            "$ref": "#/components/schemas/Gibbity-Double"
           }
         ]
       }

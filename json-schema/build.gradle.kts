@@ -17,7 +17,7 @@ sourdoughLibrary {
 }
 
 dependencies {
-  implementation("org.jetbrains.kotlin:kotlin-reflect:1.6.21")
+  implementation("org.jetbrains.kotlin:kotlin-reflect:1.7.10")
   implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
 
   testImplementation(testFixtures(projects.kompendiumCore))

@@ -74,17 +74,6 @@
           "c"
         ]
       },
-      "Gibbity-String": {
-        "type": "object",
-        "properties": {
-          "a": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "a"
-        ]
-      },
       "Bibbity-String": {
         "type": "object",
         "properties": {
@@ -100,13 +89,24 @@
           "f"
         ]
       },
+      "Gibbity-String": {
+        "type": "object",
+        "properties": {
+          "a": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "a"
+        ]
+      },
       "Flibbity-String": {
         "anyOf": [
           {
-            "$ref": "#/components/schemas/Gibbity-String"
+            "$ref": "#/components/schemas/Bibbity-String"
           },
           {
-            "$ref": "#/components/schemas/Bibbity-String"
+            "$ref": "#/components/schemas/Gibbity-String"
           }
         ]
       }

@@ -74,20 +74,6 @@
           "c"
         ]
       },
-      "SimpleGibbit": {
-        "type": "object",
-        "properties": {
-          "a": {
-            "type": "string"
-          },
-          "z": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "a"
-        ]
-      },
       "ComplexGibbit": {
         "type": "object",
         "properties": {
@@ -108,13 +94,27 @@
           "z"
         ]
       },
+      "SimpleGibbit": {
+        "type": "object",
+        "properties": {
+          "a": {
+            "type": "string"
+          },
+          "z": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "a"
+        ]
+      },
       "FlibbityGibbit": {
         "anyOf": [
           {
-            "$ref": "#/components/schemas/SimpleGibbit"
+            "$ref": "#/components/schemas/ComplexGibbit"
           },
           {
-            "$ref": "#/components/schemas/ComplexGibbit"
+            "$ref": "#/components/schemas/SimpleGibbit"
           }
         ]
       }

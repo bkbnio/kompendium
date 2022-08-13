@@ -53,38 +53,6 @@
   "webhooks": {},
   "components": {
     "schemas": {
-      "Gibbity-FlibbityGibbit": {
-        "type": "object",
-        "properties": {
-          "a": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/SimpleGibbit"
-              },
-              {
-                "$ref": "#/components/schemas/ComplexGibbit"
-              }
-            ]
-          }
-        },
-        "required": [
-          "a"
-        ]
-      },
-      "SimpleGibbit": {
-        "type": "object",
-        "properties": {
-          "a": {
-            "type": "string"
-          },
-          "z": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "a"
-        ]
-      },
       "ComplexGibbit": {
         "type": "object",
         "properties": {
@@ -105,6 +73,20 @@
           "z"
         ]
       },
+      "SimpleGibbit": {
+        "type": "object",
+        "properties": {
+          "a": {
+            "type": "string"
+          },
+          "z": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "a"
+        ]
+      },
       "Bibbity-FlibbityGibbit": {
         "type": "object",
         "properties": {
@@ -114,10 +96,10 @@
           "f": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/SimpleGibbit"
+                "$ref": "#/components/schemas/ComplexGibbit"
               },
               {
-                "$ref": "#/components/schemas/ComplexGibbit"
+                "$ref": "#/components/schemas/SimpleGibbit"
               }
             ]
           }
@@ -127,13 +109,31 @@
           "f"
         ]
       },
+      "Gibbity-FlibbityGibbit": {
+        "type": "object",
+        "properties": {
+          "a": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ComplexGibbit"
+              },
+              {
+                "$ref": "#/components/schemas/SimpleGibbit"
+              }
+            ]
+          }
+        },
+        "required": [
+          "a"
+        ]
+      },
       "Flibbity-FlibbityGibbit": {
         "anyOf": [
           {
-            "$ref": "#/components/schemas/Gibbity-FlibbityGibbit"
+            "$ref": "#/components/schemas/Bibbity-FlibbityGibbit"
           },
           {
-            "$ref": "#/components/schemas/Bibbity-FlibbityGibbit"
+            "$ref": "#/components/schemas/Gibbity-FlibbityGibbit"
           }
         ]
       }
