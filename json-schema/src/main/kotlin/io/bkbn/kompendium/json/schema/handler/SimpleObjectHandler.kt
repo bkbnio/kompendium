@@ -20,7 +20,9 @@ import kotlin.reflect.full.primaryConstructor
 object SimpleObjectHandler {
 
   fun handle(type: KType, clazz: KClass<*>, cache: MutableMap<String, JsonSchema>): JsonSchema {
-    // cache[type.getSimpleSlug()] = ReferenceDefinition("RECURSION_PLACEHOLDER")
+
+    cache[type.getSimpleSlug()] = ReferenceDefinition(type.getReferenceSlug())
+
     val typeMap = clazz.typeParameters.zip(type.arguments).toMap()
     val props = clazz.memberProperties.associate { prop ->
       val schema = when (prop.needsToInjectGenerics(typeMap)) {
@@ -31,8 +33,7 @@ object SimpleObjectHandler {
         }
       }
 
-      // TODO This is kinda hacky 👀 And might break in certain edge cases?
-      val nullCheckSchema = when (prop.returnType.isMarkedNullable && schema !is OneOfDefinition) {
+      val nullCheckSchema = when (prop.returnType.isMarkedNullable && !schema.isNullable()) {
         true -> OneOfDefinition(NullableDefinition(), schema)
         false -> schema
       }
@@ -77,7 +78,7 @@ object SimpleObjectHandler {
     }
     val constructedType = propClass.createType(types)
     return SchemaGenerator.fromTypeToSchema(constructedType, cache).let {
-      if (it is TypeDefinition && it.type == "object") {
+      if (it.isOrContainsObjectDef()) {
         cache[constructedType.getSimpleSlug()] = it
         ReferenceDefinition(prop.returnType.getReferenceSlug())
       } else {
@@ -93,7 +94,7 @@ object SimpleObjectHandler {
   ): JsonSchema {
     val type = typeMap[prop.returnType.classifier]?.type!!
     return SchemaGenerator.fromTypeToSchema(type, cache).let {
-      if (it is TypeDefinition && it.type == "object") {
+      if (it.isOrContainsObjectDef()) {
         cache[type.getSimpleSlug()] = it
         ReferenceDefinition(prop.returnType.getReferenceSlug())
       } else {
@@ -104,11 +105,19 @@ object SimpleObjectHandler {
 
   private fun handleProperty(prop: KProperty<*>, cache: MutableMap<String, JsonSchema>): JsonSchema =
     SchemaGenerator.fromTypeToSchema(prop.returnType, cache).let {
-      if (it is TypeDefinition && it.type == "object") {
+      if (it.isOrContainsObjectDef()) {
         cache[prop.returnType.getSimpleSlug()] = it
         ReferenceDefinition(prop.returnType.getReferenceSlug())
       } else {
         it
       }
     }
+
+  private fun JsonSchema.isOrContainsObjectDef(): Boolean {
+    val isTypeDef = this is TypeDefinition && type == "object"
+    val isTypeDefOneOf = this is OneOfDefinition && this.oneOf.any { js -> js is TypeDefinition && js.type == "object" }
+    return isTypeDef || isTypeDefOneOf
+  }
+
+  private fun JsonSchema.isNullable(): Boolean = this is OneOfDefinition && this.oneOf.any{ it is NullableDefinition }
 }
