@@ -17,17 +17,17 @@ dependencies {
   // Ktor
   val ktorVersion: String by project
 
-  implementation("io.ktor:ktor-server-core:2.1.0")
-  implementation("io.ktor:ktor-server-netty:2.1.0")
-  implementation("io.ktor:ktor-server-auth:2.1.0")
-  implementation("io.ktor:ktor-server-auth-jwt:2.1.0")
-  implementation("io.ktor:ktor-serialization:2.1.0")
-  implementation("io.ktor:ktor-server-status-pages:2.1.0")
-  implementation("io.ktor:ktor-server-content-negotiation:2.1.0")
-  implementation("io.ktor:ktor-serialization-kotlinx-json:2.1.0")
-  implementation("io.ktor:ktor-serialization-jackson:2.1.0")
-  implementation("io.ktor:ktor-serialization-gson:2.1.0")
-  implementation("io.ktor:ktor-server-locations:2.1.0")
+  implementation("io.ktor:ktor-server-core:$ktorVersion")
+  implementation("io.ktor:ktor-server-netty:$ktorVersion")
+  implementation("io.ktor:ktor-server-auth:$ktorVersion")
+  implementation("io.ktor:ktor-server-auth-jwt:$ktorVersion")
+  implementation("io.ktor:ktor-serialization:$ktorVersion")
+  implementation("io.ktor:ktor-server-status-pages:$ktorVersion")
+  implementation("io.ktor:ktor-server-content-negotiation:$ktorVersion")
+  implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
+  implementation("io.ktor:ktor-serialization-jackson:$ktorVersion")
+  implementation("io.ktor:ktor-serialization-gson:$ktorVersion")
+  implementation("io.ktor:ktor-server-locations:$ktorVersion")
 
   // Logging
   implementation("org.apache.logging.log4j:log4j-api-kotlin:1.2.0")
