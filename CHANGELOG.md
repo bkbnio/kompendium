@@ -6,6 +6,7 @@
 
 ### Changed
 - Can now put redoc route behind authentication
+- Fixed issue where type erasure was breaking nested generics
 
 ### Remove
 
