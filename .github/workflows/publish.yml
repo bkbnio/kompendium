@@ -1,7 +1,7 @@
 name: Publish to GitHub Packages
 on:
   push:
-    branches: [ main, v3 ]
+    branches: [ main ]
     paths-ignore:
       - docs/**
 env:
