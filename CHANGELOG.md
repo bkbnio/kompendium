@@ -7,6 +7,7 @@
 ### Changed
 - Can now put redoc route behind authentication
 - Fixed issue where type erasure was breaking nested generics
+- Fix bug with null references not displaying properly on properties
 
 ### Remove
 
