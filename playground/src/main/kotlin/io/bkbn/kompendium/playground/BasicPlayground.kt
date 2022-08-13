@@ -24,10 +24,6 @@ import io.ktor.server.routing.route
 import io.ktor.server.routing.routing
 import kotlinx.serialization.json.Json
 
-/**
- * Application entrypoint.  Run this and head on over to `localhost:8081/docs`
- * to see a very simple yet beautifully documented API
- */
 fun main() {
   embeddedServer(
     Netty,
@@ -37,7 +33,6 @@ fun main() {
 }
 
 private fun Application.mainModule() {
-  // Installs Simple JSON Content Negotiation
   install(ContentNegotiation) {
     json(Json {
       serializersModule = KompendiumSerializersModule.module
@@ -49,11 +44,8 @@ private fun Application.mainModule() {
     spec = baseSpec
   }
   routing {
-    // This adds ReDoc support at the `/docs` endpoint.
-    // By default, it will point at the `/openapi.json` created by Kompendium
     redoc(pageTitle = "Simple API Docs")
 
-    // Route with a get handler
     route("/{id}") {
       idDocumentation()
       get {
@@ -63,7 +55,6 @@ private fun Application.mainModule() {
   }
 }
 
-// Documentation for our route
 private fun Route.idDocumentation() {
   install(NotarizedRoute()) {
     parameters = listOf(
