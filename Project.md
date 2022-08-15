@@ -1,6 +1,6 @@
 # Kompendium
 
-Welcome to Kompendium, the straight-forward, non-invasive OpenAPI generator for Ktor.  
+Welcome to Kompendium, the straight-forward, non-invasive OpenAPI generator for Ktor.
 
 ## How to install
 
@@ -23,7 +23,7 @@ found [here](https://docs.github.com/en/packages/working-with-a-github-packages-
 
 ## Setting up Kompendium
 
-Kompendium's core features are comprised of a singular application level plugin and a collection of route level plugins. 
+Kompendium's core features are comprised of a singular application level plugin and a collection of route level plugins.
 The former sets up your OpenApi spec along with various cross-route metadata and overrides such as custom types (useful
 for things like datetime libraries)
 
@@ -44,10 +44,11 @@ private fun Application.mainModule() {
 ### `NotarizedRoute` plugin
 
 Notarized routes take advantage of Ktor 2's [route specific plugin](https://ktor.io/docs/plugins.html#install-route)
-feature.  This allows us to take individual routes, document them, and feed them back in to the application level plugin. 
+feature. This allows us to take individual routes, document them, and feed them back in to the application level plugin.
 
-This also allows you to adopt Kompendium incrementally. Individual routes can be documented at your leisure, and is purely
-additive, meaning that you do not need to modify existing code to get documentation working, you just need new code! 
+This also allows you to adopt Kompendium incrementally. Individual routes can be documented at your leisure, and is
+purely
+additive, meaning that you do not need to modify existing code to get documentation working, you just need new code!
 
 Non-invasive FTW 🚀
 
@@ -85,3 +86,9 @@ route("/{id}") {
 ```
 
 Full details on application and route notarization can be found in the `core` module
+
+## The Playground
+
+In addition to the documentation available here, Kompendium has a number of out-of-the-box examples available in the
+playground module.  Go ahead and fork the repo and run them directly on your machine to get a sense of what Kompendium
+can do!
