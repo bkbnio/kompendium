@@ -1,9 +1,9 @@
 plugins {
   kotlin("jvm") version "1.7.10" apply false
   kotlin("plugin.serialization") version "1.7.10" apply false
-  id("io.bkbn.sourdough.library.jvm") version "0.9.0" apply false
-  id("io.bkbn.sourdough.application.jvm") version "0.9.0" apply false
-  id("io.bkbn.sourdough.root") version "0.9.0"
+  id("io.bkbn.sourdough.library.jvm") version "0.9.1" apply false
+  id("io.bkbn.sourdough.application.jvm") version "0.9.1" apply false
+  id("io.bkbn.sourdough.root") version "0.9.1"
   id("com.github.jakemarsden.git-hooks") version "0.0.2"
   id("org.jetbrains.dokka") version "1.7.10"
   id("org.jetbrains.kotlinx.kover") version "0.5.1"
