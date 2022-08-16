@@ -12,6 +12,7 @@ import io.kotest.assertions.json.shouldEqualJson
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.DescribeSpec
 import kotlinx.serialization.json.Json
+import java.util.UUID
 
 class SchemaGeneratorTest : DescribeSpec({
   describe("Scalars") {
@@ -23,6 +24,9 @@ class SchemaGeneratorTest : DescribeSpec({
     }
     it("Can generate the schema for a String") {
       jsonSchemaTest<String>("T0003__scalar_string.json")
+    }
+    it("Can generate the schema for a UUID") {
+      jsonSchemaTest<UUID>("T0017__scalar_uuid.json")
     }
   }
   describe("Objects") {
