@@ -15,6 +15,17 @@
 
 ## Released
 
+## [3.0.0] - August 16th, 2022
+### Added
+- Ktor 2 Support 🎉
+- OpenAPI 3.1 Standard
+- JsonSchema Generator
+- `NotarizedRoute` plugin
+
+### Removed 
+- SwaggerUI module removed (due to lack of OpenAPI 3.1 support)
+- Kompendium Annotations removed (field renames, undeclared fields, etc. will be follow-up work)
+
 ## [2.3.5] - June 7th, 2022
 ### Added
 
