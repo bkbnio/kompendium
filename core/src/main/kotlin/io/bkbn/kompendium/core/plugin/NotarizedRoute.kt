@@ -4,32 +4,18 @@ import io.bkbn.kompendium.core.attribute.KompendiumAttributes
 import io.bkbn.kompendium.core.metadata.DeleteInfo
 import io.bkbn.kompendium.core.metadata.GetInfo
 import io.bkbn.kompendium.core.metadata.HeadInfo
-import io.bkbn.kompendium.core.metadata.MethodInfo
-import io.bkbn.kompendium.core.metadata.MethodInfoWithRequest
 import io.bkbn.kompendium.core.metadata.OptionsInfo
 import io.bkbn.kompendium.core.metadata.PatchInfo
 import io.bkbn.kompendium.core.metadata.PostInfo
 import io.bkbn.kompendium.core.metadata.PutInfo
-import io.bkbn.kompendium.core.metadata.ResponseInfo
 import io.bkbn.kompendium.core.util.Helpers.addToSpec
-import io.bkbn.kompendium.core.util.Helpers.getReferenceSlug
-import io.bkbn.kompendium.core.util.Helpers.getSimpleSlug
 import io.bkbn.kompendium.core.util.SpecConfig
-import io.bkbn.kompendium.json.schema.SchemaGenerator
-import io.bkbn.kompendium.json.schema.definition.ReferenceDefinition
-import io.bkbn.kompendium.oas.OpenApiSpec
 import io.bkbn.kompendium.oas.path.Path
-import io.bkbn.kompendium.oas.path.PathOperation
-import io.bkbn.kompendium.oas.payload.MediaType
 import io.bkbn.kompendium.oas.payload.Parameter
-import io.bkbn.kompendium.oas.payload.Request
-import io.bkbn.kompendium.oas.payload.Response
 import io.ktor.server.application.ApplicationCallPipeline
 import io.ktor.server.application.Hook
 import io.ktor.server.application.createRouteScopedPlugin
 import io.ktor.server.routing.Route
-import kotlin.reflect.KClass
-import kotlin.reflect.KType
 
 object NotarizedRoute {
 

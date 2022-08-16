@@ -20,6 +20,7 @@ import io.bkbn.kompendium.core.util.TestModules.multipleExceptions
 import io.bkbn.kompendium.core.util.TestModules.nestedGenericCollection
 import io.bkbn.kompendium.core.util.TestModules.nestedGenericMultipleParamsCollection
 import io.bkbn.kompendium.core.util.TestModules.nestedGenericResponse
+import io.bkbn.kompendium.core.util.TestModules.nestedTypeName
 import io.bkbn.kompendium.core.util.TestModules.nonRequiredParam
 import io.bkbn.kompendium.core.util.TestModules.polymorphicException
 import io.bkbn.kompendium.core.util.TestModules.notarizedHead
@@ -199,6 +200,9 @@ class KompendiumTest : DescribeSpec({
     }
     it("Can have a nullable reference without impacting base type") {
       openApiTestAllSerializers("T0041__nullable_reference.json") { nullableReference() }
+    }
+    it("Can handle nested type names") {
+      openApiTestAllSerializers("T0044__nested_type_name.json") { nestedTypeName() }
     }
   }
   describe("Constraints") {
