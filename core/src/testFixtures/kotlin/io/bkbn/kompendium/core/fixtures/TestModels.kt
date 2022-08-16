@@ -141,3 +141,8 @@ data class ManyThings(
 
 data class Foosy<T, K>(val test: T, val otherThing: List<K>)
 data class Barzo<G>(val result: G)
+
+object Nested {
+  @Serializable
+  data class Response(val idk: Boolean)
+}

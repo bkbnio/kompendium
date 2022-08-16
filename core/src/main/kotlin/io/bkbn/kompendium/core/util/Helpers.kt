@@ -10,9 +10,10 @@ import io.bkbn.kompendium.core.metadata.PatchInfo
 import io.bkbn.kompendium.core.metadata.PostInfo
 import io.bkbn.kompendium.core.metadata.PutInfo
 import io.bkbn.kompendium.core.metadata.ResponseInfo
-import io.bkbn.kompendium.core.plugin.NotarizedRoute
 import io.bkbn.kompendium.json.schema.SchemaGenerator
 import io.bkbn.kompendium.json.schema.definition.ReferenceDefinition
+import io.bkbn.kompendium.json.schema.util.Helpers.getReferenceSlug
+import io.bkbn.kompendium.json.schema.util.Helpers.getSimpleSlug
 import io.bkbn.kompendium.oas.OpenApiSpec
 import io.bkbn.kompendium.oas.path.Path
 import io.bkbn.kompendium.oas.path.PathOperation
@@ -23,28 +24,6 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KType
 
 object Helpers {
-
-  private const val COMPONENT_SLUG = "#/components/schemas"
-
-  fun KType.getSimpleSlug(): String = when {
-    this.arguments.isNotEmpty() -> genericNameAdapter(this, classifier as KClass<*>)
-    else -> (classifier as KClass<*>).simpleName ?: error("Could not determine simple name for $this")
-  }
-
-  fun KType.getReferenceSlug(): String = when {
-    arguments.isNotEmpty() -> "$COMPONENT_SLUG/${genericNameAdapter(this, classifier as KClass<*>)}"
-    else -> "$COMPONENT_SLUG/${(classifier as KClass<*>).simpleName}"
-  }
-
-  /**
-   * Adapts a class with type parameters into a reference friendly string
-   */
-  private fun genericNameAdapter(type: KType, clazz: KClass<*>): String {
-    val classNames = type.arguments
-      .map { it.type?.classifier as KClass<*> }
-      .map { it.simpleName }
-    return classNames.joinToString(separator = "-", prefix = "${clazz.simpleName}-")
-  }
 
   fun MethodInfo.addToSpec(path: Path, spec: OpenApiSpec, config: SpecConfig) {
     SchemaGenerator.fromTypeOrUnit(this.response.responseType, spec.components.schemas)?.let { schema ->

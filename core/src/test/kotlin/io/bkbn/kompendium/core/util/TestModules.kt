@@ -12,6 +12,7 @@ import io.bkbn.kompendium.core.fixtures.Foosy
 import io.bkbn.kompendium.core.fixtures.Gibbity
 import io.bkbn.kompendium.core.fixtures.ManyThings
 import io.bkbn.kompendium.core.fixtures.MultiNestedGenerics
+import io.bkbn.kompendium.core.fixtures.Nested
 import io.bkbn.kompendium.core.fixtures.NullableEnum
 import io.bkbn.kompendium.core.fixtures.NullableField
 import io.bkbn.kompendium.core.fixtures.Page
@@ -598,6 +599,8 @@ object TestModules {
       )
     )
   )
+
+  fun Routing.nestedTypeName() = basicGetGenerator<Nested.Response>()
 
   fun Routing.simpleRecursive() = basicGetGenerator<ColumnSchema>()
 
