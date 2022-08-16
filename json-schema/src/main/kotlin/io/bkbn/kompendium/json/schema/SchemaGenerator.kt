@@ -14,6 +14,7 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.typeOf
+import java.util.UUID
 
 object SchemaGenerator {
   inline fun <reified T : Any?> fromTypeToSchema(cache: MutableMap<String, JsonSchema> = mutableMapOf()) =
@@ -37,6 +38,7 @@ object SchemaGenerator {
       Float::class -> checkForNull(type, TypeDefinition.FLOAT)
       String::class -> checkForNull(type, TypeDefinition.STRING)
       Boolean::class -> checkForNull(type, TypeDefinition.BOOLEAN)
+      UUID::class -> checkForNull(type, TypeDefinition.UUID)
       else -> when {
         clazz.isSubclassOf(Enum::class) -> EnumHandler.handle(type, clazz)
         clazz.isSubclassOf(Collection::class) -> CollectionHandler.handle(type, cache)
