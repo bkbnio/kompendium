@@ -40,6 +40,11 @@ data class TypeDefinition(
       type = "string"
     )
 
+    val UUID = TypeDefinition(
+      type = "string",
+      format = "uuid"
+    )
+
     val BOOLEAN = TypeDefinition(
       type = "boolean"
     )
