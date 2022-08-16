@@ -16,7 +16,13 @@ Kompendium is intended to be a minimally invasive OpenApi Specification generato
 that users will use only Ktor native functions when implementing their API, and will supplement with Kompendium code in
 order to generate the appropriate spec.
 
-🚨 Kompendium _only_ supports Ktor 1.x
+### Compatability
+
+| Kompendium  | Ktor  | OpenAPI | 
+|---|---| --- |
+| 1.X  | 1  | 3.0 |
+| 2.X  | 1  | 3.0 |
+| 3.X  | 2  | 3.1 | 
 
 ## How to install
 
