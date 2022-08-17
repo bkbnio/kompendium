@@ -25,11 +25,11 @@ class HeadInfo private constructor(
 
   class Builder : MethodInfo.Builder<HeadInfo>() {
     override fun build() = HeadInfo(
-      response = response!!,
+      response = response ?: error("Response info must be present"),
       errors = errors,
       tags = tags,
-      summary = summary!!,
-      description = description!!,
+      summary = summary ?: error("Summary must be present"),
+      description = description ?: error("Description must be present"),
       externalDocumentation = externalDocumentation,
       operationId = operationId,
       deprecated = deprecated,

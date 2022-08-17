@@ -92,7 +92,8 @@ object SimpleObjectHandler {
     typeMap: Map<KTypeParameter, KTypeProjection>,
     cache: MutableMap<String, JsonSchema>
   ): JsonSchema {
-    val type = typeMap[prop.returnType.classifier]?.type!!
+    val type = typeMap[prop.returnType.classifier]?.type
+      ?: error("This indicates a bug in Kompendium, please open a GitHub issue")
     return SchemaGenerator.fromTypeToSchema(type, cache).let {
       if (it.isOrContainsObjectDef()) {
         cache[type.getSimpleSlug()] = it
@@ -119,5 +120,5 @@ object SimpleObjectHandler {
     return isTypeDef || isTypeDefOneOf
   }
 
-  private fun JsonSchema.isNullable(): Boolean = this is OneOfDefinition && this.oneOf.any{ it is NullableDefinition }
+  private fun JsonSchema.isNullable(): Boolean = this is OneOfDefinition && this.oneOf.any { it is NullableDefinition }
 }

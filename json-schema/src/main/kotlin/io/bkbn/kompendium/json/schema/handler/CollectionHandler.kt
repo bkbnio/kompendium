@@ -14,7 +14,8 @@ import kotlin.reflect.KType
 object CollectionHandler {
 
   fun handle(type: KType, cache: MutableMap<String, JsonSchema>): JsonSchema {
-    val collectionType = type.arguments.first().type!!
+    val collectionType = type.arguments.first().type
+      ?: error("This indicates a bug in Kompendium, please open a GitHub issue!")
     val typeSchema = SchemaGenerator.fromTypeToSchema(collectionType, cache).let {
       if (it is TypeDefinition && it.type == "object") {
         cache[collectionType.getSimpleSlug()] = it

@@ -55,7 +55,8 @@ object NotarizedRoute {
         Please make sure that all notarized paths are unique
       """.trimIndent()
       }
-      spec.paths[routePath] = pluginConfig.path!!
+      spec.paths[routePath] = pluginConfig.path
+        ?: error("This indicates a bug in Kompendium. Please file a GitHub issue!")
     }
 
     val spec = application.attributes[KompendiumAttributes.openApiSpec]

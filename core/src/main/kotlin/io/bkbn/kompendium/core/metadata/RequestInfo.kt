@@ -37,8 +37,8 @@ class RequestInfo private constructor(
     }
 
     fun build() = RequestInfo(
-      requestType = requestType!!,
-      description = description!!,
+      requestType = requestType ?: error("Request type must be present"),
+      description = description ?: error("Description must be present"),
       examples = examples
     )
   }

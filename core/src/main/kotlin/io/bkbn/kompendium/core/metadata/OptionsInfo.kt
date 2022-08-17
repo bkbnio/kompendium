@@ -25,11 +25,11 @@ class OptionsInfo private constructor(
 
   class Builder : MethodInfo.Builder<OptionsInfo>() {
     override fun build() = OptionsInfo(
-      response = response!!,
+      response = response ?: error("Response info must be provided!"),
       errors = errors,
       tags = tags,
-      summary = summary!!,
-      description = description!!,
+      summary = summary ?: error("Summary must be provided!"),
+      description = description ?: error("Description must be provided!"),
       externalDocumentation = externalDocumentation,
       operationId = operationId,
       deprecated = deprecated,

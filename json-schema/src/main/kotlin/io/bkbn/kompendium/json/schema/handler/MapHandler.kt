@@ -15,10 +15,10 @@ import kotlin.reflect.KType
 object MapHandler {
 
   fun handle(type: KType, cache: MutableMap<String, JsonSchema>): JsonSchema {
-    require(type.arguments.first().type!!.classifier as KClass<*> == String::class) {
+    require(type.arguments.first().type?.classifier as KClass<*> == String::class) {
       "JSON requires that map keys MUST be Strings.  You provided ${type.arguments.first().type}"
     }
-    val valueType = type.arguments[1].type!!
+    val valueType = type.arguments[1].type ?: error("this indicates a bug in Kompendium, please open a GitHub issue")
     val valueSchema = SchemaGenerator.fromTypeToSchema(valueType, cache).let {
       if (it is TypeDefinition && it.type == "object") {
         cache[valueType.getSimpleSlug()] = it

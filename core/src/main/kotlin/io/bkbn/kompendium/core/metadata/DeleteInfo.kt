@@ -25,11 +25,11 @@ class DeleteInfo private constructor(
 
   class Builder : MethodInfo.Builder<DeleteInfo>() {
     override fun build() = DeleteInfo(
-      response = response!!,
+      response = response ?: error("Response info must be present"),
       errors = errors,
       tags = tags,
-      summary = summary!!,
-      description = description!!,
+      summary = summary ?: error("Summary must be present"),
+      description = description ?: error("Description must be present"),
       externalDocumentation = externalDocumentation,
       operationId = operationId,
       deprecated = deprecated,

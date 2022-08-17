@@ -26,12 +26,12 @@ class PutInfo private constructor(
 
   class Builder : MethodInfoWithRequest.Builder<PutInfo>() {
     override fun build() = PutInfo(
-      request = request!!,
+      request = request ?: error("request info must be present"),
       errors = errors,
-      response = response!!,
+      response = response ?: error("response info must be present"),
       tags = tags,
-      summary = summary!!,
-      description = description!!,
+      summary = summary ?: error("Summary must be present"),
+      description = description ?: error("Description must be present"),
       externalDocumentation = externalDocumentation,
       operationId = operationId,
       deprecated = deprecated,
