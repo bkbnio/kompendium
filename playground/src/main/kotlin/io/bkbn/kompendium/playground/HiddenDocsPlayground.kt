@@ -21,8 +21,8 @@ import io.ktor.server.auth.Authentication
 import io.ktor.server.auth.UserIdPrincipal
 import io.ktor.server.auth.authenticate
 import io.ktor.server.auth.basic
+import io.ktor.server.cio.CIO
 import io.ktor.server.engine.embeddedServer
-import io.ktor.server.netty.Netty
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
@@ -34,7 +34,7 @@ import kotlinx.serialization.json.Json
 
 fun main() {
   embeddedServer(
-    Netty,
+    CIO,
     port = 8081,
     module = Application::mainModule
   ).start(wait = true)
