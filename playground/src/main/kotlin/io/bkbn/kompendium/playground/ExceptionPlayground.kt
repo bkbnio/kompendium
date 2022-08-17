@@ -78,11 +78,11 @@ private fun Route.locationDocumentation() {
         responseCode(HttpStatusCode.OK)
         responseType<ExampleResponse>()
         description("Will return whether or not the user is real 😱")
-        canRespond {
-          description("Bad Things Happened")
-          responseCode(HttpStatusCode.InternalServerError)
-          responseType<ExceptionResponse>()
-        }
+      }
+      canRespond {
+        description("Bad Things Happened")
+        responseCode(HttpStatusCode.InternalServerError)
+        responseType<ExceptionResponse>()
       }
     }
   }
