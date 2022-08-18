@@ -50,7 +50,7 @@ dependencies {
   testFixturesApi("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
   testFixturesApi("io.ktor:ktor-server-content-negotiation:$ktorVersion")
 
-  testFixturesApi("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
+  testFixturesApi("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0")
 }
 
 testing {
