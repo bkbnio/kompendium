@@ -219,4 +219,15 @@ class KompendiumTest : DescribeSpec({
   describe("Free Form") {
     // todo Assess strategies here
   }
+  describe("Authentication") {
+    it("Can add a default auth config by default") {
+      TODO()
+    }
+    it("Can provide custom auth config with proper scopes") {
+      TODO()
+    }
+    it("Can provide multiple authentication strategies") {
+      TODO()
+    }
+  }
 })

@@ -39,6 +39,6 @@ data class PathOperation(
   var responses: Map<Int, Response>? = null,
   var callbacks: Map<String, PathOperation>? = null,
   var deprecated: Boolean = false,
-  var security: List<Map<String, List<String>>>? = null,
+  var security: MutableList<Map<String, List<String>>>? = null,
   var servers: List<Server>? = null,
 )

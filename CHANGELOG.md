@@ -15,6 +15,13 @@
 
 ## Released
 
+## [3.1.0] - August 18th, 2022
+### Added
+- Ability to automatically detect authentication via route
+
+### Fixed
+- Improved stack trace output
+
 ## [3.0.0] - August 16th, 2022
 ### Added
 - Ktor 2 Support 🎉

@@ -11,6 +11,7 @@ import io.bkbn.kompendium.core.metadata.PutInfo
 import io.bkbn.kompendium.core.util.Helpers.addToSpec
 import io.bkbn.kompendium.core.util.SpecConfig
 import io.bkbn.kompendium.oas.path.Path
+import io.bkbn.kompendium.oas.path.PathOperation
 import io.bkbn.kompendium.oas.payload.Parameter
 import io.ktor.server.application.ApplicationCallPipeline
 import io.ktor.server.application.Hook
@@ -44,11 +45,13 @@ object NotarizedRoute {
     createConfiguration = ::Config
   ) {
 
-    // This is required in order to introspect the route path
+    // This is required in order to introspect the route path and authentication
     on(InstallHook) {
       val route = it as? Route ?: return@on
       val spec = application.attributes[KompendiumAttributes.openApiSpec]
       val routePath = route.calculateRoutePath()
+      val authMethods = route.collectAuthMethods()
+      pluginConfig.path?.addDefaultAuthMethods(authMethods)
       require(spec.paths[routePath] == null) {
         """
         The specified path ${Parameter.Location.path} has already been documented!
@@ -76,4 +79,31 @@ object NotarizedRoute {
   }
 
   private fun Route.calculateRoutePath() = toString().replace(Regex("/\\(.+\\)"), "")
+  private fun Route.collectAuthMethods() = toString()
+    .split("/")
+    .filter { it.contains(Regex("\\(authenticate .*\\)")) }
+    .map { it.replace("(authenticate ", "").replace(")", "") }
+
+  private fun Path.addDefaultAuthMethods(methods: List<String>) {
+    get?.addDefaultAuthMethods(methods)
+    put?.addDefaultAuthMethods(methods)
+    post?.addDefaultAuthMethods(methods)
+    delete?.addDefaultAuthMethods(methods)
+    options?.addDefaultAuthMethods(methods)
+    head?.addDefaultAuthMethods(methods)
+    patch?.addDefaultAuthMethods(methods)
+    trace?.addDefaultAuthMethods(methods)
+  }
+
+  private fun PathOperation.addDefaultAuthMethods(methods: List<String>) {
+    methods.forEach { m ->
+      if (security == null || security?.all { s -> !s.containsKey(m) } == true) {
+        if (security == null) {
+          security = mutableListOf(mapOf(m to emptyList()))
+        } else {
+          security?.add(mapOf(m to emptyList()))
+        }
+      }
+    }
+  }
 }
