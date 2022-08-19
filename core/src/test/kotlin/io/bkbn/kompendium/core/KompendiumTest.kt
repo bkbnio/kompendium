@@ -1,8 +1,11 @@
 package io.bkbn.kompendium.core
 
+import dev.forst.ktor.apikey.apiKey
 import io.bkbn.kompendium.core.fixtures.TestHelpers.openApiTestAllSerializers
 import io.bkbn.kompendium.core.util.TestModules.complexRequest
+import io.bkbn.kompendium.core.util.TestModules.customAuthConfig
 import io.bkbn.kompendium.core.util.TestModules.dateTimeString
+import io.bkbn.kompendium.core.util.TestModules.defaultAuthConfig
 import io.bkbn.kompendium.core.util.TestModules.defaultField
 import io.bkbn.kompendium.core.util.TestModules.defaultParameter
 import io.bkbn.kompendium.core.util.TestModules.exampleParams
@@ -16,6 +19,7 @@ import io.bkbn.kompendium.core.util.TestModules.genericPolymorphicResponse
 import io.bkbn.kompendium.core.util.TestModules.genericPolymorphicResponseMultipleImpls
 import io.bkbn.kompendium.core.util.TestModules.gnarlyGenericResponse
 import io.bkbn.kompendium.core.util.TestModules.headerParameter
+import io.bkbn.kompendium.core.util.TestModules.multipleAuthStrategies
 import io.bkbn.kompendium.core.util.TestModules.multipleExceptions
 import io.bkbn.kompendium.core.util.TestModules.nestedGenericCollection
 import io.bkbn.kompendium.core.util.TestModules.nestedGenericMultipleParamsCollection
@@ -46,7 +50,22 @@ import io.bkbn.kompendium.core.util.TestModules.simpleRecursive
 import io.bkbn.kompendium.core.util.TestModules.trailingSlash
 import io.bkbn.kompendium.core.util.TestModules.withOperationId
 import io.bkbn.kompendium.json.schema.definition.TypeDefinition
+import io.bkbn.kompendium.oas.component.Components
+import io.bkbn.kompendium.oas.security.ApiKeyAuth
+import io.bkbn.kompendium.oas.security.BasicAuth
+import io.bkbn.kompendium.oas.security.BearerAuth
+import io.bkbn.kompendium.oas.security.OAuth
 import io.kotest.core.spec.style.DescribeSpec
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.cio.CIO
+import io.ktor.http.HttpMethod
+import io.ktor.server.application.install
+import io.ktor.server.auth.Authentication
+import io.ktor.server.auth.OAuthServerSettings
+import io.ktor.server.auth.UserIdPrincipal
+import io.ktor.server.auth.basic
+import io.ktor.server.auth.jwt.jwt
+import io.ktor.server.auth.oauth
 import kotlin.reflect.typeOf
 import java.time.Instant
 
@@ -190,7 +209,7 @@ class KompendiumTest : DescribeSpec({
       // TODO Assess strategies here
     }
     it("Can serialize a recursive type") {
-       openApiTestAllSerializers("T0042__simple_recursive.json") { simpleRecursive() }
+      openApiTestAllSerializers("T0042__simple_recursive.json") { simpleRecursive() }
     }
     it("Nullable fields do not lead to doom") {
       openApiTestAllSerializers("T0036__nullable_fields.json") { nullableNestedObject() }
@@ -218,5 +237,101 @@ class KompendiumTest : DescribeSpec({
   }
   describe("Free Form") {
     // todo Assess strategies here
+  }
+  describe("Authentication") {
+    it("Can add a default auth config by default") {
+      openApiTestAllSerializers(
+        snapshotName = "T0045__default_auth_config.json",
+        applicationSetup = {
+          install(Authentication) {
+            basic("basic") {
+              realm = "Ktor Server"
+              validate { UserIdPrincipal("Placeholder") }
+            }
+          }
+        },
+        specOverrides = {
+          this.copy(
+            components = Components(
+              securitySchemes = mutableMapOf(
+                "basic" to BasicAuth()
+              )
+            )
+          )
+        }
+      ) { defaultAuthConfig() }
+    }
+    it("Can provide custom auth config with proper scopes") {
+      openApiTestAllSerializers(
+        snapshotName = "T0046__custom_auth_config.json",
+        applicationSetup = {
+          install(Authentication) {
+            oauth("auth-oauth-google") {
+              urlProvider = { "http://localhost:8080/callback" }
+              providerLookup = {
+                OAuthServerSettings.OAuth2ServerSettings(
+                  name = "google",
+                  authorizeUrl = "https://accounts.google.com/o/oauth2/auth",
+                  accessTokenUrl = "https://accounts.google.com/o/oauth2/token",
+                  requestMethod = HttpMethod.Post,
+                  clientId = "DUMMY_VAL",
+                  clientSecret = "DUMMY_VAL",
+                  defaultScopes = listOf("https://www.googleapis.com/auth/userinfo.profile"),
+                  extraTokenParameters = listOf("access_type" to "offline")
+                )
+              }
+              client = HttpClient(CIO)
+            }
+          }
+        },
+        specOverrides = {
+          this.copy(
+            components = Components(
+              securitySchemes = mutableMapOf(
+                "auth-oauth-google" to OAuth(
+                  flows = OAuth.Flows(
+                    implicit = OAuth.Flows.Implicit(
+                      authorizationUrl = "https://accounts.google.com/o/oauth2/auth",
+                      scopes = mapOf(
+                        "write:pets" to "modify pets in your account",
+                        "read:pets" to "read your pets"
+                      )
+                    )
+                  )
+                )
+              )
+            )
+          )
+        }
+      ) { customAuthConfig() }
+    }
+    it("Can provide multiple authentication strategies") {
+      openApiTestAllSerializers(
+        snapshotName = "T0047__multiple_auth_strategies.json",
+        applicationSetup = {
+          install(Authentication) {
+            apiKey("api-key") {
+              headerName = "X-API-KEY"
+              validate {
+                UserIdPrincipal("Placeholder")
+              }
+            }
+            jwt("jwt") {
+              realm = "Server"
+            }
+          }
+        },
+        specOverrides = {
+          this.copy(
+            components = Components(
+              securitySchemes = mutableMapOf(
+                "jwt" to BearerAuth("JWT"),
+                "api-key" to ApiKeyAuth(ApiKeyAuth.ApiKeyLocation.HEADER, "X-API-KEY")
+              )
+            )
+          )
+        }
+      ) { multipleAuthStrategies() }
+    }
   }
 })

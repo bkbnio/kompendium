@@ -92,9 +92,6 @@ private fun Route.locationDocumentation() {
     get = GetInfo.builder {
       summary("Get user by id")
       description("A very neat endpoint!")
-      security = mapOf(
-        "basic" to emptyList()
-      )
       response {
         responseCode(HttpStatusCode.OK)
         responseType<ExampleResponse>()

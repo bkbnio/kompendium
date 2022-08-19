@@ -70,7 +70,7 @@ object Helpers {
     security = config.security
       ?.map { (k, v) -> k to v }
       ?.map { listOf(it).toMap() }
-      ?.toList(),
+      ?.toMutableList(),
     requestBody = when (this) {
       is MethodInfoWithRequest -> Request(
         description = this.request.description,
