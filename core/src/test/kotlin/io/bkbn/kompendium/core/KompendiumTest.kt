@@ -3,6 +3,7 @@ package io.bkbn.kompendium.core
 import io.bkbn.kompendium.core.fixtures.TestHelpers.openApiTestAllSerializers
 import io.bkbn.kompendium.core.util.TestModules.complexRequest
 import io.bkbn.kompendium.core.util.TestModules.dateTimeString
+import io.bkbn.kompendium.core.util.TestModules.defaultAuthConfig
 import io.bkbn.kompendium.core.util.TestModules.defaultField
 import io.bkbn.kompendium.core.util.TestModules.defaultParameter
 import io.bkbn.kompendium.core.util.TestModules.exampleParams
@@ -46,7 +47,13 @@ import io.bkbn.kompendium.core.util.TestModules.simpleRecursive
 import io.bkbn.kompendium.core.util.TestModules.trailingSlash
 import io.bkbn.kompendium.core.util.TestModules.withOperationId
 import io.bkbn.kompendium.json.schema.definition.TypeDefinition
+import io.bkbn.kompendium.oas.component.Components
+import io.bkbn.kompendium.oas.security.BasicAuth
 import io.kotest.core.spec.style.DescribeSpec
+import io.ktor.server.application.install
+import io.ktor.server.auth.Authentication
+import io.ktor.server.auth.UserIdPrincipal
+import io.ktor.server.auth.basic
 import kotlin.reflect.typeOf
 import java.time.Instant
 
@@ -190,7 +197,7 @@ class KompendiumTest : DescribeSpec({
       // TODO Assess strategies here
     }
     it("Can serialize a recursive type") {
-       openApiTestAllSerializers("T0042__simple_recursive.json") { simpleRecursive() }
+      openApiTestAllSerializers("T0042__simple_recursive.json") { simpleRecursive() }
     }
     it("Nullable fields do not lead to doom") {
       openApiTestAllSerializers("T0036__nullable_fields.json") { nullableNestedObject() }
@@ -221,7 +228,26 @@ class KompendiumTest : DescribeSpec({
   }
   describe("Authentication") {
     it("Can add a default auth config by default") {
-      TODO()
+      openApiTestAllSerializers(
+        snapshotName = "T0045__default_auth_config.json",
+        applicationSetup = {
+          install(Authentication) {
+            basic("basic") {
+              realm = "Ktor Server"
+              validate { UserIdPrincipal("Placeholder") }
+            }
+          }
+        },
+        specOverrides = {
+          this.copy(
+            components = Components(
+              securitySchemes = mutableMapOf(
+                "basic" to BasicAuth()
+              )
+            )
+          )
+        }
+      ) { defaultAuthConfig() }
     }
     it("Can provide custom auth config with proper scopes") {
       TODO()

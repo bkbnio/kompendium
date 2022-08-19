@@ -35,8 +35,10 @@ import io.bkbn.kompendium.oas.payload.Parameter
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.call
 import io.ktor.server.application.install
+import io.ktor.server.auth.authenticate
 import io.ktor.server.response.respond
 import io.ktor.server.response.respondText
+import io.ktor.server.routing.Route
 import io.ktor.server.routing.Routing
 import io.ktor.server.routing.delete
 import io.ktor.server.routing.get
@@ -604,22 +606,37 @@ object TestModules {
 
   fun Routing.simpleRecursive() = basicGetGenerator<ColumnSchema>()
 
+  fun Routing.defaultAuthConfig() {
+    authenticate("basic") {
+      route(rootPath) {
+        basicGetGenerator<TestResponse>()
+      }
+    }
+  }
+
   private inline fun <reified T> Routing.basicGetGenerator(
     params: List<Parameter> = emptyList(),
     operationId: String? = null
   ) {
     route(rootPath) {
-      install(NotarizedRoute()) {
-        get = GetInfo.builder {
-          summary(defaultPathSummary)
-          description(defaultPathDescription)
-          operationId?.let { operationId(it) }
-          parameters = params
-          response {
-            description(defaultResponseDescription)
-            responseCode(HttpStatusCode.OK)
-            responseType<T>()
-          }
+      basicGetGenerator<T>(params, operationId)
+    }
+  }
+
+  private inline fun <reified T> Route.basicGetGenerator(
+    params: List<Parameter> = emptyList(),
+    operationId: String? = null
+  ) {
+    install(NotarizedRoute()) {
+      get = GetInfo.builder {
+        summary(defaultPathSummary)
+        description(defaultPathDescription)
+        operationId?.let { operationId(it) }
+        parameters = params
+        response {
+          description(defaultResponseDescription)
+          responseCode(HttpStatusCode.OK)
+          responseType<T>()
         }
       }
     }

@@ -59,17 +59,17 @@ object TestHelpers {
    * and build a test ktor server to compare the expected output with the output found in the default
    * OpenAPI json endpoint.  By default, this will run the same test with Gson, Kotlinx, and Jackson serializers
    * @param snapshotName The snapshot file to retrieve from the resources folder
-   * @param moduleFunction Initializer for the application to allow tests to pass the required Ktor modules
    */
   fun openApiTestAllSerializers(
     snapshotName: String,
     customTypes: Map<KType, JsonSchema> = emptyMap(),
     applicationSetup: Application.() -> Unit = { },
+    specOverrides: OpenApiSpec.() -> OpenApiSpec = { this },
     routeUnderTest: Routing.() -> Unit
   ) {
-    openApiTest(snapshotName, SupportedSerializer.KOTLINX, routeUnderTest, applicationSetup, customTypes)
-    openApiTest(snapshotName, SupportedSerializer.JACKSON, routeUnderTest, applicationSetup, customTypes)
-    openApiTest(snapshotName, SupportedSerializer.GSON, routeUnderTest, applicationSetup, customTypes)
+    openApiTest(snapshotName, SupportedSerializer.KOTLINX, routeUnderTest, applicationSetup, specOverrides, customTypes)
+    openApiTest(snapshotName, SupportedSerializer.JACKSON, routeUnderTest, applicationSetup, specOverrides, customTypes)
+    openApiTest(snapshotName, SupportedSerializer.GSON, routeUnderTest, applicationSetup, specOverrides, customTypes)
   }
 
   private fun openApiTest(
@@ -77,11 +77,12 @@ object TestHelpers {
     serializer: SupportedSerializer,
     routeUnderTest: Routing.() -> Unit,
     applicationSetup: Application.() -> Unit,
+    specOverrides: OpenApiSpec.() -> OpenApiSpec,
     typeOverrides: Map<KType, JsonSchema> = emptyMap()
   ) = testApplication {
     install(NotarizedApplication()) {
       customTypes = typeOverrides
-      spec = defaultSpec()
+      spec = defaultSpec().specOverrides()
     }
     install(ContentNegotiation) {
       when (serializer) {
