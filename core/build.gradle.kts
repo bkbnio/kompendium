@@ -32,7 +32,6 @@ dependencies {
   implementation("io.ktor:ktor-server-html-builder:$ktorVersion")
   implementation("io.ktor:ktor-server-content-negotiation:$ktorVersion")
   implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
-  implementation("io.ktor:ktor-server-auth:$ktorVersion")
   implementation("ch.qos.logback:logback-classic:1.2.11")
 
   // TEST FIXTURES
@@ -50,6 +49,9 @@ dependencies {
   testFixturesApi("io.ktor:ktor-serialization-gson:$ktorVersion")
   testFixturesApi("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
   testFixturesApi("io.ktor:ktor-server-content-negotiation:$ktorVersion")
+  testFixturesApi("io.ktor:ktor-server-auth:$ktorVersion")
+  testFixturesApi("io.ktor:ktor-client:$ktorVersion")
+  testFixturesApi("io.ktor:ktor-client-cio:$ktorVersion")
 
   testFixturesApi("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
 }

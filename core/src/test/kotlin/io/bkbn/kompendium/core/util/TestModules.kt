@@ -614,6 +614,27 @@ object TestModules {
     }
   }
 
+  fun Routing.customAuthConfig() {
+    authenticate("auth-oauth-google") {
+      route(rootPath) {
+        install(NotarizedRoute()) {
+          get = GetInfo.builder {
+            summary(defaultPathSummary)
+            description(defaultPathDescription)
+            response {
+              description(defaultResponseDescription)
+              responseCode(HttpStatusCode.OK)
+              responseType<TestResponse>()
+            }
+            security = mapOf(
+              "auth-oauth-google" to listOf("read:pets")
+            )
+          }
+        }
+      }
+    }
+  }
+
   private inline fun <reified T> Routing.basicGetGenerator(
     params: List<Parameter> = emptyList(),
     operationId: String? = null

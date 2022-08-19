@@ -2,6 +2,7 @@ package io.bkbn.kompendium.core
 
 import io.bkbn.kompendium.core.fixtures.TestHelpers.openApiTestAllSerializers
 import io.bkbn.kompendium.core.util.TestModules.complexRequest
+import io.bkbn.kompendium.core.util.TestModules.customAuthConfig
 import io.bkbn.kompendium.core.util.TestModules.dateTimeString
 import io.bkbn.kompendium.core.util.TestModules.defaultAuthConfig
 import io.bkbn.kompendium.core.util.TestModules.defaultField
@@ -49,11 +50,17 @@ import io.bkbn.kompendium.core.util.TestModules.withOperationId
 import io.bkbn.kompendium.json.schema.definition.TypeDefinition
 import io.bkbn.kompendium.oas.component.Components
 import io.bkbn.kompendium.oas.security.BasicAuth
+import io.bkbn.kompendium.oas.security.OAuth
 import io.kotest.core.spec.style.DescribeSpec
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.cio.CIO
+import io.ktor.http.HttpMethod
 import io.ktor.server.application.install
 import io.ktor.server.auth.Authentication
+import io.ktor.server.auth.OAuthServerSettings
 import io.ktor.server.auth.UserIdPrincipal
 import io.ktor.server.auth.basic
+import io.ktor.server.auth.oauth
 import kotlin.reflect.typeOf
 import java.time.Instant
 
@@ -250,7 +257,48 @@ class KompendiumTest : DescribeSpec({
       ) { defaultAuthConfig() }
     }
     it("Can provide custom auth config with proper scopes") {
-      TODO()
+      openApiTestAllSerializers(
+        snapshotName = "T0046__custom_auth_config.json",
+        applicationSetup = {
+          install(Authentication) {
+            oauth("auth-oauth-google") {
+              urlProvider = { "http://localhost:8080/callback" }
+              providerLookup = {
+                OAuthServerSettings.OAuth2ServerSettings(
+                  name = "google",
+                  authorizeUrl = "https://accounts.google.com/o/oauth2/auth",
+                  accessTokenUrl = "https://accounts.google.com/o/oauth2/token",
+                  requestMethod = HttpMethod.Post,
+                  clientId = "DUMMY_VAL",
+                  clientSecret = "DUMMY_VAL",
+                  defaultScopes = listOf("https://www.googleapis.com/auth/userinfo.profile"),
+                  extraTokenParameters = listOf("access_type" to "offline")
+                )
+              }
+              client = HttpClient(CIO)
+            }
+          }
+        },
+        specOverrides = {
+          this.copy(
+            components = Components(
+              securitySchemes = mutableMapOf(
+                "auth-oauth-google" to OAuth(
+                  flows = OAuth.Flows(
+                    implicit = OAuth.Flows.Implicit(
+                      authorizationUrl = "https://accounts.google.com/o/oauth2/auth",
+                      scopes = mapOf(
+                        "write:pets" to "modify pets in your account",
+                        "read:pets" to "read your pets"
+                      )
+                    )
+                  )
+                )
+              )
+            )
+          )
+        }
+      ) { customAuthConfig() }
     }
     it("Can provide multiple authentication strategies") {
       TODO()
