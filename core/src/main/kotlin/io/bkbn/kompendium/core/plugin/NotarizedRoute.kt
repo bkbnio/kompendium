@@ -83,6 +83,8 @@ object NotarizedRoute {
     .split("/")
     .filter { it.contains(Regex("\\(authenticate .*\\)")) }
     .map { it.replace("(authenticate ", "").replace(")", "") }
+    .map { it.split(", ") }
+    .flatten()
 
   private fun Path.addDefaultAuthMethods(methods: List<String>) {
     get?.addDefaultAuthMethods(methods)

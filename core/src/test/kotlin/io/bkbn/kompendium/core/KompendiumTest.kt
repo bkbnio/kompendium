@@ -1,5 +1,6 @@
 package io.bkbn.kompendium.core
 
+import dev.forst.ktor.apikey.apiKey
 import io.bkbn.kompendium.core.fixtures.TestHelpers.openApiTestAllSerializers
 import io.bkbn.kompendium.core.util.TestModules.complexRequest
 import io.bkbn.kompendium.core.util.TestModules.customAuthConfig
@@ -18,6 +19,7 @@ import io.bkbn.kompendium.core.util.TestModules.genericPolymorphicResponse
 import io.bkbn.kompendium.core.util.TestModules.genericPolymorphicResponseMultipleImpls
 import io.bkbn.kompendium.core.util.TestModules.gnarlyGenericResponse
 import io.bkbn.kompendium.core.util.TestModules.headerParameter
+import io.bkbn.kompendium.core.util.TestModules.multipleAuthStrategies
 import io.bkbn.kompendium.core.util.TestModules.multipleExceptions
 import io.bkbn.kompendium.core.util.TestModules.nestedGenericCollection
 import io.bkbn.kompendium.core.util.TestModules.nestedGenericMultipleParamsCollection
@@ -49,7 +51,9 @@ import io.bkbn.kompendium.core.util.TestModules.trailingSlash
 import io.bkbn.kompendium.core.util.TestModules.withOperationId
 import io.bkbn.kompendium.json.schema.definition.TypeDefinition
 import io.bkbn.kompendium.oas.component.Components
+import io.bkbn.kompendium.oas.security.ApiKeyAuth
 import io.bkbn.kompendium.oas.security.BasicAuth
+import io.bkbn.kompendium.oas.security.BearerAuth
 import io.bkbn.kompendium.oas.security.OAuth
 import io.kotest.core.spec.style.DescribeSpec
 import io.ktor.client.HttpClient
@@ -60,6 +64,7 @@ import io.ktor.server.auth.Authentication
 import io.ktor.server.auth.OAuthServerSettings
 import io.ktor.server.auth.UserIdPrincipal
 import io.ktor.server.auth.basic
+import io.ktor.server.auth.jwt.jwt
 import io.ktor.server.auth.oauth
 import kotlin.reflect.typeOf
 import java.time.Instant
@@ -301,7 +306,32 @@ class KompendiumTest : DescribeSpec({
       ) { customAuthConfig() }
     }
     it("Can provide multiple authentication strategies") {
-      TODO()
+      openApiTestAllSerializers(
+        snapshotName = "T0047__multiple_auth_strategies.json",
+        applicationSetup = {
+          install(Authentication) {
+            apiKey("api-key") {
+              headerName = "X-API-KEY"
+              validate {
+                UserIdPrincipal("Placeholder")
+              }
+            }
+            jwt("jwt") {
+              realm = "Server"
+            }
+          }
+        },
+        specOverrides = {
+          this.copy(
+            components = Components(
+              securitySchemes = mutableMapOf(
+                "jwt" to BearerAuth("JWT"),
+                "api-key" to ApiKeyAuth(ApiKeyAuth.ApiKeyLocation.HEADER, "X-API-KEY")
+              )
+            )
+          )
+        }
+      ) { multipleAuthStrategies() }
     }
   }
 })

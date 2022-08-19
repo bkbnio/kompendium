@@ -635,6 +635,14 @@ object TestModules {
     }
   }
 
+  fun Routing.multipleAuthStrategies() {
+    authenticate("jwt", "api-key") {
+      route(rootPath) {
+        basicGetGenerator<TestResponse>()
+      }
+    }
+  }
+
   private inline fun <reified T> Routing.basicGetGenerator(
     params: List<Parameter> = emptyList(),
     operationId: String? = null
