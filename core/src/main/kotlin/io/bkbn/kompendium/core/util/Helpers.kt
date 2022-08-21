@@ -43,7 +43,7 @@ object Helpers {
     when (this) {
       is MethodInfoWithRequest -> {
         SchemaGenerator.fromTypeOrUnit(
-          this.request.requestType, 
+          this.request.requestType,
           spec.components.schemas,
           serializableReader
         )?.let { schema ->
