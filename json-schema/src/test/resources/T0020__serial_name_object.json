@@ -6,7 +6,7 @@
     }
   },
   "required": [
-    "camelCaseName"
+    "snake_case_name"
   ]
 }
 
