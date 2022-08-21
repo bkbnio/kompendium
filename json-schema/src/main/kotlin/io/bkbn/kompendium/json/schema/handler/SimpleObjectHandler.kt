@@ -8,14 +8,19 @@ import io.bkbn.kompendium.json.schema.definition.ReferenceDefinition
 import io.bkbn.kompendium.json.schema.definition.TypeDefinition
 import io.bkbn.kompendium.json.schema.util.Helpers.getReferenceSlug
 import io.bkbn.kompendium.json.schema.util.Helpers.getSimpleSlug
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Transient
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.KTypeParameter
 import kotlin.reflect.KTypeProjection
+import kotlin.reflect.KProperty1
 import kotlin.reflect.full.createType
+import kotlin.reflect.full.hasAnnotation
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
+import kotlin.reflect.jvm.javaField
 
 object SimpleObjectHandler {
 
@@ -24,7 +29,8 @@ object SimpleObjectHandler {
     cache[type.getSimpleSlug()] = ReferenceDefinition(type.getReferenceSlug())
 
     val typeMap = clazz.typeParameters.zip(type.arguments).toMap()
-    val props = clazz.memberProperties.associate { prop ->
+    val props = clazz.serializableMemberProperties()
+      .associate { prop ->
       val schema = when (prop.needsToInjectGenerics(typeMap)) {
         true -> handleNestedGenerics(typeMap, prop, cache)
         false -> when (typeMap.containsKey(prop.returnType.classifier)) {
@@ -38,14 +44,14 @@ object SimpleObjectHandler {
         false -> schema
       }
 
-      prop.name to nullCheckSchema
+      prop.serializableName() to nullCheckSchema
     }
 
-    val required = clazz.memberProperties.filterNot { prop -> prop.returnType.isMarkedNullable }
+    val required = clazz.serializableMemberProperties()
+      .filterNot { prop -> prop.returnType.isMarkedNullable }
       .filterNot { prop -> clazz.primaryConstructor!!.parameters.find { it.name == prop.name }!!.isOptional }
       .map { it.name }
       .toSet()
-
 
     val definition = TypeDefinition(
       type = "object",
@@ -58,6 +64,16 @@ object SimpleObjectHandler {
       false -> definition
     }
   }
+
+  private fun KClass<*>.serializableMemberProperties() =
+    memberProperties
+      .filterNot { it.hasAnnotation<Transient>() }
+      .filterNot { it.javaField == null }
+
+  private fun KProperty1<out Any, *>.serializableName() =
+    annotations
+      .filterIsInstance<SerialName>()
+      .firstOrNull()?.value?: name
 
   private fun KProperty<*>.needsToInjectGenerics(
     typeMap: Map<KTypeParameter, KTypeProjection>

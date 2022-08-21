@@ -1,6 +1,8 @@
 package io.bkbn.kompendium.core.fixtures
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 import java.time.Instant
 
 @Serializable
@@ -146,3 +148,23 @@ object Nested {
   @Serializable
   data class Response(val idk: Boolean)
 }
+
+@Serializable
+data class TransientObject(
+  val nonTransient: String,
+  @Transient
+  val transient: String = "transient"
+)
+
+@Serializable
+data class UnbakcedObject(
+  val backed: String
+) {
+  val unbacked: String get() = "unbacked"
+}
+
+@Serializable
+data class SerialNameObject(
+  @SerialName("snake_case_name")
+  val camelCaseName: String
+)
