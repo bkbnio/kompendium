@@ -1,6 +1,7 @@
 package io.bkbn.kompendium.core.plugin
 
 import io.bkbn.kompendium.core.attribute.KompendiumAttributes
+import io.bkbn.kompendium.json.schema.SerializableReader
 import io.bkbn.kompendium.json.schema.definition.JsonSchema
 import io.bkbn.kompendium.json.schema.util.Helpers.getSimpleSlug
 import io.bkbn.kompendium.oas.OpenApiSpec
@@ -28,6 +29,7 @@ object NotarizedApplication {
       }
     }
     var customTypes: Map<KType, JsonSchema> = emptyMap()
+    var serializerReader: SerializableReader = SerializableReader.Default()
   }
 
   operator fun invoke() = createApplicationPlugin(
@@ -41,5 +43,6 @@ object NotarizedApplication {
       spec.components.schemas[type.getSimpleSlug()] = schema
     }
     application.attributes.put(KompendiumAttributes.openApiSpec, spec)
+    application.attributes.put(KompendiumAttributes.serializableReader, pluginConfig.serializerReader)
   }
 }

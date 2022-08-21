@@ -1,6 +1,7 @@
 package io.bkbn.kompendium.json.schema.handler
 
 import io.bkbn.kompendium.json.schema.SchemaGenerator
+import io.bkbn.kompendium.json.schema.SerializableReader
 import io.bkbn.kompendium.json.schema.definition.ArrayDefinition
 import io.bkbn.kompendium.json.schema.definition.JsonSchema
 import io.bkbn.kompendium.json.schema.definition.NullableDefinition
@@ -13,10 +14,10 @@ import kotlin.reflect.KType
 
 object CollectionHandler {
 
-  fun handle(type: KType, cache: MutableMap<String, JsonSchema>): JsonSchema {
+  fun handle(type: KType, cache: MutableMap<String, JsonSchema>, serializableReader: SerializableReader): JsonSchema {
     val collectionType = type.arguments.first().type
       ?: error("This indicates a bug in Kompendium, please open a GitHub issue!")
-    val typeSchema = SchemaGenerator.fromTypeToSchema(collectionType, cache).let {
+    val typeSchema = SchemaGenerator.fromTypeToSchema(collectionType, cache, serializableReader).let {
       if (it is TypeDefinition && it.type == "object") {
         cache[collectionType.getSimpleSlug()] = it
         ReferenceDefinition(collectionType.getReferenceSlug())

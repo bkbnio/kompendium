@@ -17,10 +17,17 @@ import kotlin.reflect.typeOf
 import java.util.UUID
 
 object SchemaGenerator {
-  inline fun <reified T : Any?> fromTypeToSchema(cache: MutableMap<String, JsonSchema> = mutableMapOf()) =
-    fromTypeToSchema(typeOf<T>(), cache)
 
-  fun fromTypeToSchema(type: KType, cache: MutableMap<String, JsonSchema>): JsonSchema {
+  inline fun <reified T : Any?> fromTypeToSchema(
+    cache: MutableMap<String, JsonSchema> = mutableMapOf(),
+    serializableReader: SerializableReader = SerializableReader.Default()
+  ) = fromTypeToSchema(typeOf<T>(), cache, serializableReader)
+
+  fun fromTypeToSchema(
+    type: KType,
+    cache: MutableMap<String, JsonSchema>,
+    serializableReader: SerializableReader
+  ): JsonSchema {
     cache[type.getSimpleSlug()]?.let {
       return it
     }
@@ -41,26 +48,30 @@ object SchemaGenerator {
       UUID::class -> checkForNull(type, TypeDefinition.UUID)
       else -> when {
         clazz.isSubclassOf(Enum::class) -> EnumHandler.handle(type, clazz)
-        clazz.isSubclassOf(Collection::class) -> CollectionHandler.handle(type, cache)
-        clazz.isSubclassOf(Map::class) -> MapHandler.handle(type, cache)
+        clazz.isSubclassOf(Collection::class) -> CollectionHandler.handle(type, cache, serializableReader)
+        clazz.isSubclassOf(Map::class) -> MapHandler.handle(type, cache, serializableReader)
         else -> {
           if (clazz.isSealed) {
-            SealedObjectHandler.handle(type, clazz, cache)
+            SealedObjectHandler.handle(type, clazz, cache, serializableReader)
           } else {
-            SimpleObjectHandler.handle(type, clazz, cache)
+            SimpleObjectHandler.handle(type, clazz, cache, serializableReader)
           }
         }
       }
     }
   }
 
-  fun fromTypeOrUnit(type: KType, cache: MutableMap<String, JsonSchema> = mutableMapOf()): JsonSchema? =
+  fun fromTypeOrUnit(
+    type: KType,
+    cache: MutableMap<String, JsonSchema> = mutableMapOf(),
+    serializableReader: SerializableReader
+  ): JsonSchema? =
     when (type.classifier as KClass<*>) {
       Unit::class -> null
-      else -> fromTypeToSchema(type, cache)
+      else -> fromTypeToSchema(type, cache, serializableReader)
     }
 
-  private fun checkForNull(type: KType, schema: JsonSchema): JsonSchema = when (type.isMarkedNullable) {
+  private fun checkForNull(type: KType, schema: JsonSchema, ): JsonSchema = when (type.isMarkedNullable) {
     true -> OneOfDefinition(NullableDefinition(), schema)
     false -> schema
   }

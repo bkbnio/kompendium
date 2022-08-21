@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.SerializationFeature
 import io.bkbn.kompendium.core.fixtures.TestSpecs.defaultSpec
 import io.bkbn.kompendium.core.plugin.NotarizedApplication
 import io.bkbn.kompendium.core.routes.redoc
+import io.bkbn.kompendium.json.schema.KotlinXSerializableReader
 import io.bkbn.kompendium.json.schema.definition.JsonSchema
 import io.bkbn.kompendium.oas.OpenApiSpec
 import io.bkbn.kompendium.oas.info.Contact
@@ -83,6 +84,11 @@ object TestHelpers {
     install(NotarizedApplication()) {
       customTypes = typeOverrides
       spec = defaultSpec().specOverrides()
+      serializerReader = when (serializer) {
+        SupportedSerializer.KOTLINX -> KotlinXSerializableReader()
+        SupportedSerializer.GSON -> GsonSerializableReader()
+        SupportedSerializer.JACKSON -> JacksonSerializableReader()
+      }
     }
     install(ContentNegotiation) {
       when (serializer) {

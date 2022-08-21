@@ -1,5 +1,9 @@
 package io.bkbn.kompendium.core.fixtures
 
+import com.fasterxml.jackson.annotation.JsonIgnore
+import com.fasterxml.jackson.annotation.JsonProperty
+import com.google.gson.annotations.Expose
+import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
@@ -151,7 +155,9 @@ object Nested {
 
 @Serializable
 data class TransientObject(
+  @field:Expose
   val nonTransient: String,
+  @field:JsonIgnore
   @Transient
   val transient: String = "transient"
 )
@@ -165,6 +171,8 @@ data class UnbakcedObject(
 
 @Serializable
 data class SerialNameObject(
+  @field:JsonProperty("snake_case_name")
+  @field:SerializedName("snake_case_name")
   @SerialName("snake_case_name")
   val camelCaseName: String
 )

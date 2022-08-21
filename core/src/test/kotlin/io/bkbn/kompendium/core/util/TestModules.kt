@@ -1,27 +1,6 @@
 package io.bkbn.kompendium.core.util
 
-import io.bkbn.kompendium.core.fixtures.Barzo
-import io.bkbn.kompendium.core.fixtures.ColumnSchema
-import io.bkbn.kompendium.core.fixtures.ComplexRequest
-import io.bkbn.kompendium.core.fixtures.DateTimeString
-import io.bkbn.kompendium.core.fixtures.DefaultField
-import io.bkbn.kompendium.core.fixtures.ExceptionResponse
-import io.bkbn.kompendium.core.fixtures.Flibbity
-import io.bkbn.kompendium.core.fixtures.FlibbityGibbit
-import io.bkbn.kompendium.core.fixtures.Foosy
-import io.bkbn.kompendium.core.fixtures.Gibbity
-import io.bkbn.kompendium.core.fixtures.ManyThings
-import io.bkbn.kompendium.core.fixtures.MultiNestedGenerics
-import io.bkbn.kompendium.core.fixtures.Nested
-import io.bkbn.kompendium.core.fixtures.NullableEnum
-import io.bkbn.kompendium.core.fixtures.NullableField
-import io.bkbn.kompendium.core.fixtures.Page
-import io.bkbn.kompendium.core.fixtures.ProfileUpdateRequest
-import io.bkbn.kompendium.core.fixtures.TestCreatedResponse
-import io.bkbn.kompendium.core.fixtures.TestNested
-import io.bkbn.kompendium.core.fixtures.TestRequest
-import io.bkbn.kompendium.core.fixtures.TestResponse
-import io.bkbn.kompendium.core.fixtures.TestSimpleRequest
+import io.bkbn.kompendium.core.fixtures.*
 import io.bkbn.kompendium.core.metadata.DeleteInfo
 import io.bkbn.kompendium.core.metadata.GetInfo
 import io.bkbn.kompendium.core.metadata.HeadInfo
@@ -562,6 +541,12 @@ object TestModules {
   fun Routing.nullableField() = basicGetGenerator<NullableField>()
 
   fun Routing.polymorphicResponse() = basicGetGenerator<FlibbityGibbit>()
+
+  fun Routing.ignoredFieldsResponse() = basicGetGenerator<TransientObject>()
+
+  fun Routing.unbackedFieldsResponse() = basicGetGenerator<UnbakcedObject>()
+
+  fun Routing.customFieldNameResponse() = basicGetGenerator<SerialNameObject>()
 
   fun Routing.polymorphicCollectionResponse() = basicGetGenerator<List<FlibbityGibbit>>()
 

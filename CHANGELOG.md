@@ -4,7 +4,7 @@
 
 - Support for @Transient annotation
 - Support for @SerialName annotation on fields
-- Supports for un-backed fields, by excluding them generated schema.
+- Supports for un-backed fields, by excluding them from the generated schema.
 
 ### Added
 
