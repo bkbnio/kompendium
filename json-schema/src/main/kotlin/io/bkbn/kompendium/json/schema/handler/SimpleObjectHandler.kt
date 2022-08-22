@@ -1,7 +1,7 @@
 package io.bkbn.kompendium.json.schema.handler
 
 import io.bkbn.kompendium.json.schema.SchemaGenerator
-import io.bkbn.kompendium.json.schema.SerializableReader
+import io.bkbn.kompendium.json.schema.SchemaConfigurator
 import io.bkbn.kompendium.json.schema.definition.JsonSchema
 import io.bkbn.kompendium.json.schema.definition.NullableDefinition
 import io.bkbn.kompendium.json.schema.definition.OneOfDefinition
@@ -9,17 +9,12 @@ import io.bkbn.kompendium.json.schema.definition.ReferenceDefinition
 import io.bkbn.kompendium.json.schema.definition.TypeDefinition
 import io.bkbn.kompendium.json.schema.util.Helpers.getReferenceSlug
 import io.bkbn.kompendium.json.schema.util.Helpers.getSimpleSlug
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Transient
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.KTypeParameter
 import kotlin.reflect.KTypeProjection
-import kotlin.reflect.KProperty1
 import kotlin.reflect.full.createType
-import kotlin.reflect.full.hasAnnotation
-import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
 import kotlin.reflect.jvm.javaField
 
@@ -29,20 +24,20 @@ object SimpleObjectHandler {
     type: KType,
     clazz: KClass<*>,
     cache: MutableMap<String, JsonSchema>,
-    serializableReader: SerializableReader
+    schemaConfigurator: SchemaConfigurator
   ): JsonSchema {
 
     cache[type.getSimpleSlug()] = ReferenceDefinition(type.getReferenceSlug())
 
     val typeMap = clazz.typeParameters.zip(type.arguments).toMap()
-    val props = serializableReader.serializableMemberProperties(clazz)
+    val props = schemaConfigurator.serializableMemberProperties(clazz)
       .filterNot { it.javaField == null }
       .associate { prop ->
       val schema = when (prop.needsToInjectGenerics(typeMap)) {
-        true -> handleNestedGenerics(typeMap, prop, cache, serializableReader)
+        true -> handleNestedGenerics(typeMap, prop, cache, schemaConfigurator)
         false -> when (typeMap.containsKey(prop.returnType.classifier)) {
-          true -> handleGenericProperty(prop, typeMap, cache, serializableReader)
-          false -> handleProperty(prop, cache, serializableReader)
+          true -> handleGenericProperty(prop, typeMap, cache, schemaConfigurator)
+          false -> handleProperty(prop, cache, schemaConfigurator)
         }
       }
 
@@ -51,15 +46,15 @@ object SimpleObjectHandler {
         false -> schema
       }
 
-      serializableReader.serializableName(prop) to nullCheckSchema
+      schemaConfigurator.serializableName(prop) to nullCheckSchema
     }
 
-    val required = serializableReader.serializableMemberProperties(clazz)
+    val required = schemaConfigurator.serializableMemberProperties(clazz)
       .asSequence()
       .filterNot { it.javaField == null }
       .filterNot { prop -> prop.returnType.isMarkedNullable }
       .filterNot { prop -> clazz.primaryConstructor!!.parameters.find { it.name == prop.name }!!.isOptional }
-      .map { serializableReader.serializableName(it) }
+      .map { schemaConfigurator.serializableName(it) }
       .toSet()
 
     val definition = TypeDefinition(
@@ -85,7 +80,7 @@ object SimpleObjectHandler {
     typeMap: Map<KTypeParameter, KTypeProjection>,
     prop: KProperty<*>,
     cache: MutableMap<String, JsonSchema>,
-    serializableReader: SerializableReader
+    schemaConfigurator: SchemaConfigurator
   ): JsonSchema {
     val propClass = prop.returnType.classifier as KClass<*>
     val types = prop.returnType.arguments.map {
@@ -93,7 +88,7 @@ object SimpleObjectHandler {
       typeMap.filterKeys { k -> k.name == typeSymbol }.values.first()
     }
     val constructedType = propClass.createType(types)
-    return SchemaGenerator.fromTypeToSchema(constructedType, cache, serializableReader).let {
+    return SchemaGenerator.fromTypeToSchema(constructedType, cache, schemaConfigurator).let {
       if (it.isOrContainsObjectDef()) {
         cache[constructedType.getSimpleSlug()] = it
         ReferenceDefinition(prop.returnType.getReferenceSlug())
@@ -107,11 +102,11 @@ object SimpleObjectHandler {
     prop: KProperty<*>,
     typeMap: Map<KTypeParameter, KTypeProjection>,
     cache: MutableMap<String, JsonSchema>,
-    serializableReader: SerializableReader
+    schemaConfigurator: SchemaConfigurator
   ): JsonSchema {
     val type = typeMap[prop.returnType.classifier]?.type
       ?: error("This indicates a bug in Kompendium, please open a GitHub issue")
-    return SchemaGenerator.fromTypeToSchema(type, cache, serializableReader).let {
+    return SchemaGenerator.fromTypeToSchema(type, cache, schemaConfigurator).let {
       if (it.isOrContainsObjectDef()) {
         cache[type.getSimpleSlug()] = it
         ReferenceDefinition(type.getReferenceSlug())
@@ -124,9 +119,9 @@ object SimpleObjectHandler {
   private fun handleProperty(
     prop: KProperty<*>,
     cache: MutableMap<String, JsonSchema>,
-    serializableReader: SerializableReader
+    schemaConfigurator: SchemaConfigurator
   ): JsonSchema =
-    SchemaGenerator.fromTypeToSchema(prop.returnType, cache, serializableReader).let {
+    SchemaGenerator.fromTypeToSchema(prop.returnType, cache, schemaConfigurator).let {
       if (it.isOrContainsObjectDef()) {
         cache[prop.returnType.getSimpleSlug()] = it
         ReferenceDefinition(prop.returnType.getReferenceSlug())

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-import io.bkbn.kompendium.json.schema.SerializableReader
+import io.bkbn.kompendium.json.schema.SchemaConfigurator
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty1
 import kotlin.reflect.full.memberProperties
@@ -16,7 +16,7 @@ import kotlin.reflect.jvm.javaField
   these will not always work hence why they are in the test package
  */
 
-class GsonSerializableReader: SerializableReader {
+class GsonSchemaConfigurator: SchemaConfigurator {
 
   override fun serializableMemberProperties(clazz: KClass<*>): Collection<KProperty1<out Any, *>> {
     // NOTE: This is test logic Expose is set at a global Gson level so configure to match your Gson set up
@@ -32,7 +32,7 @@ class GsonSerializableReader: SerializableReader {
 
 }
 
-class JacksonSerializableReader: SerializableReader {
+class JacksonSchemaConfigurator: SchemaConfigurator {
 
   override fun serializableMemberProperties(clazz: KClass<*>): Collection<KProperty1<out Any, *>> =
     clazz.memberProperties

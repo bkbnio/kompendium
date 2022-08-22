@@ -44,7 +44,7 @@ object NotarizedLocations {
     createConfiguration = ::Config
   ) {
     val spec = application.attributes[KompendiumAttributes.openApiSpec]
-    val serializableReader = application.attributes[KompendiumAttributes.serializableReader]
+    val serializableReader = application.attributes[KompendiumAttributes.schemaConfigurator]
     pluginConfig.locations.forEach { (k, v) ->
       val path = Path()
       path.parameters = v.parameters

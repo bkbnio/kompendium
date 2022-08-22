@@ -1,7 +1,7 @@
 package io.bkbn.kompendium.json.schema.handler
 
 import io.bkbn.kompendium.json.schema.SchemaGenerator
-import io.bkbn.kompendium.json.schema.SerializableReader
+import io.bkbn.kompendium.json.schema.SchemaConfigurator
 import io.bkbn.kompendium.json.schema.definition.AnyOfDefinition
 import io.bkbn.kompendium.json.schema.definition.JsonSchema
 import io.bkbn.kompendium.json.schema.definition.ReferenceDefinition
@@ -18,12 +18,12 @@ object SealedObjectHandler {
     type: KType,
     clazz: KClass<*>,
     cache: MutableMap<String, JsonSchema>,
-    serializableReader: SerializableReader
+    schemaConfigurator: SchemaConfigurator
   ): JsonSchema {
     val subclasses = clazz.sealedSubclasses
       .map { it.createType(type.arguments) }
       .map { t ->
-        SchemaGenerator.fromTypeToSchema(t, cache, serializableReader).let { js ->
+        SchemaGenerator.fromTypeToSchema(t, cache, schemaConfigurator).let { js ->
           if (js is TypeDefinition && js.type == "object") {
             cache[t.getSimpleSlug()] = js
             ReferenceDefinition(t.getReferenceSlug())

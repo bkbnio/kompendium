@@ -95,7 +95,7 @@ class SchemaGeneratorTest : DescribeSpec({
 
     private inline fun <reified T> jsonSchemaTest(snapshotName: String) {
       // act
-      val schema = SchemaGenerator.fromTypeToSchema<T>(serializableReader = KotlinXSerializableReader())
+      val schema = SchemaGenerator.fromTypeToSchema<T>(schemaConfigurator = KotlinXSchemaConfigurator())
 
       // todo add cache assertions!!!
 
