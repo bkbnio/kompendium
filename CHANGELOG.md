@@ -9,9 +9,6 @@
 ### Added
 
 ### Changed
-- Can now put redoc route behind authentication
-- Fixed issue where type erasure was breaking nested generics
-- Fix bug with null references not displaying properly on properties
 
 ### Remove
 
@@ -19,105 +16,151 @@
 
 ## Released
 
-## [3.1.0] - August 18th, 2022
+## [3.2.0] - August 23rd, 2022
+
 ### Added
+
+- `SchemaConfigurator` to allow for advanced json schema configuration such as field level overrides and transient
+  omission
+
+## [3.1.0] - August 18th, 2022
+
+### Added
+
 - Ability to automatically detect authentication via route
 
 ### Fixed
+
 - Improved stack trace output
 
 ## [3.0.0] - August 16th, 2022
+
 ### Added
+
 - Ktor 2 Support 🎉
 - OpenAPI 3.1 Standard
 - JsonSchema Generator
 - `NotarizedRoute` plugin
 
-### Removed 
+### Removed
+
 - SwaggerUI module removed (due to lack of OpenAPI 3.1 support)
 - Kompendium Annotations removed (field renames, undeclared fields, etc. will be follow-up work)
 
 ## [2.3.5] - June 7th, 2022
+
 ### Added
 
 ### Changed
+
 - Fix serialization for api key location in api key auth configuration
 
 ### Remove
 
 ## [2.3.4] - April 7th, 2022
+
 ### Changed
+
 - Put request body info now nullable
 
 ## [2.3.3] - April 1st, 2022
+
 ### Added
-- Added tests for Swagger UI module that verify that plugin generates correct responses for Swagger UI WEB resources (tests should detect future incompatible changes in new versions of `org.webjars.swagger-ui`)
+
+- Added tests for Swagger UI module that verify that plugin generates correct responses for Swagger UI WEB resources (
+  tests should detect future incompatible changes in new versions of `org.webjars.swagger-ui`)
 
 ### Changed
-- Fixed broken Swagger UI plugin (`org.webjars.swagger-ui` WEB resources structure changed in version 4.9.X). Issue: https://github.com/bkbnio/kompendium/issues/236
 
+- Fixed broken Swagger UI plugin (`org.webjars.swagger-ui` WEB resources structure changed in version 4.9.X).
+  Issue: https://github.com/bkbnio/kompendium/issues/236
 
 ## [2.3.2] - March 30th, 2022
+
 ### Changed
+
 - Fixed bug where nullable enum fields caused runtime exceptions
 
 ## [2.3.1] - March 5th, 2022
+
 ### Changed
+
 - Can now apply `@FreeFormObject` to top level types
 
 ## [2.3.0] - March 1st, 2022
+
 ### Added
+
 - Brand new SwaggerUI support as a KTor plugin with WebJar under the hood and flexible configuration
 
 ### Changed
+
 - Playground example `SwaggerPlaygound` now demonstrates new SwaggerUI KTor plugin usage (including OAuth security)
 
 ### Remove
+
 - Deprecated Swagger Webjar approach was removed from codebase
 
 ## [2.2.1] - February 26th, 2022
+
 - Fix to support sealed class typed Maps
 
 ## [2.2.0] - February 25th, 2022
+
 ### Changed
+
 - Fixed support Location classes located in other non-location classes
 - Fixed formatting of a custom `SimpleSchema`
 - Multipart form-data multiple file request support
 
 ## [2.1.1] - February 19th, 2022
+
 ### Changed
+
 - Fixed sealed typed collections schema generation
 - Nullability no longer breaks object schema comparison
 
 ## [2.1.0] - February 18th, 2022
+
 ### Added
+
 - Ability to override serializer via custom route
+
 ### Changed
+
 - All complex types are now represented by reference schemas
 - Deprecated `@Referenced` since all complex types now create references
 
 ## [2.0.4] - February 10th, 2022
+
 ### Added
+
 - Custom Type example to playground
 
 ### Changed
+
 - Cleaned up and broke out handlers into separate classes
 - Serializer cleanup
 - Tests now run against Jackson, Gson and kotlinx on every run
 - Swagger UI bumped from v3 to v4
 
 ## [2.0.3] - February 7th, 2022
+
 ### Changed
+
 - Fixed swagger documentation bug
 - Deprecated Swagger Webjar approach
 
 ## [2.0.2] - February 4th, 2022
+
 ### Added
+
 - `@Referenced` annotation enabling support for recursive models
 
 ## [2.0.1] - January 23rd, 2022
 
 ### Change
+
 - Fix bug in documentation publishing pipeline
 
 ## [2.0.0] - January 23rd, 2022
