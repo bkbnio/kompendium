@@ -4,6 +4,7 @@ import io.bkbn.kompendium.core.metadata.GetInfo
 import io.bkbn.kompendium.core.plugin.NotarizedApplication
 import io.bkbn.kompendium.core.plugin.NotarizedRoute
 import io.bkbn.kompendium.core.routes.redoc
+import io.bkbn.kompendium.json.schema.KotlinXSchemaConfigurator
 import io.bkbn.kompendium.json.schema.definition.TypeDefinition
 import io.bkbn.kompendium.oas.payload.Parameter
 import io.bkbn.kompendium.oas.serialization.KompendiumSerializersModule
@@ -42,6 +43,9 @@ private fun Application.mainModule() {
   }
   install(NotarizedApplication()) {
     spec = baseSpec
+    // Adds support for @Transient and @SerialName
+    // If you are not using them this is not required.
+    schemaConfigurator = KotlinXSchemaConfigurator()
   }
   routing {
     redoc(pageTitle = "Simple API Docs")
