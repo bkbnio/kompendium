@@ -5,13 +5,10 @@ import com.fasterxml.jackson.databind.SerializationFeature
 import io.bkbn.kompendium.core.fixtures.TestSpecs.defaultSpec
 import io.bkbn.kompendium.core.plugin.NotarizedApplication
 import io.bkbn.kompendium.core.routes.redoc
+import io.bkbn.kompendium.json.schema.KotlinXSchemaConfigurator
 import io.bkbn.kompendium.json.schema.definition.JsonSchema
 import io.bkbn.kompendium.oas.OpenApiSpec
-import io.bkbn.kompendium.oas.info.Contact
-import io.bkbn.kompendium.oas.info.Info
-import io.bkbn.kompendium.oas.info.License
 import io.bkbn.kompendium.oas.serialization.KompendiumSerializersModule
-import io.bkbn.kompendium.oas.server.Server
 import io.kotest.assertions.json.shouldEqualJson
 import io.kotest.assertions.ktor.client.shouldHaveStatus
 import io.kotest.matchers.shouldNot
@@ -31,7 +28,6 @@ import io.ktor.server.testing.testApplication
 import kotlin.reflect.KType
 import kotlinx.serialization.json.Json
 import java.io.File
-import java.net.URI
 
 object TestHelpers {
   private const val OPEN_API_ENDPOINT = "/openapi.json"
@@ -83,6 +79,11 @@ object TestHelpers {
     install(NotarizedApplication()) {
       customTypes = typeOverrides
       spec = defaultSpec().specOverrides()
+      schemaConfigurator = when (serializer) {
+        SupportedSerializer.KOTLINX -> KotlinXSchemaConfigurator()
+        SupportedSerializer.GSON -> GsonSchemaConfigurator()
+        SupportedSerializer.JACKSON -> JacksonSchemaConfigurator()
+      }
     }
     install(ContentNegotiation) {
       when (serializer) {

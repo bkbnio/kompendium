@@ -1,0 +1,12 @@
+{
+  "type": "object",
+  "properties": {
+    "snake_case_name": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "snake_case_name"
+  ]
+}
+

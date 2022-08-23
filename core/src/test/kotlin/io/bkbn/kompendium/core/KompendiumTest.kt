@@ -4,6 +4,7 @@ import dev.forst.ktor.apikey.apiKey
 import io.bkbn.kompendium.core.fixtures.TestHelpers.openApiTestAllSerializers
 import io.bkbn.kompendium.core.util.TestModules.complexRequest
 import io.bkbn.kompendium.core.util.TestModules.customAuthConfig
+import io.bkbn.kompendium.core.util.TestModules.customFieldNameResponse
 import io.bkbn.kompendium.core.util.TestModules.dateTimeString
 import io.bkbn.kompendium.core.util.TestModules.defaultAuthConfig
 import io.bkbn.kompendium.core.util.TestModules.defaultField
@@ -19,6 +20,7 @@ import io.bkbn.kompendium.core.util.TestModules.genericPolymorphicResponse
 import io.bkbn.kompendium.core.util.TestModules.genericPolymorphicResponseMultipleImpls
 import io.bkbn.kompendium.core.util.TestModules.gnarlyGenericResponse
 import io.bkbn.kompendium.core.util.TestModules.headerParameter
+import io.bkbn.kompendium.core.util.TestModules.ignoredFieldsResponse
 import io.bkbn.kompendium.core.util.TestModules.multipleAuthStrategies
 import io.bkbn.kompendium.core.util.TestModules.multipleExceptions
 import io.bkbn.kompendium.core.util.TestModules.nestedGenericCollection
@@ -48,6 +50,7 @@ import io.bkbn.kompendium.core.util.TestModules.simpleGenericResponse
 import io.bkbn.kompendium.core.util.TestModules.simplePathParsing
 import io.bkbn.kompendium.core.util.TestModules.simpleRecursive
 import io.bkbn.kompendium.core.util.TestModules.trailingSlash
+import io.bkbn.kompendium.core.util.TestModules.unbackedFieldsResponse
 import io.bkbn.kompendium.core.util.TestModules.withOperationId
 import io.bkbn.kompendium.json.schema.definition.TypeDefinition
 import io.bkbn.kompendium.oas.component.Components
@@ -190,6 +193,17 @@ class KompendiumTest : DescribeSpec({
     }
     it("Can handle a really gnarly generic example") {
       openApiTestAllSerializers("T0043__gnarly_generic_example.json") { gnarlyGenericResponse() }
+    }
+  }
+  describe("Custom Serializable Reader tests") {
+    it("Can support ignoring fields") {
+      openApiTestAllSerializers("T0048__ignored_property.json") { ignoredFieldsResponse() }
+    }
+    it("Can support un-backed fields") {
+      openApiTestAllSerializers("T0049__unbacked_property.json") { unbackedFieldsResponse() }
+    }
+    it("Can support custom named fields") {
+      openApiTestAllSerializers("T0050__custom_named_property.json") { customFieldNameResponse() }
     }
   }
   describe("Miscellaneous") {

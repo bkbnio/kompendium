@@ -1,12 +1,7 @@
 package io.bkbn.kompendium.json.schema
 
-import io.bkbn.kompendium.core.fixtures.ComplexRequest
-import io.bkbn.kompendium.core.fixtures.FlibbityGibbit
-import io.bkbn.kompendium.core.fixtures.SimpleEnum
-import io.bkbn.kompendium.core.fixtures.SlammaJamma
+import io.bkbn.kompendium.core.fixtures.*
 import io.bkbn.kompendium.core.fixtures.TestHelpers.getFileSnapshot
-import io.bkbn.kompendium.core.fixtures.TestResponse
-import io.bkbn.kompendium.core.fixtures.TestSimpleRequest
 import io.bkbn.kompendium.json.schema.definition.JsonSchema
 import io.kotest.assertions.json.shouldEqualJson
 import io.kotest.assertions.throwables.shouldThrow
@@ -44,6 +39,15 @@ class SchemaGeneratorTest : DescribeSpec({
     }
     xit("Can generate the schema for a recursive type") {
        // TODO jsonSchemaTest<SlammaJamma>("T0016__recursive_object.json")
+    }
+    it("Can generate the schema for object with transient property") {
+      jsonSchemaTest<TransientObject>("T0018__transient_object.json")
+    }
+    it("Can generate the schema for object with unbacked property") {
+      jsonSchemaTest<UnbakcedObject>("T0019__unbacked_object.json")
+    }
+    it("Can generate the schema for object with SerialName annotation") {
+      jsonSchemaTest<SerialNameObject>("T0020__serial_name_object.json")
     }
   }
   describe("Enums") {
@@ -91,7 +95,7 @@ class SchemaGeneratorTest : DescribeSpec({
 
     private inline fun <reified T> jsonSchemaTest(snapshotName: String) {
       // act
-      val schema = SchemaGenerator.fromTypeToSchema<T>()
+      val schema = SchemaGenerator.fromTypeToSchema<T>(schemaConfigurator = KotlinXSchemaConfigurator())
 
       // todo add cache assertions!!!
 

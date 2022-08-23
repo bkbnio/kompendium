@@ -11,6 +11,7 @@ import io.bkbn.kompendium.core.metadata.PostInfo
 import io.bkbn.kompendium.core.metadata.PutInfo
 import io.bkbn.kompendium.core.metadata.ResponseInfo
 import io.bkbn.kompendium.json.schema.SchemaGenerator
+import io.bkbn.kompendium.json.schema.SchemaConfigurator
 import io.bkbn.kompendium.json.schema.definition.ReferenceDefinition
 import io.bkbn.kompendium.json.schema.util.Helpers.getReferenceSlug
 import io.bkbn.kompendium.json.schema.util.Helpers.getSimpleSlug
@@ -25,20 +26,27 @@ import kotlin.reflect.KType
 
 object Helpers {
 
-  fun MethodInfo.addToSpec(path: Path, spec: OpenApiSpec, config: SpecConfig) {
-    SchemaGenerator.fromTypeOrUnit(this.response.responseType, spec.components.schemas)?.let { schema ->
+  fun MethodInfo.addToSpec(path: Path, spec: OpenApiSpec, config: SpecConfig, schemaConfigurator: SchemaConfigurator) {
+    SchemaGenerator.fromTypeOrUnit(
+      this.response.responseType,
+      spec.components.schemas, schemaConfigurator
+    )?.let { schema ->
       spec.components.schemas[this.response.responseType.getSimpleSlug()] = schema
     }
 
     errors.forEach { error ->
-      SchemaGenerator.fromTypeOrUnit(error.responseType, spec.components.schemas)?.let { schema ->
+      SchemaGenerator.fromTypeOrUnit(error.responseType, spec.components.schemas, schemaConfigurator)?.let { schema ->
         spec.components.schemas[error.responseType.getSimpleSlug()] = schema
       }
     }
 
     when (this) {
       is MethodInfoWithRequest -> {
-        SchemaGenerator.fromTypeOrUnit(this.request.requestType, spec.components.schemas)?.let { schema ->
+        SchemaGenerator.fromTypeOrUnit(
+          this.request.requestType,
+          spec.components.schemas,
+          schemaConfigurator
+        )?.let { schema ->
           spec.components.schemas[this.request.requestType.getSimpleSlug()] = schema
         }
       }

@@ -63,17 +63,18 @@ object NotarizedRoute {
     }
 
     val spec = application.attributes[KompendiumAttributes.openApiSpec]
+    val serializableReader = application.attributes[KompendiumAttributes.schemaConfigurator]
 
     val path = Path()
     path.parameters = pluginConfig.parameters
 
-    pluginConfig.get?.addToSpec(path, spec, pluginConfig)
-    pluginConfig.delete?.addToSpec(path, spec, pluginConfig)
-    pluginConfig.head?.addToSpec(path, spec, pluginConfig)
-    pluginConfig.options?.addToSpec(path, spec, pluginConfig)
-    pluginConfig.post?.addToSpec(path, spec, pluginConfig)
-    pluginConfig.put?.addToSpec(path, spec, pluginConfig)
-    pluginConfig.patch?.addToSpec(path, spec, pluginConfig)
+    pluginConfig.get?.addToSpec(path, spec, pluginConfig, serializableReader)
+    pluginConfig.delete?.addToSpec(path, spec, pluginConfig, serializableReader)
+    pluginConfig.head?.addToSpec(path, spec, pluginConfig, serializableReader)
+    pluginConfig.options?.addToSpec(path, spec, pluginConfig, serializableReader)
+    pluginConfig.post?.addToSpec(path, spec, pluginConfig, serializableReader)
+    pluginConfig.put?.addToSpec(path, spec, pluginConfig, serializableReader)
+    pluginConfig.patch?.addToSpec(path, spec, pluginConfig, serializableReader)
 
     pluginConfig.path = path
   }
