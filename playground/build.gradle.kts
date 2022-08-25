@@ -40,5 +40,5 @@ dependencies {
   implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0")
   implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
 
-  implementation("joda-time:joda-time:2.11.0")
+  implementation("joda-time:joda-time:2.11.1")
 }
