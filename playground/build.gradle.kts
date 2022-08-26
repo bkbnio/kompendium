@@ -3,6 +3,7 @@ plugins {
   kotlin("plugin.serialization")
   id("io.bkbn.sourdough.application.jvm")
   id("application")
+  id("org.jetbrains.kotlinx.kover")
 }
 
 sourdoughApp {
