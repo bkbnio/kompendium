@@ -9,6 +9,7 @@ plugins {
   id("java-library")
   id("signing")
   id("java-test-fixtures")
+  id("org.jetbrains.kotlinx.kover")
 }
 
 sourdoughLibrary {

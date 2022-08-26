@@ -7,6 +7,7 @@ plugins {
   id("maven-publish")
   id("java-library")
   id("signing")
+  id("org.jetbrains.kotlinx.kover")
 }
 
 sourdoughLibrary {
