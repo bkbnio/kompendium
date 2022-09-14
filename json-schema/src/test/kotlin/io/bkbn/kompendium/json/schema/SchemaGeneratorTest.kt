@@ -37,8 +37,8 @@ class SchemaGeneratorTest : DescribeSpec({
     it("Can generate the schema for a polymorphic object") {
       jsonSchemaTest<FlibbityGibbit>("T0015__polymorphic_object.json")
     }
-    xit("Can generate the schema for a recursive type") {
-       // TODO jsonSchemaTest<SlammaJamma>("T0016__recursive_object.json")
+    it("Can generate the schema for a recursive type") {
+      jsonSchemaTest<SlammaJamma>("T0016__recursive_object.json")
     }
     it("Can generate the schema for object with transient property") {
       jsonSchemaTest<TransientObject>("T0018__transient_object.json")
