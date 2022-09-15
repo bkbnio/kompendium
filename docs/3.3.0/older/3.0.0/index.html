@@ -1,0 +1,150 @@
+<!doctype html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>All modules</title>
+    <link href="images/logo-icon.svg" rel="icon" type="image/svg">
+    <script>var pathToRoot = "";</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+const savedDarkMode = storage ? JSON.parse(storage) : false
+if(savedDarkMode === true){
+    document.getElementsByTagName("html")[0].classList.add("theme-dark")
+}</script>
+<script type="text/javascript" src="scripts/sourceset_dependencies.js" async></script>
+<link href="styles/style.css" rel="Stylesheet">
+<link href="styles/jetbrains-mono.css" rel="Stylesheet">
+<link href="styles/main.css" rel="Stylesheet">
+<link href="styles/prism.css" rel="Stylesheet">
+<link href="styles/logo-styles.css" rel="Stylesheet">
+<script type="text/javascript" src="scripts/clipboard.js" async></script>
+<script type="text/javascript" src="scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="scripts/main.js" defer></script>
+<script type="text/javascript" src="scripts/prism.js" async></script>
+<link href="styles/multimodule.css" rel="Stylesheet">
+</head>
+<body>
+<div class="navigation-wrapper" id="navigation-wrapper">
+    <div id="leftToggler"><span class="icon-toggler"></span></div>
+    <div class="library-name">
+            <a href="index.html">
+                    <span>kompendium</span>
+            </a>
+    </div>
+    <div>
+<dokka-template-command data="{&quot;@class&quot;:&quot;org.jetbrains.dokka.base.templating.ReplaceVersionsCommand&quot;,&quot;location&quot;:&quot;index.html&quot;}"><div class="versions-dropdown">
+  <div class="versions-dropdown-button">3.0.0</div>
+  <div class="versions-dropdown-data"><a href="../../index.html">3.3.0</a><a href="../3.2.0/index.html">3.2.0</a><a href="../3.1.0/index.html">3.1.0</a><a href="index.html">3.0.0</a><a href="../2.3.4/index.html">2.3.4</a><a href="../2.3.3/index.html">2.3.3</a><a href="../2.3.2/index.html">2.3.2</a><a href="../2.3.1/index.html">2.3.1</a><a href="../2.3.0/index.html">2.3.0</a><a href="../2.2.1/index.html">2.2.1</a><a href="../2.2.0/index.html">2.2.0</a><a href="../2.1.1/index.html">2.1.1</a><a href="../2.1.0/index.html">2.1.0</a><a href="../2.0.4/index.html">2.0.4</a><a href="../2.0.3/index.html">2.0.3</a><a href="../2.0.2/index.html">2.0.2</a><a href="../2.0.1/index.html">2.0.1</a></div>
+</div>
+</dokka-template-command>    </div>
+    <div class="pull-right d-flex">
+        <button id="theme-toggle-button"><span id="theme-toggle"></span></button>
+        <div id="searchBar"></div>
+    </div>
+</div>
+<div id="container">
+    <div id="leftColumn">
+        <div id="sideMenu"></div>
+    </div>
+    <div id="main">
+<div class="main-content" id="content" pageids="kompendium::.ext/allModules///PointingToDeclaration//0">
+  <div class="breadcrumbs"></div>
+  <div class="cover ">
+    <div class="cover ">
+      <h1 class="">Kompendium</h1>
+      <p class="paragraph">Welcome to Kompendium, the straight-forward, non-invasive OpenAPI generator for Ktor.</p>
+      <h2 class=""> How to install</h2>
+      <p class="paragraph">Kompendium publishes all releases to Maven Central. As such, using the release versions of <code class="lang-kotlin">Kompendium</code> is as simple as declaring it as an implementation dependency in your <code class="lang-kotlin">build.gradle.kts</code></p>
+      <div class="sample-container">
+        <pre><code class="block lang-kotlin" theme="idea">repositories {<br>  mavenCentral()<br>}<br><br>dependencies {<br>  implementation("io.bkbn:kompendium-core:latest.release")<br>}</code></pre>
+<span class="top-right-position"><span class="copy-icon"></span>
+          <div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div>
+        </span></div>
+      <p class="paragraph">In addition to publishing releases to Maven Central, a snapshot version gets published to GitHub Packages on every merge to <code class="lang-kotlin">main</code>. These can be consumed by adding the repository to your gradle build file. Instructions can be found <a href="https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-gradle-registry#using-a-published-package">here</a></p>
+      <h2 class=""> Setting up Kompendium</h2>
+      <p class="paragraph">Kompendium's core features are comprised of a singular application level plugin and a collection of route level plugins. The former sets up your OpenApi spec along with various cross-route metadata and overrides such as custom types (useful for things like datetime libraries)</p>
+      <h3 class=""><code class="lang-kotlin">NotarizedApplication</code> plugin</h3>
+      <p class="paragraph">The notarized application plugin is installed at (surprise!) the app level</p>
+      <div class="sample-container">
+        <pre><code class="block lang-kotlin" theme="idea">private fun Application.mainModule() {<br>  install(NotarizedApplication()) {<br>    spec = OpenApiSpec(<br>      // spec details go here ...<br>    )<br>  }<br>}</code></pre>
+<span class="top-right-position"><span class="copy-icon"></span>
+          <div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div>
+        </span></div>
+      <h3 class=""><code class="lang-kotlin">NotarizedRoute</code> plugin</h3>
+      <p class="paragraph">Notarized routes take advantage of Ktor 2's <a href="https://ktor.io/docs/plugins.html#install-route">route specific plugin</a> feature. This allows us to take individual routes, document them, and feed them back in to the application level plugin.</p>
+      <p class="paragraph">This also allows you to adopt Kompendium incrementally. Individual routes can be documented at your leisure, and is purely additive, meaning that you do not need to modify existing code to get documentation working, you just need new code!</p>
+      <p class="paragraph">Non-invasive FTW 🚀</p>
+      <p class="paragraph">Documenting a simple <code class="lang-kotlin">GET</code> endpoint would look something like this</p>
+      <div class="sample-container">
+        <pre><code class="block lang-kotlin" theme="idea">private fun Route.documentation() {<br>  install(NotarizedRoute()) {<br>    parameters = listOf(<br>      Parameter(<br>        name = "id",<br>        `in` = Parameter.Location.path,<br>        schema = TypeDefinition.STRING<br>      )<br>    )<br>    get = GetInfo.builder {<br>      summary("Get user by id")<br>      description("A very neat endpoint!")<br>      response {<br>        responseCode(HttpStatusCode.OK)<br>        responseType&lt;ExampleResponse&gt;()<br>        description("Will return whether or not the user is real 😱")<br>      }<br>    }<br>  }<br>}<br><br><br>route("/{id}") {<br>  documentation()<br>  get {<br>    call.respond(HttpStatusCode.OK, ExampleResponse(true))<br>  }<br>}</code></pre>
+<span class="top-right-position"><span class="copy-icon"></span>
+          <div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div>
+        </span></div>
+      <p class="paragraph">Full details on application and route notarization can be found in the <code class="lang-kotlin">core</code> module</p>
+      <h2 class=""> The Playground</h2>
+      <p class="paragraph">In addition to the documentation available here, Kompendium has a number of out-of-the-box examples available in the playground module.  Go ahead and fork the repo and run them directly on your machine to get a sense of what Kompendium can do!</p>
+    </div>
+    <h2 class="">All modules:</h2>
+    <div class="table"><a data-name="-1821989938%2FMain%2F0" anchor-label="kompendium-core" id="-1821989938%2FMain%2F0" data-filterable-set=""></a>
+      <div class="table-row">
+        <div class="main-subrow ">
+          <div class="w-100"><span class="inline-flex">
+              <div><a href="kompendium-core/index.html">kompendium-core</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1821989938%2FMain%2F0"></span>
+                <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+              </span></span></div>
+          <div><span class="brief-comment">
+              <p class="paragraph">This is where the magic happens. This module houses all the reflective goodness that powers Kompendium.</p>
+            </span></div>
+        </div>
+      </div>
+<a data-name="-663309585%2FMain%2F0" anchor-label="kompendium-json-schema" id="-663309585%2FMain%2F0" data-filterable-set=""></a>
+      <div class="table-row">
+        <div class="main-subrow ">
+          <div class="w-100"><span class="inline-flex">
+              <div><a href="kompendium-json-schema/index.html">kompendium-json-schema</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-663309585%2FMain%2F0"></span>
+                <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+              </span></span></div>
+          <div><span class="brief-comment">
+              <p class="paragraph">This module handles converting Kotlin data classes to compliant <a href="https://json-schema.org">JsonSchema</a></p>
+            </span></div>
+        </div>
+      </div>
+<a data-name="-960478793%2FMain%2F0" anchor-label="kompendium-locations" id="-960478793%2FMain%2F0" data-filterable-set=""></a>
+      <div class="table-row">
+        <div class="main-subrow ">
+          <div class="w-100"><span class="inline-flex">
+              <div><a href="kompendium-locations/index.html">kompendium-locations</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-960478793%2FMain%2F0"></span>
+                <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+              </span></span></div>
+          <div><span class="brief-comment">
+              <p class="paragraph">Adds support for Ktor <a href="https://ktor.io/docs/locations.html">Locations</a> API.</p>
+            </span></div>
+        </div>
+      </div>
+<a data-name="926400660%2FMain%2F0" anchor-label="kompendium-oas" id="926400660%2FMain%2F0" data-filterable-set=""></a>
+      <div class="table-row">
+        <div class="main-subrow ">
+          <div class="w-100"><span class="inline-flex">
+              <div><a href="kompendium-oas/index.html">kompendium-oas</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="926400660%2FMain%2F0"></span>
+                <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+              </span></span></div>
+          <div><span class="brief-comment">
+              <p class="paragraph">This module contains the models that represent the Open Api Specification 3.0 (OAS).</p>
+            </span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2022 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+    </div>
+</div>
+
+</body></html>
+
