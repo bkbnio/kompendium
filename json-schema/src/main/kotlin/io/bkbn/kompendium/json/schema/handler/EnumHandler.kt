@@ -8,7 +8,6 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KType
 
 object EnumHandler {
-
   fun handle(type: KType, clazz: KClass<*>): JsonSchema {
     val options = clazz.java.enumConstants.map { it.toString() }.toSet()
     val definition = EnumDefinition(enum = options)
@@ -17,5 +16,4 @@ object EnumHandler {
       false -> definition
     }
   }
-
 }

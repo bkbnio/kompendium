@@ -2,10 +2,6 @@
 
 ## Unreleased
 
-- Support for @Transient annotation
-- Support for @SerialName annotation on fields
-- Supports for un-backed fields, by excluding them from the generated schema.
-
 ### Added
 
 ### Changed
@@ -13,6 +9,19 @@
 ### Remove
 
 ---
+
+## Released
+
+## [3.3.0] - September 15th, 2022
+
+### Added
+- Support for @Transient annotation
+- Support for @SerialName annotation on fields
+- Supports for un-backed fields, by excluding them from the generated schema.
+
+### Changed
+- Actually turned on detekt formatting 🤦
+- Removed some rouge print statements
 
 ## Released
 

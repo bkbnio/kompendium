@@ -14,7 +14,7 @@ class PutInfo private constructor(
   override val operationId: String?,
   override val deprecated: Boolean,
   override val parameters: List<Parameter>
-): MethodInfoWithRequest {
+) : MethodInfoWithRequest {
 
   companion object {
     fun builder(init: Builder.() -> Unit): PutInfo {
@@ -38,5 +38,4 @@ class PutInfo private constructor(
       parameters = parameters
     )
   }
-
 }

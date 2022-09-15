@@ -16,5 +16,4 @@ object UriSerializer : KSerializer<URI> {
   override fun serialize(encoder: Encoder, value: URI) {
     encoder.encodeString(value.toString())
   }
-
 }

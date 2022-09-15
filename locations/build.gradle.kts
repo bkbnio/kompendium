@@ -17,6 +17,9 @@ sourdoughLibrary {
 }
 
 dependencies {
+  // Versions
+  val detektVersion: String by project
+
   // IMPLEMENTATION
 
   implementation(projects.kompendiumCore)
@@ -26,6 +29,9 @@ dependencies {
   // TESTING
 
   testImplementation(testFixtures(projects.kompendiumCore))
+
+  // Formatting
+  detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:$detektVersion")
 }
 
 testing {

@@ -7,8 +7,8 @@ import io.bkbn.kompendium.json.schema.definition.TypeDefinition
 import io.bkbn.kompendium.json.schema.handler.CollectionHandler
 import io.bkbn.kompendium.json.schema.handler.EnumHandler
 import io.bkbn.kompendium.json.schema.handler.MapHandler
-import io.bkbn.kompendium.json.schema.handler.SimpleObjectHandler
 import io.bkbn.kompendium.json.schema.handler.SealedObjectHandler
+import io.bkbn.kompendium.json.schema.handler.SimpleObjectHandler
 import io.bkbn.kompendium.json.schema.util.Helpers.getSimpleSlug
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
@@ -39,6 +39,7 @@ object SchemaGenerator {
           please call SchemaGenerator.fromTypeOrUnit()
         """.trimIndent()
       )
+
       Int::class -> checkForNull(type, TypeDefinition.INT)
       Long::class -> checkForNull(type, TypeDefinition.LONG)
       Double::class -> checkForNull(type, TypeDefinition.DOUBLE)
@@ -71,7 +72,7 @@ object SchemaGenerator {
       else -> fromTypeToSchema(type, cache, schemaConfigurator)
     }
 
-  private fun checkForNull(type: KType, schema: JsonSchema, ): JsonSchema = when (type.isMarkedNullable) {
+  private fun checkForNull(type: KType, schema: JsonSchema): JsonSchema = when (type.isMarkedNullable) {
     true -> OneOfDefinition(NullableDefinition(), schema)
     false -> schema
   }

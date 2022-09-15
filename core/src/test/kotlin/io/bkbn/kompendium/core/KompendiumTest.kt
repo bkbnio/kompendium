@@ -10,11 +10,6 @@ import io.bkbn.kompendium.core.util.TestModules.defaultAuthConfig
 import io.bkbn.kompendium.core.util.TestModules.defaultField
 import io.bkbn.kompendium.core.util.TestModules.defaultParameter
 import io.bkbn.kompendium.core.util.TestModules.exampleParams
-import io.bkbn.kompendium.core.util.TestModules.nestedUnderRoot
-import io.bkbn.kompendium.core.util.TestModules.nonRequiredParams
-import io.bkbn.kompendium.core.util.TestModules.notarizedDelete
-import io.bkbn.kompendium.core.util.TestModules.notarizedGet
-import io.bkbn.kompendium.core.util.TestModules.singleException
 import io.bkbn.kompendium.core.util.TestModules.genericException
 import io.bkbn.kompendium.core.util.TestModules.genericPolymorphicResponse
 import io.bkbn.kompendium.core.util.TestModules.genericPolymorphicResponseMultipleImpls
@@ -27,8 +22,11 @@ import io.bkbn.kompendium.core.util.TestModules.nestedGenericCollection
 import io.bkbn.kompendium.core.util.TestModules.nestedGenericMultipleParamsCollection
 import io.bkbn.kompendium.core.util.TestModules.nestedGenericResponse
 import io.bkbn.kompendium.core.util.TestModules.nestedTypeName
+import io.bkbn.kompendium.core.util.TestModules.nestedUnderRoot
 import io.bkbn.kompendium.core.util.TestModules.nonRequiredParam
-import io.bkbn.kompendium.core.util.TestModules.polymorphicException
+import io.bkbn.kompendium.core.util.TestModules.nonRequiredParams
+import io.bkbn.kompendium.core.util.TestModules.notarizedDelete
+import io.bkbn.kompendium.core.util.TestModules.notarizedGet
 import io.bkbn.kompendium.core.util.TestModules.notarizedHead
 import io.bkbn.kompendium.core.util.TestModules.notarizedOptions
 import io.bkbn.kompendium.core.util.TestModules.notarizedPatch
@@ -39,6 +37,7 @@ import io.bkbn.kompendium.core.util.TestModules.nullableField
 import io.bkbn.kompendium.core.util.TestModules.nullableNestedObject
 import io.bkbn.kompendium.core.util.TestModules.nullableReference
 import io.bkbn.kompendium.core.util.TestModules.polymorphicCollectionResponse
+import io.bkbn.kompendium.core.util.TestModules.polymorphicException
 import io.bkbn.kompendium.core.util.TestModules.polymorphicMapResponse
 import io.bkbn.kompendium.core.util.TestModules.polymorphicResponse
 import io.bkbn.kompendium.core.util.TestModules.primitives
@@ -49,6 +48,7 @@ import io.bkbn.kompendium.core.util.TestModules.rootRoute
 import io.bkbn.kompendium.core.util.TestModules.simpleGenericResponse
 import io.bkbn.kompendium.core.util.TestModules.simplePathParsing
 import io.bkbn.kompendium.core.util.TestModules.simpleRecursive
+import io.bkbn.kompendium.core.util.TestModules.singleException
 import io.bkbn.kompendium.core.util.TestModules.trailingSlash
 import io.bkbn.kompendium.core.util.TestModules.unbackedFieldsResponse
 import io.bkbn.kompendium.core.util.TestModules.withOperationId
@@ -189,7 +189,9 @@ class KompendiumTest : DescribeSpec({
       openApiTestAllSerializers("T0039__nested_generic_collection.json") { nestedGenericCollection() }
     }
     it("Can support nested generics with multiple type parameters") {
-      openApiTestAllSerializers("T0040__nested_generic_multiple_type_params.json") { nestedGenericMultipleParamsCollection() }
+      openApiTestAllSerializers("T0040__nested_generic_multiple_type_params.json") {
+        nestedGenericMultipleParamsCollection()
+      }
     }
     it("Can handle a really gnarly generic example") {
       openApiTestAllSerializers("T0043__gnarly_generic_example.json") { gnarlyGenericResponse() }

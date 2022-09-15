@@ -54,9 +54,9 @@ object NotarizedRoute {
       pluginConfig.path?.addDefaultAuthMethods(authMethods)
       require(spec.paths[routePath] == null) {
         """
-        The specified path ${Parameter.Location.path} has already been documented!
-        Please make sure that all notarized paths are unique
-      """.trimIndent()
+          The specified path ${Parameter.Location.path} has already been documented!
+          Please make sure that all notarized paths are unique
+        """.trimIndent()
       }
       spec.paths[routePath] = pluginConfig.path
         ?: error("This indicates a bug in Kompendium. Please file a GitHub issue!")

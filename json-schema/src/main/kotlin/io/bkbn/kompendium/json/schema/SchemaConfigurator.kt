@@ -8,11 +8,10 @@ interface SchemaConfigurator {
   fun serializableMemberProperties(clazz: KClass<*>): Collection<KProperty1<out Any, *>>
   fun serializableName(property: KProperty1<out Any, *>): String
 
-  open class Default: SchemaConfigurator {
-    override fun serializableMemberProperties(clazz: KClass<*>): Collection<KProperty1<out Any, *>>
-      = clazz.memberProperties
-    override fun serializableName(property: KProperty1<out Any, *>): String
-      = property.name
-  }
+  open class Default : SchemaConfigurator {
+    override fun serializableMemberProperties(clazz: KClass<*>): Collection<KProperty1<out Any, *>> =
+      clazz.memberProperties
 
+    override fun serializableName(property: KProperty1<out Any, *>): String = property.name
+  }
 }
