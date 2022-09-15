@@ -33,7 +33,6 @@ class RequestInfo private constructor(
 
     fun examples(vararg e: Pair<String, Any>) = apply {
       this.examples = e.toMap().mapValues { (_, v) -> MediaType.Example(v) }
-      println(this.examples)
     }
 
     fun build() = RequestInfo(
