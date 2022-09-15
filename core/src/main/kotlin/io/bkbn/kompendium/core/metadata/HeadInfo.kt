@@ -13,7 +13,7 @@ class HeadInfo private constructor(
   override val operationId: String?,
   override val deprecated: Boolean,
   override val parameters: List<Parameter>
-): MethodInfo {
+) : MethodInfo {
 
   companion object {
     fun builder(init: Builder.() -> Unit): HeadInfo {
@@ -36,5 +36,4 @@ class HeadInfo private constructor(
       parameters = parameters
     )
   }
-
 }

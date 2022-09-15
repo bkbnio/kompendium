@@ -7,7 +7,7 @@ import kotlin.reflect.KProperty1
 import kotlin.reflect.full.hasAnnotation
 import kotlin.reflect.full.memberProperties
 
-class KotlinXSchemaConfigurator: SchemaConfigurator {
+class KotlinXSchemaConfigurator : SchemaConfigurator {
 
   override fun serializableMemberProperties(clazz: KClass<*>): Collection<KProperty1<out Any, *>> =
     clazz.memberProperties
@@ -16,5 +16,5 @@ class KotlinXSchemaConfigurator: SchemaConfigurator {
   override fun serializableName(property: KProperty1<out Any, *>): String =
     property.annotations
       .filterIsInstance<SerialName>()
-      .firstOrNull()?.value?: property.name
+      .firstOrNull()?.value ?: property.name
 }

@@ -15,9 +15,9 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class MediaType(
-    val schema: JsonSchema,
-    val examples: Map<String, Example>? = null,
-    val encoding: Map<String, Encoding>? = null,
+  val schema: JsonSchema,
+  val examples: Map<String, Example>? = null,
+  val encoding: Map<String, Encoding>? = null,
 ) {
   @Serializable
   data class Example(@Contextual val value: Any)

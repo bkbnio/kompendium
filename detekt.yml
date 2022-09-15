@@ -15,6 +15,13 @@ style:
     excludeCommentStatements: true
   MagicNumber:
     excludes: ['**/kompendium-playground/**/*', '**/test/**/*']
+  ForbiddenMethodCall:
+    active: true
+formatting:
+  Indentation:
+    indentSize: 2
+  ImportOrdering:
+    active: false
 naming:
   ConstructorParameterNaming:
     active: false

@@ -13,7 +13,7 @@ class GetInfo private constructor(
   override val operationId: String?,
   override val deprecated: Boolean,
   override val parameters: List<Parameter>
-): MethodInfo {
+) : MethodInfo {
 
   companion object {
     fun builder(init: Builder.() -> Unit): GetInfo {
@@ -36,5 +36,4 @@ class GetInfo private constructor(
       parameters = parameters
     )
   }
-
 }

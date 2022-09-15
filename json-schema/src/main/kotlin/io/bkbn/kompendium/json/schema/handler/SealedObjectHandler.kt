@@ -1,7 +1,7 @@
 package io.bkbn.kompendium.json.schema.handler
 
-import io.bkbn.kompendium.json.schema.SchemaGenerator
 import io.bkbn.kompendium.json.schema.SchemaConfigurator
+import io.bkbn.kompendium.json.schema.SchemaGenerator
 import io.bkbn.kompendium.json.schema.definition.AnyOfDefinition
 import io.bkbn.kompendium.json.schema.definition.JsonSchema
 import io.bkbn.kompendium.json.schema.definition.ReferenceDefinition

@@ -1,7 +1,7 @@
 package io.bkbn.kompendium.json.schema.handler
 
-import io.bkbn.kompendium.json.schema.SchemaGenerator
 import io.bkbn.kompendium.json.schema.SchemaConfigurator
+import io.bkbn.kompendium.json.schema.SchemaGenerator
 import io.bkbn.kompendium.json.schema.definition.JsonSchema
 import io.bkbn.kompendium.json.schema.definition.NullableDefinition
 import io.bkbn.kompendium.json.schema.definition.OneOfDefinition
@@ -33,21 +33,21 @@ object SimpleObjectHandler {
     val props = schemaConfigurator.serializableMemberProperties(clazz)
       .filterNot { it.javaField == null }
       .associate { prop ->
-      val schema = when (prop.needsToInjectGenerics(typeMap)) {
-        true -> handleNestedGenerics(typeMap, prop, cache, schemaConfigurator)
-        false -> when (typeMap.containsKey(prop.returnType.classifier)) {
-          true -> handleGenericProperty(prop, typeMap, cache, schemaConfigurator)
-          false -> handleProperty(prop, cache, schemaConfigurator)
+        val schema = when (prop.needsToInjectGenerics(typeMap)) {
+          true -> handleNestedGenerics(typeMap, prop, cache, schemaConfigurator)
+          false -> when (typeMap.containsKey(prop.returnType.classifier)) {
+            true -> handleGenericProperty(prop, typeMap, cache, schemaConfigurator)
+            false -> handleProperty(prop, cache, schemaConfigurator)
+          }
         }
-      }
 
-      val nullCheckSchema = when (prop.returnType.isMarkedNullable && !schema.isNullable()) {
-        true -> OneOfDefinition(NullableDefinition(), schema)
-        false -> schema
-      }
+        val nullCheckSchema = when (prop.returnType.isMarkedNullable && !schema.isNullable()) {
+          true -> OneOfDefinition(NullableDefinition(), schema)
+          false -> schema
+        }
 
-      schemaConfigurator.serializableName(prop) to nullCheckSchema
-    }
+        schemaConfigurator.serializableName(prop) to nullCheckSchema
+      }
 
     val required = schemaConfigurator.serializableMemberProperties(clazz)
       .asSequence()

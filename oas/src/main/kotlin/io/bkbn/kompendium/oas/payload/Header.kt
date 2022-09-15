@@ -16,10 +16,10 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class Header(
-    val schema: JsonSchema,
-    val description: String? = null,
-    val required: Boolean = true,
-    val deprecated: Boolean = false,
-    val allowEmptyValue: Boolean? = null,
+  val schema: JsonSchema,
+  val description: String? = null,
+  val required: Boolean = true,
+  val deprecated: Boolean = false,
+  val allowEmptyValue: Boolean? = null,
   // todo support styling https://spec.openapis.org/oas/v3.1.0#style-values
 )

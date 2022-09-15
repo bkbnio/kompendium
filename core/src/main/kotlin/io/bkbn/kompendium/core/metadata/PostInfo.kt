@@ -14,7 +14,7 @@ class PostInfo private constructor(
   override val operationId: String?,
   override val deprecated: Boolean,
   override val parameters: List<Parameter>
-): MethodInfoWithRequest {
+) : MethodInfoWithRequest {
 
   companion object {
     fun builder(init: Builder.() -> Unit): PostInfo {
@@ -38,5 +38,4 @@ class PostInfo private constructor(
       parameters = parameters
     )
   }
-
 }

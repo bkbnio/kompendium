@@ -41,5 +41,4 @@ class RequestInfo private constructor(
       examples = examples
     )
   }
-
 }

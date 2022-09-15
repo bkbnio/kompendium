@@ -46,7 +46,7 @@ fun Route.redoc(pageTitle: String = "Docs", specUrl: String = "/openapi.json") {
           }
         }
         body {
-          unsafe { +"<redoc spec-url='${specUrl}'></redoc>" }
+          unsafe { +"<redoc spec-url='$specUrl'></redoc>" }
           script {
             src = "https://cdn.jsdelivr.net/npm/redoc@next/bundles/redoc.standalone.js"
           }

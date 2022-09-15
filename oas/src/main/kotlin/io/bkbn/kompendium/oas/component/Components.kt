@@ -12,6 +12,6 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class Components(
-    val schemas: MutableMap<String, JsonSchema> = mutableMapOf(),
-    val securitySchemes: MutableMap<String, SecuritySchema> = mutableMapOf()
+  val schemas: MutableMap<String, JsonSchema> = mutableMapOf(),
+  val securitySchemes: MutableMap<String, SecuritySchema> = mutableMapOf()
 )
