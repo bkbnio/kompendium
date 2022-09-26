@@ -16,7 +16,7 @@ jobs:
         with:
           distribution: 'adopt'
           java-version: '17'
-      - name: Publlish to Maven Central
+      - name: Publish to Maven Central
         uses: burrunan/gradle-cache-action@v1
         with:
           gradle-version: wrapper
