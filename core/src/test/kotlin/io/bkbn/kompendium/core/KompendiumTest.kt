@@ -53,12 +53,16 @@ import io.bkbn.kompendium.core.util.TestModules.trailingSlash
 import io.bkbn.kompendium.core.util.TestModules.unbackedFieldsResponse
 import io.bkbn.kompendium.core.util.TestModules.withOperationId
 import io.bkbn.kompendium.json.schema.definition.TypeDefinition
+import io.bkbn.kompendium.json.schema.exception.UnknownSchemaException
 import io.bkbn.kompendium.oas.component.Components
 import io.bkbn.kompendium.oas.security.ApiKeyAuth
 import io.bkbn.kompendium.oas.security.BasicAuth
 import io.bkbn.kompendium.oas.security.BearerAuth
 import io.bkbn.kompendium.oas.security.OAuth
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.DescribeSpec
+import io.kotest.matchers.should
+import io.kotest.matchers.string.startWith
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.http.HttpMethod
@@ -238,6 +242,12 @@ class KompendiumTest : DescribeSpec({
     }
     it("Can handle nested type names") {
       openApiTestAllSerializers("T0044__nested_type_name.json") { nestedTypeName() }
+    }
+  }
+  describe("Error Handling") {
+    it("Throws a clear exception when an unidentified type is encountered") {
+      val exception = shouldThrow<UnknownSchemaException> { openApiTestAllSerializers("") { dateTimeString() } }
+      exception.message should startWith("An unknown type was encountered: class java.time.Instant")
     }
   }
   describe("Constraints") {

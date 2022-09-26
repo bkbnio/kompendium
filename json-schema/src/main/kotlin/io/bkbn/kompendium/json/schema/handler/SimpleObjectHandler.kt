@@ -7,6 +7,7 @@ import io.bkbn.kompendium.json.schema.definition.NullableDefinition
 import io.bkbn.kompendium.json.schema.definition.OneOfDefinition
 import io.bkbn.kompendium.json.schema.definition.ReferenceDefinition
 import io.bkbn.kompendium.json.schema.definition.TypeDefinition
+import io.bkbn.kompendium.json.schema.exception.UnknownSchemaException
 import io.bkbn.kompendium.json.schema.util.Helpers.getReferenceSlug
 import io.bkbn.kompendium.json.schema.util.Helpers.getSimpleSlug
 import kotlin.reflect.KClass
@@ -53,7 +54,20 @@ object SimpleObjectHandler {
       .asSequence()
       .filterNot { it.javaField == null }
       .filterNot { prop -> prop.returnType.isMarkedNullable }
-      .filterNot { prop -> clazz.primaryConstructor!!.parameters.find { it.name == prop.name }!!.isOptional }
+      .filterNot { prop ->
+        clazz.primaryConstructor
+          ?.parameters
+          ?.find { it.name == prop.name }
+          ?.isOptional
+          ?: throw UnknownSchemaException(
+            """
+            |An unknown type was encountered: $clazz.  This typically indicates that a complex scalar such as dates,
+            |timestamps, or custom number representations such as BigInteger were not added as custom types when
+            |configuring the NotarizedApplication plugin.  If you are still seeing this error despite adding all
+            |required custom types, this indicates a bug in Kompendium, please open an issue on GitHub.
+            """.trimMargin()
+          )
+      }
       .map { schemaConfigurator.serializableName(it) }
       .toSet()
 

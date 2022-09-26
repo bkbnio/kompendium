@@ -12,6 +12,12 @@
 
 ## Released
 
+## [3.3.1] - September 26th, 2022
+
+### Added
+
+- Better exception thrown when unidentified type is encountered
+
 ## [3.3.0] - September 15th, 2022
 
 ### Added
