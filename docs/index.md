@@ -16,3 +16,5 @@ Kompendium 3+, which supports Ktor 2, and outputs OpenAPI 3.1 compliant specs
 | 3.X        | 2    | 3.1     | 
 
 ## Getting Started
+
+Uhh... hello?
