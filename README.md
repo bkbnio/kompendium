@@ -2,18 +2,7 @@
 
 [![version](https://img.shields.io/maven-central/v/io.bkbn/kompendium-core?style=flat-square)](https://search.maven.org/search?q=io.bkbn%20kompendium)
 
-## Table of Contents
-
-- [What Is Kompendium](#what-is-kompendium)
-- [How to Install](#how-to-install)
-- [Local Development](#local-development)
-- [The Playground](#the-playground)
-
-## What is Kompendium
-
-Kompendium is intended to be a minimally invasive OpenApi Specification generator for Ktor. Minimally invasive meaning
-that users will use only Ktor native functions when implementing their API, and will supplement with Kompendium code in
-order to generate the appropriate spec.
+Documentation is stored in the `docs` folder and is hosted [here](https://bkbn.gitbook.io/kompendium)
 
 ### Compatability
 
