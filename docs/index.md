@@ -51,8 +51,51 @@ For more detail on the `NotarizedApplication` plugin, please see the [docs](./pl
 ## Notarizing a Ktor Route
 
 Once you have notarized your application, you can begin to notarize individual routes using the `NotarizedRoute` plugin.
-This is a route-level Ktor plugin that is used to configure the documentation for a specific endpoint of your API.  The 
-route documentation will be piped back to the application-level plugin, and will be automatically injected into the 
+This is a route-level Ktor plugin that is used to configure the documentation for a specific endpoint of your API. The
+route documentation will be piped back to the application-level plugin, and will be automatically injected into the
 OpenApi specification.
+
+Setting up documentation on a route is easiest achieved by creating an extension function on the Ktor `Route` class
+
+```kotlin
+private fun Route.documentation() {
+  install(NotarizedRoute()) {
+    parameters = listOf(
+      Parameter(
+        name = "id",
+        `in` = Parameter.Location.path,
+        schema = TypeDefinition.STRING
+      )
+    )
+    get = GetInfo.builder {
+      summary("Get user by id")
+      description("A very neat endpoint!")
+      response {
+        responseCode(HttpStatusCode.OK)
+        responseType<ExampleResponse>()
+        description("Will return whether or not the user is real 😱")
+      }
+    }
+  }
+}
+```
+
+Once you have created your documentation function, it can be attached to the route simply by calling it at the desired
+path.
+
+```kotlin
+private fun Application.mainModule() {
+  // ...
+  routing {
+    // ... 
+    route("/{id}") {
+      documentation()
+      get {
+        // ...
+      }
+    }
+  }
+}
+```
 
 For more details on the `NotarizedRoute` plugin, please see the [docs](./plugins/notarized_route.md)
