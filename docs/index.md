@@ -17,4 +17,8 @@ Kompendium 3+, which supports Ktor 2, and outputs OpenAPI 3.1 compliant specs
 
 ## Getting Started
 
-Uhh... hello?
+The first part of setting up Kompendium is to installed the `NotarizedApplication` plugin.  This is an application-level
+Ktor plugin that is used to instantiate and configure Kompendium.  Your OpenAPI spec metadata will go here, along with 
+custom type overrides (typically useful for custom scalars such as dates and times), along with other configurations.
+
+For more detail on the `NotarizedApplication` plugin, please see the docs [here](./plugins/notarized_application.md)
