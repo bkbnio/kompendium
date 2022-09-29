@@ -2,5 +2,6 @@
 
 * [Introduction](index.md)
 * [Plugins](./plugins/index.md)
-  * [NotarizedApplication](./plugins/notarized_application.md)
-  * [NotarizedRoute](./plugins/notarized_route.md)
+  * [Notarized Application](./plugins/notarized_application.md)
+  * [Notarized Route](./plugins/notarized_route.md)
+  * [Notarized Locations](./plugins/notarized_locations.md)
