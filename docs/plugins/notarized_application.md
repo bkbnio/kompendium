@@ -1,3 +1,1 @@
-# NotarizedApplication
-
 TODO

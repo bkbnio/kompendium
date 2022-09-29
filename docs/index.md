@@ -1,10 +1,8 @@
-# Kompendium
-
 Kompendium is intended to be a non-invasive OpenAPI spec generator for [Ktor](https://ktor.io) APIs. By operating
 entirely through Ktor's plugin architecture, Kompendium allows you to incrementally document your API without requiring
 you to rip out and replace the amazing code you have already written.
 
-## Compatibility
+# Compatibility
 
 | Kompendium | Ktor | OpenAPI | 
 |------------|------|---------|
@@ -15,9 +13,9 @@ you to rip out and replace the amazing code you have already written.
 > These docs are focused solely on Kompendium 3, previous versions should be considered deprecated and no longer
 > maintained
 
-## Getting Started
+# Getting Started
 
-### Adding the Artifact
+## Adding the Artifact
 
 All Kompendium artifacts are published to Maven Central. Most Kompendium users will only need to import the core
 dependency
@@ -29,7 +27,7 @@ dependencies {
 }
 ```
 
-### Notarizing a Ktor Application
+## Notarizing a Ktor Application
 
 Once we have added the dependencies, installed the `NotarizedApplication` plugin. This is an application-level
 Ktor plugin that is used to instantiate and configure Kompendium. Your OpenAPI spec metadata will go here, along with
@@ -50,7 +48,7 @@ at the `/openapi.json` path of your api.
 
 For more detail on the `NotarizedApplication` plugin, please see the [docs](./plugins/notarized_application.md)
 
-### Notarizing a Ktor Route
+## Notarizing a Ktor Route
 
 Once you have notarized your application, you can begin to notarize individual routes using the `NotarizedRoute` plugin.
 This is a route-level Ktor plugin that is used to configure the documentation for a specific endpoint of your API.  The 
