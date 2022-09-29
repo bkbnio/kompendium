@@ -6,7 +6,6 @@
 
 - [What Is Kompendium](#what-is-kompendium)
 - [How to Install](#how-to-install)
-- [Library Details](#library-details)
 - [Local Development](#local-development)
 - [The Playground](#the-playground)
 
@@ -18,11 +17,11 @@ order to generate the appropriate spec.
 
 ### Compatability
 
-| Kompendium  | Ktor  | OpenAPI | 
-|---|---| --- |
-| 1.X  | 1  | 3.0 |
-| 2.X  | 1  | 3.0 |
-| 3.X  | 2  | 3.1 | 
+| Kompendium | Ktor | OpenAPI | 
+|------------|------|---------|
+| 1.X        | 1    | 3.0     |
+| 2.X        | 1    | 3.0     |
+| 3.X        | 2    | 3.1     | 
 
 ## How to install
 
@@ -42,10 +41,6 @@ dependencies {
 In addition to publishing releases to Maven Central, a snapshot version gets published to GitHub Packages on every merge
 to `main`. These can be consumed by adding the repository to your gradle build file. Instructions can be
 found [here](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-gradle-registry#using-a-published-package)
-
-# Library Details
-
-Library documentation lives alongside the source code, and is generated into a static site via Dokka.  Can be viewed [here](https://bkbnio.github.io/kompendium)
 
 ## Local Development
 
