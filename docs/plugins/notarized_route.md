@@ -66,8 +66,39 @@ install(NotarizedRoute()) {
 
 ## Operation Tags
 
-Operation tags work much like route tags, except they only apply to the operation they are defined in.
+Operation tags work much like route tags, except they only apply to the operation they are defined in. They are defined
+slightly differently, as a function on the builder, rather than an instance variable directly.
+
+```kotlin
+install(NotarizedRoute()) {
+  get = GetInfo.builder {
+    tags("User")
+    // ...
+  }
+}
+```
 
 ## Operation Parameters
+
+Operation parameters work much like route parameters, except they only apply to the operation they are defined in. They
+are defined slightly differently, as a function on the builder, rather than an instance variable directly.
+
+```kotlin
+install(NotarizedRoute()) {
+  parameters(
+    Parameter(
+      name = "a",
+      `in` = Parameter.Location.path,
+      schema = TypeDefinition.STRING,
+    ),
+    Parameter(
+      name = "aa",
+      `in` = Parameter.Location.query,
+      schema = TypeDefinition.INT
+    )
+  )
+  // ...
+}
+```
 
 ## Defining Request and Response Bodies

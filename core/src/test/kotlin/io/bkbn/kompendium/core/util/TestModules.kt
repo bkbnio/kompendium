@@ -35,6 +35,7 @@ import io.bkbn.kompendium.core.metadata.PutInfo
 import io.bkbn.kompendium.core.plugin.NotarizedRoute
 import io.bkbn.kompendium.json.schema.definition.TypeDefinition
 import io.bkbn.kompendium.oas.payload.Parameter
+import io.kotest.engine.extensions.SystemPropertyTagExtension.tags
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.call
 import io.ktor.server.application.install
@@ -77,6 +78,7 @@ object TestModules {
     route(defaultPath) {
       install(NotarizedRoute()) {
         parameters = defaultParams
+        tags = setOf()
         get = GetInfo.builder {
           response {
             responseCode(HttpStatusCode.OK)
