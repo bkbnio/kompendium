@@ -85,20 +85,24 @@ are defined slightly differently, as a function on the builder, rather than an i
 
 ```kotlin
 install(NotarizedRoute()) {
-  parameters(
-    Parameter(
-      name = "a",
-      `in` = Parameter.Location.path,
-      schema = TypeDefinition.STRING,
-    ),
-    Parameter(
-      name = "aa",
-      `in` = Parameter.Location.query,
-      schema = TypeDefinition.INT
+  get = GetInfo.builder {
+    parameters(
+      Parameter(
+        name = "a",
+        `in` = Parameter.Location.path,
+        schema = TypeDefinition.STRING,
+      ),
+      Parameter(
+        name = "aa",
+        `in` = Parameter.Location.query,
+        schema = TypeDefinition.INT
+      )
     )
-  )
-  // ...
+    // ...
+  }
 }
 ```
 
 ## Defining Request and Response Bodies
+
+TODO
