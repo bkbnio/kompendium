@@ -140,11 +140,28 @@ post = PostInfo.builder {
   response {
     responseCode(HttpStatusCode.Created)
     responseType<UserCreatedResponse>()
-    description("User was created succesfully")
+    description("User was created successfully")
   }
 }
 ```
 
 ## Error Info
 
-TODO
+In addition to the standard response, you can attach additional responses via the `canRespond` function.
+
+```kotlin
+get = GetInfo.builder {
+  summary("Get user by id")
+  description("A very neat endpoint!")
+  response {
+    responseCode(HttpStatusCode.OK)
+    responseType<ExampleResponse>()
+    description("Will return whether or not the user is real 😱")
+  }
+  canRespond {
+    description("Bad Things Happened")
+    responseCode(HttpStatusCode.InternalServerError)
+    responseType<ExceptionResponse>()
+  }
+}
+```
