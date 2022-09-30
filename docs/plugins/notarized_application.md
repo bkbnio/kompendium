@@ -73,6 +73,33 @@ perform type inspection.
 This means that we only need to define our custom type once, and then Kompendium will reuse it across the entire
 application.
 
+> While intended for custom scalars, there is nothing stopping you from leveraging custom types to circumvent type
+> analysis
+> on any class you choose. If you have an alternative method of generating JsonSchema definitions, you could put them
+> all
+> in this map and effectively prevent Kompendium from having to do any reflection
+
 ## Schema Configurator
 
-TODO
+The `SchemaConfigurator` is an interface that allows users to bridge the gap between Kompendium serialization and custom
+serialization strategies that the serializer they are using for their API. For example, if you are using KotlinX
+serialization in order to convert kotlin fields from camel case to snake case, you could leverage
+the `KotlinXSchemaConfigurator` in order to instruct Kompendium on how to serialize values properly.
+
+```kotlin
+private fun Application.mainModule() {
+  install(ContentNegotiation) {
+    json(Json {
+      serializersModule = KompendiumSerializersModule.module
+      encodeDefaults = true
+      explicitNulls = false
+    })
+  }
+  install(NotarizedApplication()) {
+    spec = baseSpec
+    // Adds support for @Transient and @SerialName
+    // If you are not using them this is not required.
+    schemaConfigurator = KotlinXSchemaConfigurator()
+  }
+}
+```
