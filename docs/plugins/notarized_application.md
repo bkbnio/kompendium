@@ -17,7 +17,31 @@ reference [OpenAPI spec](https://spec.openapis.org/oas/v3.1.0) itself.
 
 ## Custom Routing
 
-TODO
+For public facing APIs, having the default endpoint exposed at `/openapi.json` is totally fine. However, if you need
+more granular control over the route that exposes the generated schema, you can modify the `openApiJson` config value.
+
+For example, if we want to hide our schema behind a basic auth check, we could do the following
+
+```kotlin
+private fun Application.mainModule() {
+  // Install content negotiation, auth, etc...
+  install(NotarizedApplication()) {
+    // ...
+    openApiJson = {
+      authenticate("basic") {
+        route("/openapi.json") {
+          get {
+            call.respond(
+              HttpStatusCode.OK,
+              this@route.application.attributes[KompendiumAttributes.openApiSpec]
+            )
+          }
+        }
+      }
+    }
+  }
+}
+```
 
 ## Custom Types
 
