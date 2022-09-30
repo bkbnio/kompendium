@@ -45,7 +45,33 @@ private fun Application.mainModule() {
 
 ## Custom Types
 
-TODO
+Kompendium is _really_ good at converting simple scalar and complex objects into JsonSchema compliant specs. However,
+there is a subset of values that cause it trouble. These are most commonly classes that produce "complex scalars",
+such as dates and times, along with object representations of scalars such as `BigInteger`.
+
+In situations like this, you will need to define a map of custom types to JsonSchema definitions that Kompendium can use
+to short-circuit its type analysis.
+
+For example, say we would like to serialize `kotlinx.datetime.Instant` entities as a field in our response objects. We
+would need to add it as a custom type.
+
+```kotlin
+private fun Application.mainModule() {
+  // ...
+  install(NotarizedApplication()) {
+    spec = baseSpec
+    customTypes = mapOf(
+      typeOf<Instant>() to TypeDefinition(type = "string", format = "date-time")
+    )
+  }
+}
+```
+
+Doing this will save it in a cache that our `NotarizedRoute` plugin definitions will check from prior to attempting to
+perform type inspection.
+
+This means that we only need to define our custom type once, and then Kompendium will reuse it across the entire
+application.
 
 ## Schema Configurator
 
