@@ -69,6 +69,7 @@ private fun Route.documentation() {
       )
     )
     get = GetInfo.builder {
+      tags("")
       summary("Get user by id")
       description("A very neat endpoint!")
       response {
