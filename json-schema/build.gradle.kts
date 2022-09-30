@@ -21,7 +21,7 @@ dependencies {
   // Versions
   val detektVersion: String by project
 
-  implementation("org.jetbrains.kotlin:kotlin-reflect:1.7.10")
+  implementation("org.jetbrains.kotlin:kotlin-reflect:1.7.20")
   implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0")
 
   // Formatting
