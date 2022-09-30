@@ -103,6 +103,48 @@ install(NotarizedRoute()) {
 }
 ```
 
-## Defining Request and Response Bodies
+## Response Info
+
+All operations are required to define a response info block, detailing the standard response that users of the API
+should expect when performing this operation. At its most simple, doing so looks like the following
+
+```kotlin
+get = GetInfo.builder {
+  summary("Get user by id")
+  description("A very neat endpoint!")
+  response {
+    responseCode(HttpStatusCode.OK)
+    responseType<ExampleResponse>()
+    description("Will return whether or not the user is real 😱")
+  }
+}
+```
+
+As you can see, we attach an http status code, a description, and finally the type that represents the payload that
+users should expect. In order to indicate that no payload is expected, use `responseType<Unit>()`. This should typically
+be paired with a `204` status code.
+
+## Request Info
+
+On operations that allow a request body to be associated, you must also define a response info block so that Kompendium
+can determine how to populate the required operation data.
+
+```kotlin
+post = PostInfo.builder {
+  summary("Create User")
+  description("Will create a new user entity")
+  request {
+    requestType<CreateUserRequest>()
+    description("Data required to create new user")
+  }
+  response {
+    responseCode(HttpStatusCode.Created)
+    responseType<UserCreatedResponse>()
+    description("User was created succesfully")
+  }
+}
+```
+
+## Error Info
 
 TODO
