@@ -20,9 +20,7 @@ To get an overview of the project, read the [README](README.md). Here are some r
 
 ## Getting started
 
-The best way to get started with Kompendium is to read the [docs](https://bkbnio.github.io/kompendium).  Kompendium generates 
-our documentation using [Dokka](https://github.com/Kotlin/dokka).  This means that the docs live side-by-side with the source 
-code itself, and leverage the KDoc format to provide syntax highlighting, dynamic linking and more!
+The best way to get started with Kompendium is to read the [docs](https://bkbn.gitbook.io/kompendium). 
 
 If live examples are more your thing, inside the `kompendium-playground` module, you will find a collection of starter 
 examples ranging from simple CRUD and authentication examples, to more advanced topics like polymorphic serialization 
