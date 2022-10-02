@@ -4,7 +4,6 @@ plugins {
   id("io.bkbn.sourdough.library.jvm")
   id("io.gitlab.arturbosch.detekt")
   id("com.adarshr.test-logger")
-  id("org.jetbrains.dokka")
   id("maven-publish")
   id("java-library")
   id("signing")
@@ -21,7 +20,7 @@ dependencies {
   // Versions
   val detektVersion: String by project
 
-  implementation("org.jetbrains.kotlin:kotlin-reflect:1.7.10")
+  implementation("org.jetbrains.kotlin:kotlin-reflect:1.7.20")
   implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0")
 
   // Formatting
