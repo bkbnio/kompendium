@@ -9,6 +9,7 @@ import io.bkbn.kompendium.json.schema.definition.TypeDefinition
 import io.bkbn.kompendium.oas.payload.Parameter
 import io.bkbn.kompendium.oas.serialization.KompendiumSerializersModule
 import io.bkbn.kompendium.playground.util.ExampleResponse
+import io.bkbn.kompendium.playground.util.ExceptionResponse
 import io.bkbn.kompendium.playground.util.Util.baseSpec
 import io.ktor.http.HttpStatusCode
 import io.ktor.serialization.kotlinx.json.json
@@ -51,15 +52,21 @@ private fun Application.mainModule() {
     redoc(pageTitle = "Simple API Docs")
 
     route("/{id}") {
-      documentation()
+      idDocumentation()
       get {
         call.respond(HttpStatusCode.OK, ExampleResponse(true))
+      }
+      route("/profile") {
+        profileDocumentation()
+        get {
+          call.respond(HttpStatusCode.OK, ExampleResponse(true))
+        }
       }
     }
   }
 }
 
-private fun Route.documentation() {
+private fun Route.idDocumentation() {
   install(NotarizedRoute()) {
     parameters = listOf(
       Parameter(
@@ -75,6 +82,38 @@ private fun Route.documentation() {
         responseCode(HttpStatusCode.OK)
         responseType<ExampleResponse>()
         description("Will return whether or not the user is real 😱")
+      }
+
+      canRespond {
+        responseType<ExceptionResponse>()
+        responseCode(HttpStatusCode.NotFound)
+        description("Indicates that a user with this id does not exist")
+      }
+    }
+  }
+}
+
+private fun Route.profileDocumentation() {
+  install(NotarizedRoute()) {
+    parameters = listOf(
+      Parameter(
+        name = "id",
+        `in` = Parameter.Location.path,
+        schema = TypeDefinition.STRING
+      )
+    )
+    get = GetInfo.builder {
+      summary("Get a users profile")
+      description("A cool endpoint!")
+      response {
+        responseCode(HttpStatusCode.OK)
+        responseType<ExampleResponse>()
+        description("Returns user profile information")
+      }
+      canRespond {
+        responseType<ExceptionResponse>()
+        responseCode(HttpStatusCode.NotFound)
+        description("Indicates that a user with this id does not exist")
       }
     }
   }
