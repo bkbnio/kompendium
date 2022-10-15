@@ -21,7 +21,7 @@ dependencies {
   val detektVersion: String by project
 
   api(projects.kompendiumJsonSchema)
-  implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0")
+  implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
 
   // Formatting
   detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:$detektVersion")
