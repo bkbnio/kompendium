@@ -4,8 +4,6 @@
 
 ### Added
 
-- Support for custom docs path
-
 ### Changed
 
 ### Remove
@@ -13,6 +11,12 @@
 ---
 
 ## Released
+
+## [3.4.0] - October 26th, 2022
+
+### Added
+
+- Support for custom docs path
 
 ## [3.3.1] - September 26th, 2022
 
