@@ -16,12 +16,13 @@ import kotlinx.html.title
 import kotlinx.html.unsafe
 
 /**
- * Provides an out-of-the-box route to view docs using ReDoc
+ * Provides an out-of-the-box route to view docs using ReDoc on the specified [path].
  * @param pageTitle Webpage title you wish to be displayed on your docs
+ * @param route path to docs resource
  * @param specUrl url to point ReDoc to the OpenAPI json document
  */
-fun Route.redoc(pageTitle: String = "Docs", specUrl: String = "/openapi.json") {
-  route("/docs") {
+fun Route.redoc(pageTitle: String = "Docs", path: String = "/docs", specUrl: String = "/openapi.json") {
+  route(path) {
     get {
       call.respondHtml(HttpStatusCode.OK) {
         head {
