@@ -4,6 +4,8 @@
 
 ### Added
 
+- Support for custom docs path
+
 ### Changed
 
 ### Remove
