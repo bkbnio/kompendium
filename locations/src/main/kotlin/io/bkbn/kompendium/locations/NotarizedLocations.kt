@@ -20,6 +20,11 @@ import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.hasAnnotation
 import kotlin.reflect.full.memberProperties
 
+@Deprecated(
+  message = "This functionality is deprecated and will be removed in the future. " +
+    "Use 'ktor-server-resources' with 'kompendium-resources' plugin instead.",
+  level = DeprecationLevel.WARNING
+)
 object NotarizedLocations {
 
   data class LocationMetadata(
