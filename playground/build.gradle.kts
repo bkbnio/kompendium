@@ -14,6 +14,7 @@ dependencies {
   // IMPLEMENTATION
   implementation(projects.kompendiumCore)
   implementation(projects.kompendiumLocations)
+  implementation(projects.kompendiumResources)
 
   // Ktor
   val ktorVersion: String by project
@@ -29,6 +30,7 @@ dependencies {
   implementation("io.ktor:ktor-serialization-jackson:$ktorVersion")
   implementation("io.ktor:ktor-serialization-gson:$ktorVersion")
   implementation("io.ktor:ktor-server-locations:$ktorVersion")
+  implementation("io.ktor:ktor-server-resources:$ktorVersion")
 
   // Logging
   implementation("org.apache.logging.log4j:log4j-api-kotlin:1.2.0")
