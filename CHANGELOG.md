@@ -4,8 +4,6 @@
 
 ### Added
 
-- New `kompendium-resources` plugin to support Ktor Resources API
-
 ### Changed
 
 ### Remove
@@ -13,6 +11,12 @@
 ---
 
 ## Released
+
+## [3.5.0] - October 29th, 2022
+
+### Added
+
+- New `kompendium-resources` plugin to support Ktor Resources API
 
 ## [3.4.0] - October 26th, 2022
 
