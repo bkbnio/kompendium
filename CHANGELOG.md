@@ -4,6 +4,8 @@
 
 ### Added
 
+- New `kompendium-resources` plugin to support Ktor Resources API
+
 ### Changed
 
 ### Remove
