@@ -58,7 +58,7 @@ dependencies {
   testFixturesApi("io.ktor:ktor-client:$ktorVersion")
   testFixturesApi("io.ktor:ktor-client-cio:$ktorVersion")
 
-  testFixturesApi("dev.forst:ktor-api-key:2.1.2")
+  testFixturesApi("dev.forst:ktor-api-key:2.1.3")
 
   testFixturesApi("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
 }
