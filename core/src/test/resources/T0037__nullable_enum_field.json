@@ -69,11 +69,7 @@
         },
         "required": []
       },
-      "TestEnum": {
-        "oneOf": [
-          {
-            "type": "null"
-          },
+      "TestEnum":
           {
             "type": "string",
             "enum": [
@@ -81,8 +77,6 @@
               "NO"
             ]
           }
-        ]
-      }
     },
     "securitySchemes": {}
   },

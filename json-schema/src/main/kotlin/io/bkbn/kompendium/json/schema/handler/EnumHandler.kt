@@ -2,8 +2,6 @@ package io.bkbn.kompendium.json.schema.handler
 
 import io.bkbn.kompendium.json.schema.definition.EnumDefinition
 import io.bkbn.kompendium.json.schema.definition.JsonSchema
-import io.bkbn.kompendium.json.schema.definition.NullableDefinition
-import io.bkbn.kompendium.json.schema.definition.OneOfDefinition
 import io.bkbn.kompendium.json.schema.definition.ReferenceDefinition
 import io.bkbn.kompendium.json.schema.util.Helpers.getReferenceSlug
 import io.bkbn.kompendium.json.schema.util.Helpers.getSimpleSlug
@@ -15,10 +13,6 @@ object EnumHandler {
     cache[type.getSimpleSlug()] = ReferenceDefinition(type.getReferenceSlug())
 
     val options = clazz.java.enumConstants.map { it.toString() }.toSet()
-    val definition = EnumDefinition(type = "string", enum = options)
-    return when (type.isMarkedNullable) {
-      true -> OneOfDefinition(NullableDefinition(), definition)
-      false -> definition
-    }
+    return EnumDefinition(type = "string", enum = options)
   }
 }

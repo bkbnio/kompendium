@@ -41,6 +41,7 @@ class SchemaGeneratorTest : DescribeSpec({
       jsonSchemaTest<ComplexRequest>("T0005__complex_object.json")
     }
     it("Can generate the schema for a nullable object") {
+      // Same schema as a non-nullable type, since the nullability will be handled on the property
       jsonSchemaTest<TestSimpleRequest?>("T0006__nullable_object.json")
     }
     it("Can generate the schema for a polymorphic object") {
@@ -64,6 +65,7 @@ class SchemaGeneratorTest : DescribeSpec({
       jsonSchemaTest<SimpleEnum>("T0007__simple_enum.json")
     }
     it("Can generate the schema for a nullable enum") {
+      // Same schema as a non-nullable enum, since the nullability will be handled on the property
       jsonSchemaTest<SimpleEnum?>("T0008__nullable_enum.json")
     }
     it("Can generate the schema for an object with an enum property") {

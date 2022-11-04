@@ -1,14 +1,4 @@
 {
-  "oneOf": [
-    {
-      "type": "null"
-    },
-    {
-      "enum": [
-        "ONE",
-        "TWO"
-      ],
-      "type": "string"
-    }
-  ]
+  "enum": [ "ONE", "TWO" ],
+  "type": "string"
 }

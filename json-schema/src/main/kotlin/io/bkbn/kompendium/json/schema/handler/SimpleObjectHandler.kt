@@ -72,16 +72,11 @@ object SimpleObjectHandler {
       .map { schemaConfigurator.serializableName(it) }
       .toSet()
 
-    val definition = TypeDefinition(
+    return TypeDefinition(
       type = "object",
       properties = props,
       required = required
     )
-
-    return when (type.isMarkedNullable) {
-      true -> OneOfDefinition(NullableDefinition(), definition)
-      false -> definition
-    }
   }
 
   private fun KProperty<*>.needsToInjectGenerics(
