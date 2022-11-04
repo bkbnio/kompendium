@@ -27,6 +27,7 @@ sealed interface JsonSchema {
         is NullableDefinition -> NullableDefinition.serializer().serialize(encoder, value)
         is OneOfDefinition -> OneOfDefinition.serializer().serialize(encoder, value)
         is AnyOfDefinition -> AnyOfDefinition.serializer().serialize(encoder, value)
+        else -> error("Unknown JsonSchema type: ${value::class.simpleName}")
       }
     }
   }

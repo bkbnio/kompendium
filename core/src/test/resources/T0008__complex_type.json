@@ -127,7 +127,8 @@
             "enum": [
               "ONE",
               "TWO"
-            ]
+            ],
+            "type": "string"
           }
         },
         "required": [

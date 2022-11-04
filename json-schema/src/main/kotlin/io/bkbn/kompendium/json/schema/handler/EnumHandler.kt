@@ -10,7 +10,7 @@ import kotlin.reflect.KType
 object EnumHandler {
   fun handle(type: KType, clazz: KClass<*>): JsonSchema {
     val options = clazz.java.enumConstants.map { it.toString() }.toSet()
-    val definition = EnumDefinition(enum = options)
+    val definition = EnumDefinition(enum = options, type = "string")
     return when (type.isMarkedNullable) {
       true -> OneOfDefinition(NullableDefinition(), definition)
       false -> definition

@@ -65,7 +65,8 @@
                 "enum": [
                   "YES",
                   "NO"
-                ]
+                ],
+                "type": "string"
               }
             ]
           }

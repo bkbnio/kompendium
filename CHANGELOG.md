@@ -4,6 +4,8 @@
 
 ### Added
 
+- Enum types are now generated with `type: string` to facilitate certain codegen tools (e.g. Orval)
+
 ### Changed
 
 ### Remove

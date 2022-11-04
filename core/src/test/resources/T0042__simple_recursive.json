@@ -64,7 +64,8 @@
               "NULLABLE",
               "REQUIRED",
               "REPEATED"
-            ]
+            ],
+            "type": "string"
           },
           "name": {
             "type": "string"
