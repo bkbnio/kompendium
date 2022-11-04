@@ -62,15 +62,26 @@
                 "type": "null"
               },
               {
-                "enum": [
-                  "YES",
-                  "NO"
-                ]
+                "$ref": "#/components/schemas/TestEnum"
               }
             ]
           }
         },
         "required": []
+      },
+      "TestEnum": {
+        "oneOf": [
+          {
+            "type": "null"
+          },
+          {
+            "type": "string",
+            "enum": [
+              "YES",
+              "NO"
+            ]
+          }
+        ]
       }
     },
     "securitySchemes": {}

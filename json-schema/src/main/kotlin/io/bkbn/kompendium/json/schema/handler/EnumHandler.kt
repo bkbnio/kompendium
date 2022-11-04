@@ -4,13 +4,18 @@ import io.bkbn.kompendium.json.schema.definition.EnumDefinition
 import io.bkbn.kompendium.json.schema.definition.JsonSchema
 import io.bkbn.kompendium.json.schema.definition.NullableDefinition
 import io.bkbn.kompendium.json.schema.definition.OneOfDefinition
+import io.bkbn.kompendium.json.schema.definition.ReferenceDefinition
+import io.bkbn.kompendium.json.schema.util.Helpers.getReferenceSlug
+import io.bkbn.kompendium.json.schema.util.Helpers.getSimpleSlug
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 
 object EnumHandler {
-  fun handle(type: KType, clazz: KClass<*>): JsonSchema {
+  fun handle(type: KType, clazz: KClass<*>, cache: MutableMap<String, JsonSchema>): JsonSchema {
+    cache[type.getSimpleSlug()] = ReferenceDefinition(type.getReferenceSlug())
+
     val options = clazz.java.enumConstants.map { it.toString() }.toSet()
-    val definition = EnumDefinition(enum = options)
+    val definition = EnumDefinition(type = "string", enum = options)
     return when (type.isMarkedNullable) {
       true -> OneOfDefinition(NullableDefinition(), definition)
       false -> definition

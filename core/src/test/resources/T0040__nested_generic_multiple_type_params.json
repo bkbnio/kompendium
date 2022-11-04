@@ -57,10 +57,7 @@
         "type": "object",
         "properties": {
           "enumeration": {
-            "enum": [
-              "ONE",
-              "TWO"
-            ]
+            "$ref": "#/components/schemas/SimpleEnum"
           }
         },
         "required": [
@@ -119,6 +116,13 @@
         },
         "required": [
           "content"
+        ]
+      },
+      "SimpleEnum": {
+        "type": "string",
+        "enum": [
+          "ONE",
+          "TWO"
         ]
       }
     },

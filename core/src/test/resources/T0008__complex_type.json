@@ -124,14 +124,18 @@
         "type": "object",
         "properties": {
           "enumeration": {
-            "enum": [
-              "ONE",
-              "TWO"
-            ]
+            "$ref": "#/components/schemas/SimpleEnum"
           }
         },
         "required": [
           "enumeration"
+        ]
+      },
+      "SimpleEnum": {
+        "type": "string",
+        "enum": [
+          "ONE",
+          "TWO"
         ]
       }
     },

@@ -1,0 +1,11 @@
+{
+  "type": "object",
+  "properties": {
+    "color": {
+      "$ref": "#/components/schemas/Color"
+    }
+  },
+  "required": [
+    "color"
+  ]
+}
