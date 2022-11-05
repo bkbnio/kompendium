@@ -7,7 +7,8 @@ import kotlin.reflect.typeOf
 class RequestInfo private constructor(
   val requestType: KType,
   val description: String,
-  val examples: Map<String, MediaType.Example>?
+  val examples: Map<String, MediaType.Example>?,
+  val mediaTypes: Set<String>
 ) {
 
   companion object {
@@ -22,6 +23,7 @@ class RequestInfo private constructor(
     private var requestType: KType? = null
     private var description: String? = null
     private var examples: Map<String, MediaType.Example>? = null
+    private var mediaTypes: Set<String>? = null
 
     fun requestType(t: KType) = apply {
       this.requestType = t
@@ -35,10 +37,15 @@ class RequestInfo private constructor(
       this.examples = e.toMap().mapValues { (_, v) -> MediaType.Example(v) }
     }
 
+    fun mediaTypes(vararg m: String) = apply {
+      this.mediaTypes = m.toSet()
+    }
+
     fun build() = RequestInfo(
       requestType = requestType ?: error("Request type must be present"),
       description = description ?: error("Description must be present"),
-      examples = examples
+      examples = examples,
+      mediaTypes = mediaTypes ?: setOf("application/json")
     )
   }
 }

@@ -84,7 +84,7 @@ object Helpers {
     requestBody = when (this) {
       is MethodInfoWithRequest -> Request(
         description = this.request.description,
-        content = this.request.requestType.toReferenceContent(this.request.examples),
+        content = this.request.requestType.toReferenceContent(this.request.examples, this.request.mediaTypes),
         required = true
       )
 
@@ -93,7 +93,7 @@ object Helpers {
     responses = mapOf(
       this.response.responseCode.value to Response(
         description = this.response.description,
-        content = this.response.responseType.toReferenceContent(this.response.examples)
+        content = this.response.responseType.toReferenceContent(this.response.examples, this.response.mediaTypes)
       )
     ).plus(this.errors.toResponseMap())
   )
@@ -101,21 +101,24 @@ object Helpers {
   private fun List<ResponseInfo>.toResponseMap(): Map<Int, Response> = associate { error ->
     error.responseCode.value to Response(
       description = error.description,
-      content = error.responseType.toReferenceContent(error.examples)
+      content = error.responseType.toReferenceContent(error.examples, error.mediaTypes)
     )
   }
 
-  private fun KType.toReferenceContent(examples: Map<String, MediaType.Example>?): Map<String, MediaType>? =
+  private fun KType.toReferenceContent(
+    examples: Map<String, MediaType.Example>?,
+    mediaTypes: Set<String>
+  ): Map<String, MediaType>? =
     when (this.classifier as KClass<*>) {
       Unit::class -> null
-      else -> mapOf(
-        "application/json" to MediaType(
+      else -> mediaTypes.associateWith {
+        MediaType(
           schema = if (this.isMarkedNullable) OneOfDefinition(
             NullableDefinition(),
             ReferenceDefinition(this.getReferenceSlug())
           ) else ReferenceDefinition(this.getReferenceSlug()),
           examples = examples
         )
-      )
+      }
     }
 }
