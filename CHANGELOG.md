@@ -12,6 +12,12 @@
 
 ## Released
 
+## [3.7.0] - November 5th, 2022
+
+### Added
+
+- Allow users to override media type in request and response
+
 ## [3.6.0] - November 5th, 2022
 
 ### Changed
