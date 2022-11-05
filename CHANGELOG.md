@@ -6,14 +6,18 @@
 
 ### Changed
 
-- Schemas for types in nullable properties are no longer nullable themselves
-- Enums are now generated as references, which makes it possible to generate types for them
-
 ### Remove
 
 ---
 
 ## Released
+
+## [3.6.0] - November 5th, 2022
+
+### Changed
+
+- Schemas for types in nullable properties are no longer nullable themselves
+- Enums are now generated as references, which makes it possible to generate types for them
 
 ## [3.5.0] - October 29th, 2022
 
