@@ -165,3 +165,21 @@ get = GetInfo.builder {
   }
 }
 ```
+
+## Media Types
+
+By default, Kompendium will set the only media type to "application/json".  If you would like to override the media type 
+for a specific request or response (including errors), you can do so with the `mediaTypes` method
+
+```kotlin
+get = GetInfo.builder {
+  summary("Get user by id")
+  description("A very neat endpoint!")
+  response {
+    mediaTypes("application/xml")
+    responseCode(HttpStatusCode.OK)
+    responseType<ExampleResponse>()
+    description("Will return whether or not the user is real 😱")
+  }
+}
+```
