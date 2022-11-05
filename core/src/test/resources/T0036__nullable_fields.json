@@ -91,37 +91,30 @@
         "required": []
       },
       "ProfileMetadataUpdateRequest": {
-        "oneOf": [
-          {
-            "type": "null"
-          },
-          {
-            "type": "object",
-            "properties": {
-              "isPrivate": {
-                "oneOf": [
-                  {
-                    "type": "null"
-                  },
-                  {
-                    "type": "boolean"
-                  }
-                ]
+        "type": "object",
+        "properties": {
+          "isPrivate": {
+            "oneOf": [
+              {
+                "type": "null"
               },
-              "otherThing": {
-                "oneOf": [
-                  {
-                    "type": "null"
-                  },
-                  {
-                    "type": "string"
-                  }
-                ]
+              {
+                "type": "boolean"
               }
-            },
-            "required": []
+            ]
+          },
+          "otherThing": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string"
+              }
+            ]
           }
-        ]
+        },
+        "required": []
       }
     },
     "securitySchemes": {}

@@ -39,7 +39,14 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/NullableEnum"
+                  "oneOf": [
+                    {
+                      "type": "null"
+                    },
+                    {
+                      "$ref": "#/components/schemas/TestResponse"
+                    }
+                  ]
                 }
               }
             }
@@ -53,30 +60,17 @@
   "webhooks": {},
   "components": {
     "schemas": {
-      "NullableEnum": {
+      "TestResponse": {
         "type": "object",
         "properties": {
-          "a": {
-            "oneOf": [
-              {
-                "type": "null"
-              },
-              {
-                "$ref": "#/components/schemas/TestEnum"
-              }
-            ]
+          "c": {
+            "type": "string"
           }
         },
-        "required": []
-      },
-      "TestEnum":
-          {
-            "type": "string",
-            "enum": [
-              "YES",
-              "NO"
-            ]
-          }
+        "required": [
+          "c"
+        ]
+      }
     },
     "securitySchemes": {}
   },

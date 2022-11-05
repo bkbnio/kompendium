@@ -2,6 +2,7 @@ package io.bkbn.kompendium.json.schema
 
 import io.bkbn.kompendium.core.fixtures.ComplexRequest
 import io.bkbn.kompendium.core.fixtures.FlibbityGibbit
+import io.bkbn.kompendium.core.fixtures.ObjectWithEnum
 import io.bkbn.kompendium.core.fixtures.SerialNameObject
 import io.bkbn.kompendium.core.fixtures.SimpleEnum
 import io.bkbn.kompendium.core.fixtures.SlammaJamma
@@ -9,7 +10,7 @@ import io.bkbn.kompendium.core.fixtures.TestHelpers.getFileSnapshot
 import io.bkbn.kompendium.core.fixtures.TestResponse
 import io.bkbn.kompendium.core.fixtures.TestSimpleRequest
 import io.bkbn.kompendium.core.fixtures.TransientObject
-import io.bkbn.kompendium.core.fixtures.UnbakcedObject
+import io.bkbn.kompendium.core.fixtures.UnbackedObject
 import io.bkbn.kompendium.json.schema.definition.JsonSchema
 import io.kotest.assertions.json.shouldEqualJson
 import io.kotest.assertions.throwables.shouldThrow
@@ -40,6 +41,7 @@ class SchemaGeneratorTest : DescribeSpec({
       jsonSchemaTest<ComplexRequest>("T0005__complex_object.json")
     }
     it("Can generate the schema for a nullable object") {
+      // Same schema as a non-nullable type, since the nullability will be handled on the property
       jsonSchemaTest<TestSimpleRequest?>("T0006__nullable_object.json")
     }
     it("Can generate the schema for a polymorphic object") {
@@ -52,7 +54,7 @@ class SchemaGeneratorTest : DescribeSpec({
       jsonSchemaTest<TransientObject>("T0018__transient_object.json")
     }
     it("Can generate the schema for object with unbacked property") {
-      jsonSchemaTest<UnbakcedObject>("T0019__unbacked_object.json")
+      jsonSchemaTest<UnbackedObject>("T0019__unbacked_object.json")
     }
     it("Can generate the schema for object with SerialName annotation") {
       jsonSchemaTest<SerialNameObject>("T0020__serial_name_object.json")
@@ -63,7 +65,11 @@ class SchemaGeneratorTest : DescribeSpec({
       jsonSchemaTest<SimpleEnum>("T0007__simple_enum.json")
     }
     it("Can generate the schema for a nullable enum") {
+      // Same schema as a non-nullable enum, since the nullability will be handled on the property
       jsonSchemaTest<SimpleEnum?>("T0008__nullable_enum.json")
+    }
+    it("Can generate the schema for an object with an enum property") {
+      jsonSchemaTest<ObjectWithEnum>("T0021__object_with_enum.json")
     }
   }
   describe("Arrays") {

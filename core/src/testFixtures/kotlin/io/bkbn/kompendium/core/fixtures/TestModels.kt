@@ -163,7 +163,7 @@ data class TransientObject(
 )
 
 @Serializable
-data class UnbakcedObject(
+data class UnbackedObject(
   val backed: String
 ) {
   val unbacked: String get() = "unbacked"
@@ -175,4 +175,15 @@ data class SerialNameObject(
   @field:SerializedName("snake_case_name")
   @SerialName("snake_case_name")
   val camelCaseName: String
+)
+
+enum class Color {
+  RED,
+  GREEN,
+  BLUE
+}
+
+@Serializable
+data class ObjectWithEnum(
+  val color: Color
 )

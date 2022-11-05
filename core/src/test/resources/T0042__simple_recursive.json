@@ -53,6 +53,14 @@
   "webhooks": {},
   "components": {
     "schemas": {
+      "ColumnMode": {
+        "type": "string",
+        "enum": [
+          "NULLABLE",
+          "REQUIRED",
+          "REPEATED"
+        ]
+      },
       "ColumnSchema": {
         "type": "object",
         "properties": {
@@ -60,11 +68,7 @@
             "type": "string"
           },
           "mode": {
-            "enum": [
-              "NULLABLE",
-              "REQUIRED",
-              "REPEATED"
-            ]
+            "$ref": "#/components/schemas/ColumnMode"
           },
           "name": {
             "type": "string"

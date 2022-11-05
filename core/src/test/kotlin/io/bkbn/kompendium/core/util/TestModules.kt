@@ -24,7 +24,7 @@ import io.bkbn.kompendium.core.fixtures.TestRequest
 import io.bkbn.kompendium.core.fixtures.TestResponse
 import io.bkbn.kompendium.core.fixtures.TestSimpleRequest
 import io.bkbn.kompendium.core.fixtures.TransientObject
-import io.bkbn.kompendium.core.fixtures.UnbakcedObject
+import io.bkbn.kompendium.core.fixtures.UnbackedObject
 import io.bkbn.kompendium.core.metadata.DeleteInfo
 import io.bkbn.kompendium.core.metadata.GetInfo
 import io.bkbn.kompendium.core.metadata.HeadInfo
@@ -568,7 +568,7 @@ object TestModules {
 
   fun Routing.ignoredFieldsResponse() = basicGetGenerator<TransientObject>()
 
-  fun Routing.unbackedFieldsResponse() = basicGetGenerator<UnbakcedObject>()
+  fun Routing.unbackedFieldsResponse() = basicGetGenerator<UnbackedObject>()
 
   fun Routing.customFieldNameResponse() = basicGetGenerator<SerialNameObject>()
 
@@ -612,6 +612,8 @@ object TestModules {
   )
 
   fun Routing.nestedTypeName() = basicGetGenerator<Nested.Response>()
+
+  fun Routing.topLevelNullable() = basicGetGenerator<TestResponse?>()
 
   fun Routing.simpleRecursive() = basicGetGenerator<ColumnSchema>()
 

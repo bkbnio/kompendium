@@ -1,23 +1,16 @@
 {
-  "oneOf": [
-    {
-      "type": "null"
+  "type": "object",
+  "properties": {
+    "a": {
+      "type": "string"
     },
-    {
-      "type": "object",
-      "properties": {
-        "a": {
-          "type": "string"
-        },
-        "b": {
-          "type": "number",
-          "format": "int32"
-        }
-      },
-      "required": [
-        "a",
-        "b"
-      ]
+    "b": {
+      "type": "number",
+      "format": "int32"
     }
+  },
+  "required": [
+    "a",
+    "b"
   ]
 }

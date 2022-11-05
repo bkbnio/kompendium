@@ -12,6 +12,8 @@ import io.bkbn.kompendium.core.metadata.PutInfo
 import io.bkbn.kompendium.core.metadata.ResponseInfo
 import io.bkbn.kompendium.json.schema.SchemaConfigurator
 import io.bkbn.kompendium.json.schema.SchemaGenerator
+import io.bkbn.kompendium.json.schema.definition.NullableDefinition
+import io.bkbn.kompendium.json.schema.definition.OneOfDefinition
 import io.bkbn.kompendium.json.schema.definition.ReferenceDefinition
 import io.bkbn.kompendium.json.schema.util.Helpers.getReferenceSlug
 import io.bkbn.kompendium.json.schema.util.Helpers.getSimpleSlug
@@ -108,7 +110,10 @@ object Helpers {
       Unit::class -> null
       else -> mapOf(
         "application/json" to MediaType(
-          schema = ReferenceDefinition(this.getReferenceSlug()),
+          schema = if (this.isMarkedNullable) OneOfDefinition(
+            NullableDefinition(),
+            ReferenceDefinition(this.getReferenceSlug())
+          ) else ReferenceDefinition(this.getReferenceSlug()),
           examples = examples
         )
       )

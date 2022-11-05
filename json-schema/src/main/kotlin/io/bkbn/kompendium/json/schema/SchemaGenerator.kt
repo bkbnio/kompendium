@@ -48,7 +48,7 @@ object SchemaGenerator {
       Boolean::class -> checkForNull(type, TypeDefinition.BOOLEAN)
       UUID::class -> checkForNull(type, TypeDefinition.UUID)
       else -> when {
-        clazz.isSubclassOf(Enum::class) -> EnumHandler.handle(type, clazz)
+        clazz.isSubclassOf(Enum::class) -> EnumHandler.handle(type, clazz, cache)
         clazz.isSubclassOf(Collection::class) -> CollectionHandler.handle(type, cache, schemaConfigurator)
         clazz.isSubclassOf(Map::class) -> MapHandler.handle(type, cache, schemaConfigurator)
         else -> {

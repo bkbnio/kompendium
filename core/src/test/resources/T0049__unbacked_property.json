@@ -39,7 +39,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UnbakcedObject"
+                  "$ref": "#/components/schemas/UnbackedObject"
                 }
               }
             }
@@ -53,7 +53,7 @@
   "webhooks": {},
   "components": {
     "schemas": {
-      "UnbakcedObject": {
+      "UnbackedObject": {
         "type": "object",
         "properties": {
           "backed": {

@@ -2,6 +2,7 @@ package io.bkbn.kompendium.json.schema.handler
 
 import io.bkbn.kompendium.json.schema.SchemaConfigurator
 import io.bkbn.kompendium.json.schema.SchemaGenerator
+import io.bkbn.kompendium.json.schema.definition.EnumDefinition
 import io.bkbn.kompendium.json.schema.definition.JsonSchema
 import io.bkbn.kompendium.json.schema.definition.NullableDefinition
 import io.bkbn.kompendium.json.schema.definition.OneOfDefinition
@@ -71,16 +72,11 @@ object SimpleObjectHandler {
       .map { schemaConfigurator.serializableName(it) }
       .toSet()
 
-    val definition = TypeDefinition(
+    return TypeDefinition(
       type = "object",
       properties = props,
       required = required
     )
-
-    return when (type.isMarkedNullable) {
-      true -> OneOfDefinition(NullableDefinition(), definition)
-      false -> definition
-    }
   }
 
   private fun KProperty<*>.needsToInjectGenerics(
@@ -103,7 +99,7 @@ object SimpleObjectHandler {
     }
     val constructedType = propClass.createType(types)
     return SchemaGenerator.fromTypeToSchema(constructedType, cache, schemaConfigurator).let {
-      if (it.isOrContainsObjectDef()) {
+      if (it.isOrContainsObjectOrEnumDef()) {
         cache[constructedType.getSimpleSlug()] = it
         ReferenceDefinition(prop.returnType.getReferenceSlug())
       } else {
@@ -121,7 +117,7 @@ object SimpleObjectHandler {
     val type = typeMap[prop.returnType.classifier]?.type
       ?: error("This indicates a bug in Kompendium, please open a GitHub issue")
     return SchemaGenerator.fromTypeToSchema(type, cache, schemaConfigurator).let {
-      if (it.isOrContainsObjectDef()) {
+      if (it.isOrContainsObjectOrEnumDef()) {
         cache[type.getSimpleSlug()] = it
         ReferenceDefinition(type.getReferenceSlug())
       } else {
@@ -136,7 +132,7 @@ object SimpleObjectHandler {
     schemaConfigurator: SchemaConfigurator
   ): JsonSchema =
     SchemaGenerator.fromTypeToSchema(prop.returnType, cache, schemaConfigurator).let {
-      if (it.isOrContainsObjectDef()) {
+      if (it.isOrContainsObjectOrEnumDef()) {
         cache[prop.returnType.getSimpleSlug()] = it
         ReferenceDefinition(prop.returnType.getReferenceSlug())
       } else {
@@ -144,10 +140,12 @@ object SimpleObjectHandler {
       }
     }
 
-  private fun JsonSchema.isOrContainsObjectDef(): Boolean {
+  private fun JsonSchema.isOrContainsObjectOrEnumDef(): Boolean {
     val isTypeDef = this is TypeDefinition && type == "object"
     val isTypeDefOneOf = this is OneOfDefinition && this.oneOf.any { js -> js is TypeDefinition && js.type == "object" }
-    return isTypeDef || isTypeDefOneOf
+    val isEnumDef = this is EnumDefinition
+    val isEnumDefOneOf = this is OneOfDefinition && this.oneOf.any { js -> js is EnumDefinition }
+    return isTypeDef || isTypeDefOneOf || isEnumDef || isEnumDefOneOf
   }
 
   private fun JsonSchema.isNullable(): Boolean = this is OneOfDefinition && this.oneOf.any { it is NullableDefinition }
