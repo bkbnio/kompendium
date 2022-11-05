@@ -36,6 +36,7 @@ import io.bkbn.kompendium.core.util.TestModules.nullableEnumField
 import io.bkbn.kompendium.core.util.TestModules.nullableField
 import io.bkbn.kompendium.core.util.TestModules.nullableNestedObject
 import io.bkbn.kompendium.core.util.TestModules.nullableReference
+import io.bkbn.kompendium.core.util.TestModules.overrideMediaTypes
 import io.bkbn.kompendium.core.util.TestModules.polymorphicCollectionResponse
 import io.bkbn.kompendium.core.util.TestModules.polymorphicException
 import io.bkbn.kompendium.core.util.TestModules.polymorphicMapResponse
@@ -111,6 +112,9 @@ class KompendiumTest : DescribeSpec({
     }
     it("Can notarize a route with non-required params") {
       openApiTestAllSerializers("T0011__non_required_params.json") { nonRequiredParams() }
+    }
+    it("Can override media types") {
+      openApiTestAllSerializers("T0052__override_media_types.json") { overrideMediaTypes() }
     }
   }
   describe("Route Parsing") {

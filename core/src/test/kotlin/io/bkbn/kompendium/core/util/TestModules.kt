@@ -315,6 +315,28 @@ object TestModules {
     }
   }
 
+  fun Routing.overrideMediaTypes() {
+    route("/media_types") {
+      install(NotarizedRoute()) {
+        put = PutInfo.builder {
+          summary(defaultPathSummary)
+          description(defaultPathDescription)
+          request {
+            mediaTypes("multipart/form-data", "application/json")
+            requestType<TestRequest>()
+            description("A cool request")
+          }
+          response {
+            mediaTypes("application/xml")
+            responseType<TestResponse>()
+            description("A good response")
+            responseCode(HttpStatusCode.Created)
+          }
+        }
+      }
+    }
+  }
+
   fun Routing.simplePathParsing() {
     route("/this") {
       route("/is") {

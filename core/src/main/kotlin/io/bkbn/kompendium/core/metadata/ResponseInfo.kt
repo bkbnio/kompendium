@@ -9,7 +9,8 @@ class ResponseInfo private constructor(
   val responseCode: HttpStatusCode,
   val responseType: KType,
   val description: String,
-  val examples: Map<String, MediaType.Example>?
+  val examples: Map<String, MediaType.Example>?,
+  val mediaTypes: Set<String>
 ) {
 
   companion object {
@@ -25,6 +26,7 @@ class ResponseInfo private constructor(
     private var responseType: KType? = null
     private var description: String? = null
     private var examples: Map<String, MediaType.Example>? = null
+    private var mediaTypes: Set<String>? = null
 
     fun responseCode(code: HttpStatusCode) = apply {
       this.responseCode = code
@@ -42,11 +44,16 @@ class ResponseInfo private constructor(
       this.examples = e.toMap().mapValues { (_, v) -> MediaType.Example(v) }
     }
 
+    fun mediaTypes(vararg m: String) = apply {
+      this.mediaTypes = m.toSet()
+    }
+
     fun build() = ResponseInfo(
       responseCode = responseCode ?: error("You must provide a response code in order to build a Response!"),
       responseType = responseType ?: error("You must provide a response type in order to build a Response!"),
       description = description ?: error("You must provide a description in order to build a Response!"),
-      examples = examples
+      examples = examples,
+      mediaTypes = mediaTypes ?: setOf("application/json")
     )
   }
 }
