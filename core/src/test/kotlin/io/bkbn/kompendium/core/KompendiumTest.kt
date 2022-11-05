@@ -49,6 +49,7 @@ import io.bkbn.kompendium.core.util.TestModules.simpleGenericResponse
 import io.bkbn.kompendium.core.util.TestModules.simplePathParsing
 import io.bkbn.kompendium.core.util.TestModules.simpleRecursive
 import io.bkbn.kompendium.core.util.TestModules.singleException
+import io.bkbn.kompendium.core.util.TestModules.topLevelNullable
 import io.bkbn.kompendium.core.util.TestModules.trailingSlash
 import io.bkbn.kompendium.core.util.TestModules.unbackedFieldsResponse
 import io.bkbn.kompendium.core.util.TestModules.withOperationId
@@ -242,6 +243,9 @@ class KompendiumTest : DescribeSpec({
     }
     it("Can handle nested type names") {
       openApiTestAllSerializers("T0044__nested_type_name.json") { nestedTypeName() }
+    }
+    it("Can handle top level nullable types") {
+      openApiTestAllSerializers("T0051__top_level_nullable.json") { topLevelNullable() }
     }
   }
   describe("Error Handling") {

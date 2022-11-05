@@ -613,6 +613,8 @@ object TestModules {
 
   fun Routing.nestedTypeName() = basicGetGenerator<Nested.Response>()
 
+  fun Routing.topLevelNullable() = basicGetGenerator<TestResponse?>()
+
   fun Routing.simpleRecursive() = basicGetGenerator<ColumnSchema>()
 
   fun Routing.defaultAuthConfig() {
