@@ -56,6 +56,12 @@ object NotarizedResources {
       v.patch?.addToSpec(path, spec, v, serializableReader)
 
       val resource = k.getResourcesFromClass()
+      require(spec.paths[resource] == null) {
+        """
+          The specified path $resource has already been documented!
+          Please make sure that all notarized paths are unique
+        """.trimIndent()
+      }
       spec.paths[resource] = path
     }
   }

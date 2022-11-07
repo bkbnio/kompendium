@@ -14,6 +14,8 @@ import io.ktor.server.application.install
 import io.ktor.server.resources.Resources
 import io.ktor.server.resources.get
 import io.ktor.server.response.respondText
+import io.ktor.server.routing.Route
+import io.ktor.server.routing.route
 
 class KompendiumResourcesTest : DescribeSpec({
   describe("Resource Tests") {
@@ -116,5 +118,71 @@ class KompendiumResourcesTest : DescribeSpec({
         }
       }
     }
+    it("Can notarize resources in route") {
+      openApiTestAllSerializers(
+        snapshotName = "T0003__resources_in_route.json",
+        applicationSetup = {
+          install(Resources)
+        }
+      ) {
+        route("/api") {
+          routeResourcesDocumentation()
+          get<Type.Edit> { edit ->
+            call.respondText("Listing ${edit.parent.name}")
+          }
+          get<Type.Other> { other ->
+            call.respondText("Listing ${other.parent.name}, page ${other.page}")
+          }
+        }
+      }
+    }
   }
 })
+
+private fun Route.routeResourcesDocumentation() {
+  install(NotarizedRouteResources()) {
+    resources = mapOf(
+      Type.Edit::class to NotarizedRouteResources.ResourceMetadata(
+        parameters = listOf(
+          Parameter(
+            name = "name",
+            `in` = Parameter.Location.path,
+            schema = TypeDefinition.STRING
+          )
+        ),
+        get = GetInfo.builder {
+          summary("Edit")
+          description("example resource")
+          response {
+            responseCode(HttpStatusCode.OK)
+            responseType<TestResponse>()
+            description("does great things")
+          }
+        }
+      ),
+      Type.Other::class to NotarizedRouteResources.ResourceMetadata(
+        parameters = listOf(
+          Parameter(
+            name = "name",
+            `in` = Parameter.Location.path,
+            schema = TypeDefinition.STRING
+          ),
+          Parameter(
+            name = "page",
+            `in` = Parameter.Location.path,
+            schema = TypeDefinition.INT
+          )
+        ),
+        get = GetInfo.builder {
+          summary("Other")
+          description("example resource")
+          response {
+            responseCode(HttpStatusCode.OK)
+            responseType<TestResponse>()
+            description("does great things")
+          }
+        }
+      ),
+    )
+  }
+}

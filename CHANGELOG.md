@@ -4,6 +4,8 @@
 
 ### Added
 
+- Add support for Resources plugin scoped to routes
+
 ### Changed
 
 ### Remove

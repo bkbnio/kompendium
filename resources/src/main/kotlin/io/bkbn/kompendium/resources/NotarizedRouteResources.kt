@@ -1,4 +1,4 @@
-package io.bkbn.kompendium.core.plugin
+package io.bkbn.kompendium.resources
 
 import io.bkbn.kompendium.core.attribute.KompendiumAttributes
 import io.bkbn.kompendium.core.metadata.DeleteInfo
@@ -13,25 +13,33 @@ import io.bkbn.kompendium.core.util.SpecConfig
 import io.bkbn.kompendium.oas.path.Path
 import io.bkbn.kompendium.oas.path.PathOperation
 import io.bkbn.kompendium.oas.payload.Parameter
+import io.ktor.resources.Resource
 import io.ktor.server.application.ApplicationCallPipeline
 import io.ktor.server.application.Hook
 import io.ktor.server.application.createRouteScopedPlugin
 import io.ktor.server.routing.Route
+import kotlin.reflect.KClass
+import kotlin.reflect.full.findAnnotation
+import kotlin.reflect.full.hasAnnotation
+import kotlin.reflect.full.memberProperties
 
-object NotarizedRoute {
-
-  class Config : SpecConfig {
-    override var tags: Set<String> = emptySet()
-    override var parameters: List<Parameter> = emptyList()
-    override var get: GetInfo? = null
-    override var post: PostInfo? = null
-    override var put: PutInfo? = null
-    override var delete: DeleteInfo? = null
-    override var patch: PatchInfo? = null
-    override var head: HeadInfo? = null
-    override var options: OptionsInfo? = null
-    override var security: Map<String, List<String>>? = null
+object NotarizedRouteResources {
+  data class ResourceMetadata(
+    override var tags: Set<String> = emptySet(),
+    override var parameters: List<Parameter> = emptyList(),
+    override var get: GetInfo? = null,
+    override var post: PostInfo? = null,
+    override var put: PutInfo? = null,
+    override var delete: DeleteInfo? = null,
+    override var patch: PatchInfo? = null,
+    override var head: HeadInfo? = null,
+    override var options: OptionsInfo? = null,
+    override var security: Map<String, List<String>>? = null,
     internal var path: Path? = null
+  ) : SpecConfig
+
+  class Config {
+    lateinit var resources: Map<KClass<*>, ResourceMetadata>
   }
 
   private object InstallHook : Hook<(ApplicationCallPipeline) -> Unit> {
@@ -41,42 +49,41 @@ object NotarizedRoute {
   }
 
   operator fun invoke() = createRouteScopedPlugin(
-    name = "NotarizedRoute",
+    name = "NotarizedRouteResources",
     createConfiguration = ::Config
   ) {
-
-    // This is required in order to introspect the route path and authentication
     on(InstallHook) {
       val route = it as? Route ?: return@on
       val spec = application.attributes[KompendiumAttributes.openApiSpec]
       val routePath = route.calculateRoutePath()
       val authMethods = route.collectAuthMethods()
-      pluginConfig.path?.addDefaultAuthMethods(authMethods)
-      require(spec.paths[routePath] == null) {
-        """
-          The specified path $routePath has already been documented!
-          Please make sure that all notarized paths are unique
-        """.trimIndent()
+
+      val serializableReader = application.attributes[KompendiumAttributes.schemaConfigurator]
+
+      pluginConfig.resources.forEach { (k, v) ->
+        val path = Path()
+        path.parameters = v.parameters
+        v.get?.addToSpec(path, spec, v, serializableReader)
+        v.delete?.addToSpec(path, spec, v, serializableReader)
+        v.head?.addToSpec(path, spec, v, serializableReader)
+        v.options?.addToSpec(path, spec, v, serializableReader)
+        v.post?.addToSpec(path, spec, v, serializableReader)
+        v.put?.addToSpec(path, spec, v, serializableReader)
+        v.patch?.addToSpec(path, spec, v, serializableReader)
+
+        path.addDefaultAuthMethods(authMethods)
+
+        val resource = k.getResourcesFromClass()
+        val fullPath = "$routePath$resource"
+        require(spec.paths[fullPath] == null) {
+          """
+            The specified path $fullPath has already been documented!
+            Please make sure that all notarized paths are unique
+          """.trimIndent()
+        }
+        spec.paths[fullPath] = path
       }
-      spec.paths[routePath] = pluginConfig.path
-        ?: error("This indicates a bug in Kompendium. Please file a GitHub issue!")
     }
-
-    val spec = application.attributes[KompendiumAttributes.openApiSpec]
-    val serializableReader = application.attributes[KompendiumAttributes.schemaConfigurator]
-
-    val path = Path()
-    path.parameters = pluginConfig.parameters
-
-    pluginConfig.get?.addToSpec(path, spec, pluginConfig, serializableReader)
-    pluginConfig.delete?.addToSpec(path, spec, pluginConfig, serializableReader)
-    pluginConfig.head?.addToSpec(path, spec, pluginConfig, serializableReader)
-    pluginConfig.options?.addToSpec(path, spec, pluginConfig, serializableReader)
-    pluginConfig.post?.addToSpec(path, spec, pluginConfig, serializableReader)
-    pluginConfig.put?.addToSpec(path, spec, pluginConfig, serializableReader)
-    pluginConfig.patch?.addToSpec(path, spec, pluginConfig, serializableReader)
-
-    pluginConfig.path = path
   }
 
   private fun Route.calculateRoutePath() = toString().replace(Regex("/\\(.+\\)"), "")
@@ -107,6 +114,22 @@ object NotarizedRoute {
           security?.add(mapOf(m to emptyList()))
         }
       }
+    }
+  }
+
+  private fun KClass<*>.getResourcesFromClass(): String {
+    // todo if parent
+
+    val resource = findAnnotation<Resource>()
+      ?: error("Cannot notarize a resource without annotating with @Resource")
+
+    val path = resource.path
+    val parent = memberProperties.map { it.returnType.classifier as KClass<*> }.find { it.hasAnnotation<Resource>() }
+
+    return if (parent == null) {
+      path
+    } else {
+      parent.getResourcesFromClass() + path
     }
   }
 }
