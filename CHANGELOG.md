@@ -6,6 +6,8 @@
 
 ### Changed
 
+- Support registering same path with different authentication and methods
+
 ### Remove
 
 ---

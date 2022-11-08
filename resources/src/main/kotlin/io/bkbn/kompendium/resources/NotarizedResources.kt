@@ -45,17 +45,17 @@ object NotarizedResources {
     val spec = application.attributes[KompendiumAttributes.openApiSpec]
     val serializableReader = application.attributes[KompendiumAttributes.schemaConfigurator]
     pluginConfig.resources.forEach { (k, v) ->
-      val path = Path()
-      path.parameters = v.parameters
-      v.get?.addToSpec(path, spec, v, serializableReader)
-      v.delete?.addToSpec(path, spec, v, serializableReader)
-      v.head?.addToSpec(path, spec, v, serializableReader)
-      v.options?.addToSpec(path, spec, v, serializableReader)
-      v.post?.addToSpec(path, spec, v, serializableReader)
-      v.put?.addToSpec(path, spec, v, serializableReader)
-      v.patch?.addToSpec(path, spec, v, serializableReader)
-
       val resource = k.getResourcesFromClass()
+      val path = spec.paths[resource] ?: Path()
+      path.parameters = path.parameters?.plus(v.parameters) ?: v.parameters
+      v.get?.addToSpec(path, spec, v, serializableReader, resource)
+      v.delete?.addToSpec(path, spec, v, serializableReader, resource)
+      v.head?.addToSpec(path, spec, v, serializableReader, resource)
+      v.options?.addToSpec(path, spec, v, serializableReader, resource)
+      v.post?.addToSpec(path, spec, v, serializableReader, resource)
+      v.put?.addToSpec(path, spec, v, serializableReader, resource)
+      v.patch?.addToSpec(path, spec, v, serializableReader, resource)
+
       spec.paths[resource] = path
     }
   }
