@@ -183,3 +183,24 @@ get = GetInfo.builder {
   }
 }
 ```
+
+## Partial Authentication
+
+One might want to have a public GET endpoint but a protected PUT endpoint. This can be achieved by registering two
+separate notarized routes. Note that you will get an error if you try to register the same method twice, as each path
+can only have one registration per method. Example:
+
+```kotlin
+route("/user/{id}") {
+  get = GetInfo.builder {
+    // ...
+  }
+  // ...
+  authenticate {
+    put = PutInfo.builder {
+      // ...
+    }
+    // ...
+  }
+}
+```

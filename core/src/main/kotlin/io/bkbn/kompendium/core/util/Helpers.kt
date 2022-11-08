@@ -24,11 +24,31 @@ import io.bkbn.kompendium.oas.payload.MediaType
 import io.bkbn.kompendium.oas.payload.Request
 import io.bkbn.kompendium.oas.payload.Response
 import kotlin.reflect.KClass
+import kotlin.reflect.KMutableProperty1
 import kotlin.reflect.KType
 
 object Helpers {
 
-  fun MethodInfo.addToSpec(path: Path, spec: OpenApiSpec, config: SpecConfig, schemaConfigurator: SchemaConfigurator) {
+  private fun PathOperation.addDefaultAuthMethods(methods: List<String>) {
+    methods.forEach { m ->
+      if (security == null || security?.all { s -> !s.containsKey(m) } == true) {
+        if (security == null) {
+          security = mutableListOf(mapOf(m to emptyList()))
+        } else {
+          security?.add(mapOf(m to emptyList()))
+        }
+      }
+    }
+  }
+
+  fun MethodInfo.addToSpec(
+    path: Path,
+    spec: OpenApiSpec,
+    config: SpecConfig,
+    schemaConfigurator: SchemaConfigurator,
+    routePath: String,
+    authMethods: List<String> = emptyList()
+  ) {
     SchemaGenerator.fromTypeOrUnit(
       this.response.responseType,
       spec.components.schemas, schemaConfigurator
@@ -57,15 +77,25 @@ object Helpers {
     }
 
     val operations = this.toPathOperation(config)
+    operations.addDefaultAuthMethods(authMethods)
 
-    when (this) {
-      is DeleteInfo -> path.delete = operations
-      is GetInfo -> path.get = operations
-      is HeadInfo -> path.head = operations
-      is PatchInfo -> path.patch = operations
-      is PostInfo -> path.post = operations
-      is PutInfo -> path.put = operations
-      is OptionsInfo -> path.options = operations
+    fun setOperation(
+      property: KMutableProperty1<Path, PathOperation?>
+    ) {
+      require(property.get(path) == null) {
+        "A route has already been registered for path: $routePath and method: ${property.name.uppercase()}"
+      }
+      property.set(path, operations)
+    }
+
+    return when (this) {
+      is DeleteInfo -> setOperation(Path::delete)
+      is GetInfo -> setOperation(Path::get)
+      is HeadInfo -> setOperation(Path::head)
+      is PatchInfo -> setOperation(Path::patch)
+      is PostInfo -> setOperation(Path::post)
+      is PutInfo -> setOperation(Path::put)
+      is OptionsInfo -> setOperation(Path::options)
     }
   }
 

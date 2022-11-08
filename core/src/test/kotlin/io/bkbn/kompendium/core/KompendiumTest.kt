@@ -2,58 +2,60 @@ package io.bkbn.kompendium.core
 
 import dev.forst.ktor.apikey.apiKey
 import io.bkbn.kompendium.core.fixtures.TestHelpers.openApiTestAllSerializers
-import io.bkbn.kompendium.core.util.TestModules.complexRequest
-import io.bkbn.kompendium.core.util.TestModules.customAuthConfig
-import io.bkbn.kompendium.core.util.TestModules.customFieldNameResponse
-import io.bkbn.kompendium.core.util.TestModules.dateTimeString
-import io.bkbn.kompendium.core.util.TestModules.defaultAuthConfig
-import io.bkbn.kompendium.core.util.TestModules.defaultField
-import io.bkbn.kompendium.core.util.TestModules.defaultParameter
-import io.bkbn.kompendium.core.util.TestModules.exampleParams
-import io.bkbn.kompendium.core.util.TestModules.genericException
-import io.bkbn.kompendium.core.util.TestModules.genericPolymorphicResponse
-import io.bkbn.kompendium.core.util.TestModules.genericPolymorphicResponseMultipleImpls
-import io.bkbn.kompendium.core.util.TestModules.gnarlyGenericResponse
-import io.bkbn.kompendium.core.util.TestModules.headerParameter
-import io.bkbn.kompendium.core.util.TestModules.ignoredFieldsResponse
-import io.bkbn.kompendium.core.util.TestModules.multipleAuthStrategies
-import io.bkbn.kompendium.core.util.TestModules.multipleExceptions
-import io.bkbn.kompendium.core.util.TestModules.nestedGenericCollection
-import io.bkbn.kompendium.core.util.TestModules.nestedGenericMultipleParamsCollection
-import io.bkbn.kompendium.core.util.TestModules.nestedGenericResponse
-import io.bkbn.kompendium.core.util.TestModules.nestedTypeName
-import io.bkbn.kompendium.core.util.TestModules.nestedUnderRoot
-import io.bkbn.kompendium.core.util.TestModules.nonRequiredParam
-import io.bkbn.kompendium.core.util.TestModules.nonRequiredParams
-import io.bkbn.kompendium.core.util.TestModules.notarizedDelete
-import io.bkbn.kompendium.core.util.TestModules.notarizedGet
-import io.bkbn.kompendium.core.util.TestModules.notarizedHead
-import io.bkbn.kompendium.core.util.TestModules.notarizedOptions
-import io.bkbn.kompendium.core.util.TestModules.notarizedPatch
-import io.bkbn.kompendium.core.util.TestModules.notarizedPost
-import io.bkbn.kompendium.core.util.TestModules.notarizedPut
-import io.bkbn.kompendium.core.util.TestModules.nullableEnumField
-import io.bkbn.kompendium.core.util.TestModules.nullableField
-import io.bkbn.kompendium.core.util.TestModules.nullableNestedObject
-import io.bkbn.kompendium.core.util.TestModules.nullableReference
-import io.bkbn.kompendium.core.util.TestModules.overrideMediaTypes
-import io.bkbn.kompendium.core.util.TestModules.polymorphicCollectionResponse
-import io.bkbn.kompendium.core.util.TestModules.polymorphicException
-import io.bkbn.kompendium.core.util.TestModules.polymorphicMapResponse
-import io.bkbn.kompendium.core.util.TestModules.polymorphicResponse
-import io.bkbn.kompendium.core.util.TestModules.primitives
-import io.bkbn.kompendium.core.util.TestModules.reqRespExamples
-import io.bkbn.kompendium.core.util.TestModules.requiredParams
-import io.bkbn.kompendium.core.util.TestModules.returnsList
-import io.bkbn.kompendium.core.util.TestModules.rootRoute
-import io.bkbn.kompendium.core.util.TestModules.simpleGenericResponse
-import io.bkbn.kompendium.core.util.TestModules.simplePathParsing
-import io.bkbn.kompendium.core.util.TestModules.simpleRecursive
-import io.bkbn.kompendium.core.util.TestModules.singleException
-import io.bkbn.kompendium.core.util.TestModules.topLevelNullable
-import io.bkbn.kompendium.core.util.TestModules.trailingSlash
-import io.bkbn.kompendium.core.util.TestModules.unbackedFieldsResponse
-import io.bkbn.kompendium.core.util.TestModules.withOperationId
+import io.bkbn.kompendium.core.util.complexRequest
+import io.bkbn.kompendium.core.util.customAuthConfig
+import io.bkbn.kompendium.core.util.customFieldNameResponse
+import io.bkbn.kompendium.core.util.dateTimeString
+import io.bkbn.kompendium.core.util.defaultAuthConfig
+import io.bkbn.kompendium.core.util.defaultField
+import io.bkbn.kompendium.core.util.defaultParameter
+import io.bkbn.kompendium.core.util.exampleParams
+import io.bkbn.kompendium.core.util.genericException
+import io.bkbn.kompendium.core.util.genericPolymorphicResponse
+import io.bkbn.kompendium.core.util.genericPolymorphicResponseMultipleImpls
+import io.bkbn.kompendium.core.util.gnarlyGenericResponse
+import io.bkbn.kompendium.core.util.headerParameter
+import io.bkbn.kompendium.core.util.ignoredFieldsResponse
+import io.bkbn.kompendium.core.util.multipleAuthStrategies
+import io.bkbn.kompendium.core.util.multipleExceptions
+import io.bkbn.kompendium.core.util.nestedGenericCollection
+import io.bkbn.kompendium.core.util.nestedGenericMultipleParamsCollection
+import io.bkbn.kompendium.core.util.nestedGenericResponse
+import io.bkbn.kompendium.core.util.nestedTypeName
+import io.bkbn.kompendium.core.util.nonRequiredParam
+import io.bkbn.kompendium.core.util.nonRequiredParams
+import io.bkbn.kompendium.core.util.notarizedDelete
+import io.bkbn.kompendium.core.util.notarizedGet
+import io.bkbn.kompendium.core.util.notarizedHead
+import io.bkbn.kompendium.core.util.notarizedOptions
+import io.bkbn.kompendium.core.util.notarizedPatch
+import io.bkbn.kompendium.core.util.notarizedPost
+import io.bkbn.kompendium.core.util.notarizedPut
+import io.bkbn.kompendium.core.util.nullableEnumField
+import io.bkbn.kompendium.core.util.nullableField
+import io.bkbn.kompendium.core.util.nullableNestedObject
+import io.bkbn.kompendium.core.util.nullableReference
+import io.bkbn.kompendium.core.util.overrideMediaTypes
+import io.bkbn.kompendium.core.util.polymorphicCollectionResponse
+import io.bkbn.kompendium.core.util.polymorphicException
+import io.bkbn.kompendium.core.util.polymorphicMapResponse
+import io.bkbn.kompendium.core.util.polymorphicResponse
+import io.bkbn.kompendium.core.util.primitives
+import io.bkbn.kompendium.core.util.reqRespExamples
+import io.bkbn.kompendium.core.util.requiredParams
+import io.bkbn.kompendium.core.util.returnsList
+import io.bkbn.kompendium.core.util.samePathDifferentMethodsAndAuth
+import io.bkbn.kompendium.core.util.samePathSameMethod
+import io.bkbn.kompendium.core.util.simpleGenericResponse
+import io.bkbn.kompendium.core.util.simpleRecursive
+import io.bkbn.kompendium.core.util.singleException
+import io.bkbn.kompendium.core.util.topLevelNullable
+import io.bkbn.kompendium.core.util.unbackedFieldsResponse
+import io.bkbn.kompendium.core.util.withOperationId
+import io.bkbn.kompendium.core.util.nestedUnderRoot
+import io.bkbn.kompendium.core.util.rootRoute
+import io.bkbn.kompendium.core.util.simplePathParsing
+import io.bkbn.kompendium.core.util.trailingSlash
 import io.bkbn.kompendium.json.schema.definition.TypeDefinition
 import io.bkbn.kompendium.json.schema.exception.UnknownSchemaException
 import io.bkbn.kompendium.oas.component.Components
@@ -75,8 +77,8 @@ import io.ktor.server.auth.UserIdPrincipal
 import io.ktor.server.auth.basic
 import io.ktor.server.auth.jwt.jwt
 import io.ktor.server.auth.oauth
-import kotlin.reflect.typeOf
 import java.time.Instant
+import kotlin.reflect.typeOf
 
 class KompendiumTest : DescribeSpec({
   describe("Notarized Open API Metadata Tests") {
@@ -251,11 +253,41 @@ class KompendiumTest : DescribeSpec({
     it("Can handle top level nullable types") {
       openApiTestAllSerializers("T0051__top_level_nullable.json") { topLevelNullable() }
     }
+    it("Can handle multiple registrations for different methods with the same path and different auth") {
+      openApiTestAllSerializers(
+        "T0053__same_path_different_methods_and_auth.json",
+        applicationSetup = {
+          install(Authentication) {
+            basic("basic") {
+              realm = "Ktor Server"
+              validate { UserIdPrincipal("Placeholder") }
+            }
+          }
+        },
+        specOverrides = {
+          this.copy(
+            components = Components(
+              securitySchemes = mutableMapOf(
+                "basic" to BasicAuth()
+              )
+            )
+          )
+        }
+      ) { samePathDifferentMethodsAndAuth() }
+    }
   }
   describe("Error Handling") {
     it("Throws a clear exception when an unidentified type is encountered") {
       val exception = shouldThrow<UnknownSchemaException> { openApiTestAllSerializers("") { dateTimeString() } }
       exception.message should startWith("An unknown type was encountered: class java.time.Instant")
+    }
+    it("Throws an exception when same method for same path has been previously registered") {
+      val exception = shouldThrow<IllegalArgumentException> {
+        openApiTestAllSerializers("") {
+          samePathSameMethod()
+        }
+      }
+      exception.message should startWith("A route has already been registered for path: /test/{a} and method: GET")
     }
   }
   describe("Constraints") {
