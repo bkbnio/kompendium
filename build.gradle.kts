@@ -1,5 +1,5 @@
 plugins {
-  kotlin("jvm") version "1.7.20" apply false
+  kotlin("jvm") version "1.7.21" apply false
   kotlin("plugin.serialization") version "1.7.20" apply false
   id("io.bkbn.sourdough.library.jvm") version "0.12.0" apply false
   id("io.bkbn.sourdough.application.jvm") version "0.12.0" apply false
