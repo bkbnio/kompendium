@@ -12,12 +12,8 @@ import io.bkbn.kompendium.core.util.Helpers.addToSpec
 import io.bkbn.kompendium.core.util.SpecConfig
 import io.bkbn.kompendium.oas.path.Path
 import io.bkbn.kompendium.oas.payload.Parameter
-import io.ktor.resources.Resource
 import io.ktor.server.application.createApplicationPlugin
 import kotlin.reflect.KClass
-import kotlin.reflect.full.findAnnotation
-import kotlin.reflect.full.hasAnnotation
-import kotlin.reflect.full.memberProperties
 
 object NotarizedResources {
 
@@ -45,7 +41,7 @@ object NotarizedResources {
     val spec = application.attributes[KompendiumAttributes.openApiSpec]
     val serializableReader = application.attributes[KompendiumAttributes.schemaConfigurator]
     pluginConfig.resources.forEach { (k, v) ->
-      val resource = k.getResourcesFromClass()
+      val resource = k.getResourcePathFromClass()
       val path = spec.paths[resource] ?: Path()
       path.parameters = path.parameters?.plus(v.parameters) ?: v.parameters
       v.get?.addToSpec(path, spec, v, serializableReader, resource)
@@ -57,22 +53,6 @@ object NotarizedResources {
       v.patch?.addToSpec(path, spec, v, serializableReader, resource)
 
       spec.paths[resource] = path
-    }
-  }
-
-  private fun KClass<*>.getResourcesFromClass(): String {
-    // todo if parent
-
-    val resource = findAnnotation<Resource>()
-      ?: error("Cannot notarize a resource without annotating with @Resource")
-
-    val path = resource.path
-    val parent = memberProperties.map { it.returnType.classifier as KClass<*> }.find { it.hasAnnotation<Resource>() }
-
-    return if (parent == null) {
-      path
-    } else {
-      parent.getResourcesFromClass() + path
     }
   }
 }
