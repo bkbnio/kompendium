@@ -10,15 +10,16 @@ import io.bkbn.kompendium.core.metadata.PostInfo
 import io.bkbn.kompendium.core.metadata.PutInfo
 import io.bkbn.kompendium.core.util.Helpers.addToSpec
 import io.bkbn.kompendium.core.util.SpecConfig
+import io.bkbn.kompendium.oas.OpenApiSpec
 import io.bkbn.kompendium.oas.path.Path
 import io.bkbn.kompendium.oas.payload.Parameter
 import io.ktor.server.application.ApplicationCallPipeline
 import io.ktor.server.application.Hook
+import io.ktor.server.application.PluginBuilder
 import io.ktor.server.application.createRouteScopedPlugin
 import io.ktor.server.routing.Route
 
 object NotarizedRoute {
-
   class Config : SpecConfig {
     override var tags: Set<String> = emptySet()
     override var parameters: List<Parameter> = emptyList()
@@ -50,25 +51,33 @@ object NotarizedRoute {
       val routePath = route.calculateRoutePath()
       val authMethods = route.collectAuthMethods()
 
-      val path = spec.paths[routePath] ?: Path()
-
-      path.parameters = path.parameters?.plus(pluginConfig.parameters) ?: pluginConfig.parameters
-      val serializableReader = application.attributes[KompendiumAttributes.schemaConfigurator]
-
-      pluginConfig.get?.addToSpec(path, spec, pluginConfig, serializableReader, routePath, authMethods)
-      pluginConfig.delete?.addToSpec(path, spec, pluginConfig, serializableReader, routePath, authMethods)
-      pluginConfig.head?.addToSpec(path, spec, pluginConfig, serializableReader, routePath, authMethods)
-      pluginConfig.options?.addToSpec(path, spec, pluginConfig, serializableReader, routePath, authMethods)
-      pluginConfig.post?.addToSpec(path, spec, pluginConfig, serializableReader, routePath, authMethods)
-      pluginConfig.put?.addToSpec(path, spec, pluginConfig, serializableReader, routePath, authMethods)
-      pluginConfig.patch?.addToSpec(path, spec, pluginConfig, serializableReader, routePath, authMethods)
-
-      spec.paths[routePath] = path
+      addToSpec(spec, routePath, authMethods)
     }
   }
 
-  private fun Route.calculateRoutePath() = toString().replace(Regex("/\\(.+\\)"), "")
-  private fun Route.collectAuthMethods() = toString()
+  fun <T : SpecConfig> PluginBuilder<T>.addToSpec(
+    spec: OpenApiSpec,
+    fullPath: String,
+    authMethods: List<String>
+  ) {
+    val path = spec.paths[fullPath] ?: Path()
+
+    path.parameters = path.parameters?.plus(pluginConfig.parameters) ?: pluginConfig.parameters
+    val serializableReader = application.attributes[KompendiumAttributes.schemaConfigurator]
+
+    pluginConfig.get?.addToSpec(path, spec, pluginConfig, serializableReader, fullPath, authMethods)
+    pluginConfig.delete?.addToSpec(path, spec, pluginConfig, serializableReader, fullPath, authMethods)
+    pluginConfig.head?.addToSpec(path, spec, pluginConfig, serializableReader, fullPath, authMethods)
+    pluginConfig.options?.addToSpec(path, spec, pluginConfig, serializableReader, fullPath, authMethods)
+    pluginConfig.post?.addToSpec(path, spec, pluginConfig, serializableReader, fullPath, authMethods)
+    pluginConfig.put?.addToSpec(path, spec, pluginConfig, serializableReader, fullPath, authMethods)
+    pluginConfig.patch?.addToSpec(path, spec, pluginConfig, serializableReader, fullPath, authMethods)
+
+    spec.paths[fullPath] = path
+  }
+
+  fun Route.calculateRoutePath() = toString().replace(Regex("/\\(.+\\)"), "")
+  fun Route.collectAuthMethods() = toString()
     .split("/")
     .filter { it.contains(Regex("\\(authenticate .*\\)")) }
     .map { it.replace("(authenticate ", "").replace(")", "") }

@@ -4,6 +4,8 @@
 
 ### Added
 
+- Add support for NotarizedResource plugin scoped to route
+
 ### Changed
 
 - Support registering same path with different authentication and methods
