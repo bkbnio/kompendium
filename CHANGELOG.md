@@ -4,17 +4,23 @@
 
 ### Added
 
-- Add support for NotarizedResource plugin scoped to route
-
 ### Changed
-
-- Support registering same path with different authentication and methods
 
 ### Remove
 
 ---
 
 ## Released
+
+## [3.8.0] - November 9th, 2022
+
+### Added
+
+- Add support for NotarizedResource plugin scoped to route
+
+### Changed
+
+- Support registering same path with different authentication and methods
 
 ## [3.7.0] - November 5th, 2022
 
