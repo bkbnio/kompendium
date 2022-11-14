@@ -11,14 +11,15 @@ plugins {
 }
 
 sourdoughLibrary {
-  libraryName.set("Kompendium Protobuf java schema")
-  libraryDescription.set("Json Schema Generator")
+  libraryName.set("Kompendium Protobuf java converter")
+  libraryDescription.set("Converts Java protobuf generated classes to custom type maps")
   compilerArgs.set(listOf("-opt-in=kotlin.RequiresOptIn"))
 }
 
 dependencies {
   // Versions
   val detektVersion: String by project
+
 
   implementation(projects.kompendiumJsonSchema)
   implementation("com.google.protobuf:protobuf-java:3.21.9")
@@ -27,14 +28,16 @@ dependencies {
 
   // Formatting
   detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:$detektVersion")
-
   testImplementation(testFixtures(projects.kompendiumCore))
 }
 
+
 testing {
+
   suites {
     named("test", JvmTestSuite::class) {
       useJUnitJupiter()
     }
   }
 }
+
