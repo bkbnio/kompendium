@@ -1,0 +1,80 @@
+syntax = "proto3";
+
+package io.bkbn.kompendium.protobufjavaconverter;
+
+option java_multiple_files = true;
+
+option java_package = "io.bkbn.kompendium.protobufjavaconverter";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/duration.proto";
+
+message SimpleTestMessage {
+  double my_test_double = 1;
+  float my_test_float = 2;
+  int32 my_test_int32 = 3;
+  int64 my_test_int64 = 4;
+  uint32 my_test_uint32 = 5;
+  uint64 my_test_uint64 = 6;
+
+  sint32 my_test_sint32 = 7;
+  sint64 my_test_sint64 = 8;
+  fixed32 my_test_fixed32 = 9;
+  fixed64 my_test_fixed64 = 10;
+  sfixed32 my_test_sfixed32 = 11;
+  sfixed64 my_test_sfixed64 = 12;
+  bool my_test_bool = 13;
+  bytes my_test_bytes = 14;
+  string my_test_string = 15;
+}
+
+enum Corpus {
+  CORPUS_UNSPECIFIED = 0;
+  CORPUS_UNIVERSAL = 1;
+  CORPUS_WEB = 2;
+  CORPUS_IMAGES = 3;
+  CORPUS_LOCAL = 4;
+  CORPUS_NEWS = 5;
+  CORPUS_PRODUCTS = 6;
+  CORPUS_VIDEO = 7;
+}
+
+message EnumMessage {
+  Corpus corpus = 1;
+}
+
+message NestedMessage {
+  SimpleTestMessage nested_field = 1;
+}
+
+message DoubleNestedMessage {
+  NestedMessage nested_field = 1;
+}
+
+message RepeatedMessage {
+  repeated SimpleTestMessage repeated_field = 1;
+}
+
+message RepeatedEnumMessage {
+  repeated Corpus repeated_field = 1;
+}
+
+message SimpleMapMessage {
+  map<string, int32> map_field = 1;
+}
+
+message NestedMapMessage {
+  map<string, SimpleTestMessage> map_field = 1;
+}
+
+message GoogleTypes {
+  google.protobuf.Timestamp timestamp_field = 1;
+  google.protobuf.Duration duration_field = 2;
+  // TODO value types
+  //
+}
+
+
+
+
+
