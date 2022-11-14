@@ -18,6 +18,7 @@ import io.ktor.server.application.Hook
 import io.ktor.server.application.PluginBuilder
 import io.ktor.server.application.createRouteScopedPlugin
 import io.ktor.server.routing.Route
+import io.ktor.server.routing.application
 
 object NotarizedRoute {
   class Config : SpecConfig {
@@ -43,7 +44,6 @@ object NotarizedRoute {
     name = "NotarizedRoute",
     createConfiguration = ::Config
   ) {
-
     // This is required in order to introspect the route path and authentication
     on(InstallHook) {
       val route = it as? Route ?: return@on
@@ -76,7 +76,17 @@ object NotarizedRoute {
     spec.paths[fullPath] = path
   }
 
-  fun Route.calculateRoutePath() = toString().replace(Regex("/\\(.+\\)"), "")
+  fun Route.calculateRoutePath() = toString()
+    .let {
+      application.environment.rootPath.takeIf { root -> root.isNotEmpty() }
+        ?.let { root ->
+          val sanitizedRoute = if (root.startsWith("/")) root else "/$root"
+          it.replace(sanitizedRoute, "")
+        }
+        ?: it
+    }
+    .replace(Regex("/\\(.+\\)"), "")
+
   fun Route.collectAuthMethods() = toString()
     .split("/")
     .filter { it.contains(Regex("\\(authenticate .*\\)")) }

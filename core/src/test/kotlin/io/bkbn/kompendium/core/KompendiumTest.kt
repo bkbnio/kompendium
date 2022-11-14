@@ -22,6 +22,7 @@ import io.bkbn.kompendium.core.util.nestedGenericCollection
 import io.bkbn.kompendium.core.util.nestedGenericMultipleParamsCollection
 import io.bkbn.kompendium.core.util.nestedGenericResponse
 import io.bkbn.kompendium.core.util.nestedTypeName
+import io.bkbn.kompendium.core.util.nestedUnderRoot
 import io.bkbn.kompendium.core.util.nonRequiredParam
 import io.bkbn.kompendium.core.util.nonRequiredParams
 import io.bkbn.kompendium.core.util.notarizedDelete
@@ -44,18 +45,17 @@ import io.bkbn.kompendium.core.util.primitives
 import io.bkbn.kompendium.core.util.reqRespExamples
 import io.bkbn.kompendium.core.util.requiredParams
 import io.bkbn.kompendium.core.util.returnsList
+import io.bkbn.kompendium.core.util.rootRoute
 import io.bkbn.kompendium.core.util.samePathDifferentMethodsAndAuth
 import io.bkbn.kompendium.core.util.samePathSameMethod
 import io.bkbn.kompendium.core.util.simpleGenericResponse
+import io.bkbn.kompendium.core.util.simplePathParsing
 import io.bkbn.kompendium.core.util.simpleRecursive
 import io.bkbn.kompendium.core.util.singleException
 import io.bkbn.kompendium.core.util.topLevelNullable
+import io.bkbn.kompendium.core.util.trailingSlash
 import io.bkbn.kompendium.core.util.unbackedFieldsResponse
 import io.bkbn.kompendium.core.util.withOperationId
-import io.bkbn.kompendium.core.util.nestedUnderRoot
-import io.bkbn.kompendium.core.util.rootRoute
-import io.bkbn.kompendium.core.util.simplePathParsing
-import io.bkbn.kompendium.core.util.trailingSlash
 import io.bkbn.kompendium.json.schema.definition.TypeDefinition
 import io.bkbn.kompendium.json.schema.exception.UnknownSchemaException
 import io.bkbn.kompendium.oas.component.Components
@@ -77,6 +77,7 @@ import io.ktor.server.auth.UserIdPrincipal
 import io.ktor.server.auth.basic
 import io.ktor.server.auth.jwt.jwt
 import io.ktor.server.auth.oauth
+import java.net.URI
 import java.time.Instant
 import kotlin.reflect.typeOf
 
@@ -274,6 +275,19 @@ class KompendiumTest : DescribeSpec({
           )
         }
       ) { samePathDifferentMethodsAndAuth() }
+    }
+    it("Can generate paths without application root-path") {
+      openApiTestAllSerializers(
+        "T0054__app_with_rootpath.json",
+        applicationEnvironmentBuilder = {
+          rootPath = "/example"
+        },
+        specOverrides = {
+          copy(
+            servers = servers.map { it.copy(url = URI("${it.url}/example")) }.toMutableList()
+          )
+        }
+      ) { notarizedGet() }
     }
   }
   describe("Error Handling") {
