@@ -15,6 +15,7 @@ dependencies {
   implementation(projects.kompendiumCore)
   implementation(projects.kompendiumLocations)
   implementation(projects.kompendiumResources)
+  implementation(projects.kompendiumProtobufJavaConverter)
 
   // Ktor
   val ktorVersion: String by project

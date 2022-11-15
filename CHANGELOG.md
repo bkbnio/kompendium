@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Added Support for Custom objects from Java generated protobuf classes
+
 ### Added
 
 ### Changed

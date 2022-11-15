@@ -5,6 +5,7 @@ include("oas")
 include("playground")
 include("locations")
 include("json-schema")
+include("protobuf-java-converter")
 include("resources")
 
 run {
