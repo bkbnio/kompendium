@@ -2,11 +2,7 @@
 
 ## Unreleased
 
-- Added Support for Custom objects from Java generated protobuf classes
-
 ### Added
-
-- Fix integration with application `rootPath` which is removed when `NotarizedRoute` resolve path.
 
 ### Changed
 
@@ -15,6 +11,16 @@
 ---
 
 ## Released
+
+## [3.9.0] - November 15th, 2022
+
+### Added
+
+- `protobuf-java-converter` module for converting generated protobuf objects to `JsonSchema` representations
+
+### Changed
+
+- Application `rootPath` is no longer prefixed to serialized route path when `NotarizedRoute` is resolved
 
 ## [3.8.0] - November 9th, 2022
 
