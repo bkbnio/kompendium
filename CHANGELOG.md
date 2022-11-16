@@ -6,6 +6,8 @@
 
 ### Added
 
+- Fix integration with application `rootPath` which is removed when `NotarizedRoute` resolve path.
+
 ### Changed
 
 ### Remove
