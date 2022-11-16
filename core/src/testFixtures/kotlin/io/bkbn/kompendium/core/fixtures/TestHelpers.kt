@@ -21,13 +21,14 @@ import io.ktor.serialization.gson.gson
 import io.ktor.serialization.jackson.jackson
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.Application
+import io.ktor.server.engine.ApplicationEngineEnvironmentBuilder
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.routing.Routing
 import io.ktor.server.testing.ApplicationTestBuilder
 import io.ktor.server.testing.testApplication
-import kotlin.reflect.KType
-import kotlinx.serialization.json.Json
 import java.io.File
+import kotlinx.serialization.json.Json
+import kotlin.reflect.KType
 
 object TestHelpers {
   private const val OPEN_API_ENDPOINT = "/openapi.json"
@@ -43,8 +44,8 @@ object TestHelpers {
    * exists as expected, and that the content matches the expected blob found in the specified file
    * @param snapshotName The snapshot file to retrieve from the resources folder
    */
-  private suspend fun ApplicationTestBuilder.compareOpenAPISpec(snapshotName: String) {
-    val response = client.get(OPEN_API_ENDPOINT)
+  private suspend fun ApplicationTestBuilder.compareOpenAPISpec(rootPath: String, snapshotName: String) {
+    val response = client.get("$rootPath$OPEN_API_ENDPOINT")
     response shouldHaveStatus HttpStatusCode.OK
     response.bodyAsText() shouldNot beBlank()
     response.bodyAsText() shouldEqualJson getFileSnapshot(snapshotName)
@@ -61,11 +62,36 @@ object TestHelpers {
     customTypes: Map<KType, JsonSchema> = emptyMap(),
     applicationSetup: Application.() -> Unit = { },
     specOverrides: OpenApiSpec.() -> OpenApiSpec = { this },
+    applicationEnvironmentBuilder: ApplicationEngineEnvironmentBuilder.() -> Unit = {},
     routeUnderTest: Routing.() -> Unit
   ) {
-    openApiTest(snapshotName, SupportedSerializer.KOTLINX, routeUnderTest, applicationSetup, specOverrides, customTypes)
-    openApiTest(snapshotName, SupportedSerializer.JACKSON, routeUnderTest, applicationSetup, specOverrides, customTypes)
-    openApiTest(snapshotName, SupportedSerializer.GSON, routeUnderTest, applicationSetup, specOverrides, customTypes)
+    openApiTest(
+      snapshotName,
+      SupportedSerializer.KOTLINX,
+      routeUnderTest,
+      applicationSetup,
+      specOverrides,
+      customTypes,
+      applicationEnvironmentBuilder
+    )
+    openApiTest(
+      snapshotName,
+      SupportedSerializer.JACKSON,
+      routeUnderTest,
+      applicationSetup,
+      specOverrides,
+      customTypes,
+      applicationEnvironmentBuilder
+    )
+    openApiTest(
+      snapshotName,
+      SupportedSerializer.GSON,
+      routeUnderTest,
+      applicationSetup,
+      specOverrides,
+      customTypes,
+      applicationEnvironmentBuilder
+    )
   }
 
   private fun openApiTest(
@@ -74,8 +100,10 @@ object TestHelpers {
     routeUnderTest: Routing.() -> Unit,
     applicationSetup: Application.() -> Unit,
     specOverrides: OpenApiSpec.() -> OpenApiSpec,
-    typeOverrides: Map<KType, JsonSchema> = emptyMap()
+    typeOverrides: Map<KType, JsonSchema> = emptyMap(),
+    applicationBuilder: ApplicationEngineEnvironmentBuilder.() -> Unit = {}
   ) = testApplication {
+    environment(applicationBuilder)
     install(NotarizedApplication()) {
       customTypes = typeOverrides
       spec = defaultSpec().specOverrides()
@@ -105,6 +133,7 @@ object TestHelpers {
       redoc()
       routeUnderTest()
     }
-    compareOpenAPISpec(snapshotName)
+    val root = ApplicationEngineEnvironmentBuilder().apply(applicationBuilder).rootPath
+    compareOpenAPISpec(root, snapshotName)
   }
 }
