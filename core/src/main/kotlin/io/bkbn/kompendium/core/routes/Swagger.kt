@@ -17,10 +17,13 @@ import kotlinx.html.unsafe
 
 /**
  * Provides an out-of-the-box route to view docs using Swagger
+ * @see <a href="https://swagger.io/specification/">Swagger OpenApi Specification</a>
+ * for the latest supported open api version.
  * @param pageTitle Webpage title you wish to be displayed on your docs
- * @param specUrl url to point Swagger to the OpenAPI json document
  */
 fun Route.swagger(pageTitle: String = "Docs", specUrl: String = "/openapi.json") {
+  val swaggerVersion = "4.15.5"
+
   route("/swagger-ui") {
     get {
       call.respondHtml {
@@ -36,7 +39,7 @@ fun Route.swagger(pageTitle: String = "Docs", specUrl: String = "/openapi.json")
             content = "width=device-width, initial-scale=1"
           }
           link {
-            href = "https://unpkg.com/swagger-ui-dist@4.5.0/swagger-ui.css"
+            href = "https://unpkg.com/swagger-ui-dist@$swaggerVersion/swagger-ui.css"
             rel = "stylesheet"
           }
         }
@@ -45,15 +48,14 @@ fun Route.swagger(pageTitle: String = "Docs", specUrl: String = "/openapi.json")
             id = "swagger-ui"
           }
           script {
-            src = "https://unpkg.com/swagger-ui-dist@4.5.0/swagger-ui-standalone-preset.js"
+            src = "https://unpkg.com/swagger-ui-dist@$swaggerVersion/swagger-ui-standalone-preset.js"
           }
           script {
-            src = "https://unpkg.com/swagger-ui-dist@4.5.0/swagger-ui-bundle.js"
+            src = "https://unpkg.com/swagger-ui-dist@$swaggerVersion/swagger-ui-bundle.js"
           }
           unsafe {
             +"""
               <script>
-
                 window.onload = function () {
                   // Build a system
                   const ui = SwaggerUIBundle({
