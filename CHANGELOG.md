@@ -4,6 +4,8 @@
 
 ### Added
 
+- Add support for swagger documentation
+
 ### Changed
 
 ### Remove
