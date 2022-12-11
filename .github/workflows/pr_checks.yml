@@ -33,9 +33,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: nelonoel/branch-name@v1.0.1
+      - name: Get branch name
+        id: branch-name
+        uses: tj-actions/branch-names@v6
       - name: 'Qodana Scan'
         uses: JetBrains/qodana-action@main
         env:
           QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
-          QODANA_BRANCH: ${{ env.BRANCH_NAME }}
+          QODANA_BRANCH: ${{ steps.branch-name.outputs.current_branch }}
