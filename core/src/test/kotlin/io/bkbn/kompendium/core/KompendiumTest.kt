@@ -297,7 +297,17 @@ class KompendiumTest : DescribeSpec({
     }
     it("Throws an exception when same method for same path has been previously registered") {
       val exception = shouldThrow<IllegalArgumentException> {
-        openApiTestAllSerializers("") {
+        openApiTestAllSerializers(
+          snapshotName = "",
+          applicationSetup = {
+            install(Authentication) {
+              basic("basic") {
+                realm = "Ktor Server"
+                validate { UserIdPrincipal("Placeholder") }
+              }
+            }
+          },
+        ) {
           samePathSameMethod()
         }
       }

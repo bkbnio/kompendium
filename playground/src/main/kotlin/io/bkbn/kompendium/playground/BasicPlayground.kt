@@ -1,6 +1,7 @@
 package io.bkbn.kompendium.playground
 
 import io.bkbn.kompendium.core.metadata.GetInfo
+import io.bkbn.kompendium.core.metadata.PostInfo
 import io.bkbn.kompendium.core.plugin.NotarizedApplication
 import io.bkbn.kompendium.core.plugin.NotarizedRoute
 import io.bkbn.kompendium.core.routes.redoc
@@ -8,6 +9,7 @@ import io.bkbn.kompendium.json.schema.KotlinXSchemaConfigurator
 import io.bkbn.kompendium.json.schema.definition.TypeDefinition
 import io.bkbn.kompendium.oas.payload.Parameter
 import io.bkbn.kompendium.oas.serialization.KompendiumSerializersModule
+import io.bkbn.kompendium.playground.util.ExampleRequest
 import io.bkbn.kompendium.playground.util.ExampleResponse
 import io.bkbn.kompendium.playground.util.ExceptionResponse
 import io.bkbn.kompendium.playground.util.Util.baseSpec
@@ -20,10 +22,7 @@ import io.ktor.server.cio.CIO
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.response.respond
-import io.ktor.server.routing.Route
-import io.ktor.server.routing.get
-import io.ktor.server.routing.route
-import io.ktor.server.routing.routing
+import io.ktor.server.routing.*
 import kotlinx.serialization.json.Json
 
 fun main() {
@@ -51,6 +50,11 @@ private fun Application.mainModule() {
   routing {
     redoc(pageTitle = "Simple API Docs")
 
+    rootDocumentation()
+    post {
+
+    }
+
     route("/{id}") {
       idDocumentation()
       get {
@@ -60,6 +64,30 @@ private fun Application.mainModule() {
         profileDocumentation()
         get {
           call.respond(HttpStatusCode.OK, ExampleResponse(true))
+        }
+      }
+    }
+  }
+}
+
+private fun Route.rootDocumentation() {
+  install(NotarizedRoute()) {
+    post = PostInfo.builder {
+      summary("Do a thing")
+      description("This is a thing")
+      request {
+        requestType<ExampleRequest>()
+        description("This is the request")
+        enrich {
+          ExampleRequest::thingA {
+            description("This is a thing")
+          }
+          ExampleRequest::thingB {
+            deprecated()
+          }
+          ExampleRequest::thingC {
+            description("This is also a thing")
+          }
         }
       }
     }

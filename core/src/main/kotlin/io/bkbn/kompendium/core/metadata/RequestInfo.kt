@@ -1,11 +1,13 @@
 package io.bkbn.kompendium.core.metadata
 
+import io.bkbn.kompendium.core.enrichment.TypeEnrichment
 import io.bkbn.kompendium.oas.payload.MediaType
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
 class RequestInfo private constructor(
   val requestType: KType,
+  val enrichment: TypeEnrichment<*>? = null,
   val description: String,
   val examples: Map<String, MediaType.Example>?,
   val mediaTypes: Set<String>
@@ -24,12 +26,23 @@ class RequestInfo private constructor(
     private var description: String? = null
     private var examples: Map<String, MediaType.Example>? = null
     private var mediaTypes: Set<String>? = null
+    private var enrichment: TypeEnrichment<*>? = null
 
     fun requestType(t: KType) = apply {
       this.requestType = t
     }
 
+    fun enrichment(t: TypeEnrichment<*>) = apply {
+      this.enrichment = t
+    }
+
     inline fun <reified T> requestType() = apply { requestType(typeOf<T>()) }
+
+    inline fun <reified T : Any> enrich(init: TypeEnrichment<T>.() -> Unit) = apply {
+      val te = TypeEnrichment<T>()
+      init.invoke(te)
+      enrichment(te)
+    }
 
     fun description(s: String) = apply { this.description = s }
 
