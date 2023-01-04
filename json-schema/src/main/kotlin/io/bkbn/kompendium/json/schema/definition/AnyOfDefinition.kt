@@ -5,6 +5,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class AnyOfDefinition(
   val anyOf: Set<JsonSchema>,
-  override val deprecated: Boolean = false,
-  override val description: String? = null
+  override val deprecated: Boolean? = null,
+  override val description: String? = null,
 ) : JsonSchema

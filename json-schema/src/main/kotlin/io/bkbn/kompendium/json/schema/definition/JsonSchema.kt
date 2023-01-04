@@ -12,7 +12,7 @@ import kotlinx.serialization.encoding.Encoder
 sealed interface JsonSchema {
 
   val description: String?
-  val deprecated: Boolean
+  val deprecated: Boolean?
 
   object Serializer : KSerializer<JsonSchema> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("JsonSchema", PrimitiveKind.STRING)

@@ -6,6 +6,6 @@ import kotlinx.serialization.Serializable
 data class EnumDefinition(
   val type: String,
   val enum: Set<String>,
-  override val deprecated: Boolean = false,
-  override val description: String? = null
+  override val deprecated: Boolean? = null,
+  override val description: String? = null,
 ) : JsonSchema

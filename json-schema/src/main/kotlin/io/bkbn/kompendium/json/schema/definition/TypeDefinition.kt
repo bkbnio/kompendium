@@ -10,8 +10,8 @@ data class TypeDefinition(
   val properties: Map<String, JsonSchema>? = null,
   val required: Set<String>? = null,
   @Contextual val default: Any? = null,
+  override val deprecated: Boolean? = null,
   override val description: String? = null,
-  override val deprecated: Boolean = false,
 ) : JsonSchema {
 
   fun withDefault(default: Any): TypeDefinition = this.copy(default = default)
