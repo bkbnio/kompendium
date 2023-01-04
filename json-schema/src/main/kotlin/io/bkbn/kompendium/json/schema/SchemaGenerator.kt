@@ -11,7 +11,7 @@ import io.bkbn.kompendium.json.schema.handler.MapHandler
 import io.bkbn.kompendium.json.schema.handler.SealedObjectHandler
 import io.bkbn.kompendium.json.schema.handler.SimpleObjectHandler
 import io.bkbn.kompendium.json.schema.util.Helpers.getSlug
-import java.util.*
+import java.util.UUID
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.full.isSubclassOf
