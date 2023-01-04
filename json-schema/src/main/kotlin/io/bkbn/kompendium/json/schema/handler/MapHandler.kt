@@ -1,5 +1,6 @@
 package io.bkbn.kompendium.json.schema.handler
 
+import io.bkbn.kompendium.enrichment.TypeEnrichment
 import io.bkbn.kompendium.json.schema.SchemaConfigurator
 import io.bkbn.kompendium.json.schema.SchemaGenerator
 import io.bkbn.kompendium.json.schema.definition.JsonSchema
@@ -9,21 +10,26 @@ import io.bkbn.kompendium.json.schema.definition.OneOfDefinition
 import io.bkbn.kompendium.json.schema.definition.ReferenceDefinition
 import io.bkbn.kompendium.json.schema.definition.TypeDefinition
 import io.bkbn.kompendium.json.schema.util.Helpers.getReferenceSlug
-import io.bkbn.kompendium.json.schema.util.Helpers.getSimpleSlug
+import io.bkbn.kompendium.json.schema.util.Helpers.getSlug
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 
 object MapHandler {
 
-  fun handle(type: KType, cache: MutableMap<String, JsonSchema>, schemaConfigurator: SchemaConfigurator): JsonSchema {
+  fun handle(
+    type: KType,
+    cache: MutableMap<String, JsonSchema>,
+    schemaConfigurator: SchemaConfigurator,
+    enrichment: TypeEnrichment<*>? = null
+  ): JsonSchema {
     require(type.arguments.first().type?.classifier as KClass<*> == String::class) {
       "JSON requires that map keys MUST be Strings.  You provided ${type.arguments.first().type}"
     }
     val valueType = type.arguments[1].type ?: error("this indicates a bug in Kompendium, please open a GitHub issue")
-    val valueSchema = SchemaGenerator.fromTypeToSchema(valueType, cache, schemaConfigurator).let {
+    val valueSchema = SchemaGenerator.fromTypeToSchema(valueType, cache, schemaConfigurator, enrichment).let {
       if (it is TypeDefinition && it.type == "object") {
-        cache[valueType.getSimpleSlug()] = it
-        ReferenceDefinition(valueType.getReferenceSlug())
+        cache[valueType.getSlug(enrichment)] = it
+        ReferenceDefinition(valueType.getReferenceSlug(enrichment))
       } else {
         it
       }

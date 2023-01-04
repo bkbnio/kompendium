@@ -1,6 +1,7 @@
 rootProject.name = "kompendium"
 
 include("core")
+include("enrichment")
 include("oas")
 include("playground")
 include("locations")

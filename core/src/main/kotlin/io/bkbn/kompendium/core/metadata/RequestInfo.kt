@@ -1,13 +1,13 @@
 package io.bkbn.kompendium.core.metadata
 
-import io.bkbn.kompendium.core.enrichment.TypeEnrichment
+import io.bkbn.kompendium.enrichment.TypeEnrichment
 import io.bkbn.kompendium.oas.payload.MediaType
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
 class RequestInfo private constructor(
   val requestType: KType,
-  val enrichment: TypeEnrichment<*>? = null,
+  val typeEnrichment: TypeEnrichment<*>?,
   val description: String,
   val examples: Map<String, MediaType.Example>?,
   val mediaTypes: Set<String>
@@ -23,25 +23,22 @@ class RequestInfo private constructor(
 
   class Builder {
     private var requestType: KType? = null
+    private var typeEnrichment: TypeEnrichment<*>? = null
     private var description: String? = null
     private var examples: Map<String, MediaType.Example>? = null
     private var mediaTypes: Set<String>? = null
-    private var enrichment: TypeEnrichment<*>? = null
 
     fun requestType(t: KType) = apply {
       this.requestType = t
     }
 
     fun enrichment(t: TypeEnrichment<*>) = apply {
-      this.enrichment = t
+      this.typeEnrichment = t
     }
 
-    inline fun <reified T> requestType() = apply { requestType(typeOf<T>()) }
-
-    inline fun <reified T : Any> enrich(init: TypeEnrichment<T>.() -> Unit) = apply {
-      val te = TypeEnrichment<T>()
-      init.invoke(te)
-      enrichment(te)
+    inline fun <reified T> requestType(enrichment: TypeEnrichment<T>? = null) = apply {
+      requestType(typeOf<T>())
+      enrichment?.let { enrichment(it) }
     }
 
     fun description(s: String) = apply { this.description = s }
@@ -57,6 +54,7 @@ class RequestInfo private constructor(
     fun build() = RequestInfo(
       requestType = requestType ?: error("Request type must be present"),
       description = description ?: error("Description must be present"),
+      typeEnrichment = typeEnrichment,
       examples = examples,
       mediaTypes = mediaTypes ?: setOf("application/json")
     )

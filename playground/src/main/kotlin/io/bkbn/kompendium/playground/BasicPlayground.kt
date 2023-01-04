@@ -5,6 +5,7 @@ import io.bkbn.kompendium.core.metadata.PostInfo
 import io.bkbn.kompendium.core.plugin.NotarizedApplication
 import io.bkbn.kompendium.core.plugin.NotarizedRoute
 import io.bkbn.kompendium.core.routes.redoc
+import io.bkbn.kompendium.enrichment.TypeEnrichment
 import io.bkbn.kompendium.json.schema.KotlinXSchemaConfigurator
 import io.bkbn.kompendium.json.schema.definition.TypeDefinition
 import io.bkbn.kompendium.oas.payload.Parameter
@@ -52,7 +53,7 @@ private fun Application.mainModule() {
 
     rootDocumentation()
     post {
-
+      call.respond(HttpStatusCode.OK, ExampleResponse(false))
     }
 
     route("/{id}") {
@@ -70,25 +71,37 @@ private fun Application.mainModule() {
   }
 }
 
+private val testEnrichment = TypeEnrichment("testerino") {
+  ExampleRequest::thingA {
+    description("This is a thing")
+  }
+  ExampleRequest::thingB {
+    description("This is another thing")
+  }
+  ExampleRequest::thingC {
+    deprecated()
+  }
+}
+
+private val testResponseEnrichment = TypeEnrichment("testerino") {
+  ExampleResponse::isReal {
+    description("Is this thing real or not")
+  }
+}
+
 private fun Route.rootDocumentation() {
   install(NotarizedRoute()) {
     post = PostInfo.builder {
       summary("Do a thing")
       description("This is a thing")
       request {
-        requestType<ExampleRequest>()
+        requestType(enrichment = testEnrichment)
         description("This is the request")
-        enrich {
-          ExampleRequest::thingA {
-            description("This is a thing")
-          }
-          ExampleRequest::thingB {
-            deprecated()
-          }
-          ExampleRequest::thingC {
-            description("This is also a thing")
-          }
-        }
+      }
+      response {
+        responseCode(HttpStatusCode.OK)
+        responseType<ExampleResponse>()
+        description("This is the response")
       }
     }
   }

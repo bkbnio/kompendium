@@ -10,13 +10,14 @@ import io.bkbn.kompendium.core.metadata.PatchInfo
 import io.bkbn.kompendium.core.metadata.PostInfo
 import io.bkbn.kompendium.core.metadata.PutInfo
 import io.bkbn.kompendium.core.metadata.ResponseInfo
+import io.bkbn.kompendium.enrichment.TypeEnrichment
 import io.bkbn.kompendium.json.schema.SchemaConfigurator
 import io.bkbn.kompendium.json.schema.SchemaGenerator
 import io.bkbn.kompendium.json.schema.definition.NullableDefinition
 import io.bkbn.kompendium.json.schema.definition.OneOfDefinition
 import io.bkbn.kompendium.json.schema.definition.ReferenceDefinition
 import io.bkbn.kompendium.json.schema.util.Helpers.getReferenceSlug
-import io.bkbn.kompendium.json.schema.util.Helpers.getSimpleSlug
+import io.bkbn.kompendium.json.schema.util.Helpers.getSlug
 import io.bkbn.kompendium.oas.OpenApiSpec
 import io.bkbn.kompendium.oas.path.Path
 import io.bkbn.kompendium.oas.path.PathOperation
@@ -50,26 +51,34 @@ object Helpers {
     authMethods: List<String> = emptyList()
   ) {
     SchemaGenerator.fromTypeOrUnit(
-      this.response.responseType,
-      spec.components.schemas, schemaConfigurator
+      type = this.response.responseType,
+      cache = spec.components.schemas,
+      schemaConfigurator = schemaConfigurator,
+      enrichment = this.response.typeEnrichment,
     )?.let { schema ->
-      spec.components.schemas[this.response.responseType.getSimpleSlug()] = schema
+      spec.components.schemas[this.response.responseType.getSlug(this.response.typeEnrichment)] = schema
     }
 
     errors.forEach { error ->
-      SchemaGenerator.fromTypeOrUnit(error.responseType, spec.components.schemas, schemaConfigurator)?.let { schema ->
-        spec.components.schemas[error.responseType.getSimpleSlug()] = schema
+      SchemaGenerator.fromTypeOrUnit(
+        type = error.responseType,
+        cache = spec.components.schemas,
+        schemaConfigurator = schemaConfigurator,
+        enrichment = error.typeEnrichment,
+      )?.let { schema ->
+        spec.components.schemas[error.responseType.getSlug(error.typeEnrichment)] = schema
       }
     }
 
     when (this) {
       is MethodInfoWithRequest -> {
         SchemaGenerator.fromTypeOrUnit(
-          this.request.requestType,
-          spec.components.schemas,
-          schemaConfigurator
+          type = this.request.requestType,
+          cache = spec.components.schemas,
+          schemaConfigurator = schemaConfigurator,
+          enrichment = this.request.typeEnrichment,
         )?.let { schema ->
-          spec.components.schemas[this.request.requestType.getSimpleSlug()] = schema
+          spec.components.schemas[this.request.requestType.getSlug(this.request.typeEnrichment)] = schema
         }
       }
 
@@ -114,7 +123,11 @@ object Helpers {
     requestBody = when (this) {
       is MethodInfoWithRequest -> Request(
         description = this.request.description,
-        content = this.request.requestType.toReferenceContent(this.request.examples, this.request.mediaTypes),
+        content = this.request.requestType.toReferenceContent(
+          examples = this.request.examples,
+          mediaTypes = this.request.mediaTypes,
+          enrichment = this.request.typeEnrichment
+        ),
         required = true
       )
 
@@ -123,7 +136,11 @@ object Helpers {
     responses = mapOf(
       this.response.responseCode.value to Response(
         description = this.response.description,
-        content = this.response.responseType.toReferenceContent(this.response.examples, this.response.mediaTypes)
+        content = this.response.responseType.toReferenceContent(
+          examples = this.response.examples,
+          mediaTypes = this.response.mediaTypes,
+          enrichment = this.response.typeEnrichment
+        )
       )
     ).plus(this.errors.toResponseMap())
   )
@@ -131,22 +148,31 @@ object Helpers {
   private fun List<ResponseInfo>.toResponseMap(): Map<Int, Response> = associate { error ->
     error.responseCode.value to Response(
       description = error.description,
-      content = error.responseType.toReferenceContent(error.examples, error.mediaTypes)
+      content = error.responseType.toReferenceContent(
+        examples = error.examples,
+        mediaTypes = error.mediaTypes,
+        enrichment = error.typeEnrichment
+      )
     )
   }
 
   private fun KType.toReferenceContent(
     examples: Map<String, MediaType.Example>?,
-    mediaTypes: Set<String>
+    mediaTypes: Set<String>,
+    enrichment: TypeEnrichment<*>?
   ): Map<String, MediaType>? =
     when (this.classifier as KClass<*>) {
       Unit::class -> null
       else -> mediaTypes.associateWith {
         MediaType(
-          schema = if (this.isMarkedNullable) OneOfDefinition(
-            NullableDefinition(),
-            ReferenceDefinition(this.getReferenceSlug())
-          ) else ReferenceDefinition(this.getReferenceSlug()),
+          schema = if (this.isMarkedNullable) {
+            OneOfDefinition(
+              NullableDefinition(),
+              ReferenceDefinition(this.getReferenceSlug(enrichment))
+            )
+          } else {
+            ReferenceDefinition(this.getReferenceSlug(enrichment))
+          },
           examples = examples
         )
       }

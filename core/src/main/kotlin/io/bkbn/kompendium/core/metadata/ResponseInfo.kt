@@ -1,5 +1,6 @@
 package io.bkbn.kompendium.core.metadata
 
+import io.bkbn.kompendium.enrichment.TypeEnrichment
 import io.bkbn.kompendium.oas.payload.MediaType
 import io.ktor.http.HttpStatusCode
 import kotlin.reflect.KType
@@ -8,6 +9,7 @@ import kotlin.reflect.typeOf
 class ResponseInfo private constructor(
   val responseCode: HttpStatusCode,
   val responseType: KType,
+  val typeEnrichment: TypeEnrichment<*>?,
   val description: String,
   val examples: Map<String, MediaType.Example>?,
   val mediaTypes: Set<String>
@@ -24,6 +26,7 @@ class ResponseInfo private constructor(
   class Builder {
     private var responseCode: HttpStatusCode? = null
     private var responseType: KType? = null
+    private var typeEnrichment: TypeEnrichment<*>? = null
     private var description: String? = null
     private var examples: Map<String, MediaType.Example>? = null
     private var mediaTypes: Set<String>? = null
@@ -36,7 +39,14 @@ class ResponseInfo private constructor(
       this.responseType = t
     }
 
-    inline fun <reified T> responseType() = apply { responseType(typeOf<T>()) }
+    fun enrichment(t: TypeEnrichment<*>) = apply {
+      this.typeEnrichment = t
+    }
+
+    inline fun <reified T> responseType(enrichment: TypeEnrichment<T>? = null) = apply {
+      responseType(typeOf<T>())
+      enrichment?.let { enrichment(it) }
+    }
 
     fun description(s: String) = apply { this.description = s }
 
@@ -52,6 +62,7 @@ class ResponseInfo private constructor(
       responseCode = responseCode ?: error("You must provide a response code in order to build a Response!"),
       responseType = responseType ?: error("You must provide a response type in order to build a Response!"),
       description = description ?: error("You must provide a description in order to build a Response!"),
+      typeEnrichment = typeEnrichment,
       examples = examples,
       mediaTypes = mediaTypes ?: setOf("application/json")
     )

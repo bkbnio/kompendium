@@ -17,6 +17,7 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.DescribeSpec
 import kotlinx.serialization.json.Json
 import java.util.UUID
+import kotlin.reflect.typeOf
 
 class SchemaGeneratorTest : DescribeSpec({
   describe("Scalars") {
@@ -88,7 +89,13 @@ class SchemaGeneratorTest : DescribeSpec({
       jsonSchemaTest<Map<String, Int>>("T0012__scalar_map.json")
     }
     it("Throws an error when map keys are not strings") {
-      shouldThrow<IllegalArgumentException> { SchemaGenerator.fromTypeToSchema<Map<Int, Int>>() }
+      shouldThrow<IllegalArgumentException> {
+        SchemaGenerator.fromTypeToSchema(
+          typeOf<Map<Int, Int>>(),
+          cache = mutableMapOf(),
+          schemaConfigurator = KotlinXSchemaConfigurator()
+        )
+      }
     }
     it("Can generate the schema for a map of objects") {
       jsonSchemaTest<Map<String, TestResponse>>("T0013__object_map.json")
@@ -109,7 +116,11 @@ class SchemaGeneratorTest : DescribeSpec({
 
     private inline fun <reified T> jsonSchemaTest(snapshotName: String) {
       // act
-      val schema = SchemaGenerator.fromTypeToSchema<T>(schemaConfigurator = KotlinXSchemaConfigurator())
+      val schema = SchemaGenerator.fromTypeToSchema(
+        type = typeOf<T>(),
+        cache = mutableMapOf(),
+        schemaConfigurator = KotlinXSchemaConfigurator()
+      )
 
       // todo add cache assertions!!!
 

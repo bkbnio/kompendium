@@ -21,6 +21,7 @@ dependencies {
   val detektVersion: String by project
 
   api(projects.kompendiumJsonSchema)
+  api(projects.kompendiumEnrichment)
   implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
 
   // Formatting
