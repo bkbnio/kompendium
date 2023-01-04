@@ -9,11 +9,11 @@ class TypeEnrichment<T>(val id: String) : Enrichment {
 
   fun getEnrichmentForProperty(property: KProperty<*>): Enrichment? = enrichments[property]
 
-  operator fun <R> KProperty1<T, R>.invoke(init: FieldEnrichment.() -> Unit) {
+  operator fun <R> KProperty1<T, R>.invoke(init: PropertyEnrichment.() -> Unit) {
     require(!enrichments.containsKey(this)) { "${this.name} has already been registered" }
-    val fieldEnrichment = FieldEnrichment()
-    init.invoke(fieldEnrichment)
-    enrichments[this] = fieldEnrichment
+    val propertyEnrichment = PropertyEnrichment()
+    init.invoke(propertyEnrichment)
+    enrichments[this] = propertyEnrichment
   }
 
   companion object {

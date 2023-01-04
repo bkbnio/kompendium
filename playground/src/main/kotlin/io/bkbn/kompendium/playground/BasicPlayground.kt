@@ -13,6 +13,7 @@ import io.bkbn.kompendium.oas.serialization.KompendiumSerializersModule
 import io.bkbn.kompendium.playground.util.ExampleRequest
 import io.bkbn.kompendium.playground.util.ExampleResponse
 import io.bkbn.kompendium.playground.util.ExceptionResponse
+import io.bkbn.kompendium.playground.util.InnerRequest
 import io.bkbn.kompendium.playground.util.Util.baseSpec
 import io.ktor.http.HttpStatusCode
 import io.ktor.serialization.kotlinx.json.json
@@ -73,19 +74,24 @@ private fun Application.mainModule() {
 
 private val testEnrichment = TypeEnrichment("testerino") {
   ExampleRequest::thingA {
-    description("This is a thing")
+    fieldDescription = "This is a thing"
   }
   ExampleRequest::thingB {
-    description("This is another thing")
+    fieldDescription = "This is another thing"
   }
   ExampleRequest::thingC {
-    deprecated()
+    deprecated = true
+    typeEnrichment = TypeEnrichment("big-tings") {
+      InnerRequest::d {
+        fieldDescription = "THE BIG D"
+      }
+    }
   }
 }
 
 private val testResponseEnrichment = TypeEnrichment("testerino") {
   ExampleResponse::isReal {
-    description("Is this thing real or not")
+    fieldDescription = "Is this thing real or not?"
   }
 }
 
@@ -100,7 +106,7 @@ private fun Route.rootDocumentation() {
       }
       response {
         responseCode(HttpStatusCode.OK)
-        responseType<ExampleResponse>()
+        responseType(enrichment = testResponseEnrichment)
         description("This is the response")
       }
     }

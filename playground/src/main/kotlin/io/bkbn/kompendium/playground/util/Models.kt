@@ -9,7 +9,13 @@ import kotlinx.serialization.Serializable
 data class ExampleRequest(
   val thingA: String,
   val thingB: Int,
-  val thingC: Boolean,
+  val thingC: InnerRequest,
+)
+
+@Serializable
+data class InnerRequest(
+  val d: Float,
+  val e: Boolean,
 )
 
 @Serializable

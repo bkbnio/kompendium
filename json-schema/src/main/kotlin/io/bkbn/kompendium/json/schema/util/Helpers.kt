@@ -1,7 +1,7 @@
 package io.bkbn.kompendium.json.schema.util
 
 import io.bkbn.kompendium.enrichment.Enrichment
-import io.bkbn.kompendium.enrichment.FieldEnrichment
+import io.bkbn.kompendium.enrichment.PropertyEnrichment
 import io.bkbn.kompendium.enrichment.TypeEnrichment
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
@@ -12,7 +12,7 @@ object Helpers {
 
   fun KType.getSlug(enrichment: Enrichment? = null) = when (enrichment) {
     is TypeEnrichment<*> -> getEnrichedSlug(enrichment)
-    is FieldEnrichment -> error("Slugs should not be generated for field enrichments")
+    is PropertyEnrichment -> error("Slugs should not be generated for field enrichments")
     null -> getSimpleSlug()
   }
 
@@ -25,7 +25,7 @@ object Helpers {
 
   fun KType.getReferenceSlug(enrichment: Enrichment? = null): String = when (enrichment) {
     is TypeEnrichment<*> -> getSimpleReferenceSlug() + "-${enrichment.id}"
-    is FieldEnrichment -> error("Reference slugs should never be generated for field enrichments")
+    is PropertyEnrichment -> error("Reference slugs should never be generated for field enrichments")
     null -> getSimpleReferenceSlug()
   }
 
