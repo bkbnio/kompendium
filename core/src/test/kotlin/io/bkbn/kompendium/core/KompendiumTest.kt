@@ -9,6 +9,10 @@ import io.bkbn.kompendium.core.util.dateTimeString
 import io.bkbn.kompendium.core.util.defaultAuthConfig
 import io.bkbn.kompendium.core.util.defaultField
 import io.bkbn.kompendium.core.util.defaultParameter
+import io.bkbn.kompendium.core.util.enrichedComplexGenericType
+import io.bkbn.kompendium.core.util.enrichedNestedCollection
+import io.bkbn.kompendium.core.util.enrichedSimpleRequest
+import io.bkbn.kompendium.core.util.enrichedSimpleResponse
 import io.bkbn.kompendium.core.util.exampleParams
 import io.bkbn.kompendium.core.util.genericException
 import io.bkbn.kompendium.core.util.genericPolymorphicResponse
@@ -422,6 +426,20 @@ class KompendiumTest : DescribeSpec({
           )
         }
       ) { multipleAuthStrategies() }
+    }
+  }
+  describe("Enrichment") {
+    it("Can enrich a simple request") {
+      openApiTestAllSerializers("T0055__enriched_simple_request.json") { enrichedSimpleRequest() }
+    }
+    it("Can enrich a simple response") {
+      openApiTestAllSerializers("T0058__enriched_simple_response.json") { enrichedSimpleResponse() }
+    }
+    it("Can enrich a nested collection") {
+      openApiTestAllSerializers("T0056__enriched_nested_collection.json") { enrichedNestedCollection() }
+    }
+    it("Can enrich a complex generic type") {
+      openApiTestAllSerializers("T0057__enriched_complex_generic_type.json") { enrichedComplexGenericType() }
     }
   }
 })
