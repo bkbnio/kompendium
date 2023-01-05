@@ -249,12 +249,12 @@ fun Routing.enrichedSimpleRequest() {
 
 {% hint style="warning" %}
 An enrichment must provide an `id` field that is unique to the data class that is being enriched. This is because
-under the hood, Kompendium appends this id to the data class identifier in order to support multiple differeent
+under the hood, Kompendium appends this id to the data class identifier in order to support multiple different
 enrichments
 on the same data class.
 
 If you provide duplicate ids, all but the first enrichment will be ignored, as Kompendium will view that as a cache hit,
-and skill analyzing the new enrichment.
+and skip analyzing the new enrichment.
 {% endhint %}
 
 At the moment, the only available enrichments are the following
