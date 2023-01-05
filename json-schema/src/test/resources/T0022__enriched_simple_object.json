@@ -1,0 +1,18 @@
+{
+  "type": "object",
+  "properties": {
+    "a": {
+      "type": "string",
+      "description": "This is a simple description"
+    },
+    "b": {
+      "type": "number",
+      "format": "int32",
+      "deprecated": true
+    }
+  },
+  "required": [
+    "a",
+    "b"
+  ]
+}

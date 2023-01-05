@@ -2,6 +2,7 @@ package io.bkbn.kompendium.json.schema
 
 import io.bkbn.kompendium.core.fixtures.ComplexRequest
 import io.bkbn.kompendium.core.fixtures.FlibbityGibbit
+import io.bkbn.kompendium.core.fixtures.NestedComplexItem
 import io.bkbn.kompendium.core.fixtures.ObjectWithEnum
 import io.bkbn.kompendium.core.fixtures.SerialNameObject
 import io.bkbn.kompendium.core.fixtures.SimpleEnum
@@ -11,6 +12,7 @@ import io.bkbn.kompendium.core.fixtures.TestResponse
 import io.bkbn.kompendium.core.fixtures.TestSimpleRequest
 import io.bkbn.kompendium.core.fixtures.TransientObject
 import io.bkbn.kompendium.core.fixtures.UnbackedObject
+import io.bkbn.kompendium.enrichment.TypeEnrichment
 import io.bkbn.kompendium.json.schema.definition.JsonSchema
 import io.kotest.assertions.json.shouldEqualJson
 import io.kotest.assertions.throwables.shouldThrow
@@ -104,6 +106,36 @@ class SchemaGeneratorTest : DescribeSpec({
       jsonSchemaTest<Map<String, Int>?>("T0014__nullable_map.json")
     }
   }
+  describe("Enrichment") {
+    it("Can attach an enrichment to a simple type") {
+      jsonSchemaTest<TestSimpleRequest>(
+        snapshotName = "T0022__enriched_simple_object.json",
+        enrichment = TypeEnrichment("simple") {
+          TestSimpleRequest::a {
+            description = "This is a simple description"
+          }
+          TestSimpleRequest::b {
+            deprecated = true
+          }
+        }
+      )
+    }
+    it("Can properly assign a reference to a nested enrichment") {
+      jsonSchemaTest<ComplexRequest>(
+        snapshotName = "T0023__enriched_nested_reference.json",
+        enrichment = TypeEnrichment("example") {
+          ComplexRequest::tables {
+            description = "Collection of important items"
+            typeEnrichment = TypeEnrichment("table") {
+              NestedComplexItem::name {
+                description = "The name of the table"
+              }
+            }
+          }
+        }
+      )
+    }
+  }
 }) {
   companion object {
     private val json = Json {
@@ -114,15 +146,14 @@ class SchemaGeneratorTest : DescribeSpec({
 
     private fun JsonSchema.serialize() = json.encodeToString(JsonSchema.serializer(), this)
 
-    private inline fun <reified T> jsonSchemaTest(snapshotName: String) {
+    private inline fun <reified T> jsonSchemaTest(snapshotName: String, enrichment: TypeEnrichment<*>? = null) {
       // act
       val schema = SchemaGenerator.fromTypeToSchema(
         type = typeOf<T>(),
         cache = mutableMapOf(),
-        schemaConfigurator = KotlinXSchemaConfigurator()
+        schemaConfigurator = KotlinXSchemaConfigurator(),
+        enrichment = enrichment,
       )
-
-      // todo add cache assertions!!!
 
       // assert
       schema.serialize() shouldEqualJson getFileSnapshot(snapshotName)

@@ -168,13 +168,13 @@ object SimpleObjectHandler {
   private fun JsonSchema.isNullable(): Boolean = this is OneOfDefinition && this.oneOf.any { it is NullableDefinition }
 
   private fun PropertyEnrichment.applyToSchema(schema: JsonSchema): JsonSchema = when (schema) {
-    is AnyOfDefinition -> schema.copy(deprecated = deprecated, description = fieldDescription)
-    is ArrayDefinition -> schema.copy(deprecated = deprecated, description = fieldDescription)
-    is EnumDefinition -> schema.copy(deprecated = deprecated, description = fieldDescription)
-    is MapDefinition -> schema.copy(deprecated = deprecated, description = fieldDescription)
-    is NullableDefinition -> schema.copy(deprecated = deprecated, description = fieldDescription)
-    is OneOfDefinition -> schema.copy(deprecated = deprecated, description = fieldDescription)
-    is ReferenceDefinition -> schema.copy(deprecated = deprecated, description = fieldDescription)
-    is TypeDefinition -> schema.copy(deprecated = deprecated, description = fieldDescription)
+    is AnyOfDefinition -> schema.copy(deprecated = deprecated, description = description)
+    is ArrayDefinition -> schema.copy(deprecated = deprecated, description = description)
+    is EnumDefinition -> schema.copy(deprecated = deprecated, description = description)
+    is MapDefinition -> schema.copy(deprecated = deprecated, description = description)
+    is NullableDefinition -> schema.copy(deprecated = deprecated, description = description)
+    is OneOfDefinition -> schema.copy(deprecated = deprecated, description = description)
+    is ReferenceDefinition -> schema.copy(deprecated = deprecated, description = description)
+    is TypeDefinition -> schema.copy(deprecated = deprecated, description = description)
   }
 }

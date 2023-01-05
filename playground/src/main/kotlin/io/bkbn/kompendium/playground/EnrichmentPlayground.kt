@@ -60,17 +60,17 @@ private fun Application.mainModule() {
 
 private val testEnrichment = TypeEnrichment("testerino") {
   ExampleRequest::thingA {
-    fieldDescription = "This is a thing"
+    description = "This is a thing"
   }
   ExampleRequest::thingB {
-    fieldDescription = "This is another thing"
+    description = "This is another thing"
   }
   ExampleRequest::thingC {
     deprecated = true
-    fieldDescription = "A good but old field"
+    description = "A good but old field"
     typeEnrichment = TypeEnrichment("big-tings") {
       InnerRequest::d {
-        fieldDescription = "THE BIG D"
+        description = "THE BIG D"
       }
     }
   }
@@ -78,7 +78,7 @@ private val testEnrichment = TypeEnrichment("testerino") {
 
 private val testResponseEnrichment = TypeEnrichment("testerino") {
   ExampleResponse::isReal {
-    fieldDescription = "Is this thing real or not?"
+    description = "Is this thing real or not?"
   }
 }
 
