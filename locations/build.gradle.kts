@@ -22,8 +22,8 @@ dependencies {
   // IMPLEMENTATION
 
   implementation(projects.kompendiumCore)
-  implementation("io.ktor:ktor-server-core:2.1.3")
-  implementation("io.ktor:ktor-server-locations:2.1.3")
+  implementation("io.ktor:ktor-server-core:2.2.2")
+  implementation("io.ktor:ktor-server-locations:2.2.2")
 
   // TESTING
 
