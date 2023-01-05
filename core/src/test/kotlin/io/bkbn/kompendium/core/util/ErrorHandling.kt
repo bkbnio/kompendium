@@ -9,7 +9,7 @@ import io.ktor.server.routing.route
 fun Routing.samePathSameMethod() {
   route(defaultPath) {
     basicGetGenerator<TestResponse>()
-    authenticate {
+    authenticate("basic") {
       basicGetGenerator<TestResponse>()
     }
   }

@@ -7,10 +7,11 @@ import kotlinx.serialization.Serializable
 data class TypeDefinition(
   val type: String,
   val format: String? = null,
-  val description: String? = null,
   val properties: Map<String, JsonSchema>? = null,
   val required: Set<String>? = null,
   @Contextual val default: Any? = null,
+  override val deprecated: Boolean? = null,
+  override val description: String? = null,
 ) : JsonSchema {
 
   fun withDefault(default: Any): TypeDefinition = this.copy(default = default)

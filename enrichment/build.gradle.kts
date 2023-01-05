@@ -1,6 +1,5 @@
 plugins {
   kotlin("jvm")
-  kotlin("plugin.serialization")
   id("io.bkbn.sourdough.library.jvm")
   id("io.gitlab.arturbosch.detekt")
   id("com.adarshr.test-logger")
@@ -11,20 +10,14 @@ plugins {
 }
 
 sourdoughLibrary {
-  libraryName.set("Kompendium JSON Schema")
-  libraryDescription.set("Json Schema Generator")
+  libraryName.set("Kompendium Type Enrichment")
+  libraryDescription.set("Utility library for creating portable type enrichments")
   compilerArgs.set(listOf("-opt-in=kotlin.RequiresOptIn"))
 }
 
 dependencies {
   // Versions
   val detektVersion: String by project
-
-  // Kompendium
-  api(projects.kompendiumEnrichment)
-
-  implementation("org.jetbrains.kotlin:kotlin-reflect:1.8.0")
-  implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
 
   // Formatting
   detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:$detektVersion")

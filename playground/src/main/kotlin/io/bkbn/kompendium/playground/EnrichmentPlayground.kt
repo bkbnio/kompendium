@@ -1,15 +1,19 @@
 package io.bkbn.kompendium.playground
 
 import io.bkbn.kompendium.core.metadata.GetInfo
+import io.bkbn.kompendium.core.metadata.PostInfo
 import io.bkbn.kompendium.core.plugin.NotarizedApplication
 import io.bkbn.kompendium.core.plugin.NotarizedRoute
 import io.bkbn.kompendium.core.routes.redoc
+import io.bkbn.kompendium.enrichment.TypeEnrichment
 import io.bkbn.kompendium.json.schema.KotlinXSchemaConfigurator
 import io.bkbn.kompendium.json.schema.definition.TypeDefinition
 import io.bkbn.kompendium.oas.payload.Parameter
 import io.bkbn.kompendium.oas.serialization.KompendiumSerializersModule
+import io.bkbn.kompendium.playground.util.ExampleRequest
 import io.bkbn.kompendium.playground.util.ExampleResponse
 import io.bkbn.kompendium.playground.util.ExceptionResponse
+import io.bkbn.kompendium.playground.util.InnerRequest
 import io.bkbn.kompendium.playground.util.Util.baseSpec
 import io.ktor.http.HttpStatusCode
 import io.ktor.serialization.kotlinx.json.json
@@ -20,10 +24,7 @@ import io.ktor.server.cio.CIO
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.response.respond
-import io.ktor.server.routing.Route
-import io.ktor.server.routing.get
-import io.ktor.server.routing.route
-import io.ktor.server.routing.routing
+import io.ktor.server.routing.*
 import kotlinx.serialization.json.Json
 
 fun main() {
@@ -50,16 +51,50 @@ private fun Application.mainModule() {
   }
   routing {
     redoc(pageTitle = "Simple API Docs")
-    route("/{id}") {
-      idDocumentation()
-      get {
-        call.respond(HttpStatusCode.OK, ExampleResponse(true))
+    enrichedDocumentation()
+    post {
+      call.respond(HttpStatusCode.OK, ExampleResponse(false))
+    }
+  }
+}
+
+private val testEnrichment = TypeEnrichment("testerino") {
+  ExampleRequest::thingA {
+    description = "This is a thing"
+  }
+  ExampleRequest::thingB {
+    description = "This is another thing"
+  }
+  ExampleRequest::thingC {
+    deprecated = true
+    description = "A good but old field"
+    typeEnrichment = TypeEnrichment("big-tings") {
+      InnerRequest::d {
+        description = "THE BIG D"
       }
-      route("/profile") {
-        profileDocumentation()
-        get {
-          call.respond(HttpStatusCode.OK, ExampleResponse(true))
-        }
+    }
+  }
+}
+
+private val testResponseEnrichment = TypeEnrichment("testerino") {
+  ExampleResponse::isReal {
+    description = "Is this thing real or not?"
+  }
+}
+
+private fun Route.enrichedDocumentation() {
+  install(NotarizedRoute()) {
+    post = PostInfo.builder {
+      summary("Do a thing")
+      description("This is a thing")
+      request {
+        requestType(enrichment = testEnrichment)
+        description("This is the request")
+      }
+      response {
+        responseCode(HttpStatusCode.OK)
+        responseType(enrichment = testResponseEnrichment)
+        description("This is the response")
       }
     }
   }

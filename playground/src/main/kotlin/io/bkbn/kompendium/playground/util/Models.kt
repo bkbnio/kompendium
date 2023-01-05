@@ -6,6 +6,19 @@ import kotlinx.datetime.Instant
 import kotlinx.serialization.Serializable
 
 @Serializable
+data class ExampleRequest(
+  val thingA: String,
+  val thingB: Int,
+  val thingC: InnerRequest,
+)
+
+@Serializable
+data class InnerRequest(
+  val d: Float,
+  val e: Boolean,
+)
+
+@Serializable
 data class ExampleResponse(val isReal: Boolean)
 
 @Serializable

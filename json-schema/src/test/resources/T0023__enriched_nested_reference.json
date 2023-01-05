@@ -1,0 +1,23 @@
+{
+  "type": "object",
+  "properties": {
+    "amazingField": {
+      "type": "string"
+    },
+    "org": {
+      "type": "string"
+    },
+    "tables": {
+      "items": {
+        "$ref": "#/components/schemas/NestedComplexItem-table"
+      },
+      "description": "Collection of important items",
+      "type": "array"
+    }
+  },
+  "required": [
+    "amazingField",
+    "org",
+    "tables"
+  ]
+}

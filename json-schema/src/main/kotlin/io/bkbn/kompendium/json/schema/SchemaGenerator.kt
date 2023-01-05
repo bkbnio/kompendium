@@ -1,5 +1,6 @@
 package io.bkbn.kompendium.json.schema
 
+import io.bkbn.kompendium.enrichment.TypeEnrichment
 import io.bkbn.kompendium.json.schema.definition.JsonSchema
 import io.bkbn.kompendium.json.schema.definition.NullableDefinition
 import io.bkbn.kompendium.json.schema.definition.OneOfDefinition
@@ -9,28 +10,26 @@ import io.bkbn.kompendium.json.schema.handler.EnumHandler
 import io.bkbn.kompendium.json.schema.handler.MapHandler
 import io.bkbn.kompendium.json.schema.handler.SealedObjectHandler
 import io.bkbn.kompendium.json.schema.handler.SimpleObjectHandler
-import io.bkbn.kompendium.json.schema.util.Helpers.getSimpleSlug
+import io.bkbn.kompendium.json.schema.util.Helpers.getSlug
+import java.util.UUID
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.full.isSubclassOf
-import kotlin.reflect.typeOf
-import java.util.UUID
 
 object SchemaGenerator {
-
-  inline fun <reified T : Any?> fromTypeToSchema(
-    cache: MutableMap<String, JsonSchema> = mutableMapOf(),
-    schemaConfigurator: SchemaConfigurator = SchemaConfigurator.Default()
-  ) = fromTypeToSchema(typeOf<T>(), cache, schemaConfigurator)
 
   fun fromTypeToSchema(
     type: KType,
     cache: MutableMap<String, JsonSchema>,
-    schemaConfigurator: SchemaConfigurator
+    schemaConfigurator: SchemaConfigurator,
+    enrichment: TypeEnrichment<*>? = null
   ): JsonSchema {
-    cache[type.getSimpleSlug()]?.let {
+    val slug = type.getSlug(enrichment)
+
+    cache[slug]?.let {
       return it
     }
+
     return when (val clazz = type.classifier as KClass<*>) {
       Unit::class -> error(
         """
@@ -48,14 +47,14 @@ object SchemaGenerator {
       Boolean::class -> checkForNull(type, TypeDefinition.BOOLEAN)
       UUID::class -> checkForNull(type, TypeDefinition.UUID)
       else -> when {
-        clazz.isSubclassOf(Enum::class) -> EnumHandler.handle(type, clazz, cache)
-        clazz.isSubclassOf(Collection::class) -> CollectionHandler.handle(type, cache, schemaConfigurator)
-        clazz.isSubclassOf(Map::class) -> MapHandler.handle(type, cache, schemaConfigurator)
+        clazz.isSubclassOf(Enum::class) -> EnumHandler.handle(type, clazz, cache, enrichment)
+        clazz.isSubclassOf(Collection::class) -> CollectionHandler.handle(type, cache, schemaConfigurator, enrichment)
+        clazz.isSubclassOf(Map::class) -> MapHandler.handle(type, cache, schemaConfigurator, enrichment)
         else -> {
           if (clazz.isSealed) {
-            SealedObjectHandler.handle(type, clazz, cache, schemaConfigurator)
+            SealedObjectHandler.handle(type, clazz, cache, schemaConfigurator, enrichment)
           } else {
-            SimpleObjectHandler.handle(type, clazz, cache, schemaConfigurator)
+            SimpleObjectHandler.handle(type, clazz, cache, schemaConfigurator, enrichment)
           }
         }
       }
@@ -65,11 +64,12 @@ object SchemaGenerator {
   fun fromTypeOrUnit(
     type: KType,
     cache: MutableMap<String, JsonSchema> = mutableMapOf(),
-    schemaConfigurator: SchemaConfigurator
+    schemaConfigurator: SchemaConfigurator,
+    enrichment: TypeEnrichment<*>? = null
   ): JsonSchema? =
     when (type.classifier as KClass<*>) {
       Unit::class -> null
-      else -> fromTypeToSchema(type, cache, schemaConfigurator)
+      else -> fromTypeToSchema(type, cache, schemaConfigurator, enrichment)
     }
 
   private fun checkForNull(type: KType, schema: JsonSchema): JsonSchema = when (type.isMarkedNullable) {

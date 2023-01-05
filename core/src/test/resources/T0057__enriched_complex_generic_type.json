@@ -1,0 +1,183 @@
+{
+  "openapi": "3.1.0",
+  "jsonSchemaDialect": "https://json-schema.org/draft/2020-12/schema",
+  "info": {
+    "title": "Test API",
+    "version": "1.33.7",
+    "description": "An amazing, fully-ish 😉 generated API spec",
+    "termsOfService": "https://example.com",
+    "contact": {
+      "name": "Homer Simpson",
+      "url": "https://gph.is/1NPUDiM",
+      "email": "chunkylover53@aol.com"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://github.com/bkbnio/kompendium/blob/main/LICENSE"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://myawesomeapi.com",
+      "description": "Production instance of my API"
+    },
+    {
+      "url": "https://staging.myawesomeapi.com",
+      "description": "Where the fun stuff happens"
+    }
+  ],
+  "paths": {
+    "/example": {
+      "post": {
+        "tags": [],
+        "summary": "Great Summary!",
+        "description": "testing more",
+        "parameters": [],
+        "requestBody": {
+          "description": "A test request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MultiNestedGenerics-String-ComplexRequest-simple"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "A Successful Endeavor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TestCreatedResponse"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      },
+      "parameters": [
+        {
+          "name": "a",
+          "in": "path",
+          "schema": {
+            "type": "string"
+          },
+          "required": true,
+          "deprecated": false
+        },
+        {
+          "name": "aa",
+          "in": "query",
+          "schema": {
+            "type": "number",
+            "format": "int32"
+          },
+          "required": true,
+          "deprecated": false
+        }
+      ]
+    }
+  },
+  "webhooks": {},
+  "components": {
+    "schemas": {
+      "TestCreatedResponse": {
+        "type": "object",
+        "properties": {
+          "c": {
+            "type": "string"
+          },
+          "id": {
+            "type": "number",
+            "format": "int32"
+          }
+        },
+        "required": [
+          "c",
+          "id"
+        ]
+      },
+      "MultiNestedGenerics-String-ComplexRequest-simple": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/ComplexRequest-nested"
+            },
+            "description": "Getting pretty crazy",
+            "type": "object"
+          }
+        },
+        "required": [
+          "content"
+        ]
+      },
+      "ComplexRequest-nested": {
+        "type": "object",
+        "properties": {
+          "amazingField": {
+            "type": "string"
+          },
+          "org": {
+            "type": "string"
+          },
+          "tables": {
+            "items": {
+              "$ref": "#/components/schemas/NestedComplexItem-nested"
+            },
+            "description": "A nested item",
+            "type": "array"
+          }
+        },
+        "required": [
+          "amazingField",
+          "org",
+          "tables"
+        ]
+      },
+      "NestedComplexItem-nested": {
+        "type": "object",
+        "properties": {
+          "alias": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/CrazyItem"
+            },
+            "type": "object"
+          },
+          "name": {
+            "type": "string",
+            "description": "A nested description"
+          }
+        },
+        "required": [
+          "alias",
+          "name"
+        ]
+      },
+      "CrazyItem": {
+        "type": "object",
+        "properties": {
+          "enumeration": {
+            "$ref": "#/components/schemas/SimpleEnum"
+          }
+        },
+        "required": [
+          "enumeration"
+        ]
+      },
+      "SimpleEnum": {
+        "type": "string",
+        "enum": [
+          "ONE",
+          "TWO"
+        ]
+      }
+    },
+    "securitySchemes": {}
+  },
+  "security": [],
+  "tags": []
+}

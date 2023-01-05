@@ -2,6 +2,7 @@ package io.bkbn.kompendium.json.schema
 
 import io.bkbn.kompendium.core.fixtures.ComplexRequest
 import io.bkbn.kompendium.core.fixtures.FlibbityGibbit
+import io.bkbn.kompendium.core.fixtures.NestedComplexItem
 import io.bkbn.kompendium.core.fixtures.ObjectWithEnum
 import io.bkbn.kompendium.core.fixtures.SerialNameObject
 import io.bkbn.kompendium.core.fixtures.SimpleEnum
@@ -11,12 +12,14 @@ import io.bkbn.kompendium.core.fixtures.TestResponse
 import io.bkbn.kompendium.core.fixtures.TestSimpleRequest
 import io.bkbn.kompendium.core.fixtures.TransientObject
 import io.bkbn.kompendium.core.fixtures.UnbackedObject
+import io.bkbn.kompendium.enrichment.TypeEnrichment
 import io.bkbn.kompendium.json.schema.definition.JsonSchema
 import io.kotest.assertions.json.shouldEqualJson
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.DescribeSpec
 import kotlinx.serialization.json.Json
 import java.util.UUID
+import kotlin.reflect.typeOf
 
 class SchemaGeneratorTest : DescribeSpec({
   describe("Scalars") {
@@ -88,13 +91,49 @@ class SchemaGeneratorTest : DescribeSpec({
       jsonSchemaTest<Map<String, Int>>("T0012__scalar_map.json")
     }
     it("Throws an error when map keys are not strings") {
-      shouldThrow<IllegalArgumentException> { SchemaGenerator.fromTypeToSchema<Map<Int, Int>>() }
+      shouldThrow<IllegalArgumentException> {
+        SchemaGenerator.fromTypeToSchema(
+          typeOf<Map<Int, Int>>(),
+          cache = mutableMapOf(),
+          schemaConfigurator = KotlinXSchemaConfigurator()
+        )
+      }
     }
     it("Can generate the schema for a map of objects") {
       jsonSchemaTest<Map<String, TestResponse>>("T0013__object_map.json")
     }
     it("Can generate the schema for a nullable map") {
       jsonSchemaTest<Map<String, Int>?>("T0014__nullable_map.json")
+    }
+  }
+  describe("Enrichment") {
+    it("Can attach an enrichment to a simple type") {
+      jsonSchemaTest<TestSimpleRequest>(
+        snapshotName = "T0022__enriched_simple_object.json",
+        enrichment = TypeEnrichment("simple") {
+          TestSimpleRequest::a {
+            description = "This is a simple description"
+          }
+          TestSimpleRequest::b {
+            deprecated = true
+          }
+        }
+      )
+    }
+    it("Can properly assign a reference to a nested enrichment") {
+      jsonSchemaTest<ComplexRequest>(
+        snapshotName = "T0023__enriched_nested_reference.json",
+        enrichment = TypeEnrichment("example") {
+          ComplexRequest::tables {
+            description = "Collection of important items"
+            typeEnrichment = TypeEnrichment("table") {
+              NestedComplexItem::name {
+                description = "The name of the table"
+              }
+            }
+          }
+        }
+      )
     }
   }
 }) {
@@ -107,11 +146,14 @@ class SchemaGeneratorTest : DescribeSpec({
 
     private fun JsonSchema.serialize() = json.encodeToString(JsonSchema.serializer(), this)
 
-    private inline fun <reified T> jsonSchemaTest(snapshotName: String) {
+    private inline fun <reified T> jsonSchemaTest(snapshotName: String, enrichment: TypeEnrichment<*>? = null) {
       // act
-      val schema = SchemaGenerator.fromTypeToSchema<T>(schemaConfigurator = KotlinXSchemaConfigurator())
-
-      // todo add cache assertions!!!
+      val schema = SchemaGenerator.fromTypeToSchema(
+        type = typeOf<T>(),
+        cache = mutableMapOf(),
+        schemaConfigurator = KotlinXSchemaConfigurator(),
+        enrichment = enrichment,
+      )
 
       // assert
       schema.serialize() shouldEqualJson getFileSnapshot(snapshotName)

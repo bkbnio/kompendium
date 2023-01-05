@@ -12,6 +12,12 @@
 
 ## Released
 
+## [3.10.0] - January 4th, 2023
+
+### Added
+
+- Support for type enrichments!  `deprecated` and `description` to start
+
 ## [3.9.0] - November 15th, 2022
 
 ### Added

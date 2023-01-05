@@ -4,7 +4,9 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ArrayDefinition(
-  val items: JsonSchema
+  val items: JsonSchema,
+  override val deprecated: Boolean? = null,
+  override val description: String? = null,
 ) : JsonSchema {
   val type: String = "array"
 }
