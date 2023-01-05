@@ -12,6 +12,12 @@
 
 ## Released
 
+## [3.11.0] - January 5th, 2023
+
+### Added
+
+- Support for type constraints.
+
 ## [3.10.0] - January 4th, 2023
 
 ### Added

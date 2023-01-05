@@ -13,6 +13,9 @@ import java.time.Instant
 data class TestNested(val nesty: String)
 
 @Serializable
+data class DoubleResponse(val payload: Double)
+
+@Serializable
 data class TestRequest(
   val fieldName: TestNested,
   val b: Double,

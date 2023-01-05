@@ -1,0 +1,103 @@
+{
+  "openapi": "3.1.0",
+  "jsonSchemaDialect": "https://json-schema.org/draft/2020-12/schema",
+  "info": {
+    "title": "Test API",
+    "version": "1.33.7",
+    "description": "An amazing, fully-ish 😉 generated API spec",
+    "termsOfService": "https://example.com",
+    "contact": {
+      "name": "Homer Simpson",
+      "url": "https://gph.is/1NPUDiM",
+      "email": "chunkylover53@aol.com"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://github.com/bkbnio/kompendium/blob/main/LICENSE"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://myawesomeapi.com",
+      "description": "Production instance of my API"
+    },
+    {
+      "url": "https://staging.myawesomeapi.com",
+      "description": "Where the fun stuff happens"
+    }
+  ],
+  "paths": {
+    "/test/{a}": {
+      "get": {
+        "tags": [],
+        "summary": "Get an array",
+        "description": "Get an array of strings",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "An array",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Page-String-example"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      },
+      "parameters": []
+    }
+  },
+  "webhooks": {},
+  "components": {
+    "schemas": {
+      "Page-String-example": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 10,
+            "minItems": 2,
+            "uniqueItems": true,
+            "type": "array"
+          },
+          "number": {
+            "type": "number",
+            "format": "int32"
+          },
+          "numberOfElements": {
+            "type": "number",
+            "format": "int32"
+          },
+          "size": {
+            "type": "number",
+            "format": "int32"
+          },
+          "totalElements": {
+            "type": "number",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "number",
+            "format": "int32"
+          }
+        },
+        "required": [
+          "content",
+          "number",
+          "numberOfElements",
+          "size",
+          "totalElements",
+          "totalPages"
+        ]
+      }
+    },
+    "securitySchemes": {}
+  },
+  "security": [],
+  "tags": []
+}
