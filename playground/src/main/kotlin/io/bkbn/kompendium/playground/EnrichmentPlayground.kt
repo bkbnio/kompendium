@@ -70,6 +70,8 @@ private val testEnrichment = TypeEnrichment("testerino") {
     description = "A good but old field"
     typeEnrichment = TypeEnrichment("big-tings") {
       InnerRequest::d {
+        exclusiveMaximum = 10.0
+        exclusiveMinimum = 1.1
         description = "THE BIG D"
       }
     }

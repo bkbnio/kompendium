@@ -169,12 +169,33 @@ object SimpleObjectHandler {
 
   private fun PropertyEnrichment.applyToSchema(schema: JsonSchema): JsonSchema = when (schema) {
     is AnyOfDefinition -> schema.copy(deprecated = deprecated, description = description)
-    is ArrayDefinition -> schema.copy(deprecated = deprecated, description = description)
+    is ArrayDefinition -> schema.copy(
+      deprecated = deprecated,
+      description = description,
+      minItems = minItems,
+      maxItems = maxItems,
+      uniqueItems = uniqueItems,
+    )
     is EnumDefinition -> schema.copy(deprecated = deprecated, description = description)
     is MapDefinition -> schema.copy(deprecated = deprecated, description = description)
     is NullableDefinition -> schema.copy(deprecated = deprecated, description = description)
     is OneOfDefinition -> schema.copy(deprecated = deprecated, description = description)
     is ReferenceDefinition -> schema.copy(deprecated = deprecated, description = description)
-    is TypeDefinition -> schema.copy(deprecated = deprecated, description = description)
+    is TypeDefinition -> schema.copy(
+      deprecated = deprecated,
+      description = description,
+      multipleOf = multipleOf,
+      maximum = maximum,
+      exclusiveMaximum = exclusiveMaximum,
+      minimum = minimum,
+      exclusiveMinimum = exclusiveMinimum,
+      maxLength = maxLength,
+      minLength = minLength,
+      pattern = pattern,
+      contentEncoding = contentEncoding,
+      contentMediaType = contentMediaType,
+      maxProperties = maxProperties,
+      minProperties = minProperties,
+    )
   }
 }

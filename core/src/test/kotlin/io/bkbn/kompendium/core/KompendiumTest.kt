@@ -2,6 +2,7 @@ package io.bkbn.kompendium.core
 
 import dev.forst.ktor.apikey.apiKey
 import io.bkbn.kompendium.core.fixtures.TestHelpers.openApiTestAllSerializers
+import io.bkbn.kompendium.core.util.arrayConstraints
 import io.bkbn.kompendium.core.util.complexRequest
 import io.bkbn.kompendium.core.util.customAuthConfig
 import io.bkbn.kompendium.core.util.customFieldNameResponse
@@ -9,6 +10,7 @@ import io.bkbn.kompendium.core.util.dateTimeString
 import io.bkbn.kompendium.core.util.defaultAuthConfig
 import io.bkbn.kompendium.core.util.defaultField
 import io.bkbn.kompendium.core.util.defaultParameter
+import io.bkbn.kompendium.core.util.doubleConstraints
 import io.bkbn.kompendium.core.util.enrichedComplexGenericType
 import io.bkbn.kompendium.core.util.enrichedNestedCollection
 import io.bkbn.kompendium.core.util.enrichedSimpleRequest
@@ -20,6 +22,7 @@ import io.bkbn.kompendium.core.util.genericPolymorphicResponseMultipleImpls
 import io.bkbn.kompendium.core.util.gnarlyGenericResponse
 import io.bkbn.kompendium.core.util.headerParameter
 import io.bkbn.kompendium.core.util.ignoredFieldsResponse
+import io.bkbn.kompendium.core.util.intConstraints
 import io.bkbn.kompendium.core.util.multipleAuthStrategies
 import io.bkbn.kompendium.core.util.multipleExceptions
 import io.bkbn.kompendium.core.util.nestedGenericCollection
@@ -56,6 +59,9 @@ import io.bkbn.kompendium.core.util.simpleGenericResponse
 import io.bkbn.kompendium.core.util.simplePathParsing
 import io.bkbn.kompendium.core.util.simpleRecursive
 import io.bkbn.kompendium.core.util.singleException
+import io.bkbn.kompendium.core.util.stringConstraints
+import io.bkbn.kompendium.core.util.stringContentEncodingConstraints
+import io.bkbn.kompendium.core.util.stringPatternConstraints
 import io.bkbn.kompendium.core.util.topLevelNullable
 import io.bkbn.kompendium.core.util.trailingSlash
 import io.bkbn.kompendium.core.util.unbackedFieldsResponse
@@ -318,9 +324,6 @@ class KompendiumTest : DescribeSpec({
       exception.message should startWith("A route has already been registered for path: /test/{a} and method: GET")
     }
   }
-  describe("Constraints") {
-    // TODO Assess strategies here
-  }
   describe("Formats") {
     it("Can set a format for a simple type schema") {
       openApiTestAllSerializers(
@@ -440,6 +443,28 @@ class KompendiumTest : DescribeSpec({
     }
     it("Can enrich a complex generic type") {
       openApiTestAllSerializers("T0057__enriched_complex_generic_type.json") { enrichedComplexGenericType() }
+    }
+  }
+  describe("Constraints") {
+    it("Can apply constraints to an int field") {
+      openApiTestAllSerializers("T0059__int_constraints.json") { intConstraints() }
+    }
+    it("Can apply constraints to a double field") {
+      openApiTestAllSerializers("T0060__double_constraints.json") { doubleConstraints() }
+    }
+    it("Can apply a min and max length to a string field") {
+      openApiTestAllSerializers("T0061__string_min_max_constraints.json") { stringConstraints() }
+    }
+    it("Can apply a pattern to a string field") {
+      openApiTestAllSerializers("T0062__string_pattern_constraints.json") { stringPatternConstraints() }
+    }
+    it("Can apply a content encoding and media type to a string field") {
+      openApiTestAllSerializers("T0063__string_content_encoding_constraints.json") {
+        stringContentEncodingConstraints()
+      }
+    }
+    it("Can apply constraints to an array field") {
+      openApiTestAllSerializers("T0064__array_constraints.json") { arrayConstraints() }
     }
   }
 })
