@@ -1,6 +1,5 @@
 Kompendium allows users to enrich their data types with additional information. This can be done by defining a
-`TypeEnrichment` object and passing it to the `enrich` function on the `NotarizedRoute` builder. Enrichments
-can be added to any request or response.
+`TypeEnrichment` object and passing it to the `enrichment` parameter of the relevant `requestType` or `responseType`.
 
 ```kotlin
 data class SimpleData(val a: String, val b: Int? = null)
