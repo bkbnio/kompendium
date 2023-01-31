@@ -33,7 +33,6 @@ dependencies {
   implementation("io.ktor:ktor-server-html-builder:$ktorVersion")
   implementation("io.ktor:ktor-server-content-negotiation:$ktorVersion")
   implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
-  implementation("ch.qos.logback:logback-classic:1.4.5")
 
   // Formatting
   detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:$detektVersion")
