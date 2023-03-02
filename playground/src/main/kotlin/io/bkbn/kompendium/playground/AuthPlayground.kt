@@ -4,6 +4,7 @@ import io.bkbn.kompendium.core.metadata.GetInfo
 import io.bkbn.kompendium.core.plugin.NotarizedApplication
 import io.bkbn.kompendium.core.plugin.NotarizedRoute
 import io.bkbn.kompendium.core.routes.redoc
+import io.bkbn.kompendium.core.routes.swagger
 import io.bkbn.kompendium.json.schema.definition.TypeDefinition
 import io.bkbn.kompendium.oas.component.Components
 import io.bkbn.kompendium.oas.payload.Parameter
@@ -68,6 +69,7 @@ private fun Application.mainModule() {
     )
   }
   routing {
+    swagger(pageTitle = "Simple API Docs")
     redoc(pageTitle = "Simple API Docs")
     authenticate("basic") {
       route("/{id}") {

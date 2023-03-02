@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.SerializationFeature
 import io.bkbn.kompendium.core.fixtures.TestSpecs.defaultSpec
 import io.bkbn.kompendium.core.plugin.NotarizedApplication
 import io.bkbn.kompendium.core.routes.redoc
+import io.bkbn.kompendium.core.routes.swagger
 import io.bkbn.kompendium.json.schema.KotlinXSchemaConfigurator
 import io.bkbn.kompendium.json.schema.definition.JsonSchema
 import io.bkbn.kompendium.oas.OpenApiSpec
@@ -130,6 +131,7 @@ object TestHelpers {
     }
     application(applicationSetup)
     routing {
+      swagger()
       redoc()
       routeUnderTest()
     }
