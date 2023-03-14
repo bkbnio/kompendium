@@ -4,8 +4,6 @@
 
 ### Added
 
-- Add support for swagger documentation
-
 ### Changed
 
 ### Remove
@@ -13,6 +11,12 @@
 ---
 
 ## Released
+
+## [3.12.0] - March 14th, 2023
+
+### Added
+
+- Add support for swagger documentation
 
 ## [3.11.0] - January 5th, 2023
 
