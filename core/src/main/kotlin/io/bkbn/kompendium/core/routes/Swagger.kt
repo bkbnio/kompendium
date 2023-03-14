@@ -28,8 +28,10 @@ fun Route.swagger(
   pageTitle: String = "Docs",
   path: String = "/swagger-ui",
   specUrl: String = "/openapi.json",
-  swaggerVersion: String = "5.0.0-alpha.0"
+  swaggerVersion: String? = null
 ) {
+  val swaggerVersionSuffix = if (swaggerVersion == null) "" else "@$swaggerVersion"
+
   route(path) {
     get {
       call.respondHtml {
@@ -45,7 +47,7 @@ fun Route.swagger(
             content = "width=device-width, initial-scale=1"
           }
           link {
-            href = "https://unpkg.com/swagger-ui-dist@$swaggerVersion/swagger-ui.css"
+            href = "https://unpkg.com/swagger-ui-dist$swaggerVersionSuffix/swagger-ui.css"
             rel = "stylesheet"
           }
         }
@@ -54,10 +56,10 @@ fun Route.swagger(
             id = "swagger-ui"
           }
           script {
-            src = "https://unpkg.com/swagger-ui-dist@$swaggerVersion/swagger-ui-standalone-preset.js"
+            src = "https://unpkg.com/swagger-ui-dist$swaggerVersionSuffix/swagger-ui-standalone-preset.js"
           }
           script {
-            src = "https://unpkg.com/swagger-ui-dist@$swaggerVersion/swagger-ui-bundle.js"
+            src = "https://unpkg.com/swagger-ui-dist$swaggerVersionSuffix/swagger-ui-bundle.js"
           }
           unsafe {
             +"""
