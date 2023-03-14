@@ -28,7 +28,7 @@ fun Route.swagger(
   pageTitle: String = "Docs",
   path: String = "/swagger-ui",
   specUrl: String = "/openapi.json",
-  swaggerVersion: String = "4.17.0"
+  swaggerVersion: String = "5.0.0-alpha.0"
 ) {
   route(path) {
     get {
