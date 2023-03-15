@@ -12,6 +12,12 @@
 
 ## Released
 
+## [3.13.0] - March 15th, 2023
+
+### Changed
+
+- Post, Put, and Patch now support not providing request info
+
 ## [3.12.0] - March 14th, 2023
 
 ### Added
