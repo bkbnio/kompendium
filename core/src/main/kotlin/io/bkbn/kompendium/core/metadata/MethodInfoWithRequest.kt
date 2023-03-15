@@ -1,7 +1,7 @@
 package io.bkbn.kompendium.core.metadata
 
 sealed interface MethodInfoWithRequest : MethodInfo {
-  val request: RequestInfo
+  val request: RequestInfo?
 
   abstract class Builder<T : MethodInfoWithRequest> : MethodInfo.Builder<T>() {
     internal var request: RequestInfo? = null

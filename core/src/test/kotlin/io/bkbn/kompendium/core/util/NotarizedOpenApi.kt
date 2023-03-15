@@ -299,3 +299,19 @@ fun Routing.overrideMediaTypes() {
     }
   }
 }
+
+fun Routing.postNoReqBody() {
+  route("/no_req_body") {
+    install(NotarizedRoute()) {
+      post = PostInfo.builder {
+        summary(defaultPathSummary)
+        description(defaultPathDescription)
+        response {
+          responseType<TestResponse>()
+          description("Cool response")
+          responseCode(HttpStatusCode.Created)
+        }
+      }
+    }
+  }
+}

@@ -4,7 +4,7 @@ import io.bkbn.kompendium.oas.common.ExternalDocumentation
 import io.bkbn.kompendium.oas.payload.Parameter
 
 class PostInfo private constructor(
-  override val request: RequestInfo,
+  override val request: RequestInfo?,
   override val errors: MutableList<ResponseInfo>,
   override val response: ResponseInfo,
   override val tags: Set<String>,
@@ -26,7 +26,7 @@ class PostInfo private constructor(
 
   class Builder : MethodInfoWithRequest.Builder<PostInfo>() {
     override fun build() = PostInfo(
-      request = request ?: error("request info must be present"),
+      request = request,
       errors = errors,
       response = response ?: error("response info must be present"),
       tags = tags,
