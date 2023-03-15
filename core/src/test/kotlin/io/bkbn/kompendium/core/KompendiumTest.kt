@@ -48,6 +48,7 @@ import io.bkbn.kompendium.core.util.polymorphicCollectionResponse
 import io.bkbn.kompendium.core.util.polymorphicException
 import io.bkbn.kompendium.core.util.polymorphicMapResponse
 import io.bkbn.kompendium.core.util.polymorphicResponse
+import io.bkbn.kompendium.core.util.postNoReqBody
 import io.bkbn.kompendium.core.util.primitives
 import io.bkbn.kompendium.core.util.reqRespExamples
 import io.bkbn.kompendium.core.util.requiredParams
@@ -128,6 +129,9 @@ class KompendiumTest : DescribeSpec({
     }
     it("Can override media types") {
       openApiTestAllSerializers("T0052__override_media_types.json") { overrideMediaTypes() }
+    }
+    it("Can support a post request with no request body") {
+      openApiTestAllSerializers("T0065__post_no_req_body.json") { postNoReqBody() }
     }
   }
   describe("Route Parsing") {

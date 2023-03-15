@@ -72,13 +72,15 @@ object Helpers {
 
     when (this) {
       is MethodInfoWithRequest -> {
-        SchemaGenerator.fromTypeOrUnit(
-          type = this.request.requestType,
-          cache = spec.components.schemas,
-          schemaConfigurator = schemaConfigurator,
-          enrichment = this.request.typeEnrichment,
-        )?.let { schema ->
-          spec.components.schemas[this.request.requestType.getSlug(this.request.typeEnrichment)] = schema
+        this.request?.let { reqInfo ->
+          SchemaGenerator.fromTypeOrUnit(
+            type = reqInfo.requestType,
+            cache = spec.components.schemas,
+            schemaConfigurator = schemaConfigurator,
+            enrichment = reqInfo.typeEnrichment,
+          )?.let { schema ->
+            spec.components.schemas[reqInfo.requestType.getSlug(reqInfo.typeEnrichment)] = schema
+          }
         }
       }
 
@@ -121,15 +123,17 @@ object Helpers {
       ?.map { listOf(it).toMap() }
       ?.toMutableList(),
     requestBody = when (this) {
-      is MethodInfoWithRequest -> Request(
-        description = this.request.description,
-        content = this.request.requestType.toReferenceContent(
-          examples = this.request.examples,
-          mediaTypes = this.request.mediaTypes,
-          enrichment = this.request.typeEnrichment
-        ),
-        required = true
-      )
+      is MethodInfoWithRequest -> this.request?.let { reqInfo ->
+        Request(
+          description = reqInfo.description,
+          content = reqInfo.requestType.toReferenceContent(
+            examples = reqInfo.examples,
+            mediaTypes = reqInfo.mediaTypes,
+            enrichment = reqInfo.typeEnrichment
+          ),
+          required = true
+        )
+      }
 
       else -> null
     },
