@@ -11,6 +11,7 @@ data class Type(val name: String) {
   @Serializable
   @Resource("/edit")
   data class Edit(val parent: Type)
+
   @Serializable
   @Resource("/other/{page}")
   data class Other(val parent: Type, val page: Int)

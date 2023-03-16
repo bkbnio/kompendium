@@ -7,6 +7,7 @@ data class Listing(val name: String, val page: Int)
 data class Type(val name: String) {
   @Location("/edit")
   data class Edit(val parent: Type)
+
   @Location("/other/{page}")
   data class Other(val parent: Type, val page: Int)
 }

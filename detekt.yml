@@ -22,6 +22,8 @@ formatting:
     indentSize: 2
   ImportOrdering:
     active: false
+  EnumEntryNameCase:
+    active: false
 naming:
   ConstructorParameterNaming:
     active: false
