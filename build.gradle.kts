@@ -6,7 +6,7 @@ plugins {
   id("io.bkbn.sourdough.root") version "0.12.0"
   id("com.github.jakemarsden.git-hooks") version "0.0.2"
   id("org.jetbrains.kotlinx.kover") version "0.6.1"
-  id("io.github.gradle-nexus.publish-plugin") version "1.2.0"
+  id("io.github.gradle-nexus.publish-plugin") version "1.3.0"
 }
 
 gitHooks {
