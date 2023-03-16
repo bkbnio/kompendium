@@ -34,7 +34,6 @@ object SimpleObjectHandler {
     schemaConfigurator: SchemaConfigurator,
     enrichment: TypeEnrichment<*>?,
   ): JsonSchema {
-
     cache[type.getSlug(enrichment)] = ReferenceDefinition(type.getReferenceSlug(enrichment))
 
     val typeMap = clazz.typeParameters.zip(type.arguments).toMap()
@@ -176,6 +175,7 @@ object SimpleObjectHandler {
       maxItems = maxItems,
       uniqueItems = uniqueItems,
     )
+
     is EnumDefinition -> schema.copy(deprecated = deprecated, description = description)
     is MapDefinition -> schema.copy(deprecated = deprecated, description = description)
     is NullableDefinition -> schema.copy(deprecated = deprecated, description = description)
