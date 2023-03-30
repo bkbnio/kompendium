@@ -23,7 +23,7 @@ dependencies {
   // Kompendium
   api(projects.kompendiumEnrichment)
 
-  implementation("org.jetbrains.kotlin:kotlin-reflect:1.8.10")
+  implementation("org.jetbrains.kotlin:kotlin-reflect:1.8.20")
   implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
 
   // Formatting
