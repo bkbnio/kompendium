@@ -14,7 +14,7 @@ class ResponseInfo private constructor(
   val description: String,
   val examples: Map<String, MediaType.Example>?,
   val mediaTypes: Set<String>,
-  val responseHeaders: Map<String, ResponseHeader>
+  val responseHeaders: Map<String, ResponseHeader>?
 ) {
 
   companion object {
@@ -72,7 +72,7 @@ class ResponseInfo private constructor(
       typeEnrichment = typeEnrichment,
       examples = examples,
       mediaTypes = mediaTypes ?: setOf("application/json"),
-      responseHeaders = responseHeaders ?: emptyMap()
+      responseHeaders = responseHeaders
     )
   }
 }
