@@ -20,8 +20,8 @@ import io.bkbn.kompendium.core.util.TestModules.defaultPathSummary
 import io.bkbn.kompendium.core.util.TestModules.defaultResponseDescription
 import io.bkbn.kompendium.core.util.TestModules.rootPath
 import io.bkbn.kompendium.json.schema.definition.TypeDefinition
+import io.bkbn.kompendium.oas.payload.Header
 import io.bkbn.kompendium.oas.payload.Parameter
-import io.bkbn.kompendium.oas.payload.ResponseHeader
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.call
@@ -69,11 +69,11 @@ fun Routing.responseHeaders() {
           description(defaultResponseDescription)
           responseHeaders(
             mapOf(
-              HttpHeaders.ETag to ResponseHeader(
+              HttpHeaders.ETag to Header(
                 TypeDefinition.STRING,
                 "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/ETag"
               ),
-              HttpHeaders.LastModified to ResponseHeader(
+              HttpHeaders.LastModified to Header(
                 TypeDefinition.STRING,
                 "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Last-Modified"
               ),

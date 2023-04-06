@@ -1,8 +1,8 @@
 package io.bkbn.kompendium.core.metadata
 
 import io.bkbn.kompendium.enrichment.TypeEnrichment
+import io.bkbn.kompendium.oas.payload.Header
 import io.bkbn.kompendium.oas.payload.MediaType
-import io.bkbn.kompendium.oas.payload.ResponseHeader
 import io.ktor.http.HttpStatusCode
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
@@ -14,7 +14,7 @@ class ResponseInfo private constructor(
   val description: String,
   val examples: Map<String, MediaType.Example>?,
   val mediaTypes: Set<String>,
-  val responseHeaders: Map<String, ResponseHeader>?
+  val responseHeaders: Map<String, Header>?
 ) {
 
   companion object {
@@ -32,9 +32,9 @@ class ResponseInfo private constructor(
     private var description: String? = null
     private var examples: Map<String, MediaType.Example>? = null
     private var mediaTypes: Set<String>? = null
-    private var responseHeaders: Map<String, ResponseHeader>? = null
+    private var responseHeaders: Map<String, Header>? = null
 
-    fun responseHeaders(headers: Map<String, ResponseHeader>) = apply {
+    fun responseHeaders(headers: Map<String, Header>) = apply {
       this.responseHeaders = headers
     }
 
