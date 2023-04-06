@@ -2,8 +2,6 @@
 
 ## Unreleased
 
-- Add support for response headers
-
 ### Added
 
 ### Changed
@@ -13,6 +11,12 @@
 ---
 
 ## Released
+
+## [3.14.0] - April 6th, 2023
+
+### Added
+
+- Add support for response headers
 
 ## [3.13.0] - March 15th, 2023
 
