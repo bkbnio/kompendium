@@ -140,6 +140,7 @@ object Helpers {
     responses = mapOf(
       this.response.responseCode.value to Response(
         description = this.response.description,
+        headers = this.response.responseHeaders,
         content = this.response.responseType.toReferenceContent(
           examples = this.response.examples,
           mediaTypes = this.response.mediaTypes,
@@ -152,6 +153,7 @@ object Helpers {
   private fun List<ResponseInfo>.toResponseMap(): Map<Int, Response> = associate { error ->
     error.responseCode.value to Response(
       description = error.description,
+      headers = error.responseHeaders,
       content = error.responseType.toReferenceContent(
         examples = error.examples,
         mediaTypes = error.mediaTypes,

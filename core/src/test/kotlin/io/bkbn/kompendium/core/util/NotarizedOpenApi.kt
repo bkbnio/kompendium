@@ -20,7 +20,9 @@ import io.bkbn.kompendium.core.util.TestModules.defaultPathSummary
 import io.bkbn.kompendium.core.util.TestModules.defaultResponseDescription
 import io.bkbn.kompendium.core.util.TestModules.rootPath
 import io.bkbn.kompendium.json.schema.definition.TypeDefinition
+import io.bkbn.kompendium.oas.payload.Header
 import io.bkbn.kompendium.oas.payload.Parameter
+import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.call
 import io.ktor.server.application.install
@@ -45,6 +47,38 @@ fun Routing.notarizedGet() {
           responseCode(HttpStatusCode.OK)
           responseType<TestResponse>()
           description(defaultResponseDescription)
+        }
+        summary(defaultPathSummary)
+        description(defaultPathDescription)
+      }
+    }
+    get {
+      call.respondText { "hey dude ‼️ congrats on the get request" }
+    }
+  }
+}
+
+fun Routing.responseHeaders() {
+  route(defaultPath) {
+    install(NotarizedRoute()) {
+      parameters = defaultParams
+      get = GetInfo.builder {
+        response {
+          responseCode(HttpStatusCode.OK)
+          responseType<TestResponse>()
+          description(defaultResponseDescription)
+          responseHeaders(
+            mapOf(
+              HttpHeaders.ETag to Header(
+                TypeDefinition.STRING,
+                "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/ETag"
+              ),
+              HttpHeaders.LastModified to Header(
+                TypeDefinition.STRING,
+                "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Last-Modified"
+              ),
+            )
+          )
         }
         summary(defaultPathSummary)
         description(defaultPathDescription)

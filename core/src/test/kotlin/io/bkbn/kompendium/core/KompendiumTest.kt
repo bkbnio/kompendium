@@ -52,6 +52,7 @@ import io.bkbn.kompendium.core.util.postNoReqBody
 import io.bkbn.kompendium.core.util.primitives
 import io.bkbn.kompendium.core.util.reqRespExamples
 import io.bkbn.kompendium.core.util.requiredParams
+import io.bkbn.kompendium.core.util.responseHeaders
 import io.bkbn.kompendium.core.util.returnsList
 import io.bkbn.kompendium.core.util.rootRoute
 import io.bkbn.kompendium.core.util.samePathDifferentMethodsAndAuth
@@ -132,6 +133,9 @@ class KompendiumTest : DescribeSpec({
     }
     it("Can support a post request with no request body") {
       openApiTestAllSerializers("T0065__post_no_req_body.json") { postNoReqBody() }
+    }
+    it("Can notarize a route with response headers") {
+      openApiTestAllSerializers("T0066__notarized_get_with_response_headers.json") { responseHeaders() }
     }
   }
   describe("Route Parsing") {
