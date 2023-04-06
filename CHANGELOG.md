@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add support for response headers
+
 ### Added
 
 ### Changed
