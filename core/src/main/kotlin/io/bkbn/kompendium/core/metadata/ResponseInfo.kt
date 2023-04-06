@@ -2,6 +2,7 @@ package io.bkbn.kompendium.core.metadata
 
 import io.bkbn.kompendium.enrichment.TypeEnrichment
 import io.bkbn.kompendium.oas.payload.MediaType
+import io.bkbn.kompendium.oas.payload.ResponseHeader
 import io.ktor.http.HttpStatusCode
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
@@ -12,7 +13,8 @@ class ResponseInfo private constructor(
   val typeEnrichment: TypeEnrichment<*>?,
   val description: String,
   val examples: Map<String, MediaType.Example>?,
-  val mediaTypes: Set<String>
+  val mediaTypes: Set<String>,
+  val responseHeaders: Map<String, ResponseHeader>
 ) {
 
   companion object {
@@ -30,6 +32,11 @@ class ResponseInfo private constructor(
     private var description: String? = null
     private var examples: Map<String, MediaType.Example>? = null
     private var mediaTypes: Set<String>? = null
+    private var responseHeaders: Map<String, ResponseHeader>? = null
+
+    fun responseHeaders(headers: Map<String, ResponseHeader>) = apply {
+      this.responseHeaders = headers
+    }
 
     fun responseCode(code: HttpStatusCode) = apply {
       this.responseCode = code
@@ -64,7 +71,8 @@ class ResponseInfo private constructor(
       description = description ?: error("You must provide a description in order to build a Response!"),
       typeEnrichment = typeEnrichment,
       examples = examples,
-      mediaTypes = mediaTypes ?: setOf("application/json")
+      mediaTypes = mediaTypes ?: setOf("application/json"),
+      responseHeaders = responseHeaders ?: emptyMap()
     )
   }
 }

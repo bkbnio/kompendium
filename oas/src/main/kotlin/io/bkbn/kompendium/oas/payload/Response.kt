@@ -16,7 +16,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Response(
   val description: String,
-  val headers: Map<String, Header>? = null,
+  val headers: Map<String, ResponseHeader>? = null,
   val content: Map<String, MediaType>? = null,
   val links: Map<String, Link>? = null
 )
