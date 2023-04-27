@@ -180,6 +180,10 @@ data class SerialNameObject(
   val camelCaseName: String
 )
 
+data class GenericObject<T>(
+  val data: T
+)
+
 enum class Color {
   RED,
   GREEN,

@@ -1,17 +1,7 @@
 package io.bkbn.kompendium.json.schema
 
-import io.bkbn.kompendium.core.fixtures.ComplexRequest
-import io.bkbn.kompendium.core.fixtures.FlibbityGibbit
-import io.bkbn.kompendium.core.fixtures.NestedComplexItem
-import io.bkbn.kompendium.core.fixtures.ObjectWithEnum
-import io.bkbn.kompendium.core.fixtures.SerialNameObject
-import io.bkbn.kompendium.core.fixtures.SimpleEnum
-import io.bkbn.kompendium.core.fixtures.SlammaJamma
+import io.bkbn.kompendium.core.fixtures.*
 import io.bkbn.kompendium.core.fixtures.TestHelpers.getFileSnapshot
-import io.bkbn.kompendium.core.fixtures.TestResponse
-import io.bkbn.kompendium.core.fixtures.TestSimpleRequest
-import io.bkbn.kompendium.core.fixtures.TransientObject
-import io.bkbn.kompendium.core.fixtures.UnbackedObject
 import io.bkbn.kompendium.enrichment.TypeEnrichment
 import io.bkbn.kompendium.json.schema.definition.JsonSchema
 import io.kotest.assertions.json.shouldEqualJson
@@ -61,6 +51,9 @@ class SchemaGeneratorTest : DescribeSpec({
     }
     it("Can generate the schema for object with SerialName annotation") {
       jsonSchemaTest<SerialNameObject>("T0020__serial_name_object.json")
+    }
+    it("Can generate the schema for object with generic property") {
+      jsonSchemaTest<GenericObject<TestSimpleRequest>>("T0024__generic_object.json")
     }
   }
   describe("Enums") {
