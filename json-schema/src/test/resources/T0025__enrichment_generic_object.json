@@ -1,0 +1,12 @@
+{
+  "type": "object",
+  "properties": {
+    "data": {
+      "description": "This is a generic param",
+      "$ref": "#/components/schemas/TestSimpleRequest-simple"
+    }
+  },
+  "required": [
+    "data"
+  ]
+}

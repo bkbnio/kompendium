@@ -128,6 +128,24 @@ class SchemaGeneratorTest : DescribeSpec({
         }
       )
     }
+    it("Can properly assign a reference to a generic object") {
+      jsonSchemaTest<GenericObject<TestSimpleRequest>>(
+        snapshotName = "T0025__enrichment_generic_object.json",
+        enrichment = TypeEnrichment("generic") {
+          GenericObject<TestSimpleRequest>::data {
+            description = "This is a generic param"
+            typeEnrichment = TypeEnrichment("simple") {
+              TestSimpleRequest::a {
+                description = "This is a simple description"
+              }
+              TestSimpleRequest::b {
+                deprecated = true
+              }
+            }
+          }
+        }
+      )
+    }
   }
 }) {
   companion object {
