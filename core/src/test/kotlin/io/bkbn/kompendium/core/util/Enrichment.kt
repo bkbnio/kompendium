@@ -6,6 +6,7 @@ import io.bkbn.kompendium.core.fixtures.NestedComplexItem
 import io.bkbn.kompendium.core.fixtures.TestCreatedResponse
 import io.bkbn.kompendium.core.fixtures.TestResponse
 import io.bkbn.kompendium.core.fixtures.TestSimpleRequest
+import io.bkbn.kompendium.core.fixtures.GenericObject
 import io.bkbn.kompendium.core.metadata.GetInfo
 import io.bkbn.kompendium.core.metadata.PostInfo
 import io.bkbn.kompendium.core.plugin.NotarizedRoute
@@ -130,6 +131,36 @@ fun Routing.enrichedComplexGenericType() {
           responseCode(HttpStatusCode.Created)
           responseType<TestCreatedResponse>()
           description(TestModules.defaultResponseDescription)
+        }
+      }
+    }
+  }
+}
+
+fun Routing.enrichedGenericResponse() {
+  route("/example") {
+    install(NotarizedRoute()) {
+      get = GetInfo.builder {
+        summary(TestModules.defaultPathSummary)
+        description(TestModules.defaultPathDescription)
+        response {
+          responseType(
+            enrichment = TypeEnrichment("generic") {
+              GenericObject<TestSimpleRequest>::data {
+                description = "A simple description"
+                typeEnrichment = TypeEnrichment("simple") {
+                  TestSimpleRequest::a {
+                    description = "A simple description"
+                  }
+                  TestSimpleRequest::b {
+                    deprecated = true
+                  }
+                }
+              }
+            }
+          )
+          description("A good response")
+          responseCode(HttpStatusCode.Created)
         }
       }
     }

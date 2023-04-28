@@ -6,6 +6,8 @@
 
 ### Changed
 
+- Generating enrichments for generic classes no longer throws the `Slugs should not be generated for field enrichments` error.
+
 ### Remove
 
 ---

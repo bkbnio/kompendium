@@ -133,8 +133,8 @@ object SimpleObjectHandler {
       ?: error("This indicates a bug in Kompendium, please open a GitHub issue")
     return SchemaGenerator.fromTypeToSchema(type, cache, schemaConfigurator, propEnrichment?.typeEnrichment).let {
       if (it.isOrContainsObjectOrEnumDef()) {
-        cache[type.getSlug(propEnrichment)] = it
-        ReferenceDefinition(type.getReferenceSlug(propEnrichment))
+        cache[type.getSlug(propEnrichment?.typeEnrichment)] = it
+        ReferenceDefinition(type.getReferenceSlug(propEnrichment?.typeEnrichment))
       } else {
         it
       }

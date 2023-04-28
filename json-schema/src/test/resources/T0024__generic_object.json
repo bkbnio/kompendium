@@ -1,0 +1,11 @@
+{
+  "type": "object",
+  "properties": {
+    "data": {
+      "$ref": "#/components/schemas/TestSimpleRequest"
+    }
+  },
+  "required": [
+    "data"
+  ]
+}

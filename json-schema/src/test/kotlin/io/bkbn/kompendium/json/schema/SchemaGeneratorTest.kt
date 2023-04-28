@@ -7,11 +7,12 @@ import io.bkbn.kompendium.core.fixtures.ObjectWithEnum
 import io.bkbn.kompendium.core.fixtures.SerialNameObject
 import io.bkbn.kompendium.core.fixtures.SimpleEnum
 import io.bkbn.kompendium.core.fixtures.SlammaJamma
-import io.bkbn.kompendium.core.fixtures.TestHelpers.getFileSnapshot
 import io.bkbn.kompendium.core.fixtures.TestResponse
 import io.bkbn.kompendium.core.fixtures.TestSimpleRequest
 import io.bkbn.kompendium.core.fixtures.TransientObject
 import io.bkbn.kompendium.core.fixtures.UnbackedObject
+import io.bkbn.kompendium.core.fixtures.GenericObject
+import io.bkbn.kompendium.core.fixtures.TestHelpers.getFileSnapshot
 import io.bkbn.kompendium.enrichment.TypeEnrichment
 import io.bkbn.kompendium.json.schema.definition.JsonSchema
 import io.kotest.assertions.json.shouldEqualJson
@@ -61,6 +62,9 @@ class SchemaGeneratorTest : DescribeSpec({
     }
     it("Can generate the schema for object with SerialName annotation") {
       jsonSchemaTest<SerialNameObject>("T0020__serial_name_object.json")
+    }
+    it("Can generate the schema for object with generic property") {
+      jsonSchemaTest<GenericObject<TestSimpleRequest>>("T0024__generic_object.json")
     }
   }
   describe("Enums") {
@@ -129,6 +133,24 @@ class SchemaGeneratorTest : DescribeSpec({
             typeEnrichment = TypeEnrichment("table") {
               NestedComplexItem::name {
                 description = "The name of the table"
+              }
+            }
+          }
+        }
+      )
+    }
+    it("Can properly assign a reference to a generic object") {
+      jsonSchemaTest<GenericObject<TestSimpleRequest>>(
+        snapshotName = "T0025__enrichment_generic_object.json",
+        enrichment = TypeEnrichment("generic") {
+          GenericObject<TestSimpleRequest>::data {
+            description = "This is a generic param"
+            typeEnrichment = TypeEnrichment("simple") {
+              TestSimpleRequest::a {
+                description = "This is a simple description"
+              }
+              TestSimpleRequest::b {
+                deprecated = true
               }
             }
           }
