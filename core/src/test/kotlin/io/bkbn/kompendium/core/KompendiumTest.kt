@@ -11,6 +11,7 @@ import io.bkbn.kompendium.core.util.defaultAuthConfig
 import io.bkbn.kompendium.core.util.defaultField
 import io.bkbn.kompendium.core.util.defaultParameter
 import io.bkbn.kompendium.core.util.doubleConstraints
+import io.bkbn.kompendium.core.util.enrichedGenericResponse
 import io.bkbn.kompendium.core.util.enrichedComplexGenericType
 import io.bkbn.kompendium.core.util.enrichedNestedCollection
 import io.bkbn.kompendium.core.util.enrichedSimpleRequest
@@ -451,6 +452,9 @@ class KompendiumTest : DescribeSpec({
     }
     it("Can enrich a complex generic type") {
       openApiTestAllSerializers("T0057__enriched_complex_generic_type.json") { enrichedComplexGenericType() }
+    }
+    it("Can enrich a generic object") {
+      openApiTestAllSerializers("T0067__enriched_generic_object.json") { enrichedGenericResponse() }
     }
   }
   describe("Constraints") {
