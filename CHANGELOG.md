@@ -6,13 +6,17 @@
 
 ### Changed
 
-- Generating enrichments for generic classes no longer throws the `Slugs should not be generated for field enrichments` error.
-
 ### Remove
 
 ---
 
 ## Released
+
+## [3.14.1] - April 28th, 2023
+
+### Changed
+
+- Generating enrichments for generic classes no longer throws the `Slugs should not be generated for field enrichments` error.
 
 ## [3.14.0] - April 6th, 2023
 
