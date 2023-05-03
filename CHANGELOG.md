@@ -6,6 +6,8 @@
 
 ### Changed
 
+- Route generation with parameters doesn`t add parameters to the path.
+
 ### Remove
 
 ---
