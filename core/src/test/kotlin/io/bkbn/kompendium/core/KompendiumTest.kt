@@ -67,6 +67,7 @@ import io.bkbn.kompendium.core.util.stringContentEncodingConstraints
 import io.bkbn.kompendium.core.util.stringPatternConstraints
 import io.bkbn.kompendium.core.util.topLevelNullable
 import io.bkbn.kompendium.core.util.trailingSlash
+import io.bkbn.kompendium.core.util.parameter
 import io.bkbn.kompendium.core.util.unbackedFieldsResponse
 import io.bkbn.kompendium.core.util.withOperationId
 import io.bkbn.kompendium.json.schema.definition.TypeDefinition
@@ -151,6 +152,9 @@ class KompendiumTest : DescribeSpec({
     }
     it("Can notarize a route with a trailing slash") {
       openApiTestAllSerializers("T0015__trailing_slash.json") { trailingSlash() }
+    }
+    it("Can notarize a route with a parameter") {
+      openApiTestAllSerializers("T0068__parameter.json") { parameter() }
     }
   }
   describe("Exceptions") {

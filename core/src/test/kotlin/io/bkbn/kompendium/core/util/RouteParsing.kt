@@ -14,6 +14,7 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.install
 import io.ktor.server.routing.Routing
 import io.ktor.server.routing.route
+import io.ktor.server.routing.param
 
 fun Routing.simplePathParsing() {
   route("/this") {
@@ -87,6 +88,31 @@ fun Routing.trailingSlash() {
   route("/test") {
     route("/") {
       install(NotarizedRoute()) {
+        get = GetInfo.builder {
+          summary(defaultPathSummary)
+          description(defaultPathDescription)
+          response {
+            description(defaultResponseDescription)
+            responseCode(HttpStatusCode.OK)
+            responseType<TestResponse>()
+          }
+        }
+      }
+    }
+  }
+}
+
+fun Routing.parameter() {
+  route("/test") {
+    param("test") {
+      install(NotarizedRoute()) {
+        parameters = listOf(
+          Parameter(
+            name = "test",
+            `in` = Parameter.Location.query,
+            schema = TypeDefinition.STRING
+          )
+        )
         get = GetInfo.builder {
           summary(defaultPathSummary)
           description(defaultPathDescription)
