@@ -102,24 +102,28 @@ fun Routing.trailingSlash() {
   }
 }
 
-fun Routing.parameter() {
+fun Routing.paramWrapper() {
   route("/test") {
-    param("test") {
-      install(NotarizedRoute()) {
-        parameters = listOf(
-          Parameter(
-            name = "test",
-            `in` = Parameter.Location.query,
-            schema = TypeDefinition.STRING
-          )
-        )
-        get = GetInfo.builder {
-          summary(defaultPathSummary)
-          description(defaultPathDescription)
-          response {
-            description(defaultResponseDescription)
-            responseCode(HttpStatusCode.OK)
-            responseType<TestResponse>()
+    param("a") {
+      param("b") {
+        param("c") {
+          install(NotarizedRoute()) {
+            parameters = listOf(
+              Parameter(
+                name = "test",
+                `in` = Parameter.Location.query,
+                schema = TypeDefinition.STRING
+              )
+            )
+            get = GetInfo.builder {
+              summary(defaultPathSummary)
+              description(defaultPathDescription)
+              response {
+                description(defaultResponseDescription)
+                responseCode(HttpStatusCode.OK)
+                responseType<TestResponse>()
+              }
+            }
           }
         }
       }
