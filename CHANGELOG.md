@@ -14,6 +14,12 @@
 
 ## Released
 
+## [3.14.2] - May 8rd, 2023
+
+### Changed
+
+- Fixed bug where routes were not resolving when a parameter was declared via the ktor SDK
+
 ## [3.14.1] - April 28th, 2023
 
 ### Changed
