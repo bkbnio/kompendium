@@ -86,6 +86,7 @@ object NotarizedRoute {
         ?: it
     }
     .replace(Regex("/\\(.+\\)"), "")
+    .replace(Regex("/\\[.+\\]"), "")
 
   fun Route.collectAuthMethods() = toString()
     .split("/")
