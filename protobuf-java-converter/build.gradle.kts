@@ -24,7 +24,7 @@ dependencies {
   implementation(projects.kompendiumJsonSchema)
   implementation("com.google.protobuf:protobuf-java:3.23.0")
   implementation("org.jetbrains.kotlin:kotlin-reflect:1.8.21")
-  implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
+  implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
 
   // Formatting
   detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:$detektVersion")
