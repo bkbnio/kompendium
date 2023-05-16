@@ -2,17 +2,21 @@ package io.bkbn.kompendium.protobufjavaconverter.converters
 
 import com.google.protobuf.Descriptors
 import com.google.protobuf.GeneratedMessageV3
+import io.bkbn.kompendium.core.fixtures.TestHelpers.openApiTestAllSerializers
+import io.bkbn.kompendium.core.metadata.PostInfo
+import io.bkbn.kompendium.core.plugin.NotarizedRoute
 import io.bkbn.kompendium.json.schema.definition.ArrayDefinition
 import io.bkbn.kompendium.json.schema.definition.EnumDefinition
 import io.bkbn.kompendium.json.schema.definition.JsonSchema
 import io.bkbn.kompendium.json.schema.definition.MapDefinition
 import io.bkbn.kompendium.json.schema.definition.ReferenceDefinition
 import io.bkbn.kompendium.json.schema.definition.TypeDefinition
+import io.bkbn.kompendium.json.schema.util.Helpers
 import io.bkbn.kompendium.protobufjavaconverter.Corpus
 import io.bkbn.kompendium.protobufjavaconverter.DoubleNestedMessage
-import io.bkbn.kompendium.protobufjavaconverter.NestedMapMessage
 import io.bkbn.kompendium.protobufjavaconverter.EnumMessage
 import io.bkbn.kompendium.protobufjavaconverter.GoogleTypes
+import io.bkbn.kompendium.protobufjavaconverter.NestedMapMessage
 import io.bkbn.kompendium.protobufjavaconverter.NestedMessage
 import io.bkbn.kompendium.protobufjavaconverter.RepeatedEnumMessage
 import io.bkbn.kompendium.protobufjavaconverter.RepeatedMessage
@@ -23,10 +27,15 @@ import io.kotest.matchers.maps.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeTypeOf
 import io.kotest.matchers.types.shouldNotBeTypeOf
+import io.ktor.http.HttpStatusCode
+import io.ktor.server.application.install
+import io.ktor.server.routing.Route
 import kotlin.reflect.KType
 import kotlin.reflect.full.createType
 
 class FieldDescriptiorConvertersKtTest : DescribeSpec({
+
+  val componentSlug = Helpers.COMPONENT_SLUG
   describe("fromTypeToSchemaTests") {
     val simpleMessageDescriptor = SimpleTestMessage.getDescriptor()
     it("java int field should return TypeDefinition INT") {
@@ -77,7 +86,7 @@ class FieldDescriptiorConvertersKtTest : DescribeSpec({
       val message = NestedMessage.getDescriptor()
       val result = fromNestedTypeToSchema(message.findFieldByName("nested_field"))
       result.shouldBeTypeOf<ReferenceDefinition>()
-      result.`$ref`.shouldBe(message.findFieldByName("nested_field").messageType.name)
+      result.`$ref`.shouldBe("${Helpers.COMPONENT_SLUG}/${message.findFieldByName("nested_field").messageType.name}")
     }
 
     it("Repeated message should return ArrayDefinition") {
@@ -85,7 +94,7 @@ class FieldDescriptiorConvertersKtTest : DescribeSpec({
       val result = fromNestedTypeToSchema(message.findFieldByName("repeated_field"))
       result.shouldBeTypeOf<ArrayDefinition>()
       result.items.shouldBeTypeOf<ReferenceDefinition>()
-      (result.items as ReferenceDefinition).`$ref`.shouldBe(SimpleTestMessage.getDescriptor().name)
+      (result.items as ReferenceDefinition).`$ref`.shouldBe("$componentSlug/${SimpleTestMessage.getDescriptor().name}")
     }
 
     it("Repeated enum message should return ArrayDefinition") {
@@ -93,7 +102,7 @@ class FieldDescriptiorConvertersKtTest : DescribeSpec({
       val result: JsonSchema = fromNestedTypeToSchema(message.findFieldByName("repeated_field"))
       result.shouldBeTypeOf<ArrayDefinition>()
       result.items.shouldBeTypeOf<ReferenceDefinition>()
-      (result.items as ReferenceDefinition).`$ref`.shouldBe(Corpus.getDescriptor().name)
+      (result.items as ReferenceDefinition).`$ref`.shouldBe("$componentSlug/${Corpus.getDescriptor().name}")
     }
 
     it("SimpleMapMessage message should return MapDefinition") {
@@ -169,7 +178,7 @@ class FieldDescriptiorConvertersKtTest : DescribeSpec({
       // Our nested field should be a reference
       result.shouldBeTypeOf<ReferenceDefinition>()
       // Our nested field should be a reference to simplemessage
-      result.`$ref`.shouldBe(SimpleTestMessage.getDescriptor().name)
+      result.`$ref`.shouldBe("$componentSlug/${SimpleTestMessage.getDescriptor().name}")
     }
 
     it("Double nested message to schema") {
@@ -201,11 +210,11 @@ class FieldDescriptiorConvertersKtTest : DescribeSpec({
       // Our nested field should be a reference
       result.shouldBeTypeOf<ReferenceDefinition>()
       // it should be a reference to our nested message
-      result.`$ref`.shouldBe(NestedMessage.getDescriptor().name)
+      result.`$ref`.shouldBe("$componentSlug/${NestedMessage.getDescriptor().name}")
       val nestedResult = (resultSchema[NestedMessage::class.createType()] as TypeDefinition).properties!!["nestedField"]
       nestedResult.shouldBeTypeOf<ReferenceDefinition>()
       // Our nested message reference should be pointing to simpleTest message
-      nestedResult.`$ref`.shouldBe(SimpleTestMessage.getDescriptor().name)
+      nestedResult.`$ref`.shouldBe("$componentSlug/${SimpleTestMessage.getDescriptor().name}")
       // last but not least we should have definition for our SimpleTest message which is not a reference
       (resultSchema[SimpleTestMessage::class.createType()] as TypeDefinition).shouldNotBeTypeOf<ReferenceDefinition>()
     }
@@ -235,6 +244,39 @@ class FieldDescriptiorConvertersKtTest : DescribeSpec({
       testMessageBasics(message)
     }
   }
+
+  describe("Test spec generation") {
+    it("Generates simple message references") {
+      openApiTestAllSerializers(
+        "T0001__simpletestmessage_post.json",
+        testMessageBasics(SimpleTestMessage.getDefaultInstance())
+      ) { testRoute<SimpleTestMessage>() }
+    }
+    it("Generates enum references") {
+      openApiTestAllSerializers(
+        "T0002__enummessage_post.json",
+        testMessageBasics(EnumMessage.getDefaultInstance())
+      ) { testRoute<EnumMessage>() }
+    }
+    it("Generates repeated type references") {
+      openApiTestAllSerializers(
+        "T0003__repeatedmessage_post.json",
+        testMessageBasics(RepeatedMessage.getDefaultInstance())
+      ) { testRoute<RepeatedMessage>() }
+    }
+    it("Generates nested type references") {
+      openApiTestAllSerializers(
+        "T0004__nestedmessage_post.json",
+        testMessageBasics(NestedMessage.getDefaultInstance())
+      ) { testRoute<NestedMessage>() }
+    }
+    it("Generates nested map type references") {
+      openApiTestAllSerializers(
+        "T0005__nestedmapmessage_post.json",
+        testMessageBasics(NestedMapMessage.getDefaultInstance())
+      ) { testRoute<NestedMapMessage>() }
+    }
+  }
 })
 
 /**
@@ -255,4 +297,26 @@ fun testMessageBasics(message: GeneratedMessageV3): Map<KType, JsonSchema> {
     else -> {}
   }
   return resultSchema
+}
+
+private const val DEFAULT_RESPONSE_DESCRIPTION = "A Successful Endeavor"
+private const val DEFAULT_REQUEST_DESCRIPTION = "You gotta send it"
+private const val DEFAULT_PATH_SUMMARY = "Great Summary!"
+private const val DEFAULT_PATH_DESCRIPTION = "testing more"
+private inline fun <reified T> Route.testRoute() {
+  install(NotarizedRoute()) {
+    post = PostInfo.builder {
+      summary(DEFAULT_PATH_SUMMARY)
+      description(DEFAULT_PATH_DESCRIPTION)
+      request {
+        requestType<Unit>()
+        description(DEFAULT_REQUEST_DESCRIPTION)
+      }
+      response {
+        responseCode(HttpStatusCode.OK)
+        responseType<T>()
+        description(DEFAULT_RESPONSE_DESCRIPTION)
+      }
+    }
+  }
 }

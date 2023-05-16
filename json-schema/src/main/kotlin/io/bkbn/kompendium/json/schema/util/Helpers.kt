@@ -8,7 +8,7 @@ import kotlin.reflect.KType
 
 object Helpers {
 
-  private const val COMPONENT_SLUG = "#/components/schemas"
+  const val COMPONENT_SLUG = "#/components/schemas"
 
   fun KType.getSlug(enrichment: Enrichment? = null) = when (enrichment) {
     is TypeEnrichment<*> -> getEnrichedSlug(enrichment)

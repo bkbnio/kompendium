@@ -9,6 +9,7 @@ import io.bkbn.kompendium.json.schema.definition.MapDefinition
 import io.bkbn.kompendium.json.schema.definition.NullableDefinition
 import io.bkbn.kompendium.json.schema.definition.ReferenceDefinition
 import io.bkbn.kompendium.json.schema.definition.TypeDefinition
+import io.bkbn.kompendium.json.schema.util.Helpers
 import kotlin.reflect.KType
 import kotlin.reflect.full.createType
 
@@ -150,7 +151,7 @@ fun fromTypeToSchema(
         type = "string",
         enum = javaProtoField.enumType.values.map { it.name }.toSet()
       )
-      ReferenceDefinition(javaProtoField.enumType.name)
+      ReferenceDefinition("${Helpers.COMPONENT_SLUG}/${javaProtoField.enumType.name}")
     }
     Descriptors.FieldDescriptor.JavaType.MESSAGE -> {
       // Traverse through possible nested messages
@@ -160,7 +161,7 @@ fun fromTypeToSchema(
           it.jsonName to fromNestedTypeToSchema(it, cache)
         }.toMap()
       )
-      ReferenceDefinition(javaProtoField.messageType.name)
+      ReferenceDefinition("${Helpers.COMPONENT_SLUG}/${javaProtoField.messageType.name}")
     }
     null -> NullableDefinition()
   }

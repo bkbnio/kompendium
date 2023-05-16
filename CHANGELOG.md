@@ -6,6 +6,8 @@
 
 ### Changed
 
+- Components definitions were not in the proper schema section. Prefixed the path with component slug in `protobuf java converter`.
+
 ### Remove
 
 ---
