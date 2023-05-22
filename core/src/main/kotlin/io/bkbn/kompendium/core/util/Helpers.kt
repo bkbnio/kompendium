@@ -131,7 +131,7 @@ object Helpers {
             mediaTypes = reqInfo.mediaTypes,
             enrichment = reqInfo.typeEnrichment
           ),
-          required = true
+          required = reqInfo.required
         )
       }
 

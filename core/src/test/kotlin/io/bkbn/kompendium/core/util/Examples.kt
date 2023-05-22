@@ -55,3 +55,30 @@ fun Routing.exampleParams() = basicGetGenerator<TestResponse>(
     )
   )
 )
+
+fun Routing.optionalReqExample() {
+  route(rootPath) {
+    install(NotarizedRoute()) {
+      post = PostInfo.builder {
+        summary(defaultPathSummary)
+        description(defaultPathDescription)
+        request {
+          description(defaultRequestDescription)
+          requestType<TestRequest>()
+          examples(
+            "Testerina" to TestRequest(TestNested("asdf"), 1.5, emptyList())
+          )
+          required(false)
+        }
+        response {
+          description(defaultResponseDescription)
+          responseCode(HttpStatusCode.OK)
+          responseType<TestResponse>()
+          examples(
+            "Testerino" to TestResponse("Heya")
+          )
+        }
+      }
+    }
+  }
+}

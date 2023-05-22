@@ -52,6 +52,7 @@ import io.bkbn.kompendium.core.util.polymorphicResponse
 import io.bkbn.kompendium.core.util.postNoReqBody
 import io.bkbn.kompendium.core.util.primitives
 import io.bkbn.kompendium.core.util.reqRespExamples
+import io.bkbn.kompendium.core.util.optionalReqExample
 import io.bkbn.kompendium.core.util.requiredParams
 import io.bkbn.kompendium.core.util.responseHeaders
 import io.bkbn.kompendium.core.util.returnsList
@@ -177,6 +178,9 @@ class KompendiumTest : DescribeSpec({
     }
     it("Can describe example parameters") {
       openApiTestAllSerializers("T0021__example_parameters.json") { exampleParams() }
+    }
+    it("Can generate example optional request body") {
+      openApiTestAllSerializers("T0069__example_optional_req.json") { optionalReqExample() }
     }
   }
   describe("Defaults") {
