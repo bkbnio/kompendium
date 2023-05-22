@@ -4,8 +4,6 @@
 
 ### Added
 
-- Added `required` parameter in request info builder.
-
 ### Changed
 
 ### Remove
@@ -13,6 +11,12 @@
 ---
 
 ## Released
+
+## [3.14.3] - May 22nd, 2023
+
+### Added
+
+- Added `required` parameter in request info builder.
 
 ## [3.14.2] - May 8rd, 2023
 
