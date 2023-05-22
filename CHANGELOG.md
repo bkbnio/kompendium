@@ -4,9 +4,9 @@
 
 ### Added
 
-### Changed
+- Added `required` parameter in request info builder.
 
-- Route generation with parameters doesn`t add parameters to the path.
+### Changed
 
 ### Remove
 
