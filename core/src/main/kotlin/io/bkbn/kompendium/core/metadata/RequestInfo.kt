@@ -10,7 +10,8 @@ class RequestInfo private constructor(
   val typeEnrichment: TypeEnrichment<*>?,
   val description: String,
   val examples: Map<String, MediaType.Example>?,
-  val mediaTypes: Set<String>
+  val mediaTypes: Set<String>,
+  val required: Boolean
 ) {
 
   companion object {
@@ -27,6 +28,11 @@ class RequestInfo private constructor(
     private var description: String? = null
     private var examples: Map<String, MediaType.Example>? = null
     private var mediaTypes: Set<String>? = null
+    private var required: Boolean? = null
+
+    fun required(r: Boolean) = apply {
+      this.required = r
+    }
 
     fun requestType(t: KType) = apply {
       this.requestType = t
@@ -56,7 +62,8 @@ class RequestInfo private constructor(
       description = description ?: error("Description must be present"),
       typeEnrichment = typeEnrichment,
       examples = examples,
-      mediaTypes = mediaTypes ?: setOf("application/json")
+      mediaTypes = mediaTypes ?: setOf("application/json"),
+      required = required ?: true
     )
   }
 }

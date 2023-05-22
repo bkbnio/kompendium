@@ -29,6 +29,7 @@ fun Routing.reqRespExamples() {
           examples(
             "Testerina" to TestRequest(TestNested("asdf"), 1.5, emptyList())
           )
+          required(false)
         }
         response {
           description(defaultResponseDescription)
