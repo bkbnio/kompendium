@@ -22,7 +22,7 @@ dependencies {
 
   api(projects.kompendiumJsonSchema)
   api(projects.kompendiumEnrichment)
-  implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
+  implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
 
   // Formatting
   detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:$detektVersion")
