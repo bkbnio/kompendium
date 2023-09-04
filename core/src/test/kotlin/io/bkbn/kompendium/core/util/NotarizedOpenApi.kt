@@ -1,6 +1,7 @@
 package io.bkbn.kompendium.core.util
 
 import io.bkbn.kompendium.core.fixtures.ComplexRequest
+import io.bkbn.kompendium.core.fixtures.SomethingSimilar
 import io.bkbn.kompendium.core.fixtures.TestCreatedResponse
 import io.bkbn.kompendium.core.fixtures.TestRequest
 import io.bkbn.kompendium.core.fixtures.TestResponse
@@ -340,6 +341,26 @@ fun Routing.postNoReqBody() {
       post = PostInfo.builder {
         summary(defaultPathSummary)
         description(defaultPathDescription)
+        response {
+          responseType<TestResponse>()
+          description("Cool response")
+          responseCode(HttpStatusCode.Created)
+        }
+      }
+    }
+  }
+}
+
+fun Routing.fieldOutsideConstructor() {
+  route("/field_outside_constructor") {
+    install(NotarizedRoute()) {
+      post = PostInfo.builder {
+        summary(defaultPathSummary)
+        description(defaultPathDescription)
+        request {
+          requestType<SomethingSimilar>()
+          description("A cool request")
+        }
         response {
           responseType<TestResponse>()
           description("Cool response")

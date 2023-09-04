@@ -17,6 +17,7 @@ import io.bkbn.kompendium.core.util.enrichedNestedCollection
 import io.bkbn.kompendium.core.util.enrichedSimpleRequest
 import io.bkbn.kompendium.core.util.enrichedSimpleResponse
 import io.bkbn.kompendium.core.util.exampleParams
+import io.bkbn.kompendium.core.util.fieldOutsideConstructor
 import io.bkbn.kompendium.core.util.genericException
 import io.bkbn.kompendium.core.util.genericPolymorphicResponse
 import io.bkbn.kompendium.core.util.genericPolymorphicResponseMultipleImpls
@@ -360,6 +361,9 @@ class KompendiumTest : DescribeSpec({
             })
           }
         ) { notarizedGet() }
+      }
+      it("Can serialize a data class with a field outside of the constructor") {
+        openApiTestAllSerializers("T0073__data_class_with_field_outside_constructor.json") { fieldOutsideConstructor() }
       }
     }
     describe("Error Handling") {

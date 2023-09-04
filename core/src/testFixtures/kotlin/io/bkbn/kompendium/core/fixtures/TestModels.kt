@@ -3,6 +3,8 @@ package io.bkbn.kompendium.core.fixtures
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import java.time.Instant
 
 @Serializable
@@ -205,3 +207,8 @@ enum class Color {
 data class ObjectWithEnum(
   val color: Color
 )
+
+@Serializable
+data class SomethingSimilar(val a: String) {
+  val b = "something else"
+}
