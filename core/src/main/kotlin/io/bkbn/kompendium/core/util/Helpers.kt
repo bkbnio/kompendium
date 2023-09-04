@@ -118,10 +118,7 @@ object Helpers {
     operationId = this.operationId,
     deprecated = this.deprecated,
     parameters = this.parameters,
-    security = config.security
-      ?.map { (k, v) -> k to v }
-      ?.map { listOf(it).toMap() }
-      ?.toMutableList(),
+    security = this.createCombinedSecurityContext(config),
     requestBody = when (this) {
       is MethodInfoWithRequest -> this.request?.let { reqInfo ->
         Request(
@@ -149,6 +146,25 @@ object Helpers {
       )
     ).plus(this.errors.toResponseMap())
   )
+
+  private fun MethodInfo.createCombinedSecurityContext(config: SpecConfig): MutableList<Map<String, List<String>>>? {
+    val configSecurity = config.security
+      ?.map { (k, v) -> k to v }
+      ?.map { listOf(it).toMap() }
+      ?.toMutableList()
+
+    val methodSecurity = this.security
+      ?.map { (k, v) -> k to v }
+      ?.map { listOf(it).toMap() }
+      ?.toMutableList()
+
+    return when {
+      configSecurity == null && methodSecurity == null -> null
+      configSecurity == null -> methodSecurity
+      methodSecurity == null -> configSecurity
+      else -> configSecurity.plus(methodSecurity).toMutableList()
+    }
+  }
 
   private fun List<ResponseInfo>.toResponseMap(): Map<Int, Response> = associate { error ->
     error.responseCode.value to Response(

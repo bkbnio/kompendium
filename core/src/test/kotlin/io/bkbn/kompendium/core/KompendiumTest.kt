@@ -6,6 +6,7 @@ import io.bkbn.kompendium.core.util.arrayConstraints
 import io.bkbn.kompendium.core.util.complexRequest
 import io.bkbn.kompendium.core.util.customAuthConfig
 import io.bkbn.kompendium.core.util.customFieldNameResponse
+import io.bkbn.kompendium.core.util.customScopesOnSiblingPathOperations
 import io.bkbn.kompendium.core.util.dateTimeString
 import io.bkbn.kompendium.core.util.defaultAuthConfig
 import io.bkbn.kompendium.core.util.defaultField
@@ -335,7 +336,7 @@ class KompendiumTest : DescribeSpec({
         ) { notarizedGet() }
       }
       it("Can apply a custom serialization strategy to the openapi document") {
-        val CustomJsonEncoder = Json {
+        val customJsonEncoder = Json {
           serializersModule = KompendiumSerializersModule.module
           encodeDefaults = true
           explicitNulls = false
@@ -348,17 +349,19 @@ class KompendiumTest : DescribeSpec({
                 route("/openapi.json") {
                   get {
                     call.response.headers.append("Content-Type", "application/json")
-                    call.respondText { CustomJsonEncoder.encodeToString(spec) }
+                    call.respondText { customJsonEncoder.encodeToString(spec) }
                   }
                 }
               }
             }
           },
           contentNegotiation = {
-            json(Json {
-              encodeDefaults = true
-              explicitNulls = true
-            })
+            json(
+              Json {
+                encodeDefaults = true
+                explicitNulls = true
+              }
+            )
           }
         ) { notarizedGet() }
       }
@@ -495,6 +498,50 @@ class KompendiumTest : DescribeSpec({
             )
           }
         ) { multipleAuthStrategies() }
+      }
+      it("Can provide different scopes on path operations in the same route") {
+        openApiTestAllSerializers(
+          snapshotName = "T0074__auth_on_specific_path_operation.json",
+          applicationSetup = {
+            install(Authentication) {
+              oauth("auth-oauth-google") {
+                urlProvider = { "http://localhost:8080/callback" }
+                providerLookup = {
+                  OAuthServerSettings.OAuth2ServerSettings(
+                    name = "google",
+                    authorizeUrl = "https://accounts.google.com/o/oauth2/auth",
+                    accessTokenUrl = "https://accounts.google.com/o/oauth2/token",
+                    requestMethod = HttpMethod.Post,
+                    clientId = "DUMMY_VAL",
+                    clientSecret = "DUMMY_VAL",
+                    defaultScopes = listOf("https://www.googleapis.com/auth/userinfo.profile"),
+                    extraTokenParameters = listOf("access_type" to "offline")
+                  )
+                }
+                client = HttpClient(CIO)
+              }
+            }
+          },
+          specOverrides = {
+            this.copy(
+              components = Components(
+                securitySchemes = mutableMapOf(
+                  "auth-oauth-google" to OAuth(
+                    flows = OAuth.Flows(
+                      implicit = OAuth.Flows.Implicit(
+                        authorizationUrl = "https://accounts.google.com/o/oauth2/auth",
+                        scopes = mapOf(
+                          "write:pets" to "modify pets in your account",
+                          "read:pets" to "read your pets"
+                        )
+                      )
+                    )
+                  )
+                )
+              )
+            )
+          }
+        ) { customScopesOnSiblingPathOperations() }
       }
     }
     describe("Enrichment") {

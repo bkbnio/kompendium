@@ -4,7 +4,6 @@ import io.bkbn.kompendium.json.schema.definition.JsonSchema
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty1
 import kotlin.reflect.KType
-import kotlin.reflect.full.memberProperties
 
 interface SchemaConfigurator {
   fun serializableMemberProperties(clazz: KClass<*>): Collection<KProperty1<out Any, *>>

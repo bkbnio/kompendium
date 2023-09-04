@@ -10,6 +10,7 @@ class DeleteInfo private constructor(
   override val summary: String,
   override val description: String,
   override val externalDocumentation: ExternalDocumentation?,
+  override val security: Map<String, List<String>>?,
   override val operationId: String?,
   override val deprecated: Boolean,
   override val parameters: List<Parameter>
@@ -33,7 +34,8 @@ class DeleteInfo private constructor(
       externalDocumentation = externalDocumentation,
       operationId = operationId,
       deprecated = deprecated,
-      parameters = parameters
+      parameters = parameters,
+      security = security
     )
   }
 }
