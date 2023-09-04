@@ -18,6 +18,7 @@ import io.bkbn.kompendium.core.util.enrichedNestedCollection
 import io.bkbn.kompendium.core.util.enrichedSimpleRequest
 import io.bkbn.kompendium.core.util.enrichedSimpleResponse
 import io.bkbn.kompendium.core.util.exampleParams
+import io.bkbn.kompendium.core.util.exampleSummaryAndDescription
 import io.bkbn.kompendium.core.util.fieldOutsideConstructor
 import io.bkbn.kompendium.core.util.genericException
 import io.bkbn.kompendium.core.util.genericPolymorphicResponse
@@ -193,6 +194,9 @@ class KompendiumTest : DescribeSpec({
     }
     it("Can generate example optional request body") {
       openApiTestAllSerializers("T0069__example_optional_req.json") { optionalReqExample() }
+    }
+    it("Can generate example summary and description") {
+      openApiTestAllSerializers("T0075__example_summary_and_description.json") { exampleSummaryAndDescription() }
     }
   }
   describe("Defaults") {
