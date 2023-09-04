@@ -28,28 +28,51 @@
   ],
   "paths": {
     "/": {
-      "get": {
+      "post": {
         "tags": [],
-        "summary": "Great Summary!",
-        "description": "testing more",
+        "summary": "This is a summary",
+        "description": "This is a description",
         "parameters": [],
-        "responses": {
-          "200": {
-            "description": "A Successful Endeavor",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TestResponse"
+        "requestBody": {
+          "description": "This is a request description",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TestRequest"
+              },
+              "examples": {
+                "Testerina": {
+                  "value": {
+                    "fieldName": {
+                      "nesty": "asdf"
+                    },
+                    "b": 1.5,
+                    "aaa": []
+                  },
+                  "summary": "summary",
+                  "description": "description"
                 }
               }
             }
           },
-          "500": {
-            "description": "Bad Things Happened",
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "This is a response description",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/FlibbityGibbit"
+                  "$ref": "#/components/schemas/TestResponse"
+                },
+                "examples": {
+                  "Testerino": {
+                    "value": {
+                      "c": "Heya"
+                    },
+                    "summary": "summary",
+                    "description": "description"
+                  }
                 }
               }
             }
@@ -74,62 +97,39 @@
           "c"
         ]
       },
-      "ComplexGibbit": {
+      "TestRequest": {
         "type": "object",
         "properties": {
+          "aaa": {
+            "items": {
+              "type": "number",
+              "format": "int64"
+            },
+            "type": "array"
+          },
           "b": {
-            "type": "string"
-          },
-          "c": {
             "type": "number",
-            "format": "int32"
+            "format": "double"
           },
-          "z": {
-            "type": "string"
-          },
-          "type": {
-            "type": "string",
-            "enum": [
-              "io.bkbn.kompendium.core.fixtures.ComplexGibbit"
-            ]
+          "fieldName": {
+            "$ref": "#/components/schemas/TestNested"
           }
         },
         "required": [
+          "aaa",
           "b",
-          "c",
-          "z",
-          "type"
+          "fieldName"
         ]
       },
-      "SimpleGibbit": {
+      "TestNested": {
         "type": "object",
         "properties": {
-          "a": {
+          "nesty": {
             "type": "string"
-          },
-          "z": {
-            "type": "string"
-          },
-          "type": {
-            "type": "string",
-            "enum": [
-              "io.bkbn.kompendium.core.fixtures.SimpleGibbit"
-            ]
           }
         },
         "required": [
-          "a",
-          "type"
-        ]
-      },
-      "FlibbityGibbit": {
-        "anyOf": [
-          {
-            "$ref": "#/components/schemas/ComplexGibbit"
-          },
-          {
-            "$ref": "#/components/schemas/SimpleGibbit"
-          }
+          "nesty"
         ]
       }
     },

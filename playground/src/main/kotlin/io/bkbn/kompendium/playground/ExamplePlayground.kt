@@ -1,21 +1,20 @@
 package io.bkbn.kompendium.playground
 
-import com.fasterxml.jackson.annotation.JsonIgnore
-import com.fasterxml.jackson.annotation.JsonInclude
-import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.databind.SerializationFeature
 import io.bkbn.kompendium.core.metadata.GetInfo
 import io.bkbn.kompendium.core.plugin.NotarizedApplication
 import io.bkbn.kompendium.core.plugin.NotarizedRoute
 import io.bkbn.kompendium.core.routes.redoc
 import io.bkbn.kompendium.core.routes.swagger
-import io.bkbn.kompendium.json.schema.SchemaConfigurator
+import io.bkbn.kompendium.json.schema.KotlinXSchemaConfigurator
 import io.bkbn.kompendium.json.schema.definition.TypeDefinition
+import io.bkbn.kompendium.oas.payload.MediaType
 import io.bkbn.kompendium.oas.payload.Parameter
+import io.bkbn.kompendium.oas.serialization.KompendiumSerializersModule
 import io.bkbn.kompendium.playground.util.ExampleResponse
+import io.bkbn.kompendium.playground.util.ExceptionResponse
 import io.bkbn.kompendium.playground.util.Util.baseSpec
 import io.ktor.http.HttpStatusCode
-import io.ktor.serialization.jackson.jackson
+import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.Application
 import io.ktor.server.application.call
 import io.ktor.server.application.install
@@ -27,10 +26,7 @@ import io.ktor.server.routing.Route
 import io.ktor.server.routing.get
 import io.ktor.server.routing.route
 import io.ktor.server.routing.routing
-import kotlin.reflect.KClass
-import kotlin.reflect.KProperty1
-import kotlin.reflect.full.memberProperties
-import kotlin.reflect.jvm.javaField
+import kotlinx.serialization.json.Json
 
 fun main() {
   embeddedServer(
@@ -42,29 +38,35 @@ fun main() {
 
 private fun Application.mainModule() {
   install(ContentNegotiation) {
-    jackson {
-      enable(SerializationFeature.INDENT_OUTPUT)
-      setSerializationInclusion(JsonInclude.Include.NON_NULL)
-    }
+    json(Json {
+      serializersModule = KompendiumSerializersModule.module
+      encodeDefaults = true
+      explicitNulls = false
+    })
   }
   install(NotarizedApplication()) {
-    spec = baseSpec
-    schemaConfigurator = JacksonSchemaConfigurator()
+    spec = { baseSpec }
+    schemaConfigurator = KotlinXSchemaConfigurator()
   }
   routing {
     swagger(pageTitle = "Simple API Docs")
     redoc(pageTitle = "Simple API Docs")
-
     route("/{id}") {
-      locationDocumentation()
+      idDocumentation()
       get {
         call.respond(HttpStatusCode.OK, ExampleResponse(true))
+      }
+      route("/profile") {
+        profileDocumentation()
+        get {
+          call.respond(HttpStatusCode.OK, ExampleResponse(true))
+        }
       }
     }
   }
 }
 
-private fun Route.locationDocumentation() {
+private fun Route.idDocumentation() {
   install(NotarizedRoute()) {
     parameters = listOf(
       Parameter(
@@ -80,31 +82,42 @@ private fun Route.locationDocumentation() {
         responseCode(HttpStatusCode.OK)
         responseType<ExampleResponse>()
         description("Will return whether or not the user is real 😱")
+        examples(
+          "example1" to MediaType.Example(ExampleResponse(true), "ahaha", "bhbh"),
+        )
+      }
+
+      canRespond {
+        responseType<ExceptionResponse>()
+        responseCode(HttpStatusCode.NotFound)
+        description("Indicates that a user with this id does not exist")
       }
     }
   }
 }
 
-// Adds support for JsonIgnore and JsonProperty annotations,
-// if you are not using them this is not required
-// This also does not support class level configuration
-private class JacksonSchemaConfigurator: SchemaConfigurator.Default() {
-
-  override fun serializableMemberProperties(clazz: KClass<*>): Collection<KProperty1<out Any, *>> =
-    clazz.memberProperties
-      .filterNot {
-        it.hasJavaAnnotation<JsonIgnore>()
+private fun Route.profileDocumentation() {
+  install(NotarizedRoute()) {
+    parameters = listOf(
+      Parameter(
+        name = "id",
+        `in` = Parameter.Location.path,
+        schema = TypeDefinition.STRING
+      )
+    )
+    get = GetInfo.builder {
+      summary("Get a users profile")
+      description("A cool endpoint!")
+      response {
+        responseCode(HttpStatusCode.OK)
+        responseType<ExampleResponse>()
+        description("Returns user profile information")
       }
-
-  override fun serializableName(property: KProperty1<out Any, *>): String =
-    property.getJavaAnnotation<JsonProperty>()?.value?: property.name
-
-}
-
-private inline fun <reified T: Annotation> KProperty1<*, *>.hasJavaAnnotation(): Boolean {
-  return javaField?.isAnnotationPresent(T::class.java)?: false
-}
-
-private inline fun <reified T: Annotation> KProperty1<*, *>.getJavaAnnotation(): T? {
-  return javaField?.getDeclaredAnnotation(T::class.java)
+      canRespond {
+        responseType<ExceptionResponse>()
+        responseCode(HttpStatusCode.NotFound)
+        description("Indicates that a user with this id does not exist")
+      }
+    }
+  }
 }

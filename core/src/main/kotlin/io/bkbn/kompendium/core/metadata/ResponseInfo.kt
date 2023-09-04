@@ -57,8 +57,8 @@ class ResponseInfo private constructor(
 
     fun description(s: String) = apply { this.description = s }
 
-    fun examples(vararg e: Pair<String, Any>) = apply {
-      this.examples = e.toMap().mapValues { (_, v) -> MediaType.Example(v) }
+    fun examples(vararg e: Pair<String, MediaType.Example>) = apply {
+      this.examples = e.toMap()
     }
 
     fun mediaTypes(vararg m: String) = apply {
