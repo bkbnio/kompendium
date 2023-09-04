@@ -7,6 +7,7 @@ import io.bkbn.kompendium.core.fixtures.Flibbity
 import io.bkbn.kompendium.core.fixtures.FlibbityGibbit
 import io.bkbn.kompendium.core.fixtures.Foosy
 import io.bkbn.kompendium.core.fixtures.Gibbity
+import io.bkbn.kompendium.core.fixtures.Gizmo
 import io.bkbn.kompendium.core.fixtures.MultiNestedGenerics
 import io.bkbn.kompendium.core.fixtures.Page
 import io.ktor.server.routing.Routing
@@ -22,3 +23,4 @@ fun Routing.genericPolymorphicResponseMultipleImpls() = basicGetGenerator<Flibbi
 fun Routing.nestedGenericCollection() = basicGetGenerator<Page<Int>>()
 fun Routing.nestedGenericMultipleParamsCollection() = basicGetGenerator<MultiNestedGenerics<String, ComplexRequest>>()
 fun Routing.overrideSealedTypeIdentifier() = basicGetGenerator<ChillaxificationMaximization>()
+fun Routing.subtypeNotCompleteSetOfParentProperties() = basicGetGenerator<Gizmo>()

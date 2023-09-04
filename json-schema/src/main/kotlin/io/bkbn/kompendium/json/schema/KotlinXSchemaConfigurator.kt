@@ -11,12 +11,15 @@ import kotlin.reflect.KType
 import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.hasAnnotation
 import kotlin.reflect.full.memberProperties
+import kotlin.reflect.full.primaryConstructor
 
 class KotlinXSchemaConfigurator : SchemaConfigurator {
 
-  override fun serializableMemberProperties(clazz: KClass<*>): Collection<KProperty1<out Any, *>> =
-    clazz.memberProperties
+  override fun serializableMemberProperties(clazz: KClass<*>): Collection<KProperty1<out Any, *>> {
+    return clazz.memberProperties
       .filterNot { it.hasAnnotation<Transient>() }
+      .filter { clazz.primaryConstructor?.parameters?.map { it.name }?.contains(it.name) ?: true }
+  }
 
   override fun serializableName(property: KProperty1<out Any, *>): String =
     property.annotations

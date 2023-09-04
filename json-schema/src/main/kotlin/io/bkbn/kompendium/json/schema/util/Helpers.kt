@@ -13,7 +13,7 @@ object Helpers {
   fun KType.getSlug(enrichment: Enrichment? = null) = when (enrichment) {
     is TypeEnrichment<*> -> getEnrichedSlug(enrichment)
     is PropertyEnrichment -> error("Slugs should not be generated for field enrichments")
-    null -> getSimpleSlug()
+    else -> getSimpleSlug()
   }
 
   fun KType.getSimpleSlug(): String = when {
@@ -26,7 +26,7 @@ object Helpers {
   fun KType.getReferenceSlug(enrichment: Enrichment? = null): String = when (enrichment) {
     is TypeEnrichment<*> -> getSimpleReferenceSlug() + "-${enrichment.id}"
     is PropertyEnrichment -> error("Reference slugs should never be generated for field enrichments")
-    null -> getSimpleReferenceSlug()
+    else -> getSimpleReferenceSlug()
   }
 
   private fun KType.getSimpleReferenceSlug() = when {

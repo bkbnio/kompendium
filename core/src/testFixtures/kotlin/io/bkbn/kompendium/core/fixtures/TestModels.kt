@@ -101,6 +101,15 @@ data class Chillax(val a: String) : ChillaxificationMaximization
 @SerialName("maximize")
 data class ToDaMax(val b: Int) : ChillaxificationMaximization
 
+sealed class Gadget(
+  open val title: String,
+  open val description: String
+)
+
+class Gizmo(
+  override val title: String,
+) : Gadget(title, "Just a gizmo")
+
 sealed interface Flibbity<T>
 
 data class Gibbity<T>(val a: T) : Flibbity<T>

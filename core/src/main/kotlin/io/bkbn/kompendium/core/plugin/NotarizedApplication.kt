@@ -1,6 +1,7 @@
 package io.bkbn.kompendium.core.plugin
 
 import io.bkbn.kompendium.core.attribute.KompendiumAttributes
+import io.bkbn.kompendium.json.schema.KotlinXSchemaConfigurator
 import io.bkbn.kompendium.json.schema.SchemaConfigurator
 import io.bkbn.kompendium.json.schema.definition.JsonSchema
 import io.bkbn.kompendium.json.schema.util.Helpers.getSimpleSlug
@@ -28,7 +29,7 @@ object NotarizedApplication {
       }
     }
     var customTypes: Map<KType, JsonSchema> = emptyMap()
-    var schemaConfigurator: SchemaConfigurator = SchemaConfigurator.Default()
+    var schemaConfigurator: SchemaConfigurator = KotlinXSchemaConfigurator()
   }
 
   operator fun invoke() = createApplicationPlugin(
