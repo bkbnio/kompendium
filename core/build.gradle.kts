@@ -48,8 +48,6 @@ dependencies {
   testFixturesApi("io.ktor:ktor-server-core:$ktorVersion")
   testFixturesApi("io.ktor:ktor-server-test-host:$ktorVersion")
   testFixturesApi("io.ktor:ktor-serialization:$ktorVersion")
-  testFixturesApi("io.ktor:ktor-serialization-jackson:$ktorVersion")
-  testFixturesApi("io.ktor:ktor-serialization-gson:$ktorVersion")
   testFixturesApi("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
   testFixturesApi("io.ktor:ktor-server-content-negotiation:$ktorVersion")
   testFixturesApi("io.ktor:ktor-server-auth:$ktorVersion")

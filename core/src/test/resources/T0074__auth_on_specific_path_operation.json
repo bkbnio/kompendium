@@ -43,19 +43,53 @@
                 }
               }
             }
+          }
+        },
+        "deprecated": false,
+        "security": [
+          {
+            "auth-oauth-google": [
+              "read:pets"
+            ]
+          }
+        ]
+      },
+      "post": {
+        "tags": [],
+        "summary": "Great Summary!",
+        "description": "testing more",
+        "parameters": [],
+        "requestBody": {
+          "description": "A Successful Endeavor",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TestResponse"
+              }
+            }
           },
-          "500": {
-            "description": "Bad Things Happened",
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "A Successful Endeavor",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/FlibbityGibbit"
+                  "$ref": "#/components/schemas/TestResponse"
                 }
               }
             }
           }
         },
-        "deprecated": false
+        "deprecated": false,
+        "security": [
+          {
+            "auth-oauth-google": [
+              "write:pets"
+            ]
+          }
+        ]
       },
       "parameters": []
     }
@@ -73,67 +107,22 @@
         "required": [
           "c"
         ]
-      },
-      "ComplexGibbit": {
-        "type": "object",
-        "properties": {
-          "b": {
-            "type": "string"
-          },
-          "c": {
-            "type": "number",
-            "format": "int32"
-          },
-          "z": {
-            "type": "string"
-          },
-          "type": {
-            "type": "string",
-            "enum": [
-              "io.bkbn.kompendium.core.fixtures.ComplexGibbit"
-            ]
-          }
-        },
-        "required": [
-          "b",
-          "c",
-          "z",
-          "type"
-        ]
-      },
-      "SimpleGibbit": {
-        "type": "object",
-        "properties": {
-          "a": {
-            "type": "string"
-          },
-          "z": {
-            "type": "string"
-          },
-          "type": {
-            "type": "string",
-            "enum": [
-              "io.bkbn.kompendium.core.fixtures.SimpleGibbit"
-            ]
-          }
-        },
-        "required": [
-          "a",
-          "type"
-        ]
-      },
-      "FlibbityGibbit": {
-        "anyOf": [
-          {
-            "$ref": "#/components/schemas/ComplexGibbit"
-          },
-          {
-            "$ref": "#/components/schemas/SimpleGibbit"
-          }
-        ]
       }
     },
-    "securitySchemes": {}
+    "securitySchemes": {
+      "auth-oauth-google": {
+        "flows": {
+          "implicit": {
+            "authorizationUrl": "https://accounts.google.com/o/oauth2/auth",
+            "scopes": {
+              "write:pets": "modify pets in your account",
+              "read:pets": "read your pets"
+            }
+          }
+        },
+        "type": "oauth2"
+      }
+    }
   },
   "security": [],
   "tags": []

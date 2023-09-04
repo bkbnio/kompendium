@@ -39,7 +39,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/List-FlibbityGibbit"
+                  "$ref": "#/components/schemas/Gizmo"
                 }
               }
             }
@@ -53,66 +53,16 @@
   "webhooks": {},
   "components": {
     "schemas": {
-      "ComplexGibbit": {
+      "Gizmo": {
         "type": "object",
         "properties": {
-          "b": {
+          "title": {
             "type": "string"
-          },
-          "c": {
-            "type": "number",
-            "format": "int32"
-          },
-          "z": {
-            "type": "string"
-          },
-          "type": {
-            "type": "string",
-            "enum": [
-              "io.bkbn.kompendium.core.fixtures.ComplexGibbit"
-            ]
           }
         },
         "required": [
-          "b",
-          "c",
-          "z",
-          "type"
+          "title"
         ]
-      },
-      "SimpleGibbit": {
-        "type": "object",
-        "properties": {
-          "a": {
-            "type": "string"
-          },
-          "z": {
-            "type": "string"
-          },
-          "type": {
-            "type": "string",
-            "enum": [
-              "io.bkbn.kompendium.core.fixtures.SimpleGibbit"
-            ]
-          }
-        },
-        "required": [
-          "a",
-          "type"
-        ]
-      },
-      "List-FlibbityGibbit": {
-        "items": {
-          "anyOf": [
-            {
-              "$ref": "#/components/schemas/ComplexGibbit"
-            },
-            {
-              "$ref": "#/components/schemas/SimpleGibbit"
-            }
-          ]
-        },
-        "type": "array"
       }
     },
     "securitySchemes": {}

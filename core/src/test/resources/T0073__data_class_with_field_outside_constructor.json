@@ -27,19 +27,30 @@
     }
   ],
   "paths": {
-    "/": {
-      "get": {
+    "/field_outside_constructor": {
+      "post": {
         "tags": [],
         "summary": "Great Summary!",
         "description": "testing more",
         "parameters": [],
+        "requestBody": {
+          "description": "A cool request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SomethingSimilar"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
-          "200": {
-            "description": "A Successful Endeavor",
+          "201": {
+            "description": "Cool response",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/List-FlibbityGibbit"
+                  "$ref": "#/components/schemas/TestResponse"
                 }
               }
             }
@@ -53,66 +64,27 @@
   "webhooks": {},
   "components": {
     "schemas": {
-      "ComplexGibbit": {
+      "TestResponse": {
         "type": "object",
         "properties": {
-          "b": {
-            "type": "string"
-          },
           "c": {
-            "type": "number",
-            "format": "int32"
-          },
-          "z": {
             "type": "string"
-          },
-          "type": {
-            "type": "string",
-            "enum": [
-              "io.bkbn.kompendium.core.fixtures.ComplexGibbit"
-            ]
           }
         },
         "required": [
-          "b",
-          "c",
-          "z",
-          "type"
+          "c"
         ]
       },
-      "SimpleGibbit": {
+      "SomethingSimilar": {
         "type": "object",
         "properties": {
           "a": {
             "type": "string"
-          },
-          "z": {
-            "type": "string"
-          },
-          "type": {
-            "type": "string",
-            "enum": [
-              "io.bkbn.kompendium.core.fixtures.SimpleGibbit"
-            ]
           }
         },
         "required": [
-          "a",
-          "type"
+          "a"
         ]
-      },
-      "List-FlibbityGibbit": {
-        "items": {
-          "anyOf": [
-            {
-              "$ref": "#/components/schemas/ComplexGibbit"
-            },
-            {
-              "$ref": "#/components/schemas/SimpleGibbit"
-            }
-          ]
-        },
-        "type": "array"
       }
     },
     "securitySchemes": {}

@@ -12,6 +12,26 @@
 
 ## Released
 
+## [4.0.0-alpha] - September 3rd, 2023
+
+### Added
+
+- Support for `type` on sealed interfaces
+- Ability to provide custom serializers
+
+### Fixed
+
+- Exception thrown when inheriting variable
+- Notarized routes not discarded on test completion
+- Data classes with property members breaks schema generation
+- Security cannot be applied to individual path operations
+- Serialization fails on generic response
+- Parameter example descriptions not being applied
+
+### Removed
+
+- Out of the box support for Jackson and Gson (can still be implemented through custom schema configurators)
+
 ## [3.14.4] - June 5th, 2023
 
 ### Changed
