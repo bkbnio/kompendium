@@ -23,7 +23,7 @@ level plugin, and **must** be install after both the `NotarizedApplication` plug
 private fun Application.mainModule() {
   install(Locations)
   install(NotarizedApplication()) {
-    spec = baseSpec
+    spec = { baseSpec }
   }
   install(NotarizedLocations()) {
     locations = mapOf(

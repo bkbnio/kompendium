@@ -30,7 +30,7 @@ application in a single block.
 private fun Application.mainModule() {
   install(Resources)
   install(NotarizedApplication()) {
-    spec = baseSpec
+    spec = { baseSpec }
   }
   install(NotarizedResources()) {
     resources = mapOf(

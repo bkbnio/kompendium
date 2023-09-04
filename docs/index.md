@@ -36,9 +36,11 @@ custom type overrides (typically useful for custom scalars such as dates and tim
 ```kotlin
 private fun Application.mainModule() {
   install(NotarizedApplication()) {
-    spec = OpenApiSpec(
-      // ...
-    )
+    spec = {
+        OpenApiSpec(
+        // ...
+      )
+    }
   }
 }
 ```

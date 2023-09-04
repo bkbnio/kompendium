@@ -20,13 +20,25 @@ reference [OpenAPI spec](https://spec.openapis.org/oas/v3.1.0) itself.
 For public facing APIs, having the default endpoint exposed at `/openapi.json` is totally fine. However, if you need
 more granular control over the route that exposes the generated schema, you can modify the `openApiJson` config value.
 
-For example, if we want to hide our schema behind a basic auth check, we could do the following
+For example, if we want to hide our schema behind a basic auth check with a custom json encoder, we could do the following
 
 ```kotlin
 private fun Application.mainModule() {
   // Install content negotiation, auth, etc...
   install(NotarizedApplication()) {
     // ...
+    specRoute = { spec, routing ->
+      routing {
+        authenticate("basic") {
+            route("/openapi.json") {
+                get {
+                    call.response.headers.append("Content-Type", "application/json")
+                    call.respondText { CustomJsonEncoder.encodeToString(spec) }
+                }
+            }
+        }
+      }
+    }
     openApiJson = {
       authenticate("basic") {
         route("/openapi.json") {
@@ -81,25 +93,9 @@ application.
 
 ## Schema Configurator
 
-The `SchemaConfigurator` is an interface that allows users to bridge the gap between Kompendium serialization and custom
-serialization strategies that the serializer they are using for their API. For example, if you are using KotlinX
-serialization in order to convert kotlin fields from camel case to snake case, you could leverage
-the `KotlinXSchemaConfigurator` in order to instruct Kompendium on how to serialize values properly.
+Out of the box, Kompendium supports KotlinX serialization... however, in order to allow for users of other
+serialization libraries to use Kompendium, we have provided a `SchemaConfigurator` interface that allows you to
+configure how Kompendium will generate schema definitions.
 
-```kotlin
-private fun Application.mainModule() {
-  install(ContentNegotiation) {
-    json(Json {
-      serializersModule = KompendiumSerializersModule.module
-      encodeDefaults = true
-      explicitNulls = false
-    })
-  }
-  install(NotarizedApplication()) {
-    spec = baseSpec
-    // Adds support for @Transient and @SerialName
-    // If you are not using them this is not required.
-    schemaConfigurator = KotlinXSchemaConfigurator()
-  }
-}
-```
+For an example of the `SchemaConfigurator` in action, please see the `KotlinxSchemaConfigurator`.  This will give you
+a good idea of the additional functionality it can add based on your own serialization needs.
