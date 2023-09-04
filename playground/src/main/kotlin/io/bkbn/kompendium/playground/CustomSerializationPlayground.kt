@@ -52,13 +52,15 @@ private fun Application.mainModule() {
     })
   }
   install(NotarizedApplication()) {
-    spec = baseSpec.copy(
-      components = Components(
-        securitySchemes = mutableMapOf(
-          "basic" to BasicAuth()
+    spec = {
+      baseSpec.copy(
+        components = Components(
+          securitySchemes = mutableMapOf(
+            "basic" to BasicAuth()
+          )
         )
       )
-    )
+    }
     specRoute = { spec, routing ->
       routing {
         route("/openapi.json") {

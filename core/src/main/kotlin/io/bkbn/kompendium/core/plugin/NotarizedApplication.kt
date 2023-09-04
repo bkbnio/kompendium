@@ -6,13 +6,10 @@ import io.bkbn.kompendium.json.schema.SchemaConfigurator
 import io.bkbn.kompendium.json.schema.definition.JsonSchema
 import io.bkbn.kompendium.json.schema.util.Helpers.getSimpleSlug
 import io.bkbn.kompendium.oas.OpenApiSpec
-import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.call
 import io.ktor.server.application.createApplicationPlugin
 import io.ktor.server.response.respond
-import io.ktor.server.routing.Route
 import io.ktor.server.routing.Routing
-import io.ktor.server.routing.application
 import io.ktor.server.routing.get
 import io.ktor.server.routing.route
 import io.ktor.server.routing.routing
@@ -21,7 +18,7 @@ import kotlin.reflect.KType
 object NotarizedApplication {
 
   class Config {
-    lateinit var spec: OpenApiSpec
+    lateinit var spec: () -> OpenApiSpec
     var specRoute: (OpenApiSpec, Routing) -> Unit = { spec, routing ->
       routing.route("/openapi.json") {
         get {
@@ -37,7 +34,7 @@ object NotarizedApplication {
     name = "NotarizedApplication",
     createConfiguration = ::Config
   ) {
-    val spec = pluginConfig.spec
+    val spec = pluginConfig.spec()
     val routing = application.routing {}
     this@createApplicationPlugin.pluginConfig.specRoute(spec, routing)
     // pluginConfig.openApiJson(routing)

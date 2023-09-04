@@ -44,7 +44,7 @@ private fun Application.mainModule() {
     })
   }
   install(NotarizedApplication()) {
-    spec = baseSpec
+    spec = { baseSpec }
     schemaConfigurator = KotlinXSchemaConfigurator()
   }
   routing {

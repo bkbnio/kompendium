@@ -43,7 +43,7 @@ private fun Application.mainModule() {
     })
   }
   install(NotarizedApplication()) {
-    spec = baseSpec
+    spec = { baseSpec }
   }
   install(NotarizedLocations()) {
     locations = mapOf(
