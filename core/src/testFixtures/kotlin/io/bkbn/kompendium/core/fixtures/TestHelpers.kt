@@ -24,6 +24,7 @@ import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.Application
 import io.ktor.server.engine.ApplicationEngineEnvironmentBuilder
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.server.plugins.contentnegotiation.ContentNegotiationConfig
 import io.ktor.server.routing.Routing
 import io.ktor.server.testing.ApplicationTestBuilder
 import io.ktor.server.testing.testApplication
@@ -64,6 +65,14 @@ object TestHelpers {
     applicationSetup: Application.() -> Unit = { },
     specOverrides: OpenApiSpec.() -> OpenApiSpec = { this },
     applicationEnvironmentBuilder: ApplicationEngineEnvironmentBuilder.() -> Unit = {},
+    notarizedApplicationConfigOverrides: NotarizedApplication.Config.() -> Unit = {},
+    contentNegotiation: ContentNegotiationConfig.() -> Unit = {
+      json(Json {
+        encodeDefaults = true
+        explicitNulls = false
+        serializersModule = KompendiumSerializersModule.module
+      })
+    },
     routeUnderTest: Routing.() -> Unit
   ) {
     openApiTest(
@@ -72,6 +81,8 @@ object TestHelpers {
       applicationSetup,
       specOverrides,
       customTypes,
+      notarizedApplicationConfigOverrides,
+      contentNegotiation,
       applicationEnvironmentBuilder
     )
   }
@@ -82,20 +93,19 @@ object TestHelpers {
     applicationSetup: Application.() -> Unit,
     specOverrides: OpenApiSpec.() -> OpenApiSpec,
     typeOverrides: Map<KType, JsonSchema> = emptyMap(),
-    applicationBuilder: ApplicationEngineEnvironmentBuilder.() -> Unit = {}
+    notarizedApplicationConfigOverrides: NotarizedApplication.Config.() -> Unit,
+    contentNegotiation: ContentNegotiationConfig.() -> Unit,
+    applicationBuilder: ApplicationEngineEnvironmentBuilder.() -> Unit
   ) = testApplication {
     environment(applicationBuilder)
     install(NotarizedApplication()) {
       customTypes = typeOverrides
       spec = defaultSpec().specOverrides()
       schemaConfigurator = KotlinXSchemaConfigurator()
+      notarizedApplicationConfigOverrides()
     }
     install(ContentNegotiation) {
-      json(Json {
-        encodeDefaults = true
-        explicitNulls = false
-        serializersModule = KompendiumSerializersModule.module
-      })
+     contentNegotiation()
     }
     application(applicationSetup)
     routing {

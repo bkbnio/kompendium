@@ -69,11 +69,13 @@ private fun Application.mainModule() {
         )
       )
     )
-    openApiJson = {
-      authenticate("basic") {
-        route("/openapi.json") {
-          get {
-            call.respond(HttpStatusCode.OK, this@route.application.attributes[KompendiumAttributes.openApiSpec])
+    specRoute = { spec, routing ->
+      routing {
+        authenticate("basic") {
+          route("/openapi.json") {
+            get {
+              call.respond(HttpStatusCode.OK, spec)
+            }
           }
         }
       }

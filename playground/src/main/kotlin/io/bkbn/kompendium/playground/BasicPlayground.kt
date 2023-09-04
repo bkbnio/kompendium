@@ -45,8 +45,6 @@ private fun Application.mainModule() {
   }
   install(NotarizedApplication()) {
     spec = baseSpec
-    // Adds support for @Transient and @SerialName
-    // If you are not using them this is not required.
     schemaConfigurator = KotlinXSchemaConfigurator()
   }
   routing {

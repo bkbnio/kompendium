@@ -11,8 +11,8 @@ import io.bkbn.kompendium.core.util.defaultAuthConfig
 import io.bkbn.kompendium.core.util.defaultField
 import io.bkbn.kompendium.core.util.defaultParameter
 import io.bkbn.kompendium.core.util.doubleConstraints
-import io.bkbn.kompendium.core.util.enrichedGenericResponse
 import io.bkbn.kompendium.core.util.enrichedComplexGenericType
+import io.bkbn.kompendium.core.util.enrichedGenericResponse
 import io.bkbn.kompendium.core.util.enrichedNestedCollection
 import io.bkbn.kompendium.core.util.enrichedSimpleRequest
 import io.bkbn.kompendium.core.util.enrichedSimpleResponse
@@ -44,7 +44,10 @@ import io.bkbn.kompendium.core.util.nullableEnumField
 import io.bkbn.kompendium.core.util.nullableField
 import io.bkbn.kompendium.core.util.nullableNestedObject
 import io.bkbn.kompendium.core.util.nullableReference
+import io.bkbn.kompendium.core.util.optionalReqExample
 import io.bkbn.kompendium.core.util.overrideMediaTypes
+import io.bkbn.kompendium.core.util.overrideSealedTypeIdentifier
+import io.bkbn.kompendium.core.util.paramWrapper
 import io.bkbn.kompendium.core.util.polymorphicCollectionResponse
 import io.bkbn.kompendium.core.util.polymorphicException
 import io.bkbn.kompendium.core.util.polymorphicMapResponse
@@ -52,8 +55,6 @@ import io.bkbn.kompendium.core.util.polymorphicResponse
 import io.bkbn.kompendium.core.util.postNoReqBody
 import io.bkbn.kompendium.core.util.primitives
 import io.bkbn.kompendium.core.util.reqRespExamples
-import io.bkbn.kompendium.core.util.optionalReqExample
-import io.bkbn.kompendium.core.util.overrideSealedTypeIdentifier
 import io.bkbn.kompendium.core.util.requiredParams
 import io.bkbn.kompendium.core.util.responseHeaders
 import io.bkbn.kompendium.core.util.returnsList
@@ -67,10 +68,9 @@ import io.bkbn.kompendium.core.util.singleException
 import io.bkbn.kompendium.core.util.stringConstraints
 import io.bkbn.kompendium.core.util.stringContentEncodingConstraints
 import io.bkbn.kompendium.core.util.stringPatternConstraints
+import io.bkbn.kompendium.core.util.subtypeNotCompleteSetOfParentProperties
 import io.bkbn.kompendium.core.util.topLevelNullable
 import io.bkbn.kompendium.core.util.trailingSlash
-import io.bkbn.kompendium.core.util.paramWrapper
-import io.bkbn.kompendium.core.util.subtypeNotCompleteSetOfParentProperties
 import io.bkbn.kompendium.core.util.unbackedFieldsResponse
 import io.bkbn.kompendium.core.util.withOperationId
 import io.bkbn.kompendium.json.schema.definition.TypeDefinition
@@ -80,6 +80,7 @@ import io.bkbn.kompendium.oas.security.ApiKeyAuth
 import io.bkbn.kompendium.oas.security.BasicAuth
 import io.bkbn.kompendium.oas.security.BearerAuth
 import io.bkbn.kompendium.oas.security.OAuth
+import io.bkbn.kompendium.oas.serialization.KompendiumSerializersModule
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.should
@@ -87,6 +88,8 @@ import io.kotest.matchers.string.startWith
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.http.HttpMethod
+import io.ktor.serialization.kotlinx.json.json
+import io.ktor.server.application.call
 import io.ktor.server.application.install
 import io.ktor.server.auth.Authentication
 import io.ktor.server.auth.OAuthServerSettings
@@ -94,6 +97,11 @@ import io.ktor.server.auth.UserIdPrincipal
 import io.ktor.server.auth.basic
 import io.ktor.server.auth.jwt.jwt
 import io.ktor.server.auth.oauth
+import io.ktor.server.response.respondText
+import io.ktor.server.routing.get
+import io.ktor.server.routing.route
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import java.net.URI
 import java.time.Instant
 import kotlin.reflect.typeOf
@@ -322,6 +330,34 @@ class KompendiumTest : DescribeSpec({
             copy(
               servers = servers.map { it.copy(url = URI("${it.url}/example")) }.toMutableList()
             )
+          }
+        ) { notarizedGet() }
+      }
+      it("Can apply a custom serialization strategy to the openapi document") {
+        val CustomJsonEncoder = Json {
+          serializersModule = KompendiumSerializersModule.module
+          encodeDefaults = true
+          explicitNulls = false
+        }
+        openApiTestAllSerializers(
+          snapshotName = "T0072__custom_serialization_strategy.json",
+          notarizedApplicationConfigOverrides = {
+            specRoute = { spec, routing ->
+              routing {
+                route("/openapi.json") {
+                  get {
+                    call.response.headers.append("Content-Type", "application/json")
+                    call.respondText { CustomJsonEncoder.encodeToString(spec) }
+                  }
+                }
+              }
+            }
+          },
+          contentNegotiation = {
+            json(Json {
+              encodeDefaults = true
+              explicitNulls = true
+            })
           }
         ) { notarizedGet() }
       }

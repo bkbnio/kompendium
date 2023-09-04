@@ -10,6 +10,7 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.call
 import io.ktor.server.application.createApplicationPlugin
 import io.ktor.server.response.respond
+import io.ktor.server.routing.Route
 import io.ktor.server.routing.Routing
 import io.ktor.server.routing.application
 import io.ktor.server.routing.get
@@ -21,10 +22,10 @@ object NotarizedApplication {
 
   class Config {
     lateinit var spec: OpenApiSpec
-    var openApiJson: Routing.() -> Unit = {
-      route("/openapi.json") {
+    var specRoute: (OpenApiSpec, Routing) -> Unit = { spec, routing ->
+      routing.route("/openapi.json") {
         get {
-          call.respond(HttpStatusCode.OK, this@route.application.attributes[KompendiumAttributes.openApiSpec])
+          call.respond(spec)
         }
       }
     }
@@ -37,8 +38,9 @@ object NotarizedApplication {
     createConfiguration = ::Config
   ) {
     val spec = pluginConfig.spec
-    val routing = application.routing { }
-    pluginConfig.openApiJson(routing)
+    val routing = application.routing {}
+    this@createApplicationPlugin.pluginConfig.specRoute(spec, routing)
+    // pluginConfig.openApiJson(routing)
     pluginConfig.customTypes.forEach { (type, schema) ->
       spec.components.schemas[type.getSimpleSlug()] = schema
     }
