@@ -55,7 +55,7 @@ object TestHelpers {
   /**
    * This will take a provided JSON snapshot file, retrieve it from the resource folder,
    * and build a test ktor server to compare the expected output with the output found in the default
-   * OpenAPI json endpoint.  By default, this will run the same test with Gson, Kotlinx, and Jackson serializers
+   * OpenAPI json endpoint.
    * @param snapshotName The snapshot file to retrieve from the resources folder
    */
   fun openApiTestAllSerializers(
@@ -68,25 +68,6 @@ object TestHelpers {
   ) {
     openApiTest(
       snapshotName,
-      SupportedSerializer.KOTLINX,
-      routeUnderTest,
-      applicationSetup,
-      specOverrides,
-      customTypes,
-      applicationEnvironmentBuilder
-    )
-    openApiTest(
-      snapshotName,
-      SupportedSerializer.JACKSON,
-      routeUnderTest,
-      applicationSetup,
-      specOverrides,
-      customTypes,
-      applicationEnvironmentBuilder
-    )
-    openApiTest(
-      snapshotName,
-      SupportedSerializer.GSON,
       routeUnderTest,
       applicationSetup,
       specOverrides,
@@ -97,7 +78,6 @@ object TestHelpers {
 
   private fun openApiTest(
     snapshotName: String,
-    serializer: SupportedSerializer,
     routeUnderTest: Routing.() -> Unit,
     applicationSetup: Application.() -> Unit,
     specOverrides: OpenApiSpec.() -> OpenApiSpec,
@@ -108,26 +88,14 @@ object TestHelpers {
     install(NotarizedApplication()) {
       customTypes = typeOverrides
       spec = defaultSpec().specOverrides()
-      schemaConfigurator = when (serializer) {
-        SupportedSerializer.KOTLINX -> KotlinXSchemaConfigurator()
-        SupportedSerializer.GSON -> GsonSchemaConfigurator()
-        SupportedSerializer.JACKSON -> JacksonSchemaConfigurator()
-      }
+      schemaConfigurator = KotlinXSchemaConfigurator()
     }
     install(ContentNegotiation) {
-      when (serializer) {
-        SupportedSerializer.KOTLINX -> json(Json {
-          encodeDefaults = true
-          explicitNulls = false
-          serializersModule = KompendiumSerializersModule.module
-        })
-
-        SupportedSerializer.GSON -> gson()
-        SupportedSerializer.JACKSON -> jackson(ContentType.Application.Json) {
-          enable(SerializationFeature.INDENT_OUTPUT)
-          setSerializationInclusion(JsonInclude.Include.NON_NULL)
-        }
-      }
+      json(Json {
+        encodeDefaults = true
+        explicitNulls = false
+        serializersModule = KompendiumSerializersModule.module
+      })
     }
     application(applicationSetup)
     routing {

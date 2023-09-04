@@ -53,6 +53,7 @@ import io.bkbn.kompendium.core.util.postNoReqBody
 import io.bkbn.kompendium.core.util.primitives
 import io.bkbn.kompendium.core.util.reqRespExamples
 import io.bkbn.kompendium.core.util.optionalReqExample
+import io.bkbn.kompendium.core.util.overrideSealedTypeIdentifier
 import io.bkbn.kompendium.core.util.requiredParams
 import io.bkbn.kompendium.core.util.responseHeaders
 import io.bkbn.kompendium.core.util.returnsList
@@ -234,6 +235,9 @@ class KompendiumTest : DescribeSpec({
     }
     it("Can handle a really gnarly generic example") {
       openApiTestAllSerializers("T0043__gnarly_generic_example.json") { gnarlyGenericResponse() }
+    }
+    it("Can override the type name for a sealed interface implementation") {
+      openApiTestAllSerializers("T0070__sealed_interface_type_name_override.json") { overrideSealedTypeIdentifier() }
     }
   }
   describe("Custom Serializable Reader tests") {

@@ -42,8 +42,7 @@ class KotlinXSchemaConfigurator : SchemaConfigurator {
   }
 
   private fun determineTypeQualifier(type: KType): String {
-    val nameOverrideAnnotation = type.findAnnotation<SerialName>()
-    // TODO Cleaner way to get fqcn?
-    return nameOverrideAnnotation?.value ?: type.classifier.toString().replace("class ", "")
+    val nameOverrideAnnotation = (type.classifier as KClass<*>).findAnnotation<SerialName>()
+    return nameOverrideAnnotation?.value ?: (type.classifier as KClass<*>).qualifiedName!!
   }
 }

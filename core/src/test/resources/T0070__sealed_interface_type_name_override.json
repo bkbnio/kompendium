@@ -39,7 +39,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Flibbity-FlibbityGibbit"
+                  "$ref": "#/components/schemas/ChillaxificationMaximization"
                 }
               }
             }
@@ -53,115 +53,50 @@
   "webhooks": {},
   "components": {
     "schemas": {
-      "Bibbity-FlibbityGibbit": {
+      "Chillax": {
         "type": "object",
         "properties": {
-          "b": {
+          "a": {
             "type": "string"
-          },
-          "f": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/ComplexGibbit"
-              },
-              {
-                "$ref": "#/components/schemas/SimpleGibbit"
-              }
-            ]
           },
           "type": {
             "type": "string",
             "enum": [
-              "io.bkbn.kompendium.core.fixtures.Bibbity"
+              "chillax"
             ]
           }
         },
         "required": [
-          "b",
-          "f",
+          "a",
           "type"
         ]
       },
-      "ComplexGibbit": {
+      "ToDaMax": {
         "type": "object",
         "properties": {
           "b": {
-            "type": "string"
-          },
-          "c": {
             "type": "number",
             "format": "int32"
           },
-          "z": {
-            "type": "string"
-          },
           "type": {
             "type": "string",
             "enum": [
-              "io.bkbn.kompendium.core.fixtures.ComplexGibbit"
+              "maximize"
             ]
           }
         },
         "required": [
           "b",
-          "c",
-          "z",
           "type"
         ]
       },
-      "SimpleGibbit": {
-        "type": "object",
-        "properties": {
-          "a": {
-            "type": "string"
-          },
-          "z": {
-            "type": "string"
-          },
-          "type": {
-            "type": "string",
-            "enum": [
-              "io.bkbn.kompendium.core.fixtures.SimpleGibbit"
-            ]
-          }
-        },
-        "required": [
-          "a",
-          "type"
-        ]
-      },
-      "Gibbity-FlibbityGibbit": {
-        "type": "object",
-        "properties": {
-          "a": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/ComplexGibbit"
-              },
-              {
-                "$ref": "#/components/schemas/SimpleGibbit"
-              }
-            ]
-          },
-          "type": {
-            "type": "string",
-            "enum": [
-              "io.bkbn.kompendium.core.fixtures.Gibbity"
-            ]
-          }
-        },
-        "required": [
-          "a",
-          "type"
-        ]
-      },
-      "Flibbity-FlibbityGibbit": {
+      "ChillaxificationMaximization": {
         "anyOf": [
           {
-            "$ref": "#/components/schemas/Bibbity-FlibbityGibbit"
+            "$ref": "#/components/schemas/Chillax"
           },
           {
-            "$ref": "#/components/schemas/Gibbity-FlibbityGibbit"
+            "$ref": "#/components/schemas/ToDaMax"
           }
         ]
       }

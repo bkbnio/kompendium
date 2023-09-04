@@ -1,6 +1,7 @@
 package io.bkbn.kompendium.core.util
 
 import io.bkbn.kompendium.core.fixtures.Barzo
+import io.bkbn.kompendium.core.fixtures.ChillaxificationMaximization
 import io.bkbn.kompendium.core.fixtures.ComplexRequest
 import io.bkbn.kompendium.core.fixtures.Flibbity
 import io.bkbn.kompendium.core.fixtures.FlibbityGibbit
@@ -20,3 +21,4 @@ fun Routing.genericPolymorphicResponse() = basicGetGenerator<Flibbity<Double>>()
 fun Routing.genericPolymorphicResponseMultipleImpls() = basicGetGenerator<Flibbity<FlibbityGibbit>>()
 fun Routing.nestedGenericCollection() = basicGetGenerator<Page<Int>>()
 fun Routing.nestedGenericMultipleParamsCollection() = basicGetGenerator<MultiNestedGenerics<String, ComplexRequest>>()
+fun Routing.overrideSealedTypeIdentifier() = basicGetGenerator<ChillaxificationMaximization>()

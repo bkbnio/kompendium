@@ -91,6 +91,16 @@ data class AnothaJamma(val b: Float) : SlammaJamma
 
 data class InsaneJamma(val c: SlammaJamma) : SlammaJamma
 
+sealed interface ChillaxificationMaximization
+
+@Serializable
+@SerialName("chillax")
+data class Chillax(val a: String) : ChillaxificationMaximization
+
+@Serializable
+@SerialName("maximize")
+data class ToDaMax(val b: Int) : ChillaxificationMaximization
+
 sealed interface Flibbity<T>
 
 data class Gibbity<T>(val a: T) : Flibbity<T>
