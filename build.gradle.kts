@@ -18,6 +18,10 @@ gitHooks {
   )
 }
 
+dependencies {
+  subprojects.forEach { kover(it) }
+}
+
 allprojects {
   group = "io.bkbn"
   version = run {

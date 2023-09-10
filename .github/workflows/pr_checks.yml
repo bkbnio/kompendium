@@ -28,4 +28,4 @@ jobs:
         uses: burrunan/gradle-cache-action@v1
         with:
           gradle-version: wrapper
-          arguments: test koverMergedReport
+          arguments: test koverHtmlReport
