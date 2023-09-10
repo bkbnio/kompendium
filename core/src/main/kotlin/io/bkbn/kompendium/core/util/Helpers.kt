@@ -42,6 +42,7 @@ object Helpers {
     }
   }
 
+  @Suppress("CyclomaticComplexMethod")
   fun MethodInfo.addToSpec(
     path: Path,
     spec: OpenApiSpec,

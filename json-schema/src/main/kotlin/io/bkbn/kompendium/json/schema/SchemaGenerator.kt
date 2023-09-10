@@ -18,6 +18,7 @@ import kotlin.reflect.full.isSubclassOf
 
 object SchemaGenerator {
 
+  @Suppress("CyclomaticComplexMethod")
   fun fromTypeToSchema(
     type: KType,
     cache: MutableMap<String, JsonSchema>,
