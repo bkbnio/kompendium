@@ -22,7 +22,7 @@ dependencies {
 
 
   implementation(projects.kompendiumJsonSchema)
-  implementation("com.google.protobuf:protobuf-java:3.25.0")
+  implementation("com.google.protobuf:protobuf-java:3.25.1")
   implementation("org.jetbrains.kotlin:kotlin-reflect:1.9.20")
   implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.1")
 
