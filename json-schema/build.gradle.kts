@@ -24,7 +24,7 @@ dependencies {
   api(projects.kompendiumEnrichment)
 
   implementation("org.jetbrains.kotlin:kotlin-reflect:1.9.21")
-  implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.1")
+  implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2")
 
   // Formatting
   detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:$detektVersion")
