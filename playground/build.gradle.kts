@@ -38,7 +38,7 @@ dependencies {
   implementation("org.apache.logging.log4j:log4j-api:2.22.1")
   implementation("org.apache.logging.log4j:log4j-core:2.22.1")
   implementation("org.slf4j:slf4j-api:2.0.9")
-  implementation("org.slf4j:slf4j-simple:2.0.9")
+  implementation("org.slf4j:slf4j-simple:2.0.10")
 
 
   implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2")
