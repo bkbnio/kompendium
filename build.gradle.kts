@@ -4,18 +4,8 @@ plugins {
   id("io.bkbn.sourdough.library.jvm") version "0.12.2" apply false
   id("io.bkbn.sourdough.application.jvm") version "0.12.2" apply false
   id("io.bkbn.sourdough.root") version "0.12.2"
-  id("com.github.jakemarsden.git-hooks") version "0.0.2"
   id("org.jetbrains.kotlinx.kover") version "0.7.5"
   id("io.github.gradle-nexus.publish-plugin") version "1.3.0"
-}
-
-gitHooks {
-  setHooks(
-    mapOf(
-      "pre-commit" to "detekt",
-      "pre-push" to "test"
-    )
-  )
 }
 
 dependencies {
