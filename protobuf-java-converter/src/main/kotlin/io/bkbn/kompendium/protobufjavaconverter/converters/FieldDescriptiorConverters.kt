@@ -148,7 +148,6 @@ fun fromTypeToSchema(
     Descriptors.FieldDescriptor.JavaType.BYTE_STRING -> TypeDefinition.STRING
     Descriptors.FieldDescriptor.JavaType.ENUM -> {
       cache[javaProtoField.enumType.fullName] = EnumDefinition(
-        type = "string",
         enum = javaProtoField.enumType.values.map { it.name }.toSet()
       )
       ReferenceDefinition("${Helpers.COMPONENT_SLUG}/${javaProtoField.enumType.name}")

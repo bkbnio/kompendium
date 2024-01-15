@@ -71,7 +71,6 @@
       },
       "TestEnum":
           {
-            "type": "string",
             "enum": [
               "YES",
               "NO"

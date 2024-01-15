@@ -19,6 +19,6 @@ object EnumHandler {
     cache[type.getSlug(enrichment)] = ReferenceDefinition(type.getReferenceSlug(enrichment))
 
     val options = clazz.java.enumConstants.map { it.toString() }.toSet()
-    return EnumDefinition(type = "string", enum = options)
+    return EnumDefinition(enum = options)
   }
 }
