@@ -54,7 +54,6 @@
   "components": {
     "schemas": {
       "ColumnMode": {
-        "type": "string",
         "enum": [
           "NULLABLE",
           "REQUIRED",

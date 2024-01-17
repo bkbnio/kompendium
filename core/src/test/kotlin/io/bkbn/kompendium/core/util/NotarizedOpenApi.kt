@@ -3,6 +3,7 @@ package io.bkbn.kompendium.core.util
 import io.bkbn.kompendium.core.fixtures.ComplexRequest
 import io.bkbn.kompendium.core.fixtures.SomethingSimilar
 import io.bkbn.kompendium.core.fixtures.TestCreatedResponse
+import io.bkbn.kompendium.core.fixtures.TestEnum
 import io.bkbn.kompendium.core.fixtures.TestRequest
 import io.bkbn.kompendium.core.fixtures.TestResponse
 import io.bkbn.kompendium.core.fixtures.TestSimpleRequest
@@ -278,6 +279,23 @@ fun Routing.returnsList() {
           description("A Successful List-y Endeavor")
           responseCode(HttpStatusCode.OK)
           responseType<List<TestResponse>>()
+        }
+      }
+    }
+  }
+}
+
+fun Routing.returnsEnumList() {
+  route(defaultPath) {
+    install(NotarizedRoute()) {
+      parameters = defaultParams
+      get = GetInfo.builder {
+        summary(defaultPathSummary)
+        description(defaultPathDescription)
+        response {
+          description("A Successful List-y Endeavor")
+          responseCode(HttpStatusCode.OK)
+          responseType<List<TestEnum>>()
         }
       }
     }

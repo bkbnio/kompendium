@@ -27,23 +27,19 @@
     }
   ],
   "paths": {
-    "/": {
-      "post": {
+    "/test/{a}": {
+      "get": {
         "tags": [],
         "summary": "Great Summary!",
         "description": "testing more",
         "parameters": [],
-        "requestBody": {
-          "description": "You gotta send it",
-          "required": true
-        },
         "responses": {
           "200": {
-            "description": "A Successful Endeavor",
+            "description": "A Successful List-y Endeavor",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/EnumMessage"
+                  "$ref": "#/components/schemas/List-TestEnum"
                 }
               }
             }
@@ -51,31 +47,43 @@
         },
         "deprecated": false
       },
-      "parameters": []
+      "parameters": [
+        {
+          "name": "a",
+          "in": "path",
+          "schema": {
+            "type": "string"
+          },
+          "required": true,
+          "deprecated": false
+        },
+        {
+          "name": "aa",
+          "in": "query",
+          "schema": {
+            "type": "number",
+            "format": "int32"
+          },
+          "required": true,
+          "deprecated": false
+        }
+      ]
     }
   },
   "webhooks": {},
   "components": {
     "schemas": {
-      "EnumMessage": {
-        "type": "object",
-        "properties": {
-          "corpus": {
-            "$ref": "#/components/schemas/Corpus"
-          }
-        }
-      },
-      "Corpus": {
+      "TestEnum": {
         "enum": [
-          "CORPUS_UNSPECIFIED",
-          "CORPUS_UNIVERSAL",
-          "CORPUS_WEB",
-          "CORPUS_IMAGES",
-          "CORPUS_LOCAL",
-          "CORPUS_NEWS",
-          "CORPUS_PRODUCTS",
-          "CORPUS_VIDEO"
+          "YES",
+          "NO"
         ]
+      },
+      "List-TestEnum": {
+        "items": {
+          "$ref": "#/components/schemas/TestEnum"
+        },
+        "type": "array"
       }
     },
     "securitySchemes": {}

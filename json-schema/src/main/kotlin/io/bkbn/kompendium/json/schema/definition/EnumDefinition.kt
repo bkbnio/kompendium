@@ -4,7 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class EnumDefinition(
-  val type: String,
   val enum: Set<String>,
   override val deprecated: Boolean? = null,
   override val description: String? = null,
