@@ -40,6 +40,8 @@ dependencies {
   implementation("org.slf4j:slf4j-api:2.0.11")
   implementation("org.slf4j:slf4j-simple:2.0.11")
 
+  // YAML
+  implementation("com.charleskorn.kaml:kaml:0.57.0")
 
   implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2")
   implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.5.0")
