@@ -4,6 +4,7 @@ import io.bkbn.kompendium.enrichment.TypeEnrichment
 import io.bkbn.kompendium.json.schema.SchemaConfigurator
 import io.bkbn.kompendium.json.schema.SchemaGenerator
 import io.bkbn.kompendium.json.schema.definition.ArrayDefinition
+import io.bkbn.kompendium.json.schema.definition.EnumDefinition
 import io.bkbn.kompendium.json.schema.definition.JsonSchema
 import io.bkbn.kompendium.json.schema.definition.NullableDefinition
 import io.bkbn.kompendium.json.schema.definition.OneOfDefinition
@@ -23,7 +24,7 @@ object CollectionHandler {
     val collectionType = type.arguments.first().type
       ?: error("This indicates a bug in Kompendium, please open a GitHub issue!")
     val typeSchema = SchemaGenerator.fromTypeToSchema(collectionType, cache, schemaConfigurator, enrichment).let {
-      if (it is TypeDefinition && it.type == "object") {
+      if ((it is TypeDefinition && it.type == "object") || it is EnumDefinition) {
         cache[collectionType.getSlug(enrichment)] = it
         ReferenceDefinition(collectionType.getReferenceSlug(enrichment))
       } else {

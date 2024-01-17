@@ -60,6 +60,7 @@ import io.bkbn.kompendium.core.util.primitives
 import io.bkbn.kompendium.core.util.reqRespExamples
 import io.bkbn.kompendium.core.util.requiredParams
 import io.bkbn.kompendium.core.util.responseHeaders
+import io.bkbn.kompendium.core.util.returnsEnumList
 import io.bkbn.kompendium.core.util.returnsList
 import io.bkbn.kompendium.core.util.rootRoute
 import io.bkbn.kompendium.core.util.samePathDifferentMethodsAndAuth
@@ -294,6 +295,9 @@ class KompendiumTest : DescribeSpec({
       }
       it("Can have a nullable enum as a member field") {
         openApiTestAllSerializers("T0037__nullable_enum_field.json") { nullableEnumField() }
+      }
+      it("Can have a list of enums as a field") {
+        openApiTestAllSerializers("T0076__list_of_enums.json") { returnsEnumList() }
       }
       it("Can have a nullable reference without impacting base type") {
         openApiTestAllSerializers("T0041__nullable_reference.json") { nullableReference() }
