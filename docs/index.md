@@ -9,8 +9,9 @@ you to rip out and replace the amazing code you have already written.
 | 1.X        | 1    | 3.0     |
 | 2.X        | 1    | 3.0     |
 | 3.X        | 2    | 3.1     | 
+| 4.X        | 2    | 3.1     | 
 
-> These docs are focused solely on Kompendium 3, previous versions should be considered deprecated and no longer
+> These docs are focused solely on Kompendium 4, previous versions should be considered deprecated and no longer
 > maintained
 
 # Getting Started
