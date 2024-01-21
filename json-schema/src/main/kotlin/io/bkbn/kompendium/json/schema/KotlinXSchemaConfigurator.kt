@@ -26,7 +26,7 @@ class KotlinXSchemaConfigurator : SchemaConfigurator {
       .filterIsInstance<SerialName>()
       .firstOrNull()?.value ?: property.name
 
-  override fun sealedTypeEnrichment(
+  override fun sealedObjectEnrichment(
     implementationType: KType,
     implementationSchema: JsonSchema,
   ): JsonSchema {

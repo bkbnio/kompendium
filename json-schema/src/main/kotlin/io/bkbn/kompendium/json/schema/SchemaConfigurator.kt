@@ -9,7 +9,7 @@ interface SchemaConfigurator {
   fun serializableMemberProperties(clazz: KClass<*>): Collection<KProperty1<out Any, *>>
   fun serializableName(property: KProperty1<out Any, *>): String
 
-  fun sealedTypeEnrichment(
+  fun sealedObjectEnrichment(
     implementationType: KType,
     implementationSchema: JsonSchema
   ): JsonSchema

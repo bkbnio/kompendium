@@ -10,7 +10,7 @@ import kotlin.reflect.typeOf
 class ResponseInfo private constructor(
   val responseCode: HttpStatusCode,
   val responseType: KType,
-  val typeEnrichment: TypeEnrichment<*>?,
+  val enrichment: TypeEnrichment<*>?,
   val description: String,
   val examples: Map<String, MediaType.Example>?,
   val mediaTypes: Set<String>,
@@ -69,7 +69,7 @@ class ResponseInfo private constructor(
       responseCode = responseCode ?: error("You must provide a response code in order to build a Response!"),
       responseType = responseType ?: error("You must provide a response type in order to build a Response!"),
       description = description ?: error("You must provide a description in order to build a Response!"),
-      typeEnrichment = typeEnrichment,
+      enrichment = typeEnrichment,
       examples = examples,
       mediaTypes = mediaTypes ?: setOf("application/json"),
       responseHeaders = responseHeaders

@@ -2,8 +2,8 @@
   "type": "object",
   "properties": {
     "data": {
-      "description": "This is a generic param",
-      "$ref": "#/components/schemas/TestSimpleRequest-simple"
+      "$ref": "#/components/schemas/TestSimpleRequest-blob",
+      "description": "This is a generic object"
     }
   },
   "required": [

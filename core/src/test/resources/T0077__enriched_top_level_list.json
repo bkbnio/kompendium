@@ -38,7 +38,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ComplexRequest-simple"
+                "$ref": "#/components/schemas/List-TestSimpleRequest-blah-blah"
               }
             }
           },
@@ -100,83 +100,47 @@
           "id"
         ]
       },
-      "ComplexRequest-simple": {
+      "TestSimpleRequest-simple": {
         "type": "object",
         "properties": {
-          "amazingField": {
-            "type": "string"
-          },
-          "org": {
-            "type": "string"
-          },
-          "tables": {
-            "items": {
-              "$ref": "#/components/schemas/NestedComplexItem-blah-blah"
-            },
-            "description": "A nested description",
-            "type": "array"
-          }
-        },
-        "required": [
-          "amazingField",
-          "org",
-          "tables"
-        ]
-      },
-      "NestedComplexItem-nested": {
-        "type": "object",
-        "properties": {
-          "alias": {
-            "additionalProperties": {
-              "$ref": "#/components/schemas/CrazyItem"
-            },
-            "type": "object"
-          },
-          "name": {
+          "a": {
             "type": "string",
-            "description": "A nested description"
-          }
-        },
-        "required": [
-          "alias",
-          "name"
-        ]
-      },
-      "CrazyItem": {
-        "type": "object",
-        "properties": {
-          "enumeration": {
-            "$ref": "#/components/schemas/SimpleEnum"
-          }
-        },
-        "required": [
-          "enumeration"
-        ]
-      },
-      "SimpleEnum": {
-        "enum": [
-          "ONE",
-          "TWO"
-        ]
-      },
-      "NestedComplexItem-blah-blah": {
-        "type": "object",
-        "properties": {
-          "alias": {
-            "additionalProperties": {
-              "$ref": "#/components/schemas/CrazyItem"
-            },
-            "type": "object"
+            "description": "A simple description"
           },
-          "name": {
-            "type": "string",
-            "description": "A nested description"
+          "b": {
+            "type": "number",
+            "format": "int32",
+            "deprecated": true
           }
         },
         "required": [
-          "alias",
-          "name"
+          "a",
+          "b"
         ]
+      },
+      "TestSimpleRequest-blah-blah": {
+        "type": "object",
+        "properties": {
+          "a": {
+            "type": "string",
+            "description": "A simple description"
+          },
+          "b": {
+            "type": "number",
+            "format": "int32",
+            "deprecated": true
+          }
+        },
+        "required": [
+          "a",
+          "b"
+        ]
+      },
+      "List-TestSimpleRequest-blah-blah": {
+        "items": {
+          "$ref": "#/components/schemas/TestSimpleRequest-blah-blah"
+        },
+        "type": "array"
       }
     },
     "securitySchemes": {}

@@ -5,8 +5,8 @@ complexity:
     active: true
     functionThreshold: 10
     constructorThreshold: 15
-  ComplexMethod:
-    threshold: 20
+  CyclomaticComplexMethod:
+    threshold: 15
 style:
   MaxLineLength:
     excludes: ['**/test/**/*']

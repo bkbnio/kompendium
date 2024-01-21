@@ -1,19 +1,17 @@
 package io.bkbn.kompendium.json.schema.handler
 
-import io.bkbn.kompendium.enrichment.PropertyEnrichment
-import io.bkbn.kompendium.enrichment.TypeEnrichment
+import io.bkbn.kompendium.enrichment.Enrichment
+import io.bkbn.kompendium.enrichment.ObjectEnrichment
 import io.bkbn.kompendium.json.schema.SchemaConfigurator
 import io.bkbn.kompendium.json.schema.SchemaGenerator
-import io.bkbn.kompendium.json.schema.definition.AnyOfDefinition
-import io.bkbn.kompendium.json.schema.definition.ArrayDefinition
 import io.bkbn.kompendium.json.schema.definition.EnumDefinition
 import io.bkbn.kompendium.json.schema.definition.JsonSchema
-import io.bkbn.kompendium.json.schema.definition.MapDefinition
 import io.bkbn.kompendium.json.schema.definition.NullableDefinition
 import io.bkbn.kompendium.json.schema.definition.OneOfDefinition
 import io.bkbn.kompendium.json.schema.definition.ReferenceDefinition
 import io.bkbn.kompendium.json.schema.definition.TypeDefinition
 import io.bkbn.kompendium.json.schema.exception.UnknownSchemaException
+import io.bkbn.kompendium.json.schema.handler.EnrichmentHandler.applyToSchema
 import io.bkbn.kompendium.json.schema.util.Helpers.getReferenceSlug
 import io.bkbn.kompendium.json.schema.util.Helpers.getSlug
 import kotlin.reflect.KClass
@@ -32,28 +30,31 @@ object SimpleObjectHandler {
     clazz: KClass<*>,
     cache: MutableMap<String, JsonSchema>,
     schemaConfigurator: SchemaConfigurator,
-    enrichment: TypeEnrichment<*>?,
+    enrichment: ObjectEnrichment<*>?,
   ): JsonSchema {
-    cache[type.getSlug(enrichment)] = ReferenceDefinition(type.getReferenceSlug(enrichment))
+    require(enrichment is ObjectEnrichment<*> || enrichment == null) {
+      "Enrichment for object must either be of type ObjectEnrichment or null"
+    }
+
+    val slug = type.getSlug(enrichment)
+    val referenceSlug = type.getReferenceSlug(enrichment)
+    cache[slug] = ReferenceDefinition(referenceSlug)
 
     val typeMap = clazz.typeParameters.zip(type.arguments).toMap()
     val props = schemaConfigurator.serializableMemberProperties(clazz)
       .filterNot { it.javaField == null }
       .associate { prop ->
-        val propTypeEnrichment = when (val pe = enrichment?.getEnrichmentForProperty(prop)) {
-          is PropertyEnrichment -> pe
-          else -> null
-        }
+        val propEnrichment = enrichment?.propertyEnrichment?.get(prop)
 
         val schema = when (prop.needsToInjectGenerics(typeMap)) {
-          true -> handleNestedGenerics(typeMap, prop, cache, schemaConfigurator, propTypeEnrichment)
+          true -> handleNestedGenerics(typeMap, prop, cache, schemaConfigurator, propEnrichment)
           false -> when (typeMap.containsKey(prop.returnType.classifier)) {
-            true -> handleGenericProperty(prop, typeMap, cache, schemaConfigurator, propTypeEnrichment)
-            false -> handleProperty(prop, cache, schemaConfigurator, propTypeEnrichment?.typeEnrichment)
+            true -> handleGenericProperty(prop, typeMap, cache, schemaConfigurator, propEnrichment)
+            false -> handleProperty(prop, cache, schemaConfigurator, propEnrichment)
           }
         }
 
-        val enrichedSchema = propTypeEnrichment?.applyToSchema(schema) ?: schema
+        val enrichedSchema = propEnrichment?.applyToSchema(schema) ?: schema
 
         val nullCheckSchema = when (prop.returnType.isMarkedNullable && !enrichedSchema.isNullable()) {
           true -> OneOfDefinition(NullableDefinition(), enrichedSchema)
@@ -84,11 +85,14 @@ object SimpleObjectHandler {
       .map { schemaConfigurator.serializableName(it) }
       .toSet()
 
-    return TypeDefinition(
+    val definition = TypeDefinition(
       type = "object",
       properties = props,
       required = required
     )
+
+    cache[slug] = definition
+    return definition
   }
 
   private fun KProperty<*>.needsToInjectGenerics(
@@ -103,7 +107,7 @@ object SimpleObjectHandler {
     prop: KProperty<*>,
     cache: MutableMap<String, JsonSchema>,
     schemaConfigurator: SchemaConfigurator,
-    propEnrichment: PropertyEnrichment?
+    propEnrichment: Enrichment?
   ): JsonSchema {
     val propClass = prop.returnType.classifier as KClass<*>
     val types = prop.returnType.arguments.map {
@@ -111,7 +115,7 @@ object SimpleObjectHandler {
       typeMap.filterKeys { k -> k.name == typeSymbol }.values.first()
     }
     val constructedType = propClass.createType(types)
-    return SchemaGenerator.fromTypeToSchema(constructedType, cache, schemaConfigurator, propEnrichment?.typeEnrichment)
+    return SchemaGenerator.fromTypeToSchema(constructedType, cache, schemaConfigurator, propEnrichment)
       .let {
         if (it.isOrContainsObjectOrEnumDef()) {
           cache[constructedType.getSlug(propEnrichment)] = it
@@ -127,14 +131,14 @@ object SimpleObjectHandler {
     typeMap: Map<KTypeParameter, KTypeProjection>,
     cache: MutableMap<String, JsonSchema>,
     schemaConfigurator: SchemaConfigurator,
-    propEnrichment: PropertyEnrichment?
+    propEnrichment: Enrichment?
   ): JsonSchema {
     val type = typeMap[prop.returnType.classifier]?.type
       ?: error("This indicates a bug in Kompendium, please open a GitHub issue")
-    return SchemaGenerator.fromTypeToSchema(type, cache, schemaConfigurator, propEnrichment?.typeEnrichment).let {
+    return SchemaGenerator.fromTypeToSchema(type, cache, schemaConfigurator, propEnrichment).let {
       if (it.isOrContainsObjectOrEnumDef()) {
-        cache[type.getSlug(propEnrichment?.typeEnrichment)] = it
-        ReferenceDefinition(type.getReferenceSlug(propEnrichment?.typeEnrichment))
+        cache[type.getSlug(propEnrichment)] = it
+        ReferenceDefinition(type.getReferenceSlug(propEnrichment))
       } else {
         it
       }
@@ -145,7 +149,7 @@ object SimpleObjectHandler {
     prop: KProperty<*>,
     cache: MutableMap<String, JsonSchema>,
     schemaConfigurator: SchemaConfigurator,
-    propEnrichment: TypeEnrichment<*>?
+    propEnrichment: Enrichment?
   ): JsonSchema =
     SchemaGenerator.fromTypeToSchema(prop.returnType, cache, schemaConfigurator, propEnrichment).let {
       if (it.isOrContainsObjectOrEnumDef()) {
@@ -165,37 +169,4 @@ object SimpleObjectHandler {
   }
 
   private fun JsonSchema.isNullable(): Boolean = this is OneOfDefinition && this.oneOf.any { it is NullableDefinition }
-
-  private fun PropertyEnrichment.applyToSchema(schema: JsonSchema): JsonSchema = when (schema) {
-    is AnyOfDefinition -> schema.copy(deprecated = deprecated, description = description)
-    is ArrayDefinition -> schema.copy(
-      deprecated = deprecated,
-      description = description,
-      minItems = minItems,
-      maxItems = maxItems,
-      uniqueItems = uniqueItems,
-    )
-
-    is EnumDefinition -> schema.copy(deprecated = deprecated, description = description)
-    is MapDefinition -> schema.copy(deprecated = deprecated, description = description)
-    is NullableDefinition -> schema.copy(deprecated = deprecated, description = description)
-    is OneOfDefinition -> schema.copy(deprecated = deprecated, description = description)
-    is ReferenceDefinition -> schema.copy(deprecated = deprecated, description = description)
-    is TypeDefinition -> schema.copy(
-      deprecated = deprecated,
-      description = description,
-      multipleOf = multipleOf,
-      maximum = maximum,
-      exclusiveMaximum = exclusiveMaximum,
-      minimum = minimum,
-      exclusiveMinimum = exclusiveMinimum,
-      maxLength = maxLength,
-      minLength = minLength,
-      pattern = pattern,
-      contentEncoding = contentEncoding,
-      contentMediaType = contentMediaType,
-      maxProperties = maxProperties,
-      minProperties = minProperties,
-    )
-  }
 }
