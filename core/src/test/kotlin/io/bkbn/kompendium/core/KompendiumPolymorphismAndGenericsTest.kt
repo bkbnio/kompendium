@@ -33,10 +33,14 @@ class KompendiumPolymorphismAndGenericsTest : DescribeSpec({
       TestHelpers.openApiTestAllSerializers("T0031__nested_generic_response.json") { nestedGenericResponse() }
     }
     it("Can generate a polymorphic response type with generics") {
-      TestHelpers.openApiTestAllSerializers("T0032__polymorphic_response_with_generics.json") { genericPolymorphicResponse() }
+      TestHelpers.openApiTestAllSerializers(
+        "T0032__polymorphic_response_with_generics.json"
+      ) { genericPolymorphicResponse() }
     }
     it("Can handle an absolutely psycho inheritance test") {
-      TestHelpers.openApiTestAllSerializers("T0033__crazy_polymorphic_example.json") { genericPolymorphicResponseMultipleImpls() }
+      TestHelpers.openApiTestAllSerializers("T0033__crazy_polymorphic_example.json") {
+        genericPolymorphicResponseMultipleImpls()
+      }
     }
     it("Can support nested generic collections") {
       TestHelpers.openApiTestAllSerializers("T0039__nested_generic_collection.json") { nestedGenericCollection() }
@@ -50,7 +54,9 @@ class KompendiumPolymorphismAndGenericsTest : DescribeSpec({
       TestHelpers.openApiTestAllSerializers("T0043__gnarly_generic_example.json") { gnarlyGenericResponse() }
     }
     it("Can override the type name for a sealed interface implementation") {
-      TestHelpers.openApiTestAllSerializers("T0070__sealed_interface_type_name_override.json") { overrideSealedTypeIdentifier() }
+      TestHelpers.openApiTestAllSerializers("T0070__sealed_interface_type_name_override.json") {
+        overrideSealedTypeIdentifier()
+      }
     }
     it("Can serialize an object where the subtype is not a complete set of parent properties") {
       TestHelpers.openApiTestAllSerializers("T0071__subtype_not_complete_set_of_parent_properties.json") {

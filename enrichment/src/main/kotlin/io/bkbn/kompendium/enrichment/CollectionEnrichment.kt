@@ -1,6 +1,5 @@
 package io.bkbn.kompendium.enrichment
 
-// TODO: Do I even need the type info here?
 class CollectionEnrichment<T>(override val id: String) : TypeEnrichment<T> {
 
   override var deprecated: Boolean? = null

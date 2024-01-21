@@ -51,37 +51,7 @@ object SchemaGenerator {
       String::class -> checkForNull(type, TypeDefinition.STRING)
       Boolean::class -> checkForNull(type, TypeDefinition.BOOLEAN)
       UUID::class -> checkForNull(type, TypeDefinition.UUID)
-      // TODO: Break this out into a separate method... too ugly right now
-      else -> when {
-        clazz.isSubclassOf(Enum::class) -> EnumHandler.handle(type, clazz, cache)
-        clazz.isSubclassOf(Collection::class) -> when (enrichment) {
-          is CollectionEnrichment<*> -> CollectionHandler.handle(type, cache, schemaConfigurator, enrichment)
-          null -> CollectionHandler.handle(type, cache, schemaConfigurator, null)
-          else -> error("Incorrect enrichment type for enrichment id: ${enrichment.id}")
-        }
-
-        clazz.isSubclassOf(Map::class) -> when (enrichment) {
-          is MapEnrichment<*> -> MapHandler.handle(type, cache, schemaConfigurator, enrichment)
-          null -> MapHandler.handle(type, cache, schemaConfigurator, null)
-          else -> error("Incorrect enrichment type for enrichment id: ${enrichment.id}")
-        }
-
-        else -> {
-          if (clazz.isSealed) {
-            when (enrichment) {
-              is ObjectEnrichment<*> -> SealedObjectHandler.handle(type, clazz, cache, schemaConfigurator, enrichment)
-              null -> SealedObjectHandler.handle(type, clazz, cache, schemaConfigurator, null)
-              else -> error("Incorrect enrichment type for enrichment id: ${enrichment.id}")
-            }
-          } else {
-            when (enrichment) {
-              is ObjectEnrichment<*> -> SimpleObjectHandler.handle(type, clazz, cache, schemaConfigurator, enrichment)
-              null -> SimpleObjectHandler.handle(type, clazz, cache, schemaConfigurator, null)
-              else -> error("Incorrect enrichment type for enrichment id: ${enrichment.id}")
-            }
-          }
-        }
-      }
+      else -> complexTypeToSchema(clazz, type, cache, schemaConfigurator, enrichment as? TypeEnrichment<*>?)
     }
   }
 
@@ -99,5 +69,60 @@ object SchemaGenerator {
   private fun checkForNull(type: KType, schema: JsonSchema): JsonSchema = when (type.isMarkedNullable) {
     true -> OneOfDefinition(NullableDefinition(), schema)
     false -> schema
+  }
+
+  private fun complexTypeToSchema(
+    clazz: KClass<*>,
+    type: KType,
+    cache: MutableMap<String, JsonSchema>,
+    schemaConfigurator: SchemaConfigurator,
+    enrichment: Enrichment? = null
+  ): JsonSchema = when {
+    clazz.isSubclassOf(Enum::class) -> EnumHandler.handle(type, clazz, cache)
+    clazz.isSubclassOf(Collection::class) -> handleCollection(type, cache, schemaConfigurator, enrichment)
+    clazz.isSubclassOf(Map::class) -> handleMap(type, cache, schemaConfigurator, enrichment)
+    else -> handleObject(type, clazz, cache, schemaConfigurator, enrichment)
+  }
+
+  private fun handleCollection(
+    type: KType,
+    cache: MutableMap<String, JsonSchema>,
+    schemaConfigurator: SchemaConfigurator,
+    enrichment: Enrichment?
+  ) = when (enrichment) {
+    is CollectionEnrichment<*> -> CollectionHandler.handle(type, cache, schemaConfigurator, enrichment)
+    null -> CollectionHandler.handle(type, cache, schemaConfigurator, null)
+    else -> error("Incorrect enrichment type for enrichment id: ${enrichment.id}")
+  }
+
+  private fun handleMap(
+    type: KType,
+    cache: MutableMap<String, JsonSchema>,
+    schemaConfigurator: SchemaConfigurator,
+    enrichment: Enrichment?
+  ) = when (enrichment) {
+    is MapEnrichment<*> -> MapHandler.handle(type, cache, schemaConfigurator, enrichment)
+    null -> MapHandler.handle(type, cache, schemaConfigurator, null)
+    else -> error("Incorrect enrichment type for enrichment id: ${enrichment.id}")
+  }
+
+  private fun handleObject(
+    type: KType,
+    clazz: KClass<*>,
+    cache: MutableMap<String, JsonSchema>,
+    schemaConfigurator: SchemaConfigurator,
+    enrichment: Enrichment?
+  ) = when (clazz.isSealed) {
+    true -> when (enrichment) {
+      is ObjectEnrichment<*> -> SealedObjectHandler.handle(type, clazz, cache, schemaConfigurator, enrichment)
+      null -> SealedObjectHandler.handle(type, clazz, cache, schemaConfigurator, null)
+      else -> error("Incorrect enrichment type for enrichment id: ${enrichment.id}")
+    }
+
+    false -> when (enrichment) {
+      is ObjectEnrichment<*> -> SimpleObjectHandler.handle(type, clazz, cache, schemaConfigurator, enrichment)
+      null -> SimpleObjectHandler.handle(type, clazz, cache, schemaConfigurator, null)
+      else -> error("Incorrect enrichment type for enrichment id: ${enrichment.id}")
+    }
   }
 }

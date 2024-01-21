@@ -1,6 +1,5 @@
 package io.bkbn.kompendium.json.schema.handler
 
-import io.bkbn.kompendium.enrichment.ObjectEnrichment
 import io.bkbn.kompendium.json.schema.definition.EnumDefinition
 import io.bkbn.kompendium.json.schema.definition.JsonSchema
 import io.bkbn.kompendium.json.schema.definition.ReferenceDefinition

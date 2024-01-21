@@ -1,22 +1,17 @@
 package io.bkbn.kompendium.json.schema.handler
 
-import io.bkbn.kompendium.enrichment.CollectionEnrichment
 import io.bkbn.kompendium.enrichment.Enrichment
-import io.bkbn.kompendium.enrichment.MapEnrichment
-import io.bkbn.kompendium.enrichment.NumberEnrichment
 import io.bkbn.kompendium.enrichment.ObjectEnrichment
-import io.bkbn.kompendium.enrichment.StringEnrichment
 import io.bkbn.kompendium.json.schema.SchemaConfigurator
 import io.bkbn.kompendium.json.schema.SchemaGenerator
-import io.bkbn.kompendium.json.schema.definition.ArrayDefinition
 import io.bkbn.kompendium.json.schema.definition.EnumDefinition
 import io.bkbn.kompendium.json.schema.definition.JsonSchema
-import io.bkbn.kompendium.json.schema.definition.MapDefinition
 import io.bkbn.kompendium.json.schema.definition.NullableDefinition
 import io.bkbn.kompendium.json.schema.definition.OneOfDefinition
 import io.bkbn.kompendium.json.schema.definition.ReferenceDefinition
 import io.bkbn.kompendium.json.schema.definition.TypeDefinition
 import io.bkbn.kompendium.json.schema.exception.UnknownSchemaException
+import io.bkbn.kompendium.json.schema.handler.EnrichmentHandler.applyToSchema
 import io.bkbn.kompendium.json.schema.util.Helpers.getReferenceSlug
 import io.bkbn.kompendium.json.schema.util.Helpers.getSlug
 import kotlin.reflect.KClass
@@ -37,7 +32,7 @@ object SimpleObjectHandler {
     schemaConfigurator: SchemaConfigurator,
     enrichment: ObjectEnrichment<*>?,
   ): JsonSchema {
-    require (enrichment is ObjectEnrichment<*> || enrichment == null) {
+    require(enrichment is ObjectEnrichment<*> || enrichment == null) {
       "Enrichment for object must either be of type ObjectEnrichment or null"
     }
 
@@ -174,57 +169,4 @@ object SimpleObjectHandler {
   }
 
   private fun JsonSchema.isNullable(): Boolean = this is OneOfDefinition && this.oneOf.any { it is NullableDefinition }
-
-  // TODO: Break up
-  private fun Enrichment.applyToSchema(schema: JsonSchema): JsonSchema = when (this) {
-    is NumberEnrichment -> when (schema) {
-      is TypeDefinition -> schema.copy(
-        deprecated = deprecated,
-        description = description,
-        multipleOf = multipleOf,
-        maximum = maximum,
-        exclusiveMaximum = exclusiveMaximum,
-        minimum = minimum,
-        exclusiveMinimum = exclusiveMinimum,
-      )
-      else -> error("Incorrect enrichment type for enrichment id: ${this.id}")
-    }
-    is StringEnrichment -> when (schema) {
-      is TypeDefinition -> schema.copy(
-        deprecated = deprecated,
-        description = description,
-        maxLength = maxLength,
-        minLength = minLength,
-        pattern = pattern,
-        contentEncoding = contentEncoding,
-        contentMediaType = contentMediaType,
-      )
-      else -> error("Incorrect enrichment type for enrichment id: ${this.id}")
-    }
-    is CollectionEnrichment<*> -> when (schema) {
-      is ArrayDefinition -> schema.copy(
-        deprecated = deprecated,
-        description = description,
-        minItems = minItems,
-        maxItems = maxItems,
-        uniqueItems = uniqueItems,
-      )
-      else -> error("Incorrect enrichment type for enrichment id: ${this.id}")
-    }
-    is MapEnrichment<*> -> when (schema) {
-      is MapDefinition -> schema.copy(
-        deprecated = deprecated,
-        description = description,
-        maxProperties = maxProperties,
-        minProperties = minProperties,
-      )
-      else -> error("Incorrect enrichment type for enrichment id: ${this.id}")
-    }
-    is ObjectEnrichment<*> -> when (schema) {
-      is TypeDefinition -> schema.copy(deprecated = deprecated, description = description)
-      is ReferenceDefinition -> schema.copy(deprecated = deprecated, description = description)
-      else -> error("Incorrect enrichment type for enrichment id: ${this.id}")
-    }
-    else -> error("Incorrect enrichment type for enrichment id: ${this.id}")
-  }
 }

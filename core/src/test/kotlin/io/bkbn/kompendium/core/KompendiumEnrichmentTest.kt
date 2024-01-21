@@ -21,7 +21,9 @@ class KompendiumEnrichmentTest : DescribeSpec({
       TestHelpers.openApiTestAllSerializers("T0056__enriched_nested_collection.json") { enrichedNestedCollection() }
     }
     it("Can enrich a complex generic type") {
-      TestHelpers.openApiTestAllSerializers("T0057__enriched_complex_generic_type.json") { enrichedComplexGenericType() }
+      TestHelpers.openApiTestAllSerializers(
+        "T0057__enriched_complex_generic_type.json"
+      ) { enrichedComplexGenericType() }
     }
     it("Can enrich a generic object") {
       TestHelpers.openApiTestAllSerializers("T0067__enriched_generic_object.json") { enrichedGenericResponse() }

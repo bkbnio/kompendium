@@ -16,7 +16,11 @@ import io.ktor.server.auth.basic
 class KompendiumErrorHandlingTest : DescribeSpec({
   describe("Error Handling") {
     it("Throws a clear exception when an unidentified type is encountered") {
-      val exception = shouldThrow<UnknownSchemaException> { TestHelpers.openApiTestAllSerializers("") { dateTimeString() } }
+      val exception = shouldThrow<UnknownSchemaException> {
+        TestHelpers.openApiTestAllSerializers(
+          ""
+        ) { dateTimeString() }
+      }
       exception.message should startWith("An unknown type was encountered: class java.time.Instant")
     }
     it("Throws an exception when same method for same path has been previously registered") {

@@ -19,7 +19,9 @@ class KompendiumExamplesTest : DescribeSpec({
       TestHelpers.openApiTestAllSerializers("T0069__example_optional_req.json") { optionalReqExample() }
     }
     it("Can generate example summary and description") {
-      TestHelpers.openApiTestAllSerializers("T0075__example_summary_and_description.json") { exampleSummaryAndDescription() }
+      TestHelpers.openApiTestAllSerializers(
+        "T0075__example_summary_and_description.json"
+      ) { exampleSummaryAndDescription() }
     }
   }
 })

@@ -1,6 +1,6 @@
 package io.bkbn.kompendium.enrichment
 
-class StringEnrichment(override val id: String): Enrichment {
+class StringEnrichment(override val id: String) : Enrichment {
   override var deprecated: Boolean? = null
   override var description: String? = null
 

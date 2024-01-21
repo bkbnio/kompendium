@@ -13,7 +13,9 @@ class KompendiumExceptionsTest : DescribeSpec({
       TestHelpers.openApiTestAllSerializers("T0016__notarized_get_with_exception_response.json") { singleException() }
     }
     it("Can support multiple response codes") {
-      TestHelpers.openApiTestAllSerializers("T0017__notarized_get_with_multiple_exception_responses.json") { multipleExceptions() }
+      TestHelpers.openApiTestAllSerializers("T0017__notarized_get_with_multiple_exception_responses.json") {
+        multipleExceptions()
+      }
     }
     it("Can add a polymorphic exception response") {
       TestHelpers.openApiTestAllSerializers("T0018__polymorphic_error_status_codes.json") { polymorphicException() }
