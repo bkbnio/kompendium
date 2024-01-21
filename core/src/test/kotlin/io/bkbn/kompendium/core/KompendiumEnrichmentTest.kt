@@ -1,6 +1,5 @@
 package io.bkbn.kompendium.core
 
-import io.bkbn.kompendium.core.fixtures.TestHelpers
 import io.bkbn.kompendium.core.fixtures.TestHelpers.openApiTestAllSerializers
 import io.bkbn.kompendium.core.util.enrichedComplexGenericType
 import io.bkbn.kompendium.core.util.enrichedGenericResponse
