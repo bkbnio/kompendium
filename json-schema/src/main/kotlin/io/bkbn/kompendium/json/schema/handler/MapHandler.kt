@@ -1,6 +1,6 @@
 package io.bkbn.kompendium.json.schema.handler
 
-import io.bkbn.kompendium.enrichment.TypeEnrichment
+import io.bkbn.kompendium.enrichment.MapEnrichment
 import io.bkbn.kompendium.json.schema.SchemaConfigurator
 import io.bkbn.kompendium.json.schema.SchemaGenerator
 import io.bkbn.kompendium.json.schema.definition.JsonSchema
@@ -20,7 +20,7 @@ object MapHandler {
     type: KType,
     cache: MutableMap<String, JsonSchema>,
     schemaConfigurator: SchemaConfigurator,
-    enrichment: TypeEnrichment<*>? = null
+    enrichment: MapEnrichment<*, *>? = null
   ): JsonSchema {
     require(type.arguments.first().type?.classifier as KClass<*> == String::class) {
       "JSON requires that map keys MUST be Strings.  You provided ${type.arguments.first().type}"

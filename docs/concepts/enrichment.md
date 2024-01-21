@@ -1,10 +1,10 @@
 Kompendium allows users to enrich their data types with additional information. This can be done by defining a
-`TypeEnrichment` object and passing it to the `enrichment` parameter of the relevant `requestType` or `responseType`.
+`ObjectEnrichment` object and passing it to the `enrichment` parameter of the relevant `requestType` or `responseType`.
 
 ```kotlin
 data class SimpleData(val a: String, val b: Int? = null)
 
-val myEnrichment = TypeEnrichment<SimpleData>(id = "simple-enrichment") {
+val myEnrichment = ObjectEnrichment<SimpleData>(id = "simple-enrichment") {
   SimpleData::a {
     description = "This will update the field description"
   }
@@ -56,7 +56,7 @@ and apply it inside a parent data class using the `typeEnrichment` property.
 data class ParentData(val a: String, val b: ChildData)
 data class ChildData(val c: String, val d: Int? = null)
 
-val childEnrichment = TypeEnrichment<ChildData>(id = "child-enrichment") {
+val childEnrichment = ObjectEnrichment<ChildData>(id = "child-enrichment") {
   ChildData::c {
     description = "This will update the field description of field c on child data"
   }
@@ -65,7 +65,7 @@ val childEnrichment = TypeEnrichment<ChildData>(id = "child-enrichment") {
   }
 }
 
-val parentEnrichment = TypeEnrichment<ParentData>(id = "parent-enrichment") {
+val parentEnrichment = ObjectEnrichment<ParentData>(id = "parent-enrichment") {
   ParentData::a {
     description = "This will update the field description"
   }

@@ -1,6 +1,6 @@
 package io.bkbn.kompendium.json.schema.handler
 
-import io.bkbn.kompendium.enrichment.TypeEnrichment
+import io.bkbn.kompendium.enrichment.CollectionEnrichment
 import io.bkbn.kompendium.json.schema.SchemaConfigurator
 import io.bkbn.kompendium.json.schema.SchemaGenerator
 import io.bkbn.kompendium.json.schema.definition.ArrayDefinition
@@ -19,7 +19,7 @@ object CollectionHandler {
     type: KType,
     cache: MutableMap<String, JsonSchema>,
     schemaConfigurator: SchemaConfigurator,
-    enrichment: TypeEnrichment<*>? = null
+    enrichment: CollectionEnrichment<*>? = null
   ): JsonSchema {
     val collectionType = type.arguments.first().type
       ?: error("This indicates a bug in Kompendium, please open a GitHub issue!")

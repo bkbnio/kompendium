@@ -1,5 +1,6 @@
 package io.bkbn.kompendium.core.metadata
 
+import io.bkbn.kompendium.enrichment.ObjectEnrichment
 import io.bkbn.kompendium.enrichment.TypeEnrichment
 import io.bkbn.kompendium.oas.payload.MediaType
 import kotlin.reflect.KType

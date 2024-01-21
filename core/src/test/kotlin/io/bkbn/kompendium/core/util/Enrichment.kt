@@ -10,7 +10,11 @@ import io.bkbn.kompendium.core.fixtures.GenericObject
 import io.bkbn.kompendium.core.metadata.GetInfo
 import io.bkbn.kompendium.core.metadata.PostInfo
 import io.bkbn.kompendium.core.plugin.NotarizedRoute
-import io.bkbn.kompendium.enrichment.TypeEnrichment
+import io.bkbn.kompendium.enrichment.CollectionEnrichment
+import io.bkbn.kompendium.enrichment.MapEnrichment
+import io.bkbn.kompendium.enrichment.NumberEnrichment
+import io.bkbn.kompendium.enrichment.ObjectEnrichment
+import io.bkbn.kompendium.enrichment.StringEnrichment
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.install
 import io.ktor.server.routing.Routing
@@ -24,9 +28,11 @@ fun Routing.enrichedSimpleResponse() {
         description(TestModules.defaultPathDescription)
         response {
           responseType(
-            enrichment = TypeEnrichment("simple") {
+            enrichment = ObjectEnrichment("simple") {
               TestResponse::c {
-                description = "A simple description"
+                StringEnrichment("blah-blah-blah").apply {
+                  description = "A simple description"
+                }
               }
             }
           )
@@ -47,12 +53,16 @@ fun Routing.enrichedSimpleRequest() {
         description(TestModules.defaultPathDescription)
         request {
           requestType(
-            enrichment = TypeEnrichment("simple") {
+            enrichment = ObjectEnrichment("simple") {
               TestSimpleRequest::a {
-                description = "A simple description"
+                StringEnrichment("blah-blah-blah").apply {
+                  description = "A simple description"
+                }
               }
               TestSimpleRequest::b {
-                deprecated = true
+                NumberEnrichment("blah-blah-blah").apply {
+                  deprecated = true
+                }
               }
             }
           )
@@ -77,12 +87,52 @@ fun Routing.enrichedNestedCollection() {
         description(TestModules.defaultPathDescription)
         request {
           requestType(
-            enrichment = TypeEnrichment("simple") {
+            enrichment = ObjectEnrichment("simple") {
               ComplexRequest::tables {
-                description = "A nested item"
-                typeEnrichment = TypeEnrichment("nested") {
-                  NestedComplexItem::name {
-                    description = "A nested description"
+                CollectionEnrichment<NestedComplexItem>("blah-blah").apply {
+                  description = "A nested description"
+                  itemEnrichment = ObjectEnrichment("nested") {
+                    NestedComplexItem::name {
+                      StringEnrichment("beleheh").apply {
+                        description = "A nested description"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          )
+          description("A test request")
+        }
+        response {
+          responseCode(HttpStatusCode.Created)
+          responseType<TestCreatedResponse>()
+          description(TestModules.defaultResponseDescription)
+        }
+      }
+    }
+  }
+}
+
+fun Routing.enrichedTopLevelCollection() {
+  route("/example") {
+    install(NotarizedRoute()) {
+      parameters = TestModules.defaultParams
+      post = PostInfo.builder {
+        summary(TestModules.defaultPathSummary)
+        description(TestModules.defaultPathDescription)
+        request {
+          requestType(
+            enrichment = CollectionEnrichment<List<TestSimpleRequest>>("blah-blah") {
+              itemEnrichment = ObjectEnrichment("simple") {
+                TestSimpleRequest::a {
+                  StringEnrichment("blah-blah-blah").apply {
+                    description = "A simple description"
+                  }
+                }
+                TestSimpleRequest::b {
+                  NumberEnrichment("blah-blah-blah").apply {
+                    deprecated = true
                   }
                 }
               }
@@ -109,15 +159,21 @@ fun Routing.enrichedComplexGenericType() {
         description(TestModules.defaultPathDescription)
         request {
           requestType(
-            enrichment = TypeEnrichment("simple") {
+            enrichment = ObjectEnrichment("simple") {
               MultiNestedGenerics<String, ComplexRequest>::content {
-                description = "Getting pretty crazy"
-                typeEnrichment = TypeEnrichment("nested") {
-                  ComplexRequest::tables {
-                    description = "A nested item"
-                    typeEnrichment = TypeEnrichment("nested") {
-                      NestedComplexItem::name {
+                MapEnrichment<String, ComplexRequest>("blah").apply {
+                  description = "A nested description"
+                  valueEnrichment = ObjectEnrichment("nested") {
+                    ComplexRequest::tables {
+                      CollectionEnrichment<NestedComplexItem>("blah-blah").apply {
                         description = "A nested description"
+                        itemEnrichment = ObjectEnrichment("nested") {
+                          NestedComplexItem::name {
+                            StringEnrichment("beleheh").apply {
+                              description = "A nested description"
+                            }
+                          }
+                        }
                       }
                     }
                   }
@@ -145,15 +201,18 @@ fun Routing.enrichedGenericResponse() {
         description(TestModules.defaultPathDescription)
         response {
           responseType(
-            enrichment = TypeEnrichment("generic") {
+            enrichment = ObjectEnrichment("generic") {
               GenericObject<TestSimpleRequest>::data {
-                description = "A simple description"
-                typeEnrichment = TypeEnrichment("simple") {
+                ObjectEnrichment("simple") {
                   TestSimpleRequest::a {
-                    description = "A simple description"
+                    StringEnrichment("blah-blah-blah").apply {
+                      description = "A simple description"
+                    }
                   }
                   TestSimpleRequest::b {
-                    deprecated = true
+                    NumberEnrichment("blah-blah-blah").apply {
+                      deprecated = true
+                    }
                   }
                 }
               }
