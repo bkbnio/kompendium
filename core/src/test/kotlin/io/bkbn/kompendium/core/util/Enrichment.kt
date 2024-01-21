@@ -227,3 +227,35 @@ fun Routing.enrichedGenericResponse() {
     }
   }
 }
+
+fun Routing.enrichedMap() {
+  route("/example") {
+    install(NotarizedRoute()) {
+      get = GetInfo.builder {
+        summary(TestModules.defaultPathSummary)
+        description(TestModules.defaultPathDescription)
+        response {
+          responseType<Map<String, TestSimpleRequest>>(
+            enrichment = MapEnrichment("blah") {
+              description = "A nested description"
+              valueEnrichment = ObjectEnrichment("nested") {
+                TestSimpleRequest::a {
+                  StringEnrichment("blah-blah-blah") {
+                    description = "A simple description"
+                  }
+                }
+                TestSimpleRequest::b {
+                  NumberEnrichment("blah-blah-blah") {
+                    deprecated = true
+                  }
+                }
+              }
+            }
+          )
+          description("A good response")
+          responseCode(HttpStatusCode.Created)
+        }
+      }
+    }
+  }
+}

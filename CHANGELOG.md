@@ -12,6 +12,16 @@
 
 ## Released
 
+## [4.0.0] - January 21st, 2024
+
+### Added
+
+- All changes from alpha release
+
+### Changed
+
+- Enrichments now mirror schema types
+
 ## [4.0.0-alpha] - September 3rd, 2023
 
 ### Added

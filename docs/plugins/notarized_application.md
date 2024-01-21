@@ -20,7 +20,8 @@ reference [OpenAPI spec](https://spec.openapis.org/oas/v3.1.0) itself.
 For public facing APIs, having the default endpoint exposed at `/openapi.json` is totally fine. However, if you need
 more granular control over the route that exposes the generated schema, you can modify the `openApiJson` config value.
 
-For example, if we want to hide our schema behind a basic auth check with a custom json encoder, we could do the following
+For example, if we want to hide our schema behind a basic auth check with a custom json encoder, we could do the
+following
 
 ```kotlin
 private fun Application.mainModule() {
@@ -30,23 +31,11 @@ private fun Application.mainModule() {
     specRoute = { spec, routing ->
       routing {
         authenticate("basic") {
-            route("/openapi.json") {
-                get {
-                    call.response.headers.append("Content-Type", "application/json")
-                    call.respondText { CustomJsonEncoder.encodeToString(spec) }
-                }
+          route("/openapi.json") {
+            get {
+              call.response.headers.append("Content-Type", "application/json")
+              call.respondText { CustomJsonEncoder.encodeToString(spec) }
             }
-        }
-      }
-    }
-    openApiJson = {
-      authenticate("basic") {
-        route("/openapi.json") {
-          get {
-            call.respond(
-              HttpStatusCode.OK,
-              this@route.application.attributes[KompendiumAttributes.openApiSpec]
-            )
           }
         }
       }
@@ -86,10 +75,8 @@ This means that we only need to define our custom type once, and then Kompendium
 application.
 
 > While intended for custom scalars, there is nothing stopping you from leveraging custom types to circumvent type
-> analysis
-> on any class you choose. If you have an alternative method of generating JsonSchema definitions, you could put them
-> all
-> in this map and effectively prevent Kompendium from having to do any reflection
+> analysis on any class you choose. If you have an alternative method of generating JsonSchema definitions, you could
+> put them all in this map and effectively prevent Kompendium from having to do any reflection
 
 ## Schema Configurator
 
@@ -97,5 +84,5 @@ Out of the box, Kompendium supports KotlinX serialization... however, in order t
 serialization libraries to use Kompendium, we have provided a `SchemaConfigurator` interface that allows you to
 configure how Kompendium will generate schema definitions.
 
-For an example of the `SchemaConfigurator` in action, please see the `KotlinxSchemaConfigurator`.  This will give you
+For an example of the `SchemaConfigurator` in action, please see the `KotlinxSchemaConfigurator`. This will give you
 a good idea of the additional functionality it can add based on your own serialization needs.
