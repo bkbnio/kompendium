@@ -20,20 +20,24 @@ object MapHandler {
     type: KType,
     cache: MutableMap<String, JsonSchema>,
     schemaConfigurator: SchemaConfigurator,
-    enrichment: MapEnrichment<*, *>? = null
+    enrichment: MapEnrichment<*>? = null
   ): JsonSchema {
+    require(enrichment is MapEnrichment<*> || enrichment == null) {
+      "Enrichment for map must be either null or a MapEnrichment"
+    }
     require(type.arguments.first().type?.classifier as KClass<*> == String::class) {
       "JSON requires that map keys MUST be Strings.  You provided ${type.arguments.first().type}"
     }
     val valueType = type.arguments[1].type ?: error("this indicates a bug in Kompendium, please open a GitHub issue")
-    val valueSchema = SchemaGenerator.fromTypeToSchema(valueType, cache, schemaConfigurator, enrichment).let {
-      if (it is TypeDefinition && it.type == "object") {
-        cache[valueType.getSlug(enrichment)] = it
-        ReferenceDefinition(valueType.getReferenceSlug(enrichment))
-      } else {
-        it
+    val valueSchema =
+      SchemaGenerator.fromTypeToSchema(valueType, cache, schemaConfigurator, enrichment?.valueEnrichment).let {
+        if (it is TypeDefinition && it.type == "object") {
+          cache[valueType.getSlug(enrichment)] = it
+          ReferenceDefinition(valueType.getReferenceSlug(enrichment))
+        } else {
+          it
+        }
       }
-    }
     val definition = MapDefinition(valueSchema)
     return when (type.isMarkedNullable) {
       true -> OneOfDefinition(NullableDefinition(), definition)

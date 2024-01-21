@@ -21,16 +21,21 @@ object CollectionHandler {
     schemaConfigurator: SchemaConfigurator,
     enrichment: CollectionEnrichment<*>? = null
   ): JsonSchema {
+    require(enrichment is CollectionEnrichment<*> || enrichment == null) {
+      "Enrichment for collection must be either null or a CollectionEnrichment"
+    }
+
     val collectionType = type.arguments.first().type
       ?: error("This indicates a bug in Kompendium, please open a GitHub issue!")
-    val typeSchema = SchemaGenerator.fromTypeToSchema(collectionType, cache, schemaConfigurator, enrichment).let {
-      if ((it is TypeDefinition && it.type == "object") || it is EnumDefinition) {
-        cache[collectionType.getSlug(enrichment)] = it
-        ReferenceDefinition(collectionType.getReferenceSlug(enrichment))
-      } else {
-        it
+    val typeSchema =
+      SchemaGenerator.fromTypeToSchema(collectionType, cache, schemaConfigurator, enrichment?.itemEnrichment).let {
+        if ((it is TypeDefinition && it.type == "object") || it is EnumDefinition) {
+          cache[collectionType.getSlug(enrichment)] = it
+          ReferenceDefinition(collectionType.getReferenceSlug(enrichment))
+        } else {
+          it
+        }
       }
-    }
     val definition = ArrayDefinition(typeSchema)
     return when (type.isMarkedNullable) {
       true -> OneOfDefinition(NullableDefinition(), definition)

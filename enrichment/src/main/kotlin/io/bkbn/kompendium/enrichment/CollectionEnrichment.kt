@@ -11,7 +11,7 @@ class CollectionEnrichment<T>(override val id: String) : TypeEnrichment<T> {
   var uniqueItems: Boolean? = null
   // TODO How to handle contains, minContains, maxContains?
 
-  lateinit var itemEnrichment: TypeEnrichment<*>
+  var itemEnrichment: TypeEnrichment<*>? = null
 
   companion object {
     inline operator fun <reified T> invoke(

@@ -1,12 +1,12 @@
 package io.bkbn.kompendium.core.util
 
 import io.bkbn.kompendium.core.fixtures.ComplexRequest
+import io.bkbn.kompendium.core.fixtures.GenericObject
 import io.bkbn.kompendium.core.fixtures.MultiNestedGenerics
 import io.bkbn.kompendium.core.fixtures.NestedComplexItem
 import io.bkbn.kompendium.core.fixtures.TestCreatedResponse
 import io.bkbn.kompendium.core.fixtures.TestResponse
 import io.bkbn.kompendium.core.fixtures.TestSimpleRequest
-import io.bkbn.kompendium.core.fixtures.GenericObject
 import io.bkbn.kompendium.core.metadata.GetInfo
 import io.bkbn.kompendium.core.metadata.PostInfo
 import io.bkbn.kompendium.core.plugin.NotarizedRoute
@@ -30,7 +30,7 @@ fun Routing.enrichedSimpleResponse() {
           responseType(
             enrichment = ObjectEnrichment("simple") {
               TestResponse::c {
-                StringEnrichment("blah-blah-blah").apply {
+                StringEnrichment("blah-blah-blah") {
                   description = "A simple description"
                 }
               }
@@ -55,12 +55,12 @@ fun Routing.enrichedSimpleRequest() {
           requestType(
             enrichment = ObjectEnrichment("simple") {
               TestSimpleRequest::a {
-                StringEnrichment("blah-blah-blah").apply {
+                StringEnrichment("blah-blah-blah") {
                   description = "A simple description"
                 }
               }
               TestSimpleRequest::b {
-                NumberEnrichment("blah-blah-blah").apply {
+                NumberEnrichment("blah-blah-blah") {
                   deprecated = true
                 }
               }
@@ -89,11 +89,11 @@ fun Routing.enrichedNestedCollection() {
           requestType(
             enrichment = ObjectEnrichment("simple") {
               ComplexRequest::tables {
-                CollectionEnrichment<NestedComplexItem>("blah-blah").apply {
+                CollectionEnrichment<NestedComplexItem>("blah-blah") {
                   description = "A nested description"
                   itemEnrichment = ObjectEnrichment("nested") {
                     NestedComplexItem::name {
-                      StringEnrichment("beleheh").apply {
+                      StringEnrichment("beleheh") {
                         description = "A nested description"
                       }
                     }
@@ -126,12 +126,12 @@ fun Routing.enrichedTopLevelCollection() {
             enrichment = CollectionEnrichment<List<TestSimpleRequest>>("blah-blah") {
               itemEnrichment = ObjectEnrichment("simple") {
                 TestSimpleRequest::a {
-                  StringEnrichment("blah-blah-blah").apply {
+                  StringEnrichment("blah-blah-blah") {
                     description = "A simple description"
                   }
                 }
                 TestSimpleRequest::b {
-                  NumberEnrichment("blah-blah-blah").apply {
+                  NumberEnrichment("blah-blah-blah") {
                     deprecated = true
                   }
                 }
@@ -161,15 +161,15 @@ fun Routing.enrichedComplexGenericType() {
           requestType(
             enrichment = ObjectEnrichment("simple") {
               MultiNestedGenerics<String, ComplexRequest>::content {
-                MapEnrichment<String, ComplexRequest>("blah").apply {
+                MapEnrichment<ComplexRequest>("blah") {
                   description = "A nested description"
                   valueEnrichment = ObjectEnrichment("nested") {
                     ComplexRequest::tables {
-                      CollectionEnrichment<NestedComplexItem>("blah-blah").apply {
+                      CollectionEnrichment<NestedComplexItem>("blah-blah") {
                         description = "A nested description"
                         itemEnrichment = ObjectEnrichment("nested") {
                           NestedComplexItem::name {
-                            StringEnrichment("beleheh").apply {
+                            StringEnrichment("beleheh") {
                               description = "A nested description"
                             }
                           }
@@ -202,15 +202,17 @@ fun Routing.enrichedGenericResponse() {
         response {
           responseType(
             enrichment = ObjectEnrichment("generic") {
+              description = "another description"
               GenericObject<TestSimpleRequest>::data {
                 ObjectEnrichment("simple") {
+                  description = "also a description"
                   TestSimpleRequest::a {
-                    StringEnrichment("blah-blah-blah").apply {
+                    StringEnrichment("blah-blah-blah") {
                       description = "A simple description"
                     }
                   }
                   TestSimpleRequest::b {
-                    NumberEnrichment("blah-blah-blah").apply {
+                    NumberEnrichment("blah-blah-blah") {
                       deprecated = true
                     }
                   }

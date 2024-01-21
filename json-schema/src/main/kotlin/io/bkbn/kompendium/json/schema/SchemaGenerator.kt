@@ -61,7 +61,7 @@ object SchemaGenerator {
         }
 
         clazz.isSubclassOf(Map::class) -> when (enrichment) {
-          is MapEnrichment<*, *> -> MapHandler.handle(type, cache, schemaConfigurator, enrichment)
+          is MapEnrichment<*> -> MapHandler.handle(type, cache, schemaConfigurator, enrichment)
           null -> MapHandler.handle(type, cache, schemaConfigurator, null)
           else -> error("Incorrect enrichment type for enrichment id: ${enrichment.id}")
         }

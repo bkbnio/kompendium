@@ -28,7 +28,7 @@ fun Routing.intConstraints() {
           responseType(
             enrichment = ObjectEnrichment("example") {
               TestCreatedResponse::id {
-                NumberEnrichment("blah-blah-blah").apply {
+                NumberEnrichment("blah-blah-blah") {
                   minimum = 2
                   maximum = 100
                   multipleOf = 2
@@ -55,7 +55,7 @@ fun Routing.doubleConstraints() {
           responseType(
             enrichment = ObjectEnrichment("example") {
               DoubleResponse::payload {
-                NumberEnrichment("blah-blah-blah").apply {
+                NumberEnrichment("blah-blah-blah") {
                   minimum = 2.0
                   maximum = 100.0
                   multipleOf = 2.0
@@ -82,7 +82,7 @@ fun Routing.stringConstraints() {
           responseType(
             enrichment = ObjectEnrichment("example") {
               TestNested::nesty {
-                StringEnrichment("blah").apply {
+                StringEnrichment("blah") {
                   maxLength = 10
                   minLength = 2
                 }
@@ -108,7 +108,7 @@ fun Routing.stringPatternConstraints() {
           responseType(
             enrichment = ObjectEnrichment("example") {
               TestNested::nesty {
-                StringEnrichment("blah").apply {
+                StringEnrichment("blah") {
                   pattern = "[a-z]+"
                 }
               }
@@ -133,7 +133,7 @@ fun Routing.stringContentEncodingConstraints() {
           responseType(
             enrichment = ObjectEnrichment("example") {
               TestNested::nesty {
-                StringEnrichment("blah").apply {
+                StringEnrichment("blah") {
                   contentEncoding = "base64"
                   contentMediaType = "image/png"
                 }
@@ -159,7 +159,7 @@ fun Routing.arrayConstraints() {
           responseType(
             enrichment = ObjectEnrichment("example") {
               Page<String>::content {
-                CollectionEnrichment<String>("blah").apply {
+                CollectionEnrichment<String>("blah") {
                   minItems = 2
                   maxItems = 10
                   uniqueItems = true

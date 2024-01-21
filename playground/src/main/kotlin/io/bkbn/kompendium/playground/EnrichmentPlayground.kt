@@ -65,21 +65,21 @@ private fun Application.mainModule() {
 
 private val testEnrichment = ObjectEnrichment("testerino") {
   ExampleRequest::thingA {
-    StringEnrichment("thingA").apply {
+    StringEnrichment("thingA") {
       description = "This is a thing"
     }
   }
   ExampleRequest::thingB {
-    NumberEnrichment("thingB").apply {
+    NumberEnrichment("thingB") {
       description = "This is another thing"
     }
   }
   ExampleRequest::thingC {
-    ObjectEnrichment<InnerRequest>("thingC").apply {
+    ObjectEnrichment<InnerRequest>("thingC") {
       deprecated = true
       description = "A good but old field"
       InnerRequest::d {
-        NumberEnrichment("blahblah").apply {
+        NumberEnrichment("blahblah") {
           exclusiveMinimum = 1.1
           exclusiveMaximum = 10.0
           description = "THE BIG D"
@@ -91,7 +91,7 @@ private val testEnrichment = ObjectEnrichment("testerino") {
 
 private val testResponseEnrichment = ObjectEnrichment("testerino") {
   ExampleResponse::isReal {
-    BooleanEnrichment("blah").apply {
+    BooleanEnrichment("blah") {
       description = "Is this thing real or not?"
     }
   }

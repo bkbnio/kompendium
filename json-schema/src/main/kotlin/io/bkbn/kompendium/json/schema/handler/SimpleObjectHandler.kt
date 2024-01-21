@@ -37,7 +37,13 @@ object SimpleObjectHandler {
     schemaConfigurator: SchemaConfigurator,
     enrichment: ObjectEnrichment<*>?,
   ): JsonSchema {
-    cache[type.getSlug(enrichment)] = ReferenceDefinition(type.getReferenceSlug(enrichment))
+    require (enrichment is ObjectEnrichment<*> || enrichment == null) {
+      "Enrichment for object must either be of type ObjectEnrichment or null"
+    }
+
+    val slug = type.getSlug(enrichment)
+    val referenceSlug = type.getReferenceSlug(enrichment)
+    cache[slug] = ReferenceDefinition(referenceSlug)
 
     val typeMap = clazz.typeParameters.zip(type.arguments).toMap()
     val props = schemaConfigurator.serializableMemberProperties(clazz)
@@ -84,11 +90,14 @@ object SimpleObjectHandler {
       .map { schemaConfigurator.serializableName(it) }
       .toSet()
 
-    return TypeDefinition(
+    val definition = TypeDefinition(
       type = "object",
       properties = props,
       required = required
     )
+
+    cache[slug] = definition
+    return definition
   }
 
   private fun KProperty<*>.needsToInjectGenerics(
@@ -202,7 +211,7 @@ object SimpleObjectHandler {
       )
       else -> error("Incorrect enrichment type for enrichment id: ${this.id}")
     }
-    is MapEnrichment<*, *> -> when (schema) {
+    is MapEnrichment<*> -> when (schema) {
       is MapDefinition -> schema.copy(
         deprecated = deprecated,
         description = description,
@@ -213,6 +222,7 @@ object SimpleObjectHandler {
     }
     is ObjectEnrichment<*> -> when (schema) {
       is TypeDefinition -> schema.copy(deprecated = deprecated, description = description)
+      is ReferenceDefinition -> schema.copy(deprecated = deprecated, description = description)
       else -> error("Incorrect enrichment type for enrichment id: ${this.id}")
     }
     else -> error("Incorrect enrichment type for enrichment id: ${this.id}")

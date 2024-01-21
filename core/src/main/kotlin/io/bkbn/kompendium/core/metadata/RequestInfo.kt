@@ -1,6 +1,5 @@
 package io.bkbn.kompendium.core.metadata
 
-import io.bkbn.kompendium.enrichment.ObjectEnrichment
 import io.bkbn.kompendium.enrichment.TypeEnrichment
 import io.bkbn.kompendium.oas.payload.MediaType
 import kotlin.reflect.KType
@@ -8,7 +7,7 @@ import kotlin.reflect.typeOf
 
 class RequestInfo private constructor(
   val requestType: KType,
-  val typeEnrichment: TypeEnrichment<*>?,
+  val enrichment: TypeEnrichment<*>?,
   val description: String,
   val examples: Map<String, MediaType.Example>?,
   val mediaTypes: Set<String>,
@@ -61,7 +60,7 @@ class RequestInfo private constructor(
     fun build() = RequestInfo(
       requestType = requestType ?: error("Request type must be present"),
       description = description ?: error("Description must be present"),
-      typeEnrichment = typeEnrichment,
+      enrichment = typeEnrichment,
       examples = examples,
       mediaTypes = mediaTypes ?: setOf("application/json"),
       required = required ?: true

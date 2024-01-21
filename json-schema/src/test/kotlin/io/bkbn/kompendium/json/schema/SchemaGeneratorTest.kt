@@ -119,12 +119,12 @@ class SchemaGeneratorTest : DescribeSpec({
         snapshotName = "T0022__enriched_simple_object.json",
         enrichment = ObjectEnrichment("simple") {
           TestSimpleRequest::a {
-            StringEnrichment("blah").apply {
+            StringEnrichment("blah") {
               description = "This is a simple description"
             }
           }
           TestSimpleRequest::b {
-            NumberEnrichment("bla").apply {
+            NumberEnrichment("bla") {
               deprecated = true
             }
           }
@@ -136,11 +136,11 @@ class SchemaGeneratorTest : DescribeSpec({
         snapshotName = "T0023__enriched_nested_reference.json",
         enrichment = ObjectEnrichment("example") {
           ComplexRequest::tables {
-            CollectionEnrichment<List<NestedComplexItem>>("tables").apply {
+            CollectionEnrichment<List<NestedComplexItem>>("tables") {
               description = "Collection of important items"
               itemEnrichment = ObjectEnrichment("table") {
                 NestedComplexItem::name {
-                  StringEnrichment("name").apply {
+                  StringEnrichment("name") {
                     description = "The name of the table"
                   }
                 }
@@ -155,15 +155,15 @@ class SchemaGeneratorTest : DescribeSpec({
         snapshotName = "T0025__enrichment_generic_object.json",
         enrichment = ObjectEnrichment("generic") {
           GenericObject<TestSimpleRequest>::data {
-            ObjectEnrichment<TestSimpleRequest>("blob").apply {
+            ObjectEnrichment<TestSimpleRequest>("blob") {
               description = "This is a generic object"
               TestSimpleRequest::a {
-                StringEnrichment("blah").apply {
+                StringEnrichment("blah") {
                   description = "This is a simple description"
                 }
               }
               TestSimpleRequest::b {
-                NumberEnrichment("bla").apply {
+                NumberEnrichment("bla") {
                   deprecated = true
                 }
               }
