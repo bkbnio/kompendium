@@ -35,8 +35,8 @@ dependencies {
 
   // Logging
   implementation("org.apache.logging.log4j:log4j-api-kotlin:1.4.0")
-  implementation("org.apache.logging.log4j:log4j-api:2.22.1")
-  implementation("org.apache.logging.log4j:log4j-core:2.22.1")
+  implementation("org.apache.logging.log4j:log4j-api:2.23.0")
+  implementation("org.apache.logging.log4j:log4j-core:2.23.0")
   implementation("org.slf4j:slf4j-api:2.0.12")
   implementation("org.slf4j:slf4j-simple:2.0.12")
 
