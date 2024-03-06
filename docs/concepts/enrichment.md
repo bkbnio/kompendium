@@ -1,125 +1,106 @@
-Kompendium enables users to enrich their payloads with additional metadata
-such as field description, deprecation, and more.
-
-Enrichments, unlike annotations, are fully decoupled from the implementation of the class
-itself. As such, we can not only enable different metadata on the same class in different
-areas of the application, we can also reuse the same metadata in different areas, and even
-support enrichment of types that you do not own, or types that are not easily annotated,
-such as collections and maps.
-
-A simple enrichment example looks like the following:
+Kompendium allows users to enrich their data types with additional information. This can be done by defining a
+`TypeEnrichment` object and passing it to the `enrichment` parameter of the relevant `requestType` or `responseType`.
 
 ```kotlin
-post = PostInfo.builder {
-  summary(TestModules.defaultPathSummary)
-  description(TestModules.defaultPathDescription)
-  request {
-    requestType(
-      enrichment = ObjectEnrichment("simple") {
-        TestSimpleRequest::a {
-          StringEnrichment(id = "simple-enrichment") {
-            description = "A simple description"
-          }
+data class SimpleData(val a: String, val b: Int? = null)
+
+val myEnrichment = TypeEnrichment<SimpleData>(id = "simple-enrichment") {
+  SimpleData::a {
+    description = "This will update the field description"
+  }
+  SimpleData::b {
+    // Will indicate in the UI that the field will be removed soon
+    deprecated = true
+  }
+}
+
+// In your route documentation
+fun Routing.enrichedSimpleRequest() {
+  route("/example") {
+    install(NotarizedRoute()) {
+      parameters = TestModules.defaultParams
+      post = PostInfo.builder {
+        summary(TestModules.defaultPathSummary)
+        description(TestModules.defaultPathDescription)
+        request {
+          requestType<SimpleData>(enrichment = myEnrichment) // Simply attach the enrichment to the request
+          description("A test request")
         }
-        TestSimpleRequest::b {
-          NumberEnrichment(id = "blah-blah-blah") {
-            deprecated = true
-          }
+        response {
+          responseCode(HttpStatusCode.Created)
+          responseType<TestCreatedResponse>()
+          description(TestModules.defaultResponseDescription)
         }
       }
-    )
-    description("A test request")
-  }
-  response {
-    responseCode(HttpStatusCode.Created)
-    responseType<TestCreatedResponse>()
-    description(TestModules.defaultResponseDescription)
+    }
   }
 }
 ```
 
-For more information on the various enrichment types, please see the following sections.
+{% hint style="warning" %}
+An enrichment must provide an `id` field that is unique to the data class that is being enriched. This is because
+under the hood, Kompendium appends this id to the data class identifier in order to support multiple different
+enrichments
+on the same data class.
 
-## Scalar Enrichment
+If you provide duplicate ids, all but the first enrichment will be ignored, as Kompendium will view that as a cache hit,
+and skip analyzing the new enrichment.
+{% endhint %}
 
-Currently, Kompendium supports enrichment of the following scalar types:
+### Nested Enrichments
 
-- Boolean
-- String
-- Number
-
-At the moment, all of these types extend a sealed interface `Enrichment`... as such you cannot provide
-enrichments for custom scalars like dates and times. This is a known limitation, and will be addressed
-in a future release.
-
-## Object Enrichment
-
-Object enrichment is the most common form of enrichment, and is used to enrich a complex type, and
-the fields of a class.
-
-## Collection Enrichment
-
-Collection enrichment is used to enrich a collection type, and the elements of that collection.
+Enrichments are portable and composable, meaning that we can take an enrichment for a child data class
+and apply it inside a parent data class using the `typeEnrichment` property.
 
 ```kotlin
-post = PostInfo.builder {
-  summary(TestModules.defaultPathSummary)
-  description(TestModules.defaultPathDescription)
-  request {
-    requestType(
-      enrichment = ObjectEnrichment("simple") {
-        ComplexRequest::tables {
-          CollectionEnrichment<NestedComplexItem>("blah-blah") {
-            description = "A nested description"
-            itemEnrichment = ObjectEnrichment("nested") {
-              NestedComplexItem::name {
-                StringEnrichment("beleheh") {
-                  description = "A nested description"
-                }
-              }
-            }
-          }
-        }
-      }
-    )
-    description("A test request")
+data class ParentData(val a: String, val b: ChildData)
+data class ChildData(val c: String, val d: Int? = null)
+
+val childEnrichment = TypeEnrichment<ChildData>(id = "child-enrichment") {
+  ChildData::c {
+    description = "This will update the field description of field c on child data"
   }
-  response {
-    responseCode(HttpStatusCode.Created)
-    responseType<TestCreatedResponse>()
-    description(TestModules.defaultResponseDescription)
+  ChildData::d {
+    description = "This will update the field description of field d on child data"
+  }
+}
+
+val parentEnrichment = TypeEnrichment<ParentData>(id = "parent-enrichment") {
+  ParentData::a {
+    description = "This will update the field description"
+  }
+  ParentData::b {
+    description = "This will update the field description of field b on parent data"
+    typeEnrichment = childEnrichment // Will apply the child enrichment to the internals of field b
   }
 }
 ```
 
-## Map Enrichment
+## Available Enrichments
 
-Map enrichment is used to enrich a map type, and the keys and values of that map.
+All enrichments support the following properties:
 
-```kotlin
-get = GetInfo.builder {
-  summary(TestModules.defaultPathSummary)
-  description(TestModules.defaultPathDescription)
-  response {
-    responseType<Map<String, TestSimpleRequest>>(
-      enrichment = MapEnrichment("blah") {
-        description = "A nested description"
-        valueEnrichment = ObjectEnrichment("nested") {
-          TestSimpleRequest::a {
-            StringEnrichment("blah-blah-blah") {
-              description = "A simple description"
-            }
-          }
-          TestSimpleRequest::b {
-            NumberEnrichment("blah-blah-blah") {
-              deprecated = true
-            }
-          }
-        }
-      }
-    )
-    description("A good response")
-    responseCode(HttpStatusCode.Created)
-  }
-}
-```
+- description -> Provides a reader friendly description of the field in the object
+- deprecated -> Indicates that the field is deprecated and should not be used
+
+### String
+
+- minLength -> The minimum length of the string
+- maxLength -> The maximum length of the string
+- pattern -> A regex pattern that the string must match
+- contentEncoding -> The encoding of the string
+- contentMediaType -> The media type of the string
+
+### Numbers
+
+- minimum -> The minimum value of the number
+- maximum -> The maximum value of the number
+- exclusiveMinimum -> Indicates that the minimum value is exclusive
+- exclusiveMaximum -> Indicates that the maximum value is exclusive
+- multipleOf -> Indicates that the number must be a multiple of the provided value
+
+### Arrays
+
+- minItems -> The minimum number of items in the array
+- maxItems -> The maximum number of items in the array
+- uniqueItems -> Indicates that the array must contain unique items
