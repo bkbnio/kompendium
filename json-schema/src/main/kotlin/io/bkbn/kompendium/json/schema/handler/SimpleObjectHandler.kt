@@ -1,5 +1,6 @@
 package io.bkbn.kompendium.json.schema.handler
 
+import io.bkbn.kompendium.enrichment.ApiDoc
 import io.bkbn.kompendium.enrichment.PropertyEnrichment
 import io.bkbn.kompendium.enrichment.TypeEnrichment
 import io.bkbn.kompendium.json.schema.SchemaConfigurator
@@ -18,6 +19,7 @@ import io.bkbn.kompendium.json.schema.util.Helpers.getReferenceSlug
 import io.bkbn.kompendium.json.schema.util.Helpers.getSlug
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
+import kotlin.reflect.KProperty1
 import kotlin.reflect.KType
 import kotlin.reflect.KTypeParameter
 import kotlin.reflect.KTypeProjection
@@ -43,8 +45,7 @@ object SimpleObjectHandler {
         val propTypeEnrichment = when (val pe = enrichment?.getEnrichmentForProperty(prop)) {
           is PropertyEnrichment -> pe
           else -> null
-        }
-
+        } ?: prop.enrichmentFromAnnotation()
         val schema = when (prop.needsToInjectGenerics(typeMap)) {
           true -> handleNestedGenerics(typeMap, prop, cache, schemaConfigurator, propTypeEnrichment)
           false -> when (typeMap.containsKey(prop.returnType.classifier)) {
@@ -198,4 +199,12 @@ object SimpleObjectHandler {
       minProperties = minProperties,
     )
   }
+  private fun KProperty1<out Any, *>.enrichmentFromAnnotation(): PropertyEnrichment? = annotations
+    .filterIsInstance<ApiDoc>()
+    .firstOrNull()
+    ?.let { doc ->
+      PropertyEnrichment().apply {
+        description = doc.description
+      }
+    }
 }

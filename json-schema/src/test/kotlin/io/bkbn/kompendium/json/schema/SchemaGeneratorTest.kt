@@ -124,6 +124,9 @@ class SchemaGeneratorTest : DescribeSpec({
         }
       )
     }
+    it("Can attach an enrichment taken from an annotation") {
+      jsonSchemaTest<TestSimpleRequest>(snapshotName = "T0022__enriched_simple_object.json")
+    }
     it("Can properly assign a reference to a nested enrichment") {
       jsonSchemaTest<ComplexRequest>(
         snapshotName = "T0023__enriched_nested_reference.json",
