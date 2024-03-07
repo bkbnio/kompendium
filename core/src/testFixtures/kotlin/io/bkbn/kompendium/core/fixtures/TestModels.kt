@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import io.bkbn.kompendium.enrichment.ApiInt
+import io.bkbn.kompendium.enrichment.ApiList
+import io.bkbn.kompendium.enrichment.ApiString
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
@@ -20,6 +23,29 @@ data class TestRequest(
   val fieldName: TestNested,
   val b: Double,
   val aaa: List<Long>
+)
+
+@Serializable
+data class AnnotatedTestRequest(
+  @ApiString(
+    description = "The name of the person",
+    maxLength = 100,
+    minLength = 1
+  )
+  val name: String,
+  @ApiInt(
+    description = "The age of the person",
+    minValue = 0,
+    maxValue = 120
+  )
+  val age: Int,
+  @ApiList(
+    description = "The list with the kids names",
+    minItems = 1,
+    maxItems = 5,
+    deprecated = true
+  )
+  val kids: List<String>
 )
 
 @Serializable

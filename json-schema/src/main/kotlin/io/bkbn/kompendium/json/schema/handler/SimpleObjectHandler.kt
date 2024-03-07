@@ -1,8 +1,12 @@
 package io.bkbn.kompendium.json.schema.handler
 
-import io.bkbn.kompendium.enrichment.ApiDoc
+import io.bkbn.kompendium.enrichment.ApiInt
+import io.bkbn.kompendium.enrichment.ApiList
+import io.bkbn.kompendium.enrichment.ApiProperty
+import io.bkbn.kompendium.enrichment.ApiString
 import io.bkbn.kompendium.enrichment.PropertyEnrichment
 import io.bkbn.kompendium.enrichment.TypeEnrichment
+import io.bkbn.kompendium.enrichment.toEnrichment
 import io.bkbn.kompendium.json.schema.SchemaConfigurator
 import io.bkbn.kompendium.json.schema.SchemaGenerator
 import io.bkbn.kompendium.json.schema.definition.AnyOfDefinition
@@ -199,12 +203,12 @@ object SimpleObjectHandler {
       minProperties = minProperties,
     )
   }
-  private fun KProperty1<out Any, *>.enrichmentFromAnnotation(): PropertyEnrichment? = annotations
-    .filterIsInstance<ApiDoc>()
-    .firstOrNull()
-    ?.let { doc ->
-      PropertyEnrichment().apply {
-        description = doc.description
-      }
-    }
+  private fun KProperty1<out Any, *>.enrichmentFromAnnotation(): PropertyEnrichment? =
+    listOfNotNull(annotations.apiString(), annotations.apiInt(), annotations.apiList(), annotations.apiProperty())
+      .firstOrNull()
+
+  private fun List<Annotation>.apiString() = filterIsInstance<ApiString>().firstOrNull()?.toEnrichment()
+  private fun List<Annotation>.apiInt() = filterIsInstance<ApiInt>().firstOrNull()?.toEnrichment()
+  private fun List<Annotation>.apiList() = filterIsInstance<ApiList>().firstOrNull()?.toEnrichment()
+  private fun List<Annotation>.apiProperty() = filterIsInstance<ApiProperty>().firstOrNull()?.toEnrichment()
 }

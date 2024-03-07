@@ -1,0 +1,35 @@
+{
+  "type": "object",
+  "properties": {
+    "age": {
+      "type": "number",
+      "format": "int32",
+      "deprecated": false,
+      "description": "The age of the person",
+      "maximum": 120,
+      "minimum": 0
+    },
+    "kids": {
+      "items": {
+        "type": "string"
+      },
+      "deprecated": true,
+      "description": "The list with the kids names",
+      "maxItems": 5,
+      "minItems": 1,
+      "type": "array"
+    },
+    "name": {
+      "type": "string",
+      "deprecated": false,
+      "description": "The name of the person",
+      "maxLength": 100,
+      "minLength": 1
+    }
+  },
+  "required": [
+    "age",
+    "kids",
+    "name"
+  ]
+}
