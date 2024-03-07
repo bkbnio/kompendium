@@ -1,5 +1,6 @@
 package io.bkbn.kompendium.json.schema
 
+import io.bkbn.kompendium.core.fixtures.AnnotatedTestRequest
 import io.bkbn.kompendium.core.fixtures.ComplexRequest
 import io.bkbn.kompendium.core.fixtures.FlibbityGibbit
 import io.bkbn.kompendium.core.fixtures.NestedComplexItem
@@ -123,6 +124,9 @@ class SchemaGeneratorTest : DescribeSpec({
           }
         }
       )
+    }
+    it("Can attach an enrichment taken from an annotations") {
+      jsonSchemaTest<AnnotatedTestRequest>(snapshotName = "T0026__enriched_annotated_object.json")
     }
     it("Can properly assign a reference to a nested enrichment") {
       jsonSchemaTest<ComplexRequest>(
