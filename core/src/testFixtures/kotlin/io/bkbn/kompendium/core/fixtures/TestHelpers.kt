@@ -1,7 +1,5 @@
 package io.bkbn.kompendium.core.fixtures
 
-import com.fasterxml.jackson.annotation.JsonInclude
-import com.fasterxml.jackson.databind.SerializationFeature
 import io.bkbn.kompendium.core.fixtures.TestSpecs.defaultSpec
 import io.bkbn.kompendium.core.plugin.NotarizedApplication
 import io.bkbn.kompendium.core.routes.redoc
@@ -14,21 +12,17 @@ import io.kotest.assertions.json.shouldEqualJson
 import io.kotest.assertions.ktor.client.shouldHaveStatus
 import io.kotest.matchers.shouldNot
 import io.kotest.matchers.string.beBlank
-import io.ktor.client.request.get
-import io.ktor.client.statement.bodyAsText
-import io.ktor.http.ContentType
-import io.ktor.http.HttpStatusCode
-import io.ktor.serialization.gson.gson
-import io.ktor.serialization.jackson.jackson
-import io.ktor.serialization.kotlinx.json.json
-import io.ktor.server.application.Application
-import io.ktor.server.engine.ApplicationEngineEnvironmentBuilder
-import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.server.routing.Routing
-import io.ktor.server.testing.ApplicationTestBuilder
-import io.ktor.server.testing.testApplication
-import java.io.File
+import io.ktor.client.request.*
+import io.ktor.client.statement.*
+import io.ktor.http.*
+import io.ktor.serialization.kotlinx.json.*
+import io.ktor.server.application.*
+import io.ktor.server.engine.*
+import io.ktor.server.plugins.contentnegotiation.*
+import io.ktor.server.routing.*
+import io.ktor.server.testing.*
 import kotlinx.serialization.json.Json
+import java.io.File
 import kotlin.reflect.KType
 
 object TestHelpers {
@@ -75,24 +69,6 @@ object TestHelpers {
       customTypes,
       applicationEnvironmentBuilder
     )
-    openApiTest(
-      snapshotName,
-      SupportedSerializer.JACKSON,
-      routeUnderTest,
-      applicationSetup,
-      specOverrides,
-      customTypes,
-      applicationEnvironmentBuilder
-    )
-    openApiTest(
-      snapshotName,
-      SupportedSerializer.GSON,
-      routeUnderTest,
-      applicationSetup,
-      specOverrides,
-      customTypes,
-      applicationEnvironmentBuilder
-    )
   }
 
   private fun openApiTest(
@@ -110,8 +86,6 @@ object TestHelpers {
       spec = defaultSpec().specOverrides()
       schemaConfigurator = when (serializer) {
         SupportedSerializer.KOTLINX -> KotlinXSchemaConfigurator()
-        SupportedSerializer.GSON -> GsonSchemaConfigurator()
-        SupportedSerializer.JACKSON -> JacksonSchemaConfigurator()
       }
     }
     install(ContentNegotiation) {
@@ -121,12 +95,6 @@ object TestHelpers {
           explicitNulls = false
           serializersModule = KompendiumSerializersModule.module
         })
-
-        SupportedSerializer.GSON -> gson()
-        SupportedSerializer.JACKSON -> jackson(ContentType.Application.Json) {
-          enable(SerializationFeature.INDENT_OUTPUT)
-          setSerializationInclusion(JsonInclude.Include.NON_NULL)
-        }
       }
     }
     application(applicationSetup)

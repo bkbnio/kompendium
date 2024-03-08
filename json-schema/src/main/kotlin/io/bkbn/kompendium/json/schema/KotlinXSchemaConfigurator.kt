@@ -29,7 +29,7 @@ class KotlinXSchemaConfigurator : SchemaConfigurator {
         required = implementationSchema.required?.plus("type"),
         properties = implementationSchema.properties?.plus(
           mapOf(
-            "type" to EnumDefinition(type = "string", enum = setOf(determineTypeQualifier(implementationType)))
+            "type" to EnumDefinition(enum = setOf(determineTypeQualifier(implementationType)))
           )
         )
       )

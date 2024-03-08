@@ -62,11 +62,17 @@
           "f": {
             "type": "number",
             "format": "double"
+          },
+          "type": {
+            "enum": [
+              "io.bkbn.kompendium.core.fixtures.Bibbity"
+            ]
           }
         },
         "required": [
           "b",
-          "f"
+          "f",
+          "type"
         ]
       },
       "Gibbity-Double": {
@@ -75,10 +81,16 @@
           "a": {
             "type": "number",
             "format": "double"
+          },
+          "type": {
+            "enum": [
+              "io.bkbn.kompendium.core.fixtures.Gibbity"
+            ]
           }
         },
         "required": [
-          "a"
+          "a",
+          "type"
         ]
       },
       "Flibbity-Double": {

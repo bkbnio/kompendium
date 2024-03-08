@@ -82,11 +82,17 @@
           },
           "f": {
             "type": "string"
+          },
+          "type": {
+            "enum": [
+              "io.bkbn.kompendium.core.fixtures.Bibbity"
+            ]
           }
         },
         "required": [
           "b",
-          "f"
+          "f",
+          "type"
         ]
       },
       "Gibbity-String": {
@@ -94,10 +100,16 @@
         "properties": {
           "a": {
             "type": "string"
+          },
+          "type": {
+            "enum": [
+              "io.bkbn.kompendium.core.fixtures.Gibbity"
+            ]
           }
         },
         "required": [
-          "a"
+          "a",
+          "type"
         ]
       },
       "Flibbity-String": {

@@ -53,40 +53,6 @@
   "webhooks": {},
   "components": {
     "schemas": {
-      "ComplexGibbit": {
-        "type": "object",
-        "properties": {
-          "b": {
-            "type": "string"
-          },
-          "c": {
-            "type": "number",
-            "format": "int32"
-          },
-          "z": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "b",
-          "c",
-          "z"
-        ]
-      },
-      "SimpleGibbit": {
-        "type": "object",
-        "properties": {
-          "a": {
-            "type": "string"
-          },
-          "z": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "a"
-        ]
-      },
       "Bibbity-FlibbityGibbit": {
         "type": "object",
         "properties": {
@@ -102,11 +68,63 @@
                 "$ref": "#/components/schemas/SimpleGibbit"
               }
             ]
+          },
+          "type": {
+            "enum": [
+              "io.bkbn.kompendium.core.fixtures.Bibbity"
+            ]
           }
         },
         "required": [
           "b",
-          "f"
+          "f",
+          "type"
+        ]
+      },
+      "ComplexGibbit": {
+        "type": "object",
+        "properties": {
+          "b": {
+            "type": "string"
+          },
+          "c": {
+            "type": "number",
+            "format": "int32"
+          },
+          "z": {
+            "type": "string"
+          },
+          "type": {
+            "enum": [
+              "io.bkbn.kompendium.core.fixtures.ComplexGibbit"
+            ]
+          }
+        },
+        "required": [
+          "b",
+          "c",
+          "z",
+          "type"
+        ]
+      },
+      "SimpleGibbit": {
+        "type": "object",
+        "properties": {
+          "a": {
+            "type": "string"
+          },
+          "z": {
+            "type": "string"
+          },
+          "type": {
+            "enum": [
+              "io.bkbn.kompendium.core.fixtures.SimpleGibbit"
+            ]
+          }
+        },
+        "required": [
+          "a",
+          "type"
         ]
       },
       "Gibbity-FlibbityGibbit": {
@@ -121,10 +139,16 @@
                 "$ref": "#/components/schemas/SimpleGibbit"
               }
             ]
+          },
+          "type": {
+            "enum": [
+              "io.bkbn.kompendium.core.fixtures.Gibbity"
+            ]
           }
         },
         "required": [
-          "a"
+          "a",
+          "type"
         ]
       },
       "Flibbity-FlibbityGibbit": {

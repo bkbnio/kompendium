@@ -65,12 +65,18 @@
           },
           "z": {
             "type": "string"
+          },
+          "type": {
+            "enum": [
+              "io.bkbn.kompendium.core.fixtures.ComplexGibbit"
+            ]
           }
         },
         "required": [
           "b",
           "c",
-          "z"
+          "z",
+          "type"
         ]
       },
       "SimpleGibbit": {
@@ -81,10 +87,16 @@
           },
           "z": {
             "type": "string"
+          },
+          "type": {
+            "enum": [
+              "io.bkbn.kompendium.core.fixtures.SimpleGibbit"
+            ]
           }
         },
         "required": [
-          "a"
+          "a",
+          "type"
         ]
       },
       "Map-String-FlibbityGibbit": {
