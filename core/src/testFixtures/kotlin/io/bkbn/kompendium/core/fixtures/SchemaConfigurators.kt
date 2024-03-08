@@ -5,8 +5,10 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import io.bkbn.kompendium.json.schema.SchemaConfigurator
+import io.bkbn.kompendium.json.schema.definition.JsonSchema
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty1
+import kotlin.reflect.KType
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.jvm.javaField
 
@@ -30,6 +32,7 @@ class GsonSchemaConfigurator: SchemaConfigurator {
   override fun serializableName(property: KProperty1<out Any, *>): String =
     property.getJavaAnnotation<SerializedName>()?.value?: property.name
 
+  override fun sealedObjectEnrichment(implementationType: KType, implementationSchema: JsonSchema) = TODO()
 }
 
 class JacksonSchemaConfigurator: SchemaConfigurator {
@@ -43,6 +46,7 @@ class JacksonSchemaConfigurator: SchemaConfigurator {
   override fun serializableName(property: KProperty1<out Any, *>): String =
     property.getJavaAnnotation<JsonProperty>()?.value?: property.name
 
+  override fun sealedObjectEnrichment(implementationType: KType, implementationSchema: JsonSchema) = TODO()
 }
 
 inline fun <reified T: Annotation> KProperty1<*, *>.hasJavaAnnotation(): Boolean {
