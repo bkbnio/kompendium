@@ -25,15 +25,17 @@ object SealedObjectHandler {
     val subclasses = clazz.sealedSubclasses
       .map { it.createType(type.arguments) }
       .map { t ->
-        SchemaGenerator.fromTypeToSchema(t, cache, schemaConfigurator, enrichment).let { js ->
-          if (js is TypeDefinition && js.type == "object") {
-            val slug = t.getSlug(enrichment)
-            cache[slug] = js
-            ReferenceDefinition(t.getReferenceSlug(enrichment))
-          } else {
-            js
+        SchemaGenerator.fromTypeToSchema(t, cache, schemaConfigurator, enrichment)
+          .let { schemaConfigurator.sealedObjectEnrichment(t, it) }
+          .let { js ->
+            if (js is TypeDefinition && js.type == "object") {
+              val slug = t.getSlug(enrichment)
+              cache[slug] = js
+              ReferenceDefinition(t.getReferenceSlug(enrichment))
+            } else {
+              js
+            }
           }
-        }
       }
       .toSet()
     return AnyOfDefinition(subclasses)
