@@ -79,7 +79,7 @@
           "type"
         ]
       },
-      "SimpleGibbit": {
+      "MyGibbit": {
         "type": "object",
         "properties": {
           "a": {
@@ -105,7 +105,7 @@
             "$ref": "#/components/schemas/ComplexGibbit"
           },
           {
-            "$ref": "#/components/schemas/SimpleGibbit"
+            "$ref": "#/components/schemas/MyGibbit"
           }
         ]
       }

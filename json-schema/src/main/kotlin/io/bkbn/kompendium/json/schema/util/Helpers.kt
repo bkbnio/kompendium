@@ -1,5 +1,6 @@
 package io.bkbn.kompendium.json.schema.util
 
+import io.bkbn.kompendium.enrichment.ApiClass
 import io.bkbn.kompendium.enrichment.Enrichment
 import io.bkbn.kompendium.enrichment.PropertyEnrichment
 import io.bkbn.kompendium.enrichment.TypeEnrichment
@@ -38,8 +39,13 @@ object Helpers {
   private fun KClass<*>.kompendiumSlug(): String? {
     if (java.packageName == "java.lang") return simpleName
     if (java.packageName == "java.util") return simpleName
-    val pkg = java.packageName
-    return qualifiedName?.replace(pkg, "")?.replace(".", "")
+    val apiClassAnnotation = annotations.filterIsInstance<ApiClass>().firstOrNull()
+    return if (apiClassAnnotation != null) {
+      apiClassAnnotation.refId
+    } else {
+      val pkg = java.packageName
+      qualifiedName?.replace(pkg, "")?.replace(".", "")
+    }
   }
 
   private fun genericNameAdapter(type: KType, clazz: KClass<*>): String {

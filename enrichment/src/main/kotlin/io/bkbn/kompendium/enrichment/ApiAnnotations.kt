@@ -1,5 +1,6 @@
 package io.bkbn.kompendium.enrichment
 
+import kotlin.annotation.AnnotationTarget.CLASS
 import kotlin.annotation.AnnotationTarget.PROPERTY
 
 @Target(PROPERTY)
@@ -30,6 +31,11 @@ annotation class ApiList(
   val deprecated: Boolean = false,
   val minItems: Int = 0,
   val maxItems: Int = Int.MAX_VALUE,
+)
+
+@Target(CLASS)
+annotation class ApiClass(
+  val refId: String
 )
 
 fun ApiString.toEnrichment() = PropertyEnrichment().apply {

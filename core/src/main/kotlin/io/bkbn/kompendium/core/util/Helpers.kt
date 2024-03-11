@@ -87,12 +87,11 @@ object Helpers {
       else -> {}
     }
 
-    val operations = this.toPathOperation(config)
-    operations.addDefaultAuthMethods(authMethods)
+    val operations = this.toPathOperation(config).apply {
+      addDefaultAuthMethods(authMethods)
+    }
 
-    fun setOperation(
-      property: KMutableProperty1<Path, PathOperation?>
-    ) {
+    fun setOperation(property: KMutableProperty1<Path, PathOperation?>) {
       require(property.get(path) == null) {
         "A route has already been registered for path: $routePath and method: ${property.name.uppercase()}"
       }

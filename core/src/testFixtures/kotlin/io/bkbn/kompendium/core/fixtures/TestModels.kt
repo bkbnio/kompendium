@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import io.bkbn.kompendium.enrichment.ApiClass
 import io.bkbn.kompendium.enrichment.ApiInt
 import io.bkbn.kompendium.enrichment.ApiList
 import io.bkbn.kompendium.enrichment.ApiString
@@ -107,6 +108,7 @@ sealed class FlibbityGibbit {
   abstract val z: String
 }
 
+@ApiClass("MyGibbit")
 data class SimpleGibbit(val a: String, override val z: String = "z") : FlibbityGibbit()
 data class ComplexGibbit(val b: String, val c: Int, override val z: String) : FlibbityGibbit()
 
