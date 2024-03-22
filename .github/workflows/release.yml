@@ -1,9 +1,7 @@
 name: Publish Release
 on:
-  push:
-    branches: [ main ]
-    paths-ignore:
-      - docs/**
+  workflow_dispatch:
+
 jobs:
   publish:
     runs-on: ubuntu-latest
