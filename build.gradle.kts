@@ -23,7 +23,7 @@ allprojects {
   version = run {
     val baseVersion =
       project.findProperty("project.version") ?: error("project.version needs to be set in gradle.properties")
-    when ((project.findProperty("release") as? String)?.toBoolean()) {
+    when ((project.findProperty("releaseVersion") as? String)?.toBoolean()) {
       true -> baseVersion
       else -> "$baseVersion-SNAPSHOT"
     }

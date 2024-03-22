@@ -17,6 +17,6 @@ jobs:
           gradle-version: wrapper
           arguments: publishAllPublicationsToGithubPackagesRepository
           properties: |
-            release=true
+            releaseVersion=true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
