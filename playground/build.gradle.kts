@@ -41,7 +41,7 @@ dependencies {
   implementation("org.slf4j:slf4j-simple:2.0.13")
 
   // YAML
-  implementation("com.charleskorn.kaml:kaml:0.58.0")
+  implementation("com.charleskorn.kaml:kaml:0.59.0")
 
   implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
   implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.5.0")
