@@ -23,7 +23,7 @@ dependencies {
 
   implementation(projects.kompendiumCore)
   implementation("io.ktor:ktor-server-core:2.3.10")
-  implementation("io.ktor:ktor-server-resources:2.3.10")
+  implementation("io.ktor:ktor-server-resources:2.3.11")
 
   // TESTING
 
