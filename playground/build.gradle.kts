@@ -44,7 +44,7 @@ dependencies {
   implementation("com.charleskorn.kaml:kaml:0.59.0")
 
   implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
-  implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.5.0")
+  implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.0")
 
   implementation("joda-time:joda-time:2.12.7")
 }
