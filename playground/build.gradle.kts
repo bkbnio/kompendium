@@ -37,8 +37,8 @@ dependencies {
   implementation("org.apache.logging.log4j:log4j-api-kotlin:1.5.0")
   implementation("org.apache.logging.log4j:log4j-api:2.23.1")
   implementation("org.apache.logging.log4j:log4j-core:2.23.1")
-  implementation("org.slf4j:slf4j-api:2.0.13")
-  implementation("org.slf4j:slf4j-simple:2.0.13")
+  implementation("org.slf4j:slf4j-api:2.0.14")
+  implementation("org.slf4j:slf4j-simple:2.0.14")
 
   // YAML
   implementation("com.charleskorn.kaml:kaml:0.59.0")
