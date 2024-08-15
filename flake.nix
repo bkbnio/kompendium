@@ -9,10 +9,9 @@
   inputs.flake-utils.inputs.systems.follows = "systems";
 
   outputs = {
-    self,
-    systems,
     nixpkgs,
     flake-utils,
+    ...
   }:
     flake-utils.lib.eachDefaultSystem (system: let
       pkgs = import nixpkgs {inherit system;};
@@ -26,6 +25,5 @@
           ktlint
         ];
       };
-      packages.default = pkgs.callPackage ./build.nix {};
     });
 }
