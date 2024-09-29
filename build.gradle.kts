@@ -5,7 +5,7 @@ plugins {
   id("io.bkbn.sourdough.application.jvm") version "0.12.2" apply false
   id("io.bkbn.sourdough.root") version "0.12.2"
   id("org.jetbrains.kotlinx.kover") version "0.8.3"
-  id("io.github.gradle-nexus.publish-plugin") version "1.3.0"
+  id("io.github.gradle-nexus.publish-plugin") version "2.0.0"
 }
 
 dependencies {
