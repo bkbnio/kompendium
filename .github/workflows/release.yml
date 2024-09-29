@@ -17,7 +17,7 @@ jobs:
           distribution: 'adopt'
           java-version: '21'
       - name: Publish to Maven Central
-        uses: burrunan/gradle-cache-action@v1
+        uses: burrunan/gradle-cache-action@v2
         with:
           gradle-version: wrapper
           arguments: publishToSonatype closeAndReleaseSonatypeStagingRepository
