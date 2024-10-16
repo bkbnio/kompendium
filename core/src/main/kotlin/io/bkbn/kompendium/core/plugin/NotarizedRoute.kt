@@ -78,7 +78,7 @@ object NotarizedRoute {
 
   fun Route.calculateRoutePath() = toString()
     .let {
-      application.environment.rootPath.takeIf { root -> root.isNotEmpty() }
+      application.rootPath.takeIf { root -> root.isNotEmpty() }
         ?.let { root ->
           val sanitizedRoute = if (root.startsWith("/")) root else "/$root"
           it.replace(sanitizedRoute, "")
