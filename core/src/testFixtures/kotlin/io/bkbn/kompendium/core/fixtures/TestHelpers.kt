@@ -17,10 +17,11 @@ import io.ktor.client.statement.bodyAsText
 import io.ktor.http.HttpStatusCode
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.Application
-import io.ktor.server.engine.ApplicationEngineEnvironmentBuilder
+import io.ktor.server.application.ServerConfigBuilder
+import io.ktor.server.engine.ApplicationEnvironmentBuilder
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiationConfig
-import io.ktor.server.routing.Routing
+import io.ktor.server.routing.Route
 import io.ktor.server.testing.ApplicationTestBuilder
 import io.ktor.server.testing.testApplication
 import kotlinx.serialization.json.Json
@@ -59,7 +60,7 @@ object TestHelpers {
     customTypes: Map<KType, JsonSchema> = emptyMap(),
     applicationSetup: Application.() -> Unit = { },
     specOverrides: OpenApiSpec.() -> OpenApiSpec = { this },
-    applicationEnvironmentBuilder: ApplicationEngineEnvironmentBuilder.() -> Unit = {},
+    applicationEnvironmentBuilder: ApplicationEnvironmentBuilder.() -> Unit = {},
     notarizedApplicationConfigOverrides: NotarizedApplication.Config.() -> Unit = {},
     contentNegotiation: ContentNegotiationConfig.() -> Unit = {
       json(Json {
@@ -68,7 +69,9 @@ object TestHelpers {
         serializersModule = KompendiumSerializersModule.module
       })
     },
-    routeUnderTest: Routing.() -> Unit
+
+    serverConfigSetup: ServerConfigBuilder.() -> Unit = { },
+    routeUnderTest: Route.() -> Unit
   ) {
     openApiTest(
       snapshotName,
@@ -78,19 +81,21 @@ object TestHelpers {
       customTypes,
       notarizedApplicationConfigOverrides,
       contentNegotiation,
-      applicationEnvironmentBuilder
+      applicationEnvironmentBuilder,
+      serverConfigSetup
     )
   }
 
   private fun openApiTest(
     snapshotName: String,
-    routeUnderTest: Routing.() -> Unit,
+    routeUnderTest: Route.() -> Unit,
     applicationSetup: Application.() -> Unit,
     specOverrides: OpenApiSpec.() -> OpenApiSpec,
     typeOverrides: Map<KType, JsonSchema> = emptyMap(),
     notarizedApplicationConfigOverrides: NotarizedApplication.Config.() -> Unit,
     contentNegotiation: ContentNegotiationConfig.() -> Unit,
-    applicationBuilder: ApplicationEngineEnvironmentBuilder.() -> Unit
+    applicationBuilder: ApplicationEnvironmentBuilder.() -> Unit,
+    serverConfigSetup: ServerConfigBuilder.() -> Unit
   ) = testApplication {
     environment(applicationBuilder)
     install(NotarizedApplication()) {
@@ -103,12 +108,14 @@ object TestHelpers {
       contentNegotiation()
     }
     application(applicationSetup)
+    serverConfig(serverConfigSetup)
     routing {
       swagger()
       redoc()
       routeUnderTest()
     }
-    val root = ApplicationEngineEnvironmentBuilder().apply(applicationBuilder).rootPath
+
+    val root = ServerConfigBuilder(ApplicationEnvironmentBuilder().apply(applicationBuilder).build()).apply(serverConfigSetup).rootPath
     compareOpenAPISpec(root, snapshotName)
   }
 }

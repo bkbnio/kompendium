@@ -6,7 +6,6 @@ import io.bkbn.kompendium.json.schema.SchemaConfigurator
 import io.bkbn.kompendium.json.schema.definition.JsonSchema
 import io.bkbn.kompendium.json.schema.util.Helpers.getSimpleSlug
 import io.bkbn.kompendium.oas.OpenApiSpec
-import io.ktor.server.application.call
 import io.ktor.server.application.createApplicationPlugin
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Routing

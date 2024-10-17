@@ -19,10 +19,11 @@ sourdoughLibrary {
 dependencies {
   // Versions
   val detektVersion: String by project
+  val kotlinSerializeVersion: String by project
 
   api(projects.kompendiumJsonSchema)
   api(projects.kompendiumEnrichment)
-  implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
+  implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinSerializeVersion")
 
   // Formatting
   detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:$detektVersion")

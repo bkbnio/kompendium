@@ -9,7 +9,6 @@ import io.bkbn.kompendium.core.util.TestModules.rootPath
 import io.bkbn.kompendium.json.schema.definition.TypeDefinition
 import io.bkbn.kompendium.oas.payload.Parameter
 import io.ktor.http.HttpStatusCode
-import io.ktor.server.application.install
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.Routing
 import io.ktor.server.routing.route

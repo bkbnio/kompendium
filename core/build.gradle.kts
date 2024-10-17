@@ -20,6 +20,7 @@ sourdoughLibrary {
 dependencies {
   // VERSIONS
   val kotestVersion: String by project
+  val kotlinSerializeVersion: String by project
   val ktorVersion: String by project
   val detektVersion: String by project
 
@@ -43,7 +44,7 @@ dependencies {
   testFixturesApi("io.kotest:kotest-assertions-core-jvm:$kotestVersion")
   testFixturesApi("io.kotest:kotest-property-jvm:$kotestVersion")
   testFixturesApi("io.kotest:kotest-assertions-json-jvm:$kotestVersion")
-  testFixturesApi("io.kotest:kotest-assertions-ktor-jvm:4.4.3")
+  testFixturesApi("io.kotest.extensions:kotest-assertions-ktor:2.0.0")
 
   testFixturesApi("io.ktor:ktor-server-core:$ktorVersion")
   testFixturesApi("io.ktor:ktor-server-test-host:$ktorVersion")
@@ -57,7 +58,7 @@ dependencies {
 
   testFixturesApi("dev.forst:ktor-api-key:2.2.4")
 
-  testFixturesApi("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
+  testFixturesApi("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinSerializeVersion")
 }
 
 testing {

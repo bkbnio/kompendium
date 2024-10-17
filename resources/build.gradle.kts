@@ -18,12 +18,13 @@ sourdoughLibrary {
 dependencies {
   // Versions
   val detektVersion: String by project
+  val ktorVersion: String by project
 
   // IMPLEMENTATION
 
   implementation(projects.kompendiumCore)
-  implementation("io.ktor:ktor-server-core:2.3.12")
-  implementation("io.ktor:ktor-server-resources:2.3.12")
+  implementation("io.ktor:ktor-server-core:$ktorVersion")
+  implementation("io.ktor:ktor-server-resources:$ktorVersion")
 
   // TESTING
 

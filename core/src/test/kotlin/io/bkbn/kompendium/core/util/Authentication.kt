@@ -9,13 +9,11 @@ import io.bkbn.kompendium.core.util.TestModules.defaultPathSummary
 import io.bkbn.kompendium.core.util.TestModules.defaultResponseDescription
 import io.bkbn.kompendium.core.util.TestModules.rootPath
 import io.ktor.http.HttpStatusCode
-import io.ktor.server.application.install
 import io.ktor.server.auth.authenticate
-import io.ktor.server.routing.Routing
-import io.ktor.server.routing.post
+import io.ktor.server.routing.Route
 import io.ktor.server.routing.route
 
-fun Routing.defaultAuthConfig() {
+fun Route.defaultAuthConfig() {
   authenticate("basic") {
     route(rootPath) {
       basicGetGenerator<TestResponse>()
@@ -23,7 +21,7 @@ fun Routing.defaultAuthConfig() {
   }
 }
 
-fun Routing.customAuthConfig() {
+fun Route.customAuthConfig() {
   authenticate("auth-oauth-google") {
     route(rootPath) {
       install(NotarizedRoute()) {
@@ -44,7 +42,7 @@ fun Routing.customAuthConfig() {
   }
 }
 
-fun Routing.customScopesOnSiblingPathOperations() {
+fun Route.customScopesOnSiblingPathOperations() {
   authenticate("auth-oauth-google") {
     route(rootPath) {
       install(NotarizedRoute()) {
@@ -81,7 +79,7 @@ fun Routing.customScopesOnSiblingPathOperations() {
   }
 }
 
-fun Routing.multipleAuthStrategies() {
+fun Route.multipleAuthStrategies() {
   authenticate("jwt", "api-key") {
     route(rootPath) {
       basicGetGenerator<TestResponse>()

@@ -3,9 +3,9 @@ package io.bkbn.kompendium.core.util
 import io.bkbn.kompendium.core.fixtures.TestResponse
 import io.bkbn.kompendium.json.schema.definition.TypeDefinition
 import io.bkbn.kompendium.oas.payload.Parameter
-import io.ktor.server.routing.Routing
+import io.ktor.server.routing.Route
 
-fun Routing.defaultParameter() = basicGetGenerator<TestResponse>(
+fun Route.defaultParameter() = basicGetGenerator<TestResponse>(
   params = listOf(
     Parameter(
       name = "id",

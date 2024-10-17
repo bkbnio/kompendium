@@ -11,11 +11,10 @@ import io.bkbn.kompendium.core.util.TestModules.defaultPathSummary
 import io.bkbn.kompendium.core.util.TestModules.defaultResponseDescription
 import io.bkbn.kompendium.core.util.TestModules.rootPath
 import io.ktor.http.HttpStatusCode
-import io.ktor.server.application.install
-import io.ktor.server.routing.Routing
+import io.ktor.server.routing.Route
 import io.ktor.server.routing.route
 
-fun Routing.singleException() {
+fun Route.singleException() {
   route(rootPath) {
     install(NotarizedRoute()) {
       get = GetInfo.builder {
@@ -36,7 +35,7 @@ fun Routing.singleException() {
   }
 }
 
-fun Routing.multipleExceptions() {
+fun Route.multipleExceptions() {
   route(rootPath) {
     install(NotarizedRoute()) {
       get = GetInfo.builder {
@@ -62,7 +61,7 @@ fun Routing.multipleExceptions() {
   }
 }
 
-fun Routing.polymorphicException() {
+fun Route.polymorphicException() {
   route(rootPath) {
     install(NotarizedRoute()) {
       get = GetInfo.builder {
@@ -83,7 +82,7 @@ fun Routing.polymorphicException() {
   }
 }
 
-fun Routing.genericException() {
+fun Route.genericException() {
   route(rootPath) {
     install(NotarizedRoute()) {
       get = GetInfo.builder {
