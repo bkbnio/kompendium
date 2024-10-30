@@ -9,7 +9,6 @@ import io.bkbn.kompendium.json.schema.definition.TypeDefinition
 import io.bkbn.kompendium.oas.payload.Parameter
 import io.kotest.core.spec.style.DescribeSpec
 import io.ktor.http.HttpStatusCode
-import io.ktor.server.application.call
 import io.ktor.server.application.install
 import io.ktor.server.resources.Resources
 import io.ktor.server.resources.get

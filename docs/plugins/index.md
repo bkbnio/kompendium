@@ -8,4 +8,4 @@ be an iterative process. Each route you notarize will be picked up and injected 
 generates for you.
 
 Finally, there is the `NotarizedResources` plugin that allows you to leverage and document your usage of the
-Ktor [Resources](https://ktor.io/docs/resources.html) API.
+Ktor [Resources](https://ktor.io/docs/server-resources.html) API.

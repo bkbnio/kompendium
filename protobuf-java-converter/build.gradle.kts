@@ -18,12 +18,13 @@ sourdoughLibrary {
 dependencies {
   // Versions
   val detektVersion: String by project
-
+  val kotlinVersion: String by project
+  val kotlinSerializeVersion: String by project
 
   implementation(projects.kompendiumJsonSchema)
   implementation("com.google.protobuf:protobuf-java:3.25.5")
-  implementation("org.jetbrains.kotlin:kotlin-reflect:1.9.25")
-  implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
+  implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
+  implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinSerializeVersion")
 
   // Formatting
   detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:$detektVersion")

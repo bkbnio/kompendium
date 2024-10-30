@@ -38,7 +38,6 @@ import io.bkbn.kompendium.oas.security.BasicAuth
 import io.bkbn.kompendium.oas.serialization.KompendiumSerializersModule
 import io.kotest.core.spec.style.DescribeSpec
 import io.ktor.serialization.kotlinx.json.json
-import io.ktor.server.application.call
 import io.ktor.server.application.install
 import io.ktor.server.auth.Authentication
 import io.ktor.server.auth.UserIdPrincipal
@@ -182,13 +181,16 @@ class KompendiumTest : DescribeSpec({
     it("Can generate paths without application root-path") {
       openApiTestAllSerializers(
         "T0054__app_with_rootpath.json",
-        applicationEnvironmentBuilder = {
+        applicationSetup = {
           rootPath = "/example"
         },
         specOverrides = {
           copy(
             servers = servers.map { it.copy(url = URI("${it.url}/example")) }.toMutableList()
           )
+        },
+        serverConfigSetup = {
+          rootPath = "/example"
         }
       ) { notarizedGet() }
     }
@@ -202,12 +204,10 @@ class KompendiumTest : DescribeSpec({
         snapshotName = "T0072__custom_serialization_strategy.json",
         notarizedApplicationConfigOverrides = {
           specRoute = { spec, routing ->
-            routing {
-              route("/openapi.json") {
-                get {
-                  call.response.headers.append("Content-Type", "application/json")
-                  call.respondText { customJsonEncoder.encodeToString(spec) }
-                }
+            routing.route("/openapi.json") {
+              get {
+                call.response.headers.append("Content-Type", "application/json")
+                call.respondText { customJsonEncoder.encodeToString(spec) }
               }
             }
           }

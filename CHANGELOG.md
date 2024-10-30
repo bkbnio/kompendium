@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Updates for Ktor 3.x support
+- Remove deprecated `NotarizedLocations`
+
 ### Added
 
 ### Changed

@@ -5,9 +5,9 @@ import io.bkbn.kompendium.core.fixtures.NullableField
 import io.bkbn.kompendium.core.fixtures.TestResponse
 import io.bkbn.kompendium.json.schema.definition.TypeDefinition
 import io.bkbn.kompendium.oas.payload.Parameter
-import io.ktor.server.routing.Routing
+import io.ktor.server.routing.Route
 
-fun Routing.requiredParams() = basicGetGenerator<TestResponse>(
+fun Route.requiredParams() = basicGetGenerator<TestResponse>(
   params = listOf(
     Parameter(
       name = "id",
@@ -17,7 +17,7 @@ fun Routing.requiredParams() = basicGetGenerator<TestResponse>(
   )
 )
 
-fun Routing.nonRequiredParam() = basicGetGenerator<TestResponse>(
+fun Route.nonRequiredParam() = basicGetGenerator<TestResponse>(
   params = listOf(
     Parameter(
       name = "id",
@@ -28,5 +28,5 @@ fun Routing.nonRequiredParam() = basicGetGenerator<TestResponse>(
   )
 )
 
-fun Routing.defaultField() = basicGetGenerator<DefaultField>()
-fun Routing.nullableField() = basicGetGenerator<NullableField>()
+fun Route.defaultField() = basicGetGenerator<DefaultField>()
+fun Route.nullableField() = basicGetGenerator<NullableField>()
