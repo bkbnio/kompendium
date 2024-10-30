@@ -18,6 +18,7 @@ import io.ktor.http.HttpMethod
 import io.ktor.server.application.install
 import io.ktor.server.auth.Authentication
 import io.ktor.server.auth.OAuthServerSettings
+import io.ktor.server.auth.Principal
 import io.ktor.server.auth.UserIdPrincipal
 import io.ktor.server.auth.basic
 import io.ktor.server.auth.jwt.jwt
@@ -92,14 +93,18 @@ class KompendiumAuthenticationTest : DescribeSpec({
       ) { customAuthConfig() }
     }
     it("Can provide multiple authentication strategies") {
+      data class TestAppPrincipal(val key: String) : Principal
       TestHelpers.openApiTestAllSerializers(
         snapshotName = "T0047__multiple_auth_strategies.json",
         applicationSetup = {
           install(Authentication) {
             apiKey("api-key") {
               headerName = "X-API-KEY"
-              validate {
-                UserIdPrincipal("Placeholder")
+              validate { key ->
+                // api key library (dev.forst.ktor.apikey) is using the deprecated `Principal` class
+                key
+                  .takeIf { it == "api-key" }
+                  ?.let { TestAppPrincipal(it) }
               }
             }
             jwt("jwt") {

@@ -16,11 +16,10 @@ import io.bkbn.kompendium.enrichment.NumberEnrichment
 import io.bkbn.kompendium.enrichment.ObjectEnrichment
 import io.bkbn.kompendium.enrichment.StringEnrichment
 import io.ktor.http.HttpStatusCode
-import io.ktor.server.application.install
-import io.ktor.server.routing.Routing
+import io.ktor.server.routing.Route
 import io.ktor.server.routing.route
 
-fun Routing.enrichedSimpleResponse() {
+fun Route.enrichedSimpleResponse() {
   route("/enriched") {
     install(NotarizedRoute()) {
       get = GetInfo.builder {
@@ -44,7 +43,7 @@ fun Routing.enrichedSimpleResponse() {
   }
 }
 
-fun Routing.enrichedSimpleRequest() {
+fun Route.enrichedSimpleRequest() {
   route("/example") {
     install(NotarizedRoute()) {
       parameters = TestModules.defaultParams
@@ -78,7 +77,7 @@ fun Routing.enrichedSimpleRequest() {
   }
 }
 
-fun Routing.enrichedNestedCollection() {
+fun Route.enrichedNestedCollection() {
   route("/example") {
     install(NotarizedRoute()) {
       parameters = TestModules.defaultParams
@@ -114,7 +113,7 @@ fun Routing.enrichedNestedCollection() {
   }
 }
 
-fun Routing.enrichedTopLevelCollection() {
+fun Route.enrichedTopLevelCollection() {
   route("/example") {
     install(NotarizedRoute()) {
       parameters = TestModules.defaultParams
@@ -150,7 +149,7 @@ fun Routing.enrichedTopLevelCollection() {
   }
 }
 
-fun Routing.enrichedComplexGenericType() {
+fun Route.enrichedComplexGenericType() {
   route("/example") {
     install(NotarizedRoute()) {
       parameters = TestModules.defaultParams
@@ -193,7 +192,7 @@ fun Routing.enrichedComplexGenericType() {
   }
 }
 
-fun Routing.enrichedGenericResponse() {
+fun Route.enrichedGenericResponse() {
   route("/example") {
     install(NotarizedRoute()) {
       get = GetInfo.builder {
@@ -228,7 +227,7 @@ fun Routing.enrichedGenericResponse() {
   }
 }
 
-fun Routing.enrichedMap() {
+fun Route.enrichedMap() {
   route("/example") {
     install(NotarizedRoute()) {
       get = GetInfo.builder {

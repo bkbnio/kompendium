@@ -11,12 +11,11 @@ import io.bkbn.kompendium.core.util.TestModules.rootPath
 import io.bkbn.kompendium.json.schema.definition.TypeDefinition
 import io.bkbn.kompendium.oas.payload.Parameter
 import io.ktor.http.HttpStatusCode
-import io.ktor.server.application.install
-import io.ktor.server.routing.Routing
+import io.ktor.server.routing.Route
 import io.ktor.server.routing.route
 import io.ktor.server.routing.param
 
-fun Routing.simplePathParsing() {
+fun Route.simplePathParsing() {
   route("/this") {
     route("/is") {
       route("/a") {
@@ -49,7 +48,7 @@ fun Routing.simplePathParsing() {
   }
 }
 
-fun Routing.rootRoute() {
+fun Route.rootRoute() {
   route(rootPath) {
     install(NotarizedRoute()) {
       parameters = listOf(defaultParams.last())
@@ -66,7 +65,7 @@ fun Routing.rootRoute() {
   }
 }
 
-fun Routing.nestedUnderRoot() {
+fun Route.nestedUnderRoot() {
   route("/") {
     route("/testerino") {
       install(NotarizedRoute()) {
@@ -84,7 +83,7 @@ fun Routing.nestedUnderRoot() {
   }
 }
 
-fun Routing.trailingSlash() {
+fun Route.trailingSlash() {
   route("/test") {
     route("/") {
       install(NotarizedRoute()) {
@@ -102,7 +101,7 @@ fun Routing.trailingSlash() {
   }
 }
 
-fun Routing.paramWrapper() {
+fun Route.paramWrapper() {
   route("/test") {
     param("a") {
       param("b") {

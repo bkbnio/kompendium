@@ -21,17 +21,16 @@ import io.bkbn.kompendium.core.util.TestModules.defaultResponseDescription
 import io.bkbn.kompendium.json.schema.definition.TypeDefinition
 import io.bkbn.kompendium.oas.payload.Parameter
 import io.ktor.http.HttpStatusCode
-import io.ktor.server.application.install
 import io.ktor.server.auth.authenticate
-import io.ktor.server.routing.Routing
+import io.ktor.server.routing.Route
 import io.ktor.server.routing.route
 
-fun Routing.withOperationId() = basicGetGenerator<TestResponse>(operationId = "getThisDude")
-fun Routing.nullableNestedObject() = basicGetGenerator<ProfileUpdateRequest>()
-fun Routing.nullableEnumField() = basicGetGenerator<NullableEnum>()
-fun Routing.nullableReference() = basicGetGenerator<ManyThings>()
-fun Routing.dateTimeString() = basicGetGenerator<DateTimeString>()
-fun Routing.headerParameter() = basicGetGenerator<TestResponse>(
+fun Route.withOperationId() = basicGetGenerator<TestResponse>(operationId = "getThisDude")
+fun Route.nullableNestedObject() = basicGetGenerator<ProfileUpdateRequest>()
+fun Route.nullableEnumField() = basicGetGenerator<NullableEnum>()
+fun Route.nullableReference() = basicGetGenerator<ManyThings>()
+fun Route.dateTimeString() = basicGetGenerator<DateTimeString>()
+fun Route.headerParameter() = basicGetGenerator<TestResponse>(
   params = listOf(
     Parameter(
       name = "X-User-Email",
@@ -42,10 +41,10 @@ fun Routing.headerParameter() = basicGetGenerator<TestResponse>(
   )
 )
 
-fun Routing.nestedTypeName() = basicGetGenerator<Nested.Response>()
-fun Routing.topLevelNullable() = basicGetGenerator<TestResponse?>()
-fun Routing.simpleRecursive() = basicGetGenerator<ColumnSchema>()
-fun Routing.samePathDifferentMethodsAndAuth() {
+fun Route.nestedTypeName() = basicGetGenerator<Nested.Response>()
+fun Route.topLevelNullable() = basicGetGenerator<TestResponse?>()
+fun Route.simpleRecursive() = basicGetGenerator<ColumnSchema>()
+fun Route.samePathDifferentMethodsAndAuth() {
   route(defaultPath) {
     install(NotarizedRoute()) {
       parameters = defaultParams

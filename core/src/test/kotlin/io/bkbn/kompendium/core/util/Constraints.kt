@@ -12,11 +12,10 @@ import io.bkbn.kompendium.enrichment.NumberEnrichment
 import io.bkbn.kompendium.enrichment.ObjectEnrichment
 import io.bkbn.kompendium.enrichment.StringEnrichment
 import io.ktor.http.HttpStatusCode
-import io.ktor.server.application.install
-import io.ktor.server.routing.Routing
+import io.ktor.server.routing.Route
 import io.ktor.server.routing.route
 
-fun Routing.intConstraints() {
+fun Route.intConstraints() {
   route(defaultPath) {
     install(NotarizedRoute()) {
       get = GetInfo.builder {
@@ -43,7 +42,7 @@ fun Routing.intConstraints() {
   }
 }
 
-fun Routing.doubleConstraints() {
+fun Route.doubleConstraints() {
   route(defaultPath) {
     install(NotarizedRoute()) {
       get = GetInfo.builder {
@@ -70,7 +69,7 @@ fun Routing.doubleConstraints() {
   }
 }
 
-fun Routing.stringConstraints() {
+fun Route.stringConstraints() {
   route(defaultPath) {
     install(NotarizedRoute()) {
       get = GetInfo.builder {
@@ -96,7 +95,7 @@ fun Routing.stringConstraints() {
   }
 }
 
-fun Routing.stringPatternConstraints() {
+fun Route.stringPatternConstraints() {
   route(defaultPath) {
     install(NotarizedRoute()) {
       get = GetInfo.builder {
@@ -121,7 +120,7 @@ fun Routing.stringPatternConstraints() {
   }
 }
 
-fun Routing.stringContentEncodingConstraints() {
+fun Route.stringContentEncodingConstraints() {
   route(defaultPath) {
     install(NotarizedRoute()) {
       get = GetInfo.builder {
@@ -147,7 +146,7 @@ fun Routing.stringContentEncodingConstraints() {
   }
 }
 
-fun Routing.arrayConstraints() {
+fun Route.arrayConstraints() {
   route(defaultPath) {
     install(NotarizedRoute()) {
       get = GetInfo.builder {
