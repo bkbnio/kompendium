@@ -13,7 +13,6 @@ sourdoughApp {
 dependencies {
   // IMPLEMENTATION
   implementation(projects.kompendiumCore)
-  implementation(projects.kompendiumLocations)
   implementation(projects.kompendiumResources)
   implementation(projects.kompendiumProtobufJavaConverter)
 
