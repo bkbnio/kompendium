@@ -2,9 +2,6 @@
 
 ## Unreleased
 
-- Updates for Ktor 3.x support
-- Remove deprecated `NotarizedLocations`
-
 ### Added
 
 ### Changed
@@ -15,7 +12,14 @@
 
 ## Released
 
-## [4.0.0] - January 21st, 2024
+## [4.0.2] - November 4th, 2024
+
+⚠️ 4.X release has been pretty wonky due to Maven Central problems, please only use 4.0.2 or greater
+when bumping to 4.X
+
+### Breaking
+
+- Supports Ktor 3
 
 ### Added
 
