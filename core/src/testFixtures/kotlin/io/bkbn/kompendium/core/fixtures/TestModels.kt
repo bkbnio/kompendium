@@ -23,7 +23,8 @@ data class TestRequest(
 @Serializable
 data class TestSimpleRequest(
   val a: String,
-  val b: Int
+  val b: Int,
+  val c: Boolean
 )
 
 @Serializable

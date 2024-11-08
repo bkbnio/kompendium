@@ -111,11 +111,15 @@
             "type": "number",
             "format": "int32",
             "deprecated": true
+          },
+          "c": {
+            "type": "boolean"
           }
         },
         "required": [
           "a",
-          "b"
+          "b",
+          "c"
         ]
       },
       "TestSimpleRequest-blah-blah": {
@@ -129,11 +133,15 @@
             "type": "number",
             "format": "int32",
             "deprecated": true
+          },
+          "c": {
+            "type": "boolean"
           }
         },
         "required": [
           "a",
-          "b"
+          "b",
+          "c"
         ]
       },
       "List-TestSimpleRequest-blah-blah": {

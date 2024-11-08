@@ -10,6 +10,7 @@ import io.bkbn.kompendium.core.fixtures.TestSimpleRequest
 import io.bkbn.kompendium.core.metadata.GetInfo
 import io.bkbn.kompendium.core.metadata.PostInfo
 import io.bkbn.kompendium.core.plugin.NotarizedRoute
+import io.bkbn.kompendium.enrichment.BooleanEnrichment
 import io.bkbn.kompendium.enrichment.CollectionEnrichment
 import io.bkbn.kompendium.enrichment.MapEnrichment
 import io.bkbn.kompendium.enrichment.NumberEnrichment
@@ -62,6 +63,9 @@ fun Route.enrichedSimpleRequest() {
                 NumberEnrichment("blah-blah-blah") {
                   deprecated = true
                 }
+              }
+              TestSimpleRequest::c {
+                BooleanEnrichment("blah-blah-blah") { }
               }
             }
           )
