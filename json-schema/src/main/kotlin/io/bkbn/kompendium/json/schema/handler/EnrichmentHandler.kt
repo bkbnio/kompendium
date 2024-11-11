@@ -1,5 +1,6 @@
 package io.bkbn.kompendium.json.schema.handler
 
+import io.bkbn.kompendium.enrichment.BooleanEnrichment
 import io.bkbn.kompendium.enrichment.CollectionEnrichment
 import io.bkbn.kompendium.enrichment.Enrichment
 import io.bkbn.kompendium.enrichment.MapEnrichment
@@ -15,6 +16,7 @@ import io.bkbn.kompendium.json.schema.definition.TypeDefinition
 object EnrichmentHandler {
 
   fun Enrichment.applyToSchema(schema: JsonSchema): JsonSchema = when (this) {
+    is BooleanEnrichment -> applyToSchema(schema)
     is NumberEnrichment -> applyToSchema(schema)
     is StringEnrichment -> applyToSchema(schema)
     is CollectionEnrichment<*> -> applyToSchema(schema)
@@ -39,6 +41,11 @@ object EnrichmentHandler {
     else -> error("Incorrect enrichment type for enrichment id: ${this.id}")
   }
 
+  private fun BooleanEnrichment.applyToSchema(schema: JsonSchema): JsonSchema = when (schema) {
+    is TypeDefinition -> schema.copyBooleanEnrichment(this)
+    else -> error("Incorrect enrichment type for enrichment id: ${this.id}")
+  }
+
   private fun NumberEnrichment.applyToSchema(schema: JsonSchema): JsonSchema = when (schema) {
     is TypeDefinition -> schema.copyNumberEnrichment(this)
     else -> error("Incorrect enrichment type for enrichment id: ${this.id}")
@@ -48,6 +55,13 @@ object EnrichmentHandler {
     is TypeDefinition -> schema.copyStringEnrichment(this)
     else -> error("Incorrect enrichment type for enrichment id: ${this.id}")
   }
+
+  private fun TypeDefinition.copyBooleanEnrichment(
+    enrichment: BooleanEnrichment
+  ): TypeDefinition = copy(
+    deprecated = enrichment.deprecated,
+    description = enrichment.description,
+  )
 
   private fun TypeDefinition.copyNumberEnrichment(
     enrichment: NumberEnrichment

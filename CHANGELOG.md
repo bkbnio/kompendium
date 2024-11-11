@@ -6,6 +6,10 @@
 
 ### Changed
 
+### Fixed
+
+- Fixed missing `BooleanEnrichment` mapping
+
 ### Remove
 
 ---

@@ -64,11 +64,15 @@
             "type": "number",
             "format": "int32",
             "deprecated": true
+          },
+          "c": {
+            "type": "boolean"
           }
         },
         "required": [
           "a",
-          "b"
+          "b",
+          "c"
         ]
       },
       "TestSimpleRequest-blah": {
@@ -82,11 +86,15 @@
             "type": "number",
             "format": "int32",
             "deprecated": true
+          },
+          "c": {
+            "type": "boolean"
           }
         },
         "required": [
           "a",
-          "b"
+          "b",
+          "c"
         ]
       },
       "Map-String-TestSimpleRequest-blah": {

@@ -144,11 +144,15 @@
           "b": {
             "type": "number",
             "format": "int32"
+          },
+          "c": {
+            "type": "boolean"
           }
         },
         "required": [
           "a",
-          "b"
+          "b",
+          "c"
         ]
       }
     },
