@@ -9,7 +9,7 @@ plugins {
   id("io.bkbn.sourdough.application.jvm") version "0.13.1" apply false
   id("com.vanniktech.maven.publish") version "0.30.0" apply false
   id("io.bkbn.sourdough.root") version "0.13.1"
-  id("org.jetbrains.kotlinx.kover") version "0.8.3"
+  id("org.jetbrains.kotlinx.kover") version "0.9.0"
 }
 
 dependencies {
