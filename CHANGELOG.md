@@ -1,649 +1,762 @@
 # Changelog
 
-## Unreleased
+All notable changes to this project will be documented in this file.
+
+## [4.0.3] - 2024-11-11
+
+### 🐛 Bug Fixes
+
+- Add missing mapping of BooleanEnrichment to EnrichmentHandler
+
+## [4.0.2] - 2024-11-01
+
+### 🐛 Bug Fixes
+
+- Resources plugin not published
+
+## [4.0.1] - 2024-10-31
+
+### 🐛 Bug Fixes
+
+- *(deps)* Update dependency com.charleskorn.kaml:kaml to v0.62.1 (#649)
+- Maybe actually fixed gradle publishing for real this time??
+
+### ⚙️ Miscellaneous Tasks
+
+- Add stacktrace to release workflow
+
+## [4.0.0-test] - 2024-10-30
+
+### 🚀 Features
+
+- Enriched enrichments (#566)
+- Add nix flake (#631)
+
+### 🐛 Bug Fixes
+
+- *(deps)* Update kotestversion to v5.7.2 (#507)
+- *(deps)* Update dependency com.google.protobuf:protobuf-java to v3.24.3 (#510)
+- *(deps)* Update dependency io.gitlab.arturbosch.detekt:detekt-formatting to v1.23.1 (#471)
+- *(deps)* Update dependency com.google.protobuf:protobuf-java to v3.24.4 (#511)
+- *(deps)* Update ktor to v2.3.5 (#513)
+- *(deps)* Update dependency org.apache.logging.log4j:log4j-api-kotlin to v1.3.0 (#515)
+- *(deps)* Update dependency org.apache.logging.log4j:log4j-core to v2.21.0 (#518)
+- *(deps)* Update dependency org.apache.logging.log4j:log4j-api to v2.21.0 (#517)
+- *(deps)* Update dependency org.apache.logging.log4j:log4j-api to v2.21.1 (#519)
+- *(deps)* Update dependency org.apache.logging.log4j:log4j-core to v2.21.1 (#520)
+- *(deps)* Update ktor to v2.3.5 (#514)
+- *(deps)* Update dependency org.jetbrains.kotlin:kotlin-reflect to v1.9.20 (#526)
+- *(deps)* Update dependency io.gitlab.arturbosch.detekt:detekt-formatting to v1.23.2 (#525)
+- *(deps)* Update dependency io.gitlab.arturbosch.detekt:detekt-formatting to v1.23.3 (#528)
+- *(deps)* Update dependency com.google.protobuf:protobuf-java to v3.25.0 (#530)
+- *(deps)* Update kotestversion to v5.8.0 (#531)
+- *(deps)* Update ktor to v2.3.6 (#532)
+- *(deps)* Update dependency org.jetbrains.kotlinx:kotlinx-serialization-json to v1.6.1 (#533)
+- *(deps)* Update dependency com.google.protobuf:protobuf-java to v3.25.1 (#534)
+- *(deps)* Update dependency org.apache.logging.log4j:log4j-api to v2.22.0 (#535)
+- *(deps)* Update dependency org.apache.logging.log4j:log4j-core to v2.22.0 (#536)
+- *(deps)* Update dependency org.jetbrains.kotlin:kotlin-reflect to v1.9.21 (#538)
+- *(deps)* Update dependency io.gitlab.arturbosch.detekt:detekt-formatting to v1.23.4 (#540)
+- *(deps)* Update dependency org.jetbrains.kotlinx:kotlinx-serialization-json to v1.6.2 (#545)
+- *(deps)* Update dependency org.jetbrains.kotlinx:kotlinx-datetime to v0.5.0 (#546)
+- *(deps)* Update ktor to v2.3.7 (#547)
+- *(deps)* Update dependency org.jetbrains.kotlin:kotlin-reflect to v1.9.22 (#550)
+- *(deps)* Update log4j2 monorepo to v2.22.1 (#553)
+- *(deps)* Update dependency org.apache.logging.log4j:log4j-api-kotlin to v1.4.0 (#554)
+- *(deps)* Update dependency org.slf4j:slf4j-simple to v2.0.10 (#556)
+- *(deps)* Update dependency org.slf4j:slf4j-api to v2.0.10 (#555)
+- *(deps)* Update dependency joda-time:joda-time to v2.12.6 (#557)
+- *(deps)* Update dependency org.slf4j:slf4j-api to v2.0.11 (#558)
+- *(deps)* Update dependency org.slf4j:slf4j-simple to v2.0.11 (#559)
+- *(deps)* Update dependency com.google.protobuf:protobuf-java to v3.25.2 (#560)
+- Enum type def (#563)
+- *(deps)* Update dependency io.gitlab.arturbosch.detekt:detekt-formatting to v1.23.5 (#569)
+- *(deps)* Update ktor to v2.3.8 (#570)
+- *(deps)* Update dependency joda-time:joda-time to v2.12.7 (#573)
+- *(deps)* Update slf4j monorepo to v2.0.12 (#574)
+- *(deps)* Update dependency com.google.protobuf:protobuf-java to v3.25.3 (#575)
+- *(deps)* Update dependency org.jetbrains.kotlinx:kotlinx-serialization-json to v1.6.3 (#576)
+- *(deps)* Update log4j2 monorepo to v2.23.0 (#578)
+- *(deps)* Update ktor to v2.3.9 (#580)
+- *(deps)* Update dependency org.jetbrains.kotlin:kotlin-reflect to v1.9.23 (#584)
+- *(deps)* Update log4j2 monorepo to v2.23.1 (#585)
+- *(deps)* Update kotestversion to v5.8.1 (#586)
+- *(deps)* Update dependency com.charleskorn.kaml:kaml to v0.58.0 (#589)
+- *(deps)* Update dependency io.gitlab.arturbosch.detekt:detekt-formatting to v1.23.6 (#591)
+- *(deps)* Update ktor to v2.3.10 (#593)
+- *(deps)* Update slf4j monorepo to v2.0.13 (#594)
+- *(deps)* Update dependency com.charleskorn.kaml:kaml to v0.59.0 (#595)
+- *(deps)* Update dependency org.jetbrains.kotlin:kotlin-reflect to v1.9.24 (#598)
+- *(deps)* Update ktor to v2.3.11 (#601)
+- *(deps)* Update kotestversion to v5.9.0 (#603)
+- *(deps)* Update dependency org.jetbrains.kotlinx:kotlinx-datetime to v0.6.0 (#604)
+- *(deps)* Update kotestversion to v5.9.1 (#611)
+- *(deps)* Update ktor to v2.3.12 (#602)
+- *(deps)* Update dependency org.jetbrains.kotlin:kotlin-reflect to v1.9.25 (#623)
+- *(deps)* Update dependency com.google.protobuf:protobuf-java to v3.25.4 (#624)
+- *(deps)* Update dependency org.apache.logging.log4j:log4j-api-kotlin to v1.5.0 (#626)
+- *(deps)* Update slf4j monorepo to v2.0.14 (#627)
+- *(deps)* Update slf4j monorepo to v2.0.15 (#628)
+- *(deps)* Update slf4j monorepo to v2.0.16 (#629)
+- *(deps)* Update dependency org.jetbrains.kotlinx:kotlinx-datetime to v0.6.1 (#633)
+- *(deps)* Update log4j2 monorepo to v2.24.0 (#634)
+- *(deps)* Update dependency io.gitlab.arturbosch.detekt:detekt-formatting to v1.23.7 (#635)
+- *(deps)* Update dependency joda-time:joda-time to v2.13.0 (#637)
+- *(deps)* Update dependency com.google.protobuf:protobuf-java to v3.25.5 (#638)
+- *(deps)* Update log4j2 monorepo to v2.24.1 (#641)
+- *(deps)* Update dependency com.charleskorn.kaml:kaml to v0.62.0 (#614)
+- *(deps)* Update ktor to v3.0.1 (#647)
+- On the path to fixing publishing to maven central (#648)
 
-### Added
+### 📚 Documentation
 
-### Changed
+- Update docs for 4.0 release (#567)
 
-### Remove
+### ⚙️ Miscellaneous Tasks
 
----
+- Enable k2 compiler (#529)
+- Bump sourdough (#562)
+- Yaml example (#564)
+- Rollback docs due to sonatype disaster (#581)
+- Add test suffix to version for now
 
-## Released
+### Major
 
-## [3.14.4] - June 5th, 2023
+- Ktor 3.0.0 support - fixes #644 (#645)
 
-### Changed
+## [4.0.0-alpha] - 2023-09-04
 
-- Components definitions were not in the proper schema section. Prefixed the path with component slug in `protobuf java converter`.
+### 🐛 Bug Fixes
 
-## [3.14.3] - May 22nd, 2023
+- *(deps)* Update dependency org.jetbrains.kotlin:kotlin-reflect to v1.8.22 (#477)
+- *(deps)* Update dependency com.google.protobuf:protobuf-java to v3.23.3 (#478)
+- *(deps)* Update ktor to v2.3.2 (#480)
+- *(deps)* Update dependency org.jetbrains.kotlin:kotlin-reflect to v1.9.0 (#484)
+- *(deps)* Update dependency com.google.protobuf:protobuf-java to v3.23.4 (#485)
+- *(deps)* Update ktor to v2.3.3 (#487)
+- *(deps)* Update dependency com.google.protobuf:protobuf-java to v3.24.0 (#488)
+- *(deps)* Update dependency com.google.protobuf:protobuf-java to v3.24.1 (#490)
+- *(deps)* Update dependency org.jetbrains.kotlinx:kotlinx-serialization-json to v1.6.0 (#491)
+- *(deps)* Update dependency org.jetbrains.kotlin:kotlin-reflect to v1.9.10 (#494)
+- *(deps)* Update dependency com.google.protobuf:protobuf-java to v3.24.2 (#495)
+- *(deps)* Update ktor to v2.3.4 (#496)
+- *(deps)* Update dependency org.jetbrains.kotlinx:kotlinx-datetime to v0.4.1 (#497)
+- *(deps)* Update kotestversion to v5.7.0 (#498)
+- *(deps)* Update dependency org.slf4j:slf4j-simple to v2.0.9 (#500)
+- *(deps)* Update dependency org.slf4j:slf4j-api to v2.0.9 (#499)
+- *(deps)* Update kotestversion to v5.7.1 (#501)
 
-### Added
+### ⚙️ Miscellaneous Tasks
 
-- Added `required` parameter in request info builder.
+- Docs
 
-## [3.14.2] - May 8rd, 2023
+### Major
 
-### Changed
+- V4 alpha (#505)
 
-- Fixed bug where routes were not resolving when a parameter was declared via the ktor SDK
+## [3.14.4] - 2023-06-05
 
-## [3.14.1] - April 28th, 2023
+### 🐛 Bug Fixes
 
-### Changed
+- *(deps)* Update dependency com.google.protobuf:protobuf-java to v3.23.2 (#472)
+- *(deps)* Update ktor to v2.3.1 (#473)
+- *(deps)* Update dependency io.ktor:ktor-server-core to v2.3.1 (#474)
+- References for for protobuf objects (#466)
 
-- Generating enrichments for generic classes no longer throws the `Slugs should not be generated for field enrichments` error.
+### ⚙️ Miscellaneous Tasks
 
-## [3.14.0] - April 6th, 2023
+- Prep for 3.14.4 release
 
-### Added
+## [3.14.3] - 2023-05-22
 
-- Add support for response headers
+### 🐛 Bug Fixes
 
-## [3.13.0] - March 15th, 2023
+- *(deps)* Update dependency org.jetbrains.kotlin:kotlin-reflect to v1.8.21 (#460)
+- *(deps)* Update dependency com.google.protobuf:protobuf-java to v3.23.0 (#461)
+- *(deps)* Update kotestversion to v5.6.2 (#462)
+- *(deps)* Update dependency org.jetbrains.kotlinx:kotlinx-serialization-json to v1.5.1 (#463)
+- *(deps)* Update dependency com.google.protobuf:protobuf-java to v3.23.1 (#469)
+- Allow for request bodies to be marked as required=false (#470)
 
-### Changed
+### ⚙️ Miscellaneous Tasks
 
-- Post, Put, and Patch now support not providing request info
+- Prep for 3.14.3 release
 
-## [3.12.0] - March 14th, 2023
+## [3.14.2] - 2023-05-08
 
-### Added
+### 🐛 Bug Fixes
 
-- Add support for swagger documentation
+- Route with parameter declared via ktor function (#455)
 
-## [3.11.0] - January 5th, 2023
+### ⚙️ Miscellaneous Tasks
 
-### Added
+- Prep for 3.14.2 release
 
-- Support for type constraints.
+## [3.14.1] - 2023-04-28
 
-## [3.10.0] - January 4th, 2023
+### 🐛 Bug Fixes
 
-### Added
+- *(deps)* Update dependency com.google.protobuf:protobuf-java to v3.22.3 (#448)
+- *(deps)* Update dependency io.kotest:kotest-runner-junit5-jvm to v5.6.0 (#450)
+- *(deps)* Update dependency io.kotest:kotest-assertions-json-jvm to v5.6.1 (#451)
+- *(deps)* Update ktor to v2.3.0 (#452)
+- Fixed generic property enrichment (#454)
 
-- Support for type enrichments!  `deprecated` and `description` to start
+### ⚙️ Miscellaneous Tasks
 
-## [3.9.0] - November 15th, 2022
+- Rearrange docs (#447)
+- Prep for 3.14.1 release
 
-### Added
+## [3.14.0] - 2023-04-06
 
-- `protobuf-java-converter` module for converting generated protobuf objects to `JsonSchema` representations
+### 🚀 Features
 
-### Changed
+- Introduce Support for Response Headers (#446)
 
-- Application `rootPath` is no longer prefixed to serialized route path when `NotarizedRoute` is resolved
+### 🐛 Bug Fixes
 
-## [3.8.0] - November 9th, 2022
+- *(deps)* Update dependency com.google.protobuf:protobuf-java to v3.22.2 (#429)
+- *(deps)* Update ktor to v2.2.4 (#430)
+- *(deps)* Update dependency org.jetbrains.kotlinx:kotlinx-serialization-json to v1.5.0 (#432)
+- *(deps)* Update dependency io.gitlab.arturbosch.detekt:detekt-formatting to v1.22.0 (#388)
+- *(deps)* Update dependency org.slf4j:slf4j-api to v2.0.7 (#433)
+- *(deps)* Update dependency org.slf4j:slf4j-simple to v2.0.7 (#434)
+- *(deps)* Update dependency joda-time:joda-time to v2.12.3 (#435)
+- *(deps)* Update dependency joda-time:joda-time to v2.12.4 (#436)
+- *(deps)* Update dependency org.jetbrains.kotlin:kotlin-reflect to v1.8.20 (#438)
+- *(deps)* Update dependency joda-time:joda-time to v2.12.5 (#441)
+- *(deps)* Update dependency dev.forst:ktor-api-key to v2.2.4 (#442)
 
-### Added
+### 📚 Documentation
 
-- Add support for NotarizedResource plugin scoped to route
+- Add showcase link to readme
 
-### Changed
+### ⚙️ Miscellaneous Tasks
 
-- Support registering same path with different authentication and methods
+- Prep for 3.14.0 release
 
-## [3.7.0] - November 5th, 2022
+## [3.13.0] - 2023-03-15
 
-### Added
+### 🚀 Features
 
-- Allow users to override media type in request and response
+- Support no request body for post, put and patch (#427)
 
-## [3.6.0] - November 5th, 2022
+## [3.12.0] - 2023-03-14
 
-### Changed
+### 🚀 Features
 
-- Schemas for types in nullable properties are no longer nullable themselves
-- Enums are now generated as references, which makes it possible to generate types for them
+- Reintroduce swagger compatability (#426)
 
-## [3.5.0] - October 29th, 2022
+### 🐛 Bug Fixes
 
-### Added
+- *(deps)* Update ktor to v2.2.3 (#414)
+- *(deps)* Update dependency org.jetbrains.kotlin:kotlin-reflect to v1.8.10 (#418)
+- *(deps)* Update kotestversion to v5.5.5 (#420)
+- *(deps)* Update dependency com.google.protobuf:protobuf-java to v3.22.0 (#421)
+- *(deps)* Update dependency org.apache.logging.log4j:log4j-api to v2.20.0 (#422)
+- *(deps)* Update dependency org.apache.logging.log4j:log4j-core to v2.20.0 (#423)
 
-- New `kompendium-resources` plugin to support Ktor Resources API
+### ⚙️ Miscellaneous Tasks
 
-## [3.4.0] - October 26th, 2022
+- Prep for 3.12.0 release
 
-### Added
+## [3.11.1] - 2023-01-31
 
-- Support for custom docs path
+### 🐛 Bug Fixes
 
-## [3.3.1] - September 26th, 2022
+- *(deps)* Update dependency dev.forst:ktor-api-key to v2.2.2 (#410)
+- Drop logback (#413)
 
-### Added
+### ⚙️ Miscellaneous Tasks
 
-- Better exception thrown when unidentified type is encountered
+- Fix incorrect line in documentation
 
-## [3.3.0] - September 15th, 2022
+## [3.11.0] - 2023-01-05
 
-### Added
-- Support for @Transient annotation
-- Support for @SerialName annotation on fields
-- Supports for un-backed fields, by excluding them from the generated schema.
+### 🚀 Features
 
-### Changed
-- Actually turned on detekt formatting 🤦
-- Removed some rouge print statements
+- Constraints (#409)
 
-## Released
+### 🐛 Bug Fixes
 
-## [3.2.0] - August 23rd, 2022
+- *(deps)* Update ktor (#397)
 
-### Added
+## [3.10.0] - 2023-01-05
 
-- `SchemaConfigurator` to allow for advanced json schema configuration such as field level overrides and transient
-  omission
+### 🚀 Features
 
-## [3.1.0] - August 18th, 2022
+- Type enrichment (#408)
 
-### Added
+### 🐛 Bug Fixes
 
-- Ability to automatically detect authentication via route
+- *(deps)* Update dependency org.slf4j:slf4j-api to v2.0.4 (#385)
+- *(deps)* Update dependency org.slf4j:slf4j-simple to v2.0.4 (#386)
+- *(deps)* Update dependency ch.qos.logback:logback-classic to v1.4.5 (#387)
+- *(deps)* Update dependency org.slf4j:slf4j-api to v2.0.5 (#389)
+- *(deps)* Update dependency org.slf4j:slf4j-simple to v2.0.5 (#390)
+- *(deps)* Update dependency org.jetbrains.kotlin:kotlin-reflect to v1.7.22 (#394)
+- *(deps)* Update dependency com.google.protobuf:protobuf-java to v3.21.10 (#395)
+- *(deps)* Update dependency joda-time:joda-time to v2.12.2 (#396)
+- *(deps)* Update dependency com.google.protobuf:protobuf-java to v3.21.11 (#398)
+- *(deps)* Update dependency org.slf4j:slf4j-api to v2.0.6 (#400)
+- *(deps)* Update dependency org.slf4j:slf4j-simple to v2.0.6 (#401)
+- *(deps)* Update dependency com.google.protobuf:protobuf-java to v3.21.12 (#402)
+- *(deps)* Update dependency org.jetbrains.kotlin:kotlin-reflect to v1.8.0 (#405)
 
-### Fixed
+### ⚙️ Miscellaneous Tasks
 
-- Improved stack trace output
+- Bump gradle version
 
-## [3.0.0] - August 16th, 2022
+## [3.9.0] - 2022-11-16
 
-### Added
+### 🚀 Features
 
-- Ktor 2 Support 🎉
-- OpenAPI 3.1 Standard
-- JsonSchema Generator
-- `NotarizedRoute` plugin
+- Protobuf java converters (#382)
 
-### Removed
+### 🐛 Bug Fixes
 
-- SwaggerUI module removed (due to lack of OpenAPI 3.1 support)
-- Kompendium Annotations removed (field renames, undeclared fields, etc. will be follow-up work)
+- Do not include rootPath in serialized route path
 
-## [2.3.5] - June 7th, 2022
+### ⚙️ Miscellaneous Tasks
 
-### Added
+- Prep for 3.9.0 release
 
-### Changed
+## [3.8.0] - 2022-11-09
 
-- Fix serialization for api key location in api key auth configuration
+### 🚀 Features
 
-### Remove
+- Support partial authentication (#372) (#375)
+- NotarizedResource plugin
 
-## [2.3.4] - April 7th, 2022
+### 🐛 Bug Fixes
 
-### Changed
+- *(deps)* Update kotlin monorepo to v1.7.21 (#374)
 
-- Put request body info now nullable
+### ⚙️ Miscellaneous Tasks
 
-## [2.3.3] - April 1st, 2022
+- Delete autoupdate action
+- Prep for 3.8.0 release
 
-### Added
+## [3.7.0] - 2022-11-05
 
-- Added tests for Swagger UI module that verify that plugin generates correct responses for Swagger UI WEB resources (
-  tests should detect future incompatible changes in new versions of `org.webjars.swagger-ui`)
+### 🚀 Features
 
-### Changed
+- Allow media type overrides (#369)
 
-- Fixed broken Swagger UI plugin (`org.webjars.swagger-ui` WEB resources structure changed in version 4.9.X).
-  Issue: https://github.com/bkbnio/kompendium/issues/236
+## [3.6.0] - 2022-11-05
 
-## [2.3.2] - March 30th, 2022
+### 🚀 Features
 
-### Changed
+- Create schema reference for enum types (#368)
 
-- Fixed bug where nullable enum fields caused runtime exceptions
+### 🐛 Bug Fixes
 
-## [2.3.1] - March 5th, 2022
+- *(deps)* Update dependency joda-time:joda-time to v2.12.1 (#359)
+- *(deps)* Update ktor to v2.1.3 (#360)
+- *(deps)* Update dependency dev.forst:ktor-api-key to v2.1.3 (#361)
+- *(deps)* Update kotestversion to v5.5.4 (#363)
 
-### Changed
+### ⚙️ Miscellaneous Tasks
 
-- Can now apply `@FreeFormObject` to top level types
+- Prep for release
 
-## [2.3.0] - March 1st, 2022
+## [3.5.0] - 2022-10-29
 
-### Added
+### 🚀 Features
 
-- Brand new SwaggerUI support as a KTor plugin with WebJar under the hood and flexible configuration
+- Add plugin to support ktor-server-resources (#358)
 
-### Changed
+### 🐛 Bug Fixes
 
-- Playground example `SwaggerPlaygound` now demonstrates new SwaggerUI KTor plugin usage (including OAuth security)
+- *(deps)* Update kotestversion to v5.5.3 (#355)
+- *(deps)* Update dependency io.ktor:ktor-server-content-negotiation to v2.1.3 (#357)
 
-### Remove
+### ⚙️ Miscellaneous Tasks
 
-- Deprecated Swagger Webjar approach was removed from codebase
+- Prep for 3.5.0 release
 
-## [2.2.1] - February 26th, 2022
+## [3.4.0] - 2022-10-26
 
-- Fix to support sealed class typed Maps
+### 🚀 Features
 
-## [2.2.0] - February 25th, 2022
+- Add possibility to customize docs path (#352)
 
-### Changed
+### 🐛 Bug Fixes
 
-- Fixed support Location classes located in other non-location classes
-- Fixed formatting of a custom `SimpleSchema`
-- Multipart form-data multiple file request support
+- *(deps)* Update dependency org.slf4j:slf4j-api to v2.0.3 (#328)
+- *(deps)* Update dependency org.slf4j:slf4j-simple to v2.0.3 (#329)
+- *(deps)* Update ktor to v2.1.2 (#340)
+- *(deps)* Update kotestversion to v5.5.0 (#343)
+- *(deps)* Update dependency ch.qos.logback:logback-classic to v1.4.3 (#342)
+- *(deps)* Update dependency io.kotest:kotest-property-jvm to v5.5.1 (#347)
+- *(deps)* Update dependency ch.qos.logback:logback-classic to v1.4.4 (#348)
+- *(deps)* Update dependency joda-time:joda-time to v2.12.0 (#349)
+- *(deps)* Update dependency org.jetbrains.kotlinx:kotlinx-serialization-json to v1.4.1 (#350)
+- *(deps)* Update dependency io.kotest:kotest-runner-junit5-jvm to v5.5.2 (#351)
 
-## [2.1.1] - February 19th, 2022
+### 📚 Documentation
 
-### Changed
+- Added Latest Documentation ✨
+- Initial gitbook docs (#336)
 
-- Fixed sealed typed collections schema generation
-- Nullability no longer breaks object schema comparison
+### ⚙️ Miscellaneous Tasks
 
-## [2.1.0] - February 18th, 2022
+- Migrate to gitbook (#334)
+- Bumped versions (#341)
+- Update to sourdough 0.12.0
+- Show nested documentation on basic playground
+- Prep for 3.4.0 release
 
-### Added
+## [3.3.1] - 2022-09-26
 
-- Ability to override serializer via custom route
+### 🐛 Bug Fixes
 
-### Changed
+- *(deps)* Update dependency org.slf4j:slf4j-api to v2.0.1 (#317)
+- *(deps)* Update dependency org.apache.logging.log4j:log4j-api to v2.19.0 (#320)
+- *(deps)* Update dependency org.apache.logging.log4j:log4j-core to v2.19.0 (#321)
+- *(deps)* Update dependency dev.forst:ktor-api-key to v2.1.1-1 (#322)
+- *(deps)* Update dependency org.slf4j:slf4j-api to v2.0.2 (#323)
+- *(deps)* Update dependency org.slf4j:slf4j-simple to v2.0.2 (#324)
+- *(deps)* Update dependency joda-time:joda-time to v2.11.2 (#326)
+- Improved error output when an unknown schema is encountered (#327)
 
-- All complex types are now represented by reference schemas
-- Deprecated `@Referenced` since all complex types now create references
+### 📚 Documentation
 
-## [2.0.4] - February 10th, 2022
+- Added Latest Documentation ✨
 
-### Added
+## [3.3.0] - 2022-09-15
 
-- Custom Type example to playground
+### 🐛 Bug Fixes
 
-### Changed
+- *(deps)* Update dependency joda-time:joda-time to v2.11.1 (#307)
+- *(deps)* Update dependency ch.qos.logback:logback-classic to v1.4.0 (#311)
+- *(deps)* Update ktor to v2.1.1 (#312)
+- *(deps)* Update dependency dev.forst:ktor-api-key to v2.1.1 (#313)
+- *(deps)* Update dependency org.slf4j:slf4j-simple to v2.0.1 (#314)
+- *(deps)* Update dependency ch.qos.logback:logback-classic to v1.4.1 (#316)
+- Remove print statements for examples (#318)
 
-- Cleaned up and broke out handlers into separate classes
-- Serializer cleanup
-- Tests now run against Jackson, Gson and kotlinx on every run
-- Swagger UI bumped from v3 to v4
+### 📚 Documentation
 
-## [2.0.3] - February 7th, 2022
+- Added Latest Documentation ✨
 
-### Changed
+### ⚙️ Miscellaneous Tasks
 
-- Fixed swagger documentation bug
-- Deprecated Swagger Webjar approach
+- Bump kover version (#308)
+- Enable recursion test (#315)
+- Prep for 3.3.0 (#319)
 
-## [2.0.2] - February 4th, 2022
+## [3.2.0] - 2022-08-23
 
-### Added
+### 🚀 Features
 
-- `@Referenced` annotation enabling support for recursive models
+- Schema configurator to enable field name overrides and transient field omission (#302)
 
-## [2.0.1] - January 23rd, 2022
+### 🐛 Bug Fixes
 
-### Change
+- *(deps)* Update dependency org.slf4j:slf4j-simple to v2 (#301)
 
-- Fix bug in documentation publishing pipeline
+### 📚 Documentation
 
-## [2.0.0] - January 23rd, 2022
+- Added Latest Documentation ✨
 
-Major Release 🎉 As we head towards the Ktor 2 release, this library will be kept compatible with Ktor 1. A future
-Kompendium 2 repository will be created soon, porting much of the changes you see here, with some awesome Ktor 2 twists
-😉
+### ⚙️ Miscellaneous Tasks
 
-### Added
+- Prep 3.2.0 release
 
-- Support for HTTP Patch, Head, and Options methods
-- Support for including parameter examples via `MethodInfo`
-- Dokka Pipeline Generation
-- GitHub Pages integration
-- Sourdough Gradle updates
-- Support for OAuth authentication
-- Gradle Toolchain feature to ensure match between local JDK and compile target
-- Dokka integration
-- Post-processing callback hook
-- `description` key to KompendiumField
-- Set of base constraints for simple and formatted types
-- Ability to document expected unstructured data
+## [3.1.0] - 2022-08-19
 
-### Changed
+### 🚀 Features
 
-- Kompendium now leverages the chosen API serializer. Supports Jackson, Gson and Kotlinx Serialization
-- Fixed bug where overridden field names were not reflected in serialized object and required array
-- Fixed bug where Ktor Location parents were not being scanned for parameters
-- `$ref` types are no longer generated, instead all objects are defined explicitly
-- All OpenAPI domain models moved to a separate module `kompendium-oas`
-- Moved all files in `kompendium-core` into `io.bkbn.kompendium.core` package from `io.bkbn.kompendium`
-- Gradle bumped to 7.3.2
-- Gradle build logic offloaded to Sourdough Plugin
-- Minimum supported Java version is now 11
-- Bumped Kotlin to 1.6
-- Annotations now live in a separate module.  (Should not impact end users as module is imported as api dependency by
-  core).
-- Kotest as the testing framework of choice
-- Path calculation removed in favor of built-in route toString
-- Ktor to 1.6.7
-- Completely reworked authentication and exceptions
-- MethodInfo now exists in a separate package as a sealed interface, each implementation also has its own file
-- Kompendium is now a Ktor Plugin!
-- GitHub Actions now leverage Gradle Wrapper
-- Dropped Codacy support b/c codacy kinda sucks
-- Fixed bug where KompendiumField was being completely ignored
-- Redid playground to serve as a showcase for various functionality
-- README updates
-- Refactored `handleComplexType` 🎉
-- Enabled field descriptions
-- Dropped Version Catalog
-- Responses are now a map of _actual_ responses rather than generic payloads
-- Fixed bug where params with default values were listed as required
-- Made empty put/post request info opt-in rather than default
-- Fields are now marked as required when there is no default, and they are non-nullable
-- `KompendiumField` and 'KompendiumParam' renamed to `Field` and `Param` respectively
-- Description dropped from `Param`
-- Dropped unnecessary parameter content scanning method
-- Fixed bug causing all request bodies to be marked as optional
-- Dropped ASDF tool manifest
+- Auto auth detect (#299)
 
-## [1.11.1] - November 25th, 2021
+### 🐛 Bug Fixes
 
-### Added
+- Incorrectly nested example
+- *(deps)* Update dependency org.jetbrains.kotlinx:kotlinx-serialization-json to v1.4.0 (#298)
 
-- Documentation showing how to add header names using Kotlin backtick convention
+### 📚 Documentation
 
-## [1.11.0] - November 25th, 2021
+- Added Latest Documentation ✨
+- Add compatibility matrix on README
 
-### Added
+### ⚙️ Miscellaneous Tasks
 
-- Support for Ktor Location Plugin
+- Clean up some bad habits
+- Move playground from netty to cio
 
-## [1.10.0] - November 25th, 2021
+## [3.0.0] - 2022-08-16
 
-### Changed
+### 🚀 Features
 
-- Added `operationId` parameter to `MethodInfo`
+- V3 locations (#292)
 
-## [1.9.2] - October 24th, 2021
+### 🐛 Bug Fixes
 
-### Changed
+- *(deps)* Update dependency org.apache.logging.log4j:log4j-api to v2.18.0 (#283)
+- Spec and docs behind auth (#284)
+- Type erasure breaking nested generics (#285)
+- Null ref  (#286)
+- Recursion (#293)
+- Complex generic breaks introspection (#294)
+- Uuid schema (#296)
+- Nested class name support
 
-- Jackson ObjectMapper passed by parameter to openapi module
-- Added serializable annotation to ExceptionResponse
+### 📚 Documentation
 
-## [1.9.1] - October 17th, 2021
+- Some dokka updates (#295)
 
-### Changed
+### ⚙️ Miscellaneous Tasks
 
-- Code Coverage removed from PR checks due to limitations with GitHub workflows
-- Minor linting fixes
-- Detekt now builds off of default config
+- Prep for 3.0 release
 
-## [1.9.0] - october 15th, 2021
+## [3.0.0-alpha] - 2022-08-13
 
-### Added
+### 🐛 Bug Fixes
 
-- ByteArray added to the set of default types
+- *(deps)* Update kotestversion to v5.4.1 (#278)
+- *(deps)* Update dependency org.webjars:swagger-ui to v4.13.2 (#279)
+- *(deps)* Update kotestversion to v5.4.2 (#281)
+- *(deps)* Update dependency joda-time:joda-time to v2.11.0 (#282)
 
-## [1.8.1] - October 4th, 2021
+## [2.3.5] - 2022-06-07
 
-### Added
+### 🐛 Bug Fixes
 
-- Codacy integration
+- Serialization of api key auth location (#261)
 
-## [1.8.0] - October 4th, 2021
+### 📚 Documentation
 
-### Changed
+- Added Latest Documentation ✨
 
-- Path calculation revamped to allow for simpler selector injection
-- Kotlin version bumped to 1.5.31
-- Ktor version bumped to 1.6.4
+### ⚙️ Miscellaneous Tasks
 
-## [1.7.0] - August 14th, 2021
+- Prep for 2.3.5 release
 
-### Added
+## [2.3.4] - 2022-04-07
 
-- Added ability to inject an emergency `UndeclaredField` in the event of certain polymorphic serializers and such
+### 🐛 Bug Fixes
 
-## [1.6.0] - August 12th, 2021
+- Put info request body nullable
 
-### Added
+### 📚 Documentation
 
-- Ability to add custom type schema overrides for edge case types.
+- Added Latest Documentation ✨
 
-## [1.5.1] - August 12th, 2021
+## [2.3.3] - 2022-04-01
 
-### Changed
+### 🐛 Bug Fixes
 
-- Fixed bug where polymorphic types were not being rendered correctly when part of collections and maps
+- Swagger ui regression from dependency bump
 
-## [1.5.0] - July 25th, 2021
+### 📚 Documentation
 
-### Changed
+- Added Latest Documentation ✨
 
-- Added support for BigInteger and BigDecimal in response types
+### ⚙️ Miscellaneous Tasks
 
-## [1.4.0] - July 22nd, 2021
+- Prep for 2.3.3 release
 
-### Changed
+## [2.3.2] - 2022-03-30
 
-- Decreased jvmTarget version from 11 to 1.8
+### 🐛 Bug Fixes
 
-## [1.3.0] - June 4th, 2021
+- Nullable enum support (#234)
 
-### Changed
+### 📚 Documentation
 
-- Explicitly encode JSON object by default
+- Added Latest Documentation ✨
 
-## [1.2.3] - June 3rd, 2021
+## [2.3.1] - 2022-03-05
 
-### Added
+### 🐛 Bug Fixes
 
-- Updates showing/explaining serializer agnostic approach
+- Free form annotation can be applied to top level type (#219)
 
-## [1.2.2] - May 23rd, 2021
+### 📚 Documentation
 
-This is just to get my repo back to normal now that I have confirmed sonatype publish is happening
+- Added Latest Documentation ✨
 
-## [1.2.0] - May 23rd, 2021
+## [2.3.0] - 2022-03-01
 
-### Added
+### 🚀 Features
 
-- Finally, successfully pushed to Maven Central!!!
+- Added SwaggerUI KTor Plugin (#215)
 
-## [1.1.0] - May 19th, 2021
+### 📚 Documentation
 
-### Added
+- Added Latest Documentation ✨
 
-- Support for sealed classes 🔥
-- Support for generic classes ☄️
+### ⚙️ Miscellaneous Tasks
 
-## [1.0.1] - May 10th, 2021
+- Prep for 2.3.0 release
 
-### Changed
+## [2.2.1] - 2022-02-26
 
-- a word to sweep my rude commit message to Nexus under the rug
+### 🐛 Bug Fixes
 
-## [1.0.0] - May 9th, 2021
+- Support Maps with sealed class type (#211)
 
-### Added
+### 📚 Documentation
 
-- SonaType integration to publish to MavenCentral
+- Added Latest Documentation ✨
 
-### [1.0.0-rc] - May 8th, 2021
+### ⚙️ Miscellaneous Tasks
 
-### Changed
+- Prep for 2.2.1 release
 
-- Migrated to io.bkbn group and package name
+## [2.2.0] - 2022-02-25
 
-### [1.0.0-beta] - May 6th, 2021
+### 🚀 Features
 
-### Added
+- Enable format support on type definitions 
 
-- Release action to package a release JAR 🍻
-- EXTREME DOCUMENTATION 📜
+### 🐛 Bug Fixes
 
-### Changed
+- (#194) to support Location classes located in other non-location classes (e.g. inside Object) (#207)
+- Formatting custom SimpleSchema (fixes #198) (#208)
 
-- Cleanup to test files
-- Removes KompendiumHttpCodes in favor of Ktor HttpStatusCode
+### 📚 Documentation
 
-### [0.9.0] - May 5th, 2021
+- Added Latest Documentation ✨
 
-### Added
+### ⚙️ Miscellaneous Tasks
 
-- Support for default parameter responses
+- Prep for 2.2.0 release
 
-### Changed
+## [2.1.1] - 2022-02-19
 
-- In order to facilitate default parameters, a couple changes were needed
-  - `KompendiumParam` was added in replacement of the four parameter annotations
-  - Specs now explicitly declare type of parameter rather than a reference in order to not override default values.
+### 🐛 Bug Fixes
 
-## [0.8.0] - May 4th, 2021
+- Nullability breaks object comparison (#202)
 
-### Added
+### 📚 Documentation
 
-- Support for example request and response bodies. Parameter examples / defaults are a separate issue for later.
+- Added Latest Documentation ✨
 
-### Changed
+### Fix
 
-- Converted `MethodInfo` into a sealed class with distinct method types for Get, Post, Put, and Delete
+- Unable to use sealed typed collections #199 (#200)
 
-## [0.7.0] - April 29th, 2021
+## [2.1.0] - 2022-02-18
 
-### Added
+### 🚀 Features
 
-- `notarizedException` for notarizing `StatusPage` handlers 🎉
-- `com.adarshr.test-logger` Gradle plugin for improved test output clarity and insight
+- Allow for overriding openapi endpoint (#192)
+- Moving request and response to references (#181)
 
-### Changed
+### 📚 Documentation
 
-- Refactored `kompendium-core` to break up the `Kompendium` object into slightly more manageable chunks
-- Notarization Parameters can now be inferred from method info
+- Added Latest Documentation ✨
 
-## [0.6.2] - April 23rd, 2021
+## [2.0.4] - 2022-02-10
 
-### Added
+### 🐛 Bug Fixes
 
-- Request params are not required when property is nullable
+- Bumped swagger version + minor playground fix (#191)
 
-## [0.6.1] - April 23rd, 2021
+### 📚 Documentation
 
-### Added
+- Added Latest Documentation ✨
+- Add custom type example to playground (#189)
+- Add contributing and code of conduct guides (#190)
 
-- Added support for Swagger ui
+### ⚙️ Miscellaneous Tasks
 
-### Changed
+- Handler refactor (#179)
+- Test all serializers (#180)
 
-- Set jvm target to 11
-- Resolved bug for empty params and/or empty response body
+## [2.0.3] - 2022-02-07
 
-## [0.6.0] - April 21st, 2021
+### 🐛 Bug Fixes
 
-### Added
+- Swagger ui bug (#177)
 
-- Added basic and jwt security scheme support with the new module kompendium-auth
+### 📚 Documentation
 
-## [0.5.2] - April 19th, 2021
+- Added Latest Documentation ✨
 
-### Removed
+## [2.0.2] - 2022-02-04
 
-- Removed `Route.calculatePath`
+### 🐛 Bug Fixes
 
-### Added
+- Support recursive types (#174)
 
-- Added an explicit  `PathCalculator` interface to allow for easier handling of routes external to the core set of Ktor
-  route selectors.
+### 📚 Documentation
 
-## [0.5.1] - April 19th, 2021
+- Added Latest Documentation ✨
 
-### Changed
+## [2.0.1] - 2022-01-23
 
-- Resolved bug where paths under root route where appending a trailing `/`
+### 🐛 Bug Fixes
 
-## [0.5.0] - April 19th, 2021
+- Bug in doc publishing pipeline
 
-### Added
+## [2.0.0] - 2022-01-23
 
-- Expose `/openapi.json` and `/docs` as opt-in pre-built Routes
+### 🚀 Features
 
-## [0.4.0] - April 17th, 2021
+- Kompendium 2.0.0 release!
 
-### Added
+### ⚙️ Miscellaneous Tasks
 
-- Basic Query and Path Parameter Support 🍻
+- Version bumps and cleanup (#156)
 
-### Changed
+## [2.0.0-beta-hotfix] - 2022-01-12
 
-- No content workaround, flow will likely need refactoring for clarity.
+### 🐛 Bug Fixes
 
-## [0.3.0] - April 17th, 2021
+- Adding signing plugin (#147)
 
-### Changed
+## [2.0.0-beta] - 2022-01-12
 
-- Removed response and request annotations in favor of MethodInfo extension.
-- Modified notarization to add the correct reference slug regardless of type
+### 🚀 Features
 
-## [0.2.0] - April 16th, 2021
+- Added head, patch, and options methods (#132)
+- Enable creation of explicit parameter examples (#133)
+- Multi Serialization Support (#134)
 
-### Changed
+### 🐛 Bug Fixes
 
-- Another re-haul to the reflection analysis
-- Top level generics, enums, collections, and maps now supported 🙌
+- Locations inheritance (#135)
+- Bug in testing suite + lots of documentation updates 
 
-## [0.1.1] - April 16th, 2021
+## [2.0.0-alpha-hotfix] - 2022-01-03
 
-### Added
+### Hotfix
 
-- Explicit UUID support to prevent incorrect interpretation as complex object
+- Hopefully fix bug in release pipeline
 
-## [0.1.0] - April 16th, 2021
+## [2.0.0-alpha] - 2022-01-03
 
-### Changed
+### 🚀 Features
 
-- Completely redid the reflection system to improve flow, decrease errors ✨
+- V2-alpha  (#112)
 
-### Added
+### 📚 Documentation
 
-- Added ReDoc to the Playground to make manual testing more convenient
+- Example header parameter (#114)
 
-## [0.0.7] - April 16th, 2021
+## [1.11.0] - 2021-11-25
 
-### Added
+### 🚀 Features
 
-- Include sources in publish 📚
+- Add opt-in locations support via ancillary module  (#107)
 
-## [0.0.6] - April 15th, 2021
+## [1.10.0] - 2021-11-25
 
-### Added
+### 🚀 Features
 
-- Logging to get a more intuitive sense for operations performed
-- Serialization for Maps, Collections and Enums
+- Add operationId method info (#106)
 
-## [0.0.5] - April 15th, 2021
+### 🐛 Bug Fixes
 
-### Added
+- Allow for injectable ObjectMapper to resolve serialization issues for Java 8 date type
 
-- Full list of compile-time-constant status codes
+## [1.9.1] - 2021-10-17
 
-## [0.0.4] - April 14th, 2021
+### 🐛 Bug Fixes
 
-### Changed
+- Code coverage pr check removed
 
-- Added fix to route selector matching that accounts for trailing slash selection
-
-## [0.0.3] - April 13th, 2021
-
-### Added
-
-- Notarized Deletes
-- Request and Response reflection abstractions
-- Basic unit test coverage for each notarized operation
-
-## [0.0.2] - April 12th, 2021
-
-### Added
-
-- Beginning of an implementation. Currently, able to generate a rough outline of the API at runtime, along with
-  generating full data classes represented by JSON Schema.
-
-## [0.0.1] - April 11th, 2021
-
-### Added
-
-- Added _most_ of the data classes necessary for generating an [Open API Spec](https://swagger.io/specification)
-- Added playground to allow users to tinker with a live Ktor api in conjunction with development
-- Added all standard OSS files
-- Absolutely paltry README
-- Added License
+<!-- generated by git-cliff -->

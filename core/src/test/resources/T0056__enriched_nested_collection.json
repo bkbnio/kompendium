@@ -111,9 +111,9 @@
           },
           "tables": {
             "items": {
-              "$ref": "#/components/schemas/NestedComplexItem-nested"
+              "$ref": "#/components/schemas/NestedComplexItem-blah-blah"
             },
-            "description": "A nested item",
+            "description": "A nested description",
             "type": "array"
           }
         },
@@ -154,10 +154,28 @@
         ]
       },
       "SimpleEnum": {
-        "type": "string",
         "enum": [
           "ONE",
           "TWO"
+        ]
+      },
+      "NestedComplexItem-blah-blah": {
+        "type": "object",
+        "properties": {
+          "alias": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/CrazyItem"
+            },
+            "type": "object"
+          },
+          "name": {
+            "type": "string",
+            "description": "A nested description"
+          }
+        },
+        "required": [
+          "alias",
+          "name"
         ]
       }
     },

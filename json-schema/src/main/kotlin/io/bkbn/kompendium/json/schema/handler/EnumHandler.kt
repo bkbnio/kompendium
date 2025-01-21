@@ -1,6 +1,5 @@
 package io.bkbn.kompendium.json.schema.handler
 
-import io.bkbn.kompendium.enrichment.TypeEnrichment
 import io.bkbn.kompendium.json.schema.definition.EnumDefinition
 import io.bkbn.kompendium.json.schema.definition.JsonSchema
 import io.bkbn.kompendium.json.schema.definition.ReferenceDefinition
@@ -14,11 +13,10 @@ object EnumHandler {
     type: KType,
     clazz: KClass<*>,
     cache: MutableMap<String, JsonSchema>,
-    enrichment: TypeEnrichment<*>? = null
   ): JsonSchema {
-    cache[type.getSlug(enrichment)] = ReferenceDefinition(type.getReferenceSlug(enrichment))
+    cache[type.getSlug()] = ReferenceDefinition(type.getReferenceSlug())
 
     val options = clazz.java.enumConstants.map { it.toString() }.toSet()
-    return EnumDefinition(type = "string", enum = options)
+    return EnumDefinition(enum = options)
   }
 }

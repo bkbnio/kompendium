@@ -4,7 +4,7 @@ plugins {
   id("io.bkbn.sourdough.library.jvm")
   id("io.gitlab.arturbosch.detekt")
   id("com.adarshr.test-logger")
-  id("maven-publish")
+  id("com.vanniktech.maven.publish")
   id("java-library")
   id("signing")
   id("org.jetbrains.kotlinx.kover")
@@ -18,12 +18,13 @@ sourdoughLibrary {
 dependencies {
   // Versions
   val detektVersion: String by project
+  val ktorVersion: String by project
 
   // IMPLEMENTATION
 
   implementation(projects.kompendiumCore)
-  implementation("io.ktor:ktor-server-core:2.3.1")
-  implementation("io.ktor:ktor-server-resources:2.3.1")
+  implementation("io.ktor:ktor-server-core:$ktorVersion")
+  implementation("io.ktor:ktor-server-resources:$ktorVersion")
 
   // TESTING
 

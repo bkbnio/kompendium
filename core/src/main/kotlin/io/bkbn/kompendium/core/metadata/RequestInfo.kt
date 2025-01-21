@@ -7,7 +7,7 @@ import kotlin.reflect.typeOf
 
 class RequestInfo private constructor(
   val requestType: KType,
-  val typeEnrichment: TypeEnrichment<*>?,
+  val enrichment: TypeEnrichment<*>?,
   val description: String,
   val examples: Map<String, MediaType.Example>?,
   val mediaTypes: Set<String>,
@@ -49,8 +49,8 @@ class RequestInfo private constructor(
 
     fun description(s: String) = apply { this.description = s }
 
-    fun examples(vararg e: Pair<String, Any>) = apply {
-      this.examples = e.toMap().mapValues { (_, v) -> MediaType.Example(v) }
+    fun examples(vararg e: Pair<String, MediaType.Example>) = apply {
+      this.examples = e.toMap()
     }
 
     fun mediaTypes(vararg m: String) = apply {
@@ -60,7 +60,7 @@ class RequestInfo private constructor(
     fun build() = RequestInfo(
       requestType = requestType ?: error("Request type must be present"),
       description = description ?: error("Description must be present"),
-      typeEnrichment = typeEnrichment,
+      enrichment = typeEnrichment,
       examples = examples,
       mediaTypes = mediaTypes ?: setOf("application/json"),
       required = required ?: true

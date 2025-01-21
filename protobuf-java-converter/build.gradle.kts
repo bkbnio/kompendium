@@ -4,7 +4,7 @@ plugins {
   id("io.bkbn.sourdough.library.jvm")
   id("io.gitlab.arturbosch.detekt")
   id("com.adarshr.test-logger")
-  id("maven-publish")
+  id("com.vanniktech.maven.publish")
   id("java-library")
   id("signing")
   id("org.jetbrains.kotlinx.kover")
@@ -19,12 +19,13 @@ sourdoughLibrary {
 dependencies {
   // Versions
   val detektVersion: String by project
-
+  val kotlinVersion: String by project
+  val kotlinSerializeVersion: String by project
 
   implementation(projects.kompendiumJsonSchema)
-  implementation("com.google.protobuf:protobuf-java:3.23.2")
-  implementation("org.jetbrains.kotlin:kotlin-reflect:1.8.21")
-  implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
+  implementation("com.google.protobuf:protobuf-java:3.25.5")
+  implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
+  implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinSerializeVersion")
 
   // Formatting
   detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:$detektVersion")

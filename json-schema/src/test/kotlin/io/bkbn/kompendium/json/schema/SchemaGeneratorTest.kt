@@ -14,7 +14,10 @@ import io.bkbn.kompendium.core.fixtures.TransientObject
 import io.bkbn.kompendium.core.fixtures.UnbackedObject
 import io.bkbn.kompendium.core.fixtures.GenericObject
 import io.bkbn.kompendium.core.fixtures.TestHelpers.getFileSnapshot
-import io.bkbn.kompendium.enrichment.TypeEnrichment
+import io.bkbn.kompendium.enrichment.CollectionEnrichment
+import io.bkbn.kompendium.enrichment.NumberEnrichment
+import io.bkbn.kompendium.enrichment.ObjectEnrichment
+import io.bkbn.kompendium.enrichment.StringEnrichment
 import io.bkbn.kompendium.json.schema.definition.JsonSchema
 import io.kotest.assertions.json.shouldEqualJson
 import io.kotest.assertions.throwables.shouldThrow
@@ -115,12 +118,16 @@ class SchemaGeneratorTest : DescribeSpec({
     it("Can attach an enrichment to a simple type") {
       jsonSchemaTest<TestSimpleRequest>(
         snapshotName = "T0022__enriched_simple_object.json",
-        enrichment = TypeEnrichment("simple") {
+        enrichment = ObjectEnrichment("simple") {
           TestSimpleRequest::a {
-            description = "This is a simple description"
+            StringEnrichment("blah") {
+              description = "This is a simple description"
+            }
           }
           TestSimpleRequest::b {
-            deprecated = true
+            NumberEnrichment("bla") {
+              deprecated = true
+            }
           }
         }
       )
@@ -131,12 +138,16 @@ class SchemaGeneratorTest : DescribeSpec({
     it("Can properly assign a reference to a nested enrichment") {
       jsonSchemaTest<ComplexRequest>(
         snapshotName = "T0023__enriched_nested_reference.json",
-        enrichment = TypeEnrichment("example") {
+        enrichment = ObjectEnrichment("example") {
           ComplexRequest::tables {
-            description = "Collection of important items"
-            typeEnrichment = TypeEnrichment("table") {
-              NestedComplexItem::name {
-                description = "The name of the table"
+            CollectionEnrichment<List<NestedComplexItem>>("tables") {
+              description = "Collection of important items"
+              itemEnrichment = ObjectEnrichment("table") {
+                NestedComplexItem::name {
+                  StringEnrichment("name") {
+                    description = "The name of the table"
+                  }
+                }
               }
             }
           }
@@ -146,15 +157,19 @@ class SchemaGeneratorTest : DescribeSpec({
     it("Can properly assign a reference to a generic object") {
       jsonSchemaTest<GenericObject<TestSimpleRequest>>(
         snapshotName = "T0025__enrichment_generic_object.json",
-        enrichment = TypeEnrichment("generic") {
+        enrichment = ObjectEnrichment("generic") {
           GenericObject<TestSimpleRequest>::data {
-            description = "This is a generic param"
-            typeEnrichment = TypeEnrichment("simple") {
+            ObjectEnrichment<TestSimpleRequest>("blob") {
+              description = "This is a generic object"
               TestSimpleRequest::a {
-                description = "This is a simple description"
+                StringEnrichment("blah") {
+                  description = "This is a simple description"
+                }
               }
               TestSimpleRequest::b {
-                deprecated = true
+                NumberEnrichment("bla") {
+                  deprecated = true
+                }
               }
             }
           }
@@ -172,7 +187,7 @@ class SchemaGeneratorTest : DescribeSpec({
 
     private fun JsonSchema.serialize() = json.encodeToString(JsonSchema.serializer(), this)
 
-    private inline fun <reified T> jsonSchemaTest(snapshotName: String, enrichment: TypeEnrichment<*>? = null) {
+    private inline fun <reified T> jsonSchemaTest(snapshotName: String, enrichment: ObjectEnrichment<*>? = null) {
       // act
       val schema = SchemaGenerator.fromTypeToSchema(
         type = typeOf<T>(),

@@ -9,6 +9,9 @@ sealed interface MethodInfo {
   val tags: Set<String>
   val summary: String
   val description: String
+
+  val security: Map<String, List<String>>?
+    get() = null
   val externalDocumentation: ExternalDocumentation?
     get() = null
   val operationId: String?
@@ -28,6 +31,7 @@ sealed interface MethodInfo {
     internal var tags: Set<String> = emptySet()
     internal var parameters: List<Parameter> = emptyList()
     internal var errors: MutableList<ResponseInfo> = mutableListOf()
+    internal var security: Map<String, List<String>>? = null
 
     fun response(init: ResponseInfo.Builder.() -> Unit) = apply {
       val builder = ResponseInfo.Builder()
@@ -58,6 +62,8 @@ sealed interface MethodInfo {
     fun tags(vararg tags: String) = apply { this.tags = tags.toSet() }
 
     fun parameters(vararg parameters: Parameter) = apply { this.parameters = parameters.toList() }
+
+    fun security(security: Map<String, List<String>>) = apply { this.security = security }
 
     abstract fun build(): T
   }

@@ -1,0 +1,106 @@
+{
+  "openapi": "3.1.0",
+  "jsonSchemaDialect": "https://json-schema.org/draft/2020-12/schema",
+  "info": {
+    "title": "Test API",
+    "version": "1.33.7",
+    "description": "An amazing, fully-ish 😉 generated API spec",
+    "termsOfService": "https://example.com",
+    "contact": {
+      "name": "Homer Simpson",
+      "url": "https://gph.is/1NPUDiM",
+      "email": "chunkylover53@aol.com"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://github.com/bkbnio/kompendium/blob/main/LICENSE"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://myawesomeapi.com",
+      "description": "Production instance of my API"
+    },
+    {
+      "url": "https://staging.myawesomeapi.com",
+      "description": "Where the fun stuff happens"
+    }
+  ],
+  "paths": {
+    "/": {
+      "get": {
+        "tags": [],
+        "summary": "Great Summary!",
+        "description": "testing more",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "A Successful Endeavor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChillaxificationMaximization"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      },
+      "parameters": []
+    }
+  },
+  "webhooks": {},
+  "components": {
+    "schemas": {
+      "Chillax": {
+        "type": "object",
+        "properties": {
+          "a": {
+            "type": "string"
+          },
+          "type": {
+            "enum": [
+              "chillax"
+            ]
+          }
+        },
+        "required": [
+          "a",
+          "type"
+        ]
+      },
+      "ToDaMax": {
+        "type": "object",
+        "properties": {
+          "b": {
+            "type": "number",
+            "format": "int32"
+          },
+          "type": {
+            "enum": [
+              "maximize"
+            ]
+          }
+        },
+        "required": [
+          "b",
+          "type"
+        ]
+      },
+      "ChillaxificationMaximization": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/Chillax"
+          },
+          {
+            "$ref": "#/components/schemas/ToDaMax"
+          }
+        ]
+      }
+    },
+    "securitySchemes": {}
+  },
+  "security": [],
+  "tags": []
+}

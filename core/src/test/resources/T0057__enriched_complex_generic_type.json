@@ -105,9 +105,9 @@
         "properties": {
           "content": {
             "additionalProperties": {
-              "$ref": "#/components/schemas/ComplexRequest-nested"
+              "$ref": "#/components/schemas/ComplexRequest-blah"
             },
-            "description": "Getting pretty crazy",
+            "description": "A nested description",
             "type": "object"
           }
         },
@@ -126,9 +126,9 @@
           },
           "tables": {
             "items": {
-              "$ref": "#/components/schemas/NestedComplexItem-nested"
+              "$ref": "#/components/schemas/NestedComplexItem-blah-blah"
             },
-            "description": "A nested item",
+            "description": "A nested description",
             "type": "array"
           }
         },
@@ -169,10 +169,51 @@
         ]
       },
       "SimpleEnum": {
-        "type": "string",
         "enum": [
           "ONE",
           "TWO"
+        ]
+      },
+      "NestedComplexItem-blah-blah": {
+        "type": "object",
+        "properties": {
+          "alias": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/CrazyItem"
+            },
+            "type": "object"
+          },
+          "name": {
+            "type": "string",
+            "description": "A nested description"
+          }
+        },
+        "required": [
+          "alias",
+          "name"
+        ]
+      },
+      "ComplexRequest-blah": {
+        "type": "object",
+        "properties": {
+          "amazingField": {
+            "type": "string"
+          },
+          "org": {
+            "type": "string"
+          },
+          "tables": {
+            "items": {
+              "$ref": "#/components/schemas/NestedComplexItem-blah-blah"
+            },
+            "description": "A nested description",
+            "type": "array"
+          }
+        },
+        "required": [
+          "amazingField",
+          "org",
+          "tables"
         ]
       }
     },

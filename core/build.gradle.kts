@@ -4,7 +4,7 @@ plugins {
   id("io.bkbn.sourdough.library.jvm")
   id("io.gitlab.arturbosch.detekt")
   id("com.adarshr.test-logger")
-  id("maven-publish")
+  id("com.vanniktech.maven.publish")
   id("java-library")
   id("signing")
   id("java-test-fixtures")
@@ -20,6 +20,7 @@ sourdoughLibrary {
 dependencies {
   // VERSIONS
   val kotestVersion: String by project
+  val kotlinSerializeVersion: String by project
   val ktorVersion: String by project
   val detektVersion: String by project
 
@@ -43,13 +44,11 @@ dependencies {
   testFixturesApi("io.kotest:kotest-assertions-core-jvm:$kotestVersion")
   testFixturesApi("io.kotest:kotest-property-jvm:$kotestVersion")
   testFixturesApi("io.kotest:kotest-assertions-json-jvm:$kotestVersion")
-  testFixturesApi("io.kotest:kotest-assertions-ktor-jvm:4.4.3")
+  testFixturesApi("io.kotest.extensions:kotest-assertions-ktor:2.0.0")
 
   testFixturesApi("io.ktor:ktor-server-core:$ktorVersion")
   testFixturesApi("io.ktor:ktor-server-test-host:$ktorVersion")
   testFixturesApi("io.ktor:ktor-serialization:$ktorVersion")
-  testFixturesApi("io.ktor:ktor-serialization-jackson:$ktorVersion")
-  testFixturesApi("io.ktor:ktor-serialization-gson:$ktorVersion")
   testFixturesApi("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
   testFixturesApi("io.ktor:ktor-server-content-negotiation:$ktorVersion")
   testFixturesApi("io.ktor:ktor-server-auth:$ktorVersion")
@@ -59,7 +58,7 @@ dependencies {
 
   testFixturesApi("dev.forst:ktor-api-key:2.2.4")
 
-  testFixturesApi("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
+  testFixturesApi("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinSerializeVersion")
 }
 
 testing {

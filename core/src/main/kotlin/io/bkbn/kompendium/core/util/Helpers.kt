@@ -42,6 +42,7 @@ object Helpers {
     }
   }
 
+  @Suppress("CyclomaticComplexMethod")
   fun MethodInfo.addToSpec(
     path: Path,
     spec: OpenApiSpec,
@@ -50,36 +51,45 @@ object Helpers {
     routePath: String,
     authMethods: List<String> = emptyList()
   ) {
+    val type = this.response.responseType
+    val enrichment = this.response.enrichment
     SchemaGenerator.fromTypeOrUnit(
-      type = this.response.responseType,
+      type = type,
       cache = spec.components.schemas,
       schemaConfigurator = schemaConfigurator,
-      enrichment = this.response.typeEnrichment,
+      enrichment = enrichment,
     )?.let { schema ->
-      spec.components.schemas[this.response.responseType.getSlug(this.response.typeEnrichment)] = schema
+      val slug = type.getSlug(enrichment)
+      spec.components.schemas[slug] = schema
     }
 
     errors.forEach { error ->
+      val errorEnrichment = error.enrichment
+      val errorType = error.responseType
       SchemaGenerator.fromTypeOrUnit(
-        type = error.responseType,
+        type = errorType,
         cache = spec.components.schemas,
         schemaConfigurator = schemaConfigurator,
-        enrichment = error.typeEnrichment,
+        enrichment = errorEnrichment,
       )?.let { schema ->
-        spec.components.schemas[error.responseType.getSlug(error.typeEnrichment)] = schema
+        val slug = errorType.getSlug(errorEnrichment)
+        spec.components.schemas[slug] = schema
       }
     }
 
     when (this) {
       is MethodInfoWithRequest -> {
         this.request?.let { reqInfo ->
+          val reqEnrichment = reqInfo.enrichment
+          val reqType = reqInfo.requestType
           SchemaGenerator.fromTypeOrUnit(
-            type = reqInfo.requestType,
+            type = reqType,
             cache = spec.components.schemas,
             schemaConfigurator = schemaConfigurator,
-            enrichment = reqInfo.typeEnrichment,
+            enrichment = reqEnrichment,
           )?.let { schema ->
-            spec.components.schemas[reqInfo.requestType.getSlug(reqInfo.typeEnrichment)] = schema
+            val slug = reqType.getSlug(reqEnrichment)
+            spec.components.schemas[slug] = schema
           }
         }
       }
@@ -117,10 +127,7 @@ object Helpers {
     operationId = this.operationId,
     deprecated = this.deprecated,
     parameters = this.parameters,
-    security = config.security
-      ?.map { (k, v) -> k to v }
-      ?.map { listOf(it).toMap() }
-      ?.toMutableList(),
+    security = this.createCombinedSecurityContext(config),
     requestBody = when (this) {
       is MethodInfoWithRequest -> this.request?.let { reqInfo ->
         Request(
@@ -128,7 +135,7 @@ object Helpers {
           content = reqInfo.requestType.toReferenceContent(
             examples = reqInfo.examples,
             mediaTypes = reqInfo.mediaTypes,
-            enrichment = reqInfo.typeEnrichment
+            enrichment = reqInfo.enrichment
           ),
           required = reqInfo.required
         )
@@ -143,11 +150,30 @@ object Helpers {
         content = this.response.responseType.toReferenceContent(
           examples = this.response.examples,
           mediaTypes = this.response.mediaTypes,
-          enrichment = this.response.typeEnrichment
+          enrichment = this.response.enrichment
         )
       )
     ).plus(this.errors.toResponseMap())
   )
+
+  private fun MethodInfo.createCombinedSecurityContext(config: SpecConfig): MutableList<Map<String, List<String>>>? {
+    val configSecurity = config.security
+      ?.map { (k, v) -> k to v }
+      ?.map { listOf(it).toMap() }
+      ?.toMutableList()
+
+    val methodSecurity = this.security
+      ?.map { (k, v) -> k to v }
+      ?.map { listOf(it).toMap() }
+      ?.toMutableList()
+
+    return when {
+      configSecurity == null && methodSecurity == null -> null
+      configSecurity == null -> methodSecurity
+      methodSecurity == null -> configSecurity
+      else -> configSecurity.plus(methodSecurity).toMutableList()
+    }
+  }
 
   private fun List<ResponseInfo>.toResponseMap(): Map<Int, Response> = associate { error ->
     error.responseCode.value to Response(
@@ -156,7 +182,7 @@ object Helpers {
       content = error.responseType.toReferenceContent(
         examples = error.examples,
         mediaTypes = error.mediaTypes,
-        enrichment = error.typeEnrichment
+        enrichment = error.enrichment
       )
     )
   }

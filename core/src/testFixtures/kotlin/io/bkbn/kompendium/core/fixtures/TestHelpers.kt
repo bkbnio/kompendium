@@ -12,15 +12,18 @@ import io.kotest.assertions.json.shouldEqualJson
 import io.kotest.assertions.ktor.client.shouldHaveStatus
 import io.kotest.matchers.shouldNot
 import io.kotest.matchers.string.beBlank
-import io.ktor.client.request.*
-import io.ktor.client.statement.*
-import io.ktor.http.*
-import io.ktor.serialization.kotlinx.json.*
-import io.ktor.server.application.*
-import io.ktor.server.engine.*
-import io.ktor.server.plugins.contentnegotiation.*
-import io.ktor.server.routing.*
-import io.ktor.server.testing.*
+import io.ktor.client.request.get
+import io.ktor.client.statement.bodyAsText
+import io.ktor.http.HttpStatusCode
+import io.ktor.serialization.kotlinx.json.json
+import io.ktor.server.application.Application
+import io.ktor.server.application.ServerConfigBuilder
+import io.ktor.server.engine.ApplicationEnvironmentBuilder
+import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.server.plugins.contentnegotiation.ContentNegotiationConfig
+import io.ktor.server.routing.Route
+import io.ktor.server.testing.ApplicationTestBuilder
+import io.ktor.server.testing.testApplication
 import kotlinx.serialization.json.Json
 import java.io.File
 import kotlin.reflect.KType
@@ -49,7 +52,7 @@ object TestHelpers {
   /**
    * This will take a provided JSON snapshot file, retrieve it from the resource folder,
    * and build a test ktor server to compare the expected output with the output found in the default
-   * OpenAPI json endpoint.  By default, this will run the same test with Gson, Kotlinx, and Jackson serializers
+   * OpenAPI json endpoint.
    * @param snapshotName The snapshot file to retrieve from the resources folder
    */
   fun openApiTestAllSerializers(
@@ -57,53 +60,62 @@ object TestHelpers {
     customTypes: Map<KType, JsonSchema> = emptyMap(),
     applicationSetup: Application.() -> Unit = { },
     specOverrides: OpenApiSpec.() -> OpenApiSpec = { this },
-    applicationEnvironmentBuilder: ApplicationEngineEnvironmentBuilder.() -> Unit = {},
-    routeUnderTest: Routing.() -> Unit
+    applicationEnvironmentBuilder: ApplicationEnvironmentBuilder.() -> Unit = {},
+    notarizedApplicationConfigOverrides: NotarizedApplication.Config.() -> Unit = {},
+    contentNegotiation: ContentNegotiationConfig.() -> Unit = {
+      json(Json {
+        encodeDefaults = true
+        explicitNulls = false
+        serializersModule = KompendiumSerializersModule.module
+      })
+    },
+
+    serverConfigSetup: ServerConfigBuilder.() -> Unit = { },
+    routeUnderTest: Route.() -> Unit
   ) {
     openApiTest(
       snapshotName,
-      SupportedSerializer.KOTLINX,
       routeUnderTest,
       applicationSetup,
       specOverrides,
       customTypes,
-      applicationEnvironmentBuilder
+      notarizedApplicationConfigOverrides,
+      contentNegotiation,
+      applicationEnvironmentBuilder,
+      serverConfigSetup
     )
   }
 
   private fun openApiTest(
     snapshotName: String,
-    serializer: SupportedSerializer,
-    routeUnderTest: Routing.() -> Unit,
+    routeUnderTest: Route.() -> Unit,
     applicationSetup: Application.() -> Unit,
     specOverrides: OpenApiSpec.() -> OpenApiSpec,
     typeOverrides: Map<KType, JsonSchema> = emptyMap(),
-    applicationBuilder: ApplicationEngineEnvironmentBuilder.() -> Unit = {}
+    notarizedApplicationConfigOverrides: NotarizedApplication.Config.() -> Unit,
+    contentNegotiation: ContentNegotiationConfig.() -> Unit,
+    applicationBuilder: ApplicationEnvironmentBuilder.() -> Unit,
+    serverConfigSetup: ServerConfigBuilder.() -> Unit
   ) = testApplication {
     environment(applicationBuilder)
     install(NotarizedApplication()) {
       customTypes = typeOverrides
-      spec = defaultSpec().specOverrides()
-      schemaConfigurator = when (serializer) {
-        SupportedSerializer.KOTLINX -> KotlinXSchemaConfigurator()
-      }
+      spec = { specOverrides(defaultSpec()) }
+      schemaConfigurator = KotlinXSchemaConfigurator()
+      notarizedApplicationConfigOverrides()
     }
     install(ContentNegotiation) {
-      when (serializer) {
-        SupportedSerializer.KOTLINX -> json(Json {
-          encodeDefaults = true
-          explicitNulls = false
-          serializersModule = KompendiumSerializersModule.module
-        })
-      }
+      contentNegotiation()
     }
     application(applicationSetup)
+    serverConfig(serverConfigSetup)
     routing {
       swagger()
       redoc()
       routeUnderTest()
     }
-    val root = ApplicationEngineEnvironmentBuilder().apply(applicationBuilder).rootPath
+
+    val root = ServerConfigBuilder(ApplicationEnvironmentBuilder().apply(applicationBuilder).build()).apply(serverConfigSetup).rootPath
     compareOpenAPISpec(root, snapshotName)
   }
 }

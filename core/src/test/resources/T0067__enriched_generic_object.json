@@ -58,7 +58,7 @@
         "properties": {
           "data": {
             "$ref": "#/components/schemas/TestSimpleRequest-simple",
-            "description": "A simple description"
+            "description": "also a description"
           }
         },
         "required": [
@@ -76,11 +76,15 @@
             "type": "number",
             "format": "int32",
             "deprecated": true
+          },
+          "c": {
+            "type": "boolean"
           }
         },
         "required": [
           "a",
-          "b"
+          "b",
+          "c"
         ]
       }
     },

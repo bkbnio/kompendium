@@ -1,6 +1,6 @@
 package io.bkbn.kompendium.json.schema.handler
 
-import io.bkbn.kompendium.enrichment.TypeEnrichment
+import io.bkbn.kompendium.enrichment.ObjectEnrichment
 import io.bkbn.kompendium.json.schema.SchemaConfigurator
 import io.bkbn.kompendium.json.schema.SchemaGenerator
 import io.bkbn.kompendium.json.schema.definition.AnyOfDefinition
@@ -20,14 +20,15 @@ object SealedObjectHandler {
     clazz: KClass<*>,
     cache: MutableMap<String, JsonSchema>,
     schemaConfigurator: SchemaConfigurator,
-    enrichment: TypeEnrichment<*>? = null,
+    enrichment: ObjectEnrichment<*>? = null,
   ): JsonSchema {
     val subclasses = clazz.sealedSubclasses
       .map { it.createType(type.arguments) }
       .map { t ->
         SchemaGenerator.fromTypeToSchema(t, cache, schemaConfigurator, enrichment)
-          .let { schemaConfigurator.sealedObjectEnrichment(t, it) }
-          .let { js ->
+          .let {
+            schemaConfigurator.sealedObjectEnrichment(t, it)
+          }.let { js ->
             if (js is TypeDefinition && js.type == "object") {
               val slug = t.getSlug(enrichment)
               cache[slug] = js

@@ -1,0 +1,111 @@
+{
+  "openapi": "3.1.0",
+  "jsonSchemaDialect": "https://json-schema.org/draft/2020-12/schema",
+  "info": {
+    "title": "Test API",
+    "version": "1.33.7",
+    "description": "An amazing, fully-ish 😉 generated API spec",
+    "termsOfService": "https://example.com",
+    "contact": {
+      "name": "Homer Simpson",
+      "url": "https://gph.is/1NPUDiM",
+      "email": "chunkylover53@aol.com"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://github.com/bkbnio/kompendium/blob/main/LICENSE"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://myawesomeapi.com",
+      "description": "Production instance of my API"
+    },
+    {
+      "url": "https://staging.myawesomeapi.com",
+      "description": "Where the fun stuff happens"
+    }
+  ],
+  "paths": {
+    "/example": {
+      "get": {
+        "tags": [],
+        "summary": "Great Summary!",
+        "description": "testing more",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "A good response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Map-String-TestSimpleRequest-blah"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      },
+      "parameters": []
+    }
+  },
+  "webhooks": {},
+  "components": {
+    "schemas": {
+      "TestSimpleRequest-nested": {
+        "type": "object",
+        "properties": {
+          "a": {
+            "type": "string",
+            "description": "A simple description"
+          },
+          "b": {
+            "type": "number",
+            "format": "int32",
+            "deprecated": true
+          },
+          "c": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "a",
+          "b",
+          "c"
+        ]
+      },
+      "TestSimpleRequest-blah": {
+        "type": "object",
+        "properties": {
+          "a": {
+            "type": "string",
+            "description": "A simple description"
+          },
+          "b": {
+            "type": "number",
+            "format": "int32",
+            "deprecated": true
+          },
+          "c": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "a",
+          "b",
+          "c"
+        ]
+      },
+      "Map-String-TestSimpleRequest-blah": {
+        "additionalProperties": {
+          "$ref": "#/components/schemas/TestSimpleRequest-blah"
+        },
+        "type": "object"
+      }
+    },
+    "securitySchemes": {}
+  },
+  "security": [],
+  "tags": []
+}

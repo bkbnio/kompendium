@@ -2,8 +2,6 @@ package io.bkbn.kompendium.json.schema.util
 
 import io.bkbn.kompendium.enrichment.ApiClass
 import io.bkbn.kompendium.enrichment.Enrichment
-import io.bkbn.kompendium.enrichment.PropertyEnrichment
-import io.bkbn.kompendium.enrichment.TypeEnrichment
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 
@@ -12,9 +10,8 @@ object Helpers {
   const val COMPONENT_SLUG = "#/components/schemas"
 
   fun KType.getSlug(enrichment: Enrichment? = null) = when (enrichment) {
-    is TypeEnrichment<*> -> getEnrichedSlug(enrichment)
-    is PropertyEnrichment -> error("Slugs should not be generated for field enrichments")
     null -> getSimpleSlug()
+    else -> getEnrichedSlug(enrichment)
   }
 
   fun KType.getSimpleSlug(): String = when {
@@ -22,12 +19,11 @@ object Helpers {
     else -> (classifier as KClass<*>).kompendiumSlug() ?: error("Could not determine simple name for $this")
   }
 
-  private fun KType.getEnrichedSlug(enrichment: TypeEnrichment<*>) = getSimpleSlug() + "-${enrichment.id}"
+  private fun KType.getEnrichedSlug(enrichment: Enrichment) = getSimpleSlug() + "-${enrichment.id}"
 
   fun KType.getReferenceSlug(enrichment: Enrichment? = null): String = when (enrichment) {
-    is TypeEnrichment<*> -> getSimpleReferenceSlug() + "-${enrichment.id}"
-    is PropertyEnrichment -> error("Reference slugs should never be generated for field enrichments")
     null -> getSimpleReferenceSlug()
+    else -> getSimpleReferenceSlug() + "-${enrichment.id}"
   }
 
   private fun KType.getSimpleReferenceSlug() = when {

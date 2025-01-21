@@ -1,7 +1,9 @@
 package io.bkbn.kompendium.core.util
 
 import io.bkbn.kompendium.core.fixtures.ComplexRequest
+import io.bkbn.kompendium.core.fixtures.SomethingSimilar
 import io.bkbn.kompendium.core.fixtures.TestCreatedResponse
+import io.bkbn.kompendium.core.fixtures.TestEnum
 import io.bkbn.kompendium.core.fixtures.TestRequest
 import io.bkbn.kompendium.core.fixtures.TestResponse
 import io.bkbn.kompendium.core.fixtures.TestSimpleRequest
@@ -24,11 +26,9 @@ import io.bkbn.kompendium.oas.payload.Header
 import io.bkbn.kompendium.oas.payload.Parameter
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
-import io.ktor.server.application.call
-import io.ktor.server.application.install
 import io.ktor.server.response.respond
 import io.ktor.server.response.respondText
-import io.ktor.server.routing.Routing
+import io.ktor.server.routing.Route
 import io.ktor.server.routing.delete
 import io.ktor.server.routing.get
 import io.ktor.server.routing.head
@@ -38,7 +38,7 @@ import io.ktor.server.routing.post
 import io.ktor.server.routing.put
 import io.ktor.server.routing.route
 
-fun Routing.notarizedGet() {
+fun Route.notarizedGet() {
   route(defaultPath) {
     install(NotarizedRoute()) {
       parameters = defaultParams
@@ -58,7 +58,7 @@ fun Routing.notarizedGet() {
   }
 }
 
-fun Routing.responseHeaders() {
+fun Route.responseHeaders() {
   route(defaultPath) {
     install(NotarizedRoute()) {
       parameters = defaultParams
@@ -90,7 +90,7 @@ fun Routing.responseHeaders() {
   }
 }
 
-fun Routing.notarizedPost() {
+fun Route.notarizedPost() {
   route(defaultPath) {
     install(NotarizedRoute()) {
       parameters = defaultParams
@@ -114,7 +114,7 @@ fun Routing.notarizedPost() {
   }
 }
 
-fun Routing.notarizedPut() {
+fun Route.notarizedPut() {
   route(defaultPath) {
     install(NotarizedRoute()) {
       parameters = defaultParams
@@ -138,7 +138,7 @@ fun Routing.notarizedPut() {
   }
 }
 
-fun Routing.notarizedDelete() {
+fun Route.notarizedDelete() {
   route(defaultPath) {
     install(NotarizedRoute()) {
       parameters = defaultParams
@@ -158,7 +158,7 @@ fun Routing.notarizedDelete() {
   }
 }
 
-fun Routing.notarizedPatch() {
+fun Route.notarizedPatch() {
   route(defaultPath) {
     install(NotarizedRoute()) {
       parameters = defaultParams
@@ -182,7 +182,7 @@ fun Routing.notarizedPatch() {
   }
 }
 
-fun Routing.notarizedHead() {
+fun Route.notarizedHead() {
   route(defaultPath) {
     install(NotarizedRoute()) {
       parameters = defaultParams
@@ -203,7 +203,7 @@ fun Routing.notarizedHead() {
   }
 }
 
-fun Routing.notarizedOptions() {
+fun Route.notarizedOptions() {
   route(defaultPath) {
     install(NotarizedRoute()) {
       parameters = defaultParams
@@ -223,7 +223,7 @@ fun Routing.notarizedOptions() {
   }
 }
 
-fun Routing.complexRequest() {
+fun Route.complexRequest() {
   route(rootPath) {
     install(NotarizedRoute()) {
       put = PutInfo.builder {
@@ -246,7 +246,7 @@ fun Routing.complexRequest() {
   }
 }
 
-fun Routing.primitives() {
+fun Route.primitives() {
   route(rootPath) {
     install(NotarizedRoute()) {
       put = PutInfo.builder {
@@ -266,7 +266,7 @@ fun Routing.primitives() {
   }
 }
 
-fun Routing.returnsList() {
+fun Route.returnsList() {
   route(defaultPath) {
     install(NotarizedRoute()) {
       parameters = defaultParams
@@ -283,7 +283,24 @@ fun Routing.returnsList() {
   }
 }
 
-fun Routing.nonRequiredParams() {
+fun Route.returnsEnumList() {
+  route(defaultPath) {
+    install(NotarizedRoute()) {
+      parameters = defaultParams
+      get = GetInfo.builder {
+        summary(defaultPathSummary)
+        description(defaultPathDescription)
+        response {
+          description("A Successful List-y Endeavor")
+          responseCode(HttpStatusCode.OK)
+          responseType<List<TestEnum>>()
+        }
+      }
+    }
+  }
+}
+
+fun Route.nonRequiredParams() {
   route("/optional") {
     install(NotarizedRoute()) {
       parameters = listOf(
@@ -312,7 +329,7 @@ fun Routing.nonRequiredParams() {
   }
 }
 
-fun Routing.overrideMediaTypes() {
+fun Route.overrideMediaTypes() {
   route("/media_types") {
     install(NotarizedRoute()) {
       put = PutInfo.builder {
@@ -334,12 +351,32 @@ fun Routing.overrideMediaTypes() {
   }
 }
 
-fun Routing.postNoReqBody() {
+fun Route.postNoReqBody() {
   route("/no_req_body") {
     install(NotarizedRoute()) {
       post = PostInfo.builder {
         summary(defaultPathSummary)
         description(defaultPathDescription)
+        response {
+          responseType<TestResponse>()
+          description("Cool response")
+          responseCode(HttpStatusCode.Created)
+        }
+      }
+    }
+  }
+}
+
+fun Route.fieldOutsideConstructor() {
+  route("/field_outside_constructor") {
+    install(NotarizedRoute()) {
+      post = PostInfo.builder {
+        summary(defaultPathSummary)
+        description(defaultPathDescription)
+        request {
+          requestType<SomethingSimilar>()
+          description("A cool request")
+        }
         response {
           responseType<TestResponse>()
           description("Cool response")

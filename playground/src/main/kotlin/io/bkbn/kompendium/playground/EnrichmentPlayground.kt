@@ -6,7 +6,10 @@ import io.bkbn.kompendium.core.plugin.NotarizedApplication
 import io.bkbn.kompendium.core.plugin.NotarizedRoute
 import io.bkbn.kompendium.core.routes.redoc
 import io.bkbn.kompendium.core.routes.swagger
-import io.bkbn.kompendium.enrichment.TypeEnrichment
+import io.bkbn.kompendium.enrichment.BooleanEnrichment
+import io.bkbn.kompendium.enrichment.NumberEnrichment
+import io.bkbn.kompendium.enrichment.ObjectEnrichment
+import io.bkbn.kompendium.enrichment.StringEnrichment
 import io.bkbn.kompendium.json.schema.KotlinXSchemaConfigurator
 import io.bkbn.kompendium.json.schema.definition.TypeDefinition
 import io.bkbn.kompendium.oas.payload.Parameter
@@ -45,7 +48,7 @@ private fun Application.mainModule() {
     })
   }
   install(NotarizedApplication()) {
-    spec = baseSpec
+    spec = { baseSpec }
     // Adds support for @Transient and @SerialName
     // If you are not using them this is not required.
     schemaConfigurator = KotlinXSchemaConfigurator()
@@ -60,29 +63,37 @@ private fun Application.mainModule() {
   }
 }
 
-private val testEnrichment = TypeEnrichment("testerino") {
+private val testEnrichment = ObjectEnrichment("testerino") {
   ExampleRequest::thingA {
-    description = "This is a thing"
+    StringEnrichment("thingA") {
+      description = "This is a thing"
+    }
   }
   ExampleRequest::thingB {
-    description = "This is another thing"
+    NumberEnrichment("thingB") {
+      description = "This is another thing"
+    }
   }
   ExampleRequest::thingC {
-    deprecated = true
-    description = "A good but old field"
-    typeEnrichment = TypeEnrichment("big-tings") {
+    ObjectEnrichment<InnerRequest>("thingC") {
+      deprecated = true
+      description = "A good but old field"
       InnerRequest::d {
-        exclusiveMaximum = 10.0
-        exclusiveMinimum = 1.1
-        description = "THE BIG D"
+        NumberEnrichment("blahblah") {
+          exclusiveMinimum = 1.1
+          exclusiveMaximum = 10.0
+          description = "THE BIG D"
+        }
       }
     }
   }
 }
 
-private val testResponseEnrichment = TypeEnrichment("testerino") {
+private val testResponseEnrichment = ObjectEnrichment("testerino") {
   ExampleResponse::isReal {
-    description = "Is this thing real or not?"
+    BooleanEnrichment("blah") {
+      description = "Is this thing real or not?"
+    }
   }
 }
 

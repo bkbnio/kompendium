@@ -13,6 +13,6 @@ class ApiKeyAuth private constructor(val `in`: String, val name: String) : Secur
   enum class ApiKeyLocation(val value: String) {
     HEADER("header"),
     QUERY("query"),
-    COOKIE("cookie");
+    COOKIE("cookie")
   }
 }

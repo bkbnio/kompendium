@@ -13,7 +13,8 @@ class PostInfo private constructor(
   override val externalDocumentation: ExternalDocumentation?,
   override val operationId: String?,
   override val deprecated: Boolean,
-  override val parameters: List<Parameter>
+  override val parameters: List<Parameter>,
+  override val security: Map<String, List<String>>?,
 ) : MethodInfoWithRequest {
 
   companion object {
@@ -35,7 +36,8 @@ class PostInfo private constructor(
       externalDocumentation = externalDocumentation,
       operationId = operationId,
       deprecated = deprecated,
-      parameters = parameters
+      parameters = parameters,
+      security = security,
     )
   }
 }

@@ -7,13 +7,15 @@ import io.bkbn.kompendium.core.fixtures.TestNested
 import io.bkbn.kompendium.core.metadata.GetInfo
 import io.bkbn.kompendium.core.plugin.NotarizedRoute
 import io.bkbn.kompendium.core.util.TestModules.defaultPath
-import io.bkbn.kompendium.enrichment.TypeEnrichment
+import io.bkbn.kompendium.enrichment.CollectionEnrichment
+import io.bkbn.kompendium.enrichment.NumberEnrichment
+import io.bkbn.kompendium.enrichment.ObjectEnrichment
+import io.bkbn.kompendium.enrichment.StringEnrichment
 import io.ktor.http.HttpStatusCode
-import io.ktor.server.application.install
-import io.ktor.server.routing.Routing
+import io.ktor.server.routing.Route
 import io.ktor.server.routing.route
 
-fun Routing.intConstraints() {
+fun Route.intConstraints() {
   route(defaultPath) {
     install(NotarizedRoute()) {
       get = GetInfo.builder {
@@ -23,22 +25,24 @@ fun Routing.intConstraints() {
           responseCode(HttpStatusCode.OK)
           description("An int")
           responseType(
-            enrichment = TypeEnrichment("example") {
+            enrichment = ObjectEnrichment("example") {
               TestCreatedResponse::id {
-                minimum = 2
-                maximum = 100
-                multipleOf = 2
+                NumberEnrichment("blah-blah-blah") {
+                  minimum = 2
+                  maximum = 100
+                  multipleOf = 2
+                }
               }
+              responseCode(HttpStatusCode.OK)
             }
           )
-          responseCode(HttpStatusCode.OK)
         }
       }
     }
   }
 }
 
-fun Routing.doubleConstraints() {
+fun Route.doubleConstraints() {
   route(defaultPath) {
     install(NotarizedRoute()) {
       get = GetInfo.builder {
@@ -48,11 +52,13 @@ fun Routing.doubleConstraints() {
           responseCode(HttpStatusCode.OK)
           description("A double")
           responseType(
-            enrichment = TypeEnrichment("example") {
+            enrichment = ObjectEnrichment("example") {
               DoubleResponse::payload {
-                minimum = 2.0
-                maximum = 100.0
-                multipleOf = 2.0
+                NumberEnrichment("blah-blah-blah") {
+                  minimum = 2.0
+                  maximum = 100.0
+                  multipleOf = 2.0
+                }
               }
             }
           )
@@ -63,7 +69,7 @@ fun Routing.doubleConstraints() {
   }
 }
 
-fun Routing.stringConstraints() {
+fun Route.stringConstraints() {
   route(defaultPath) {
     install(NotarizedRoute()) {
       get = GetInfo.builder {
@@ -73,10 +79,12 @@ fun Routing.stringConstraints() {
           responseCode(HttpStatusCode.OK)
           description("A string")
           responseType(
-            enrichment = TypeEnrichment("example") {
+            enrichment = ObjectEnrichment("example") {
               TestNested::nesty {
-                maxLength = 10
-                minLength = 2
+                StringEnrichment("blah") {
+                  maxLength = 10
+                  minLength = 2
+                }
               }
             }
           )
@@ -87,7 +95,7 @@ fun Routing.stringConstraints() {
   }
 }
 
-fun Routing.stringPatternConstraints() {
+fun Route.stringPatternConstraints() {
   route(defaultPath) {
     install(NotarizedRoute()) {
       get = GetInfo.builder {
@@ -97,9 +105,11 @@ fun Routing.stringPatternConstraints() {
           responseCode(HttpStatusCode.OK)
           description("A string")
           responseType(
-            enrichment = TypeEnrichment("example") {
+            enrichment = ObjectEnrichment("example") {
               TestNested::nesty {
-                pattern = "[a-z]+"
+                StringEnrichment("blah") {
+                  pattern = "[a-z]+"
+                }
               }
             }
           )
@@ -110,7 +120,7 @@ fun Routing.stringPatternConstraints() {
   }
 }
 
-fun Routing.stringContentEncodingConstraints() {
+fun Route.stringContentEncodingConstraints() {
   route(defaultPath) {
     install(NotarizedRoute()) {
       get = GetInfo.builder {
@@ -120,10 +130,12 @@ fun Routing.stringContentEncodingConstraints() {
           responseCode(HttpStatusCode.OK)
           description("A string")
           responseType(
-            enrichment = TypeEnrichment("example") {
+            enrichment = ObjectEnrichment("example") {
               TestNested::nesty {
-                contentEncoding = "base64"
-                contentMediaType = "image/png"
+                StringEnrichment("blah") {
+                  contentEncoding = "base64"
+                  contentMediaType = "image/png"
+                }
               }
             }
           )
@@ -134,7 +146,7 @@ fun Routing.stringContentEncodingConstraints() {
   }
 }
 
-fun Routing.arrayConstraints() {
+fun Route.arrayConstraints() {
   route(defaultPath) {
     install(NotarizedRoute()) {
       get = GetInfo.builder {
@@ -144,11 +156,13 @@ fun Routing.arrayConstraints() {
           responseCode(HttpStatusCode.OK)
           description("An array")
           responseType(
-            enrichment = TypeEnrichment("example") {
+            enrichment = ObjectEnrichment("example") {
               Page<String>::content {
-                minItems = 2
-                maxItems = 10
-                uniqueItems = true
+                CollectionEnrichment<String>("blah") {
+                  minItems = 2
+                  maxItems = 10
+                  uniqueItems = true
+                }
               }
             }
           )

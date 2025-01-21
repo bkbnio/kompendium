@@ -46,7 +46,7 @@ private fun Application.mainModule() {
     })
   }
   install(NotarizedApplication()) {
-    spec = baseSpec
+    spec = { baseSpec }
     customTypes = mapOf(
       typeOf<Instant>() to TypeDefinition(type = "string", format = "date-time")
     )

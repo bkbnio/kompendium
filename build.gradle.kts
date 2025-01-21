@@ -1,21 +1,19 @@
+import com.vanniktech.maven.publish.SonatypeHost
+import io.bkbn.sourdough.gradle.library.jvm.LibraryJvmPlugin
+import io.bkbn.sourdough.gradle.library.jvm.LibraryJvmExtension
+
 plugins {
-  kotlin("jvm") version "1.8.21" apply false
-  kotlin("plugin.serialization") version "1.8.21" apply false
-  id("io.bkbn.sourdough.library.jvm") version "0.12.0" apply false
-  id("io.bkbn.sourdough.application.jvm") version "0.12.0" apply false
-  id("io.bkbn.sourdough.root") version "0.12.0"
-  id("com.github.jakemarsden.git-hooks") version "0.0.2"
-  id("org.jetbrains.kotlinx.kover") version "0.6.1"
-  id("io.github.gradle-nexus.publish-plugin") version "1.3.0"
+  kotlin("jvm") version "2.1.0" apply false
+  kotlin("plugin.serialization") version "2.1.0" apply false
+  id("io.bkbn.sourdough.library.jvm") version "0.13.1" apply false
+  id("io.bkbn.sourdough.application.jvm") version "0.13.1" apply false
+  id("com.vanniktech.maven.publish") version "0.30.0" apply false
+  id("io.bkbn.sourdough.root") version "0.13.1"
+  id("org.jetbrains.kotlinx.kover") version "0.9.1"
 }
 
-gitHooks {
-  setHooks(
-    mapOf(
-      "pre-commit" to "detekt",
-      "pre-push" to "test"
-    )
-  )
+dependencies {
+  subprojects.forEach { kover(it) }
 }
 
 allprojects {
@@ -31,8 +29,8 @@ allprojects {
 }
 
 subprojects {
-  plugins.withType(io.bkbn.sourdough.gradle.library.jvm.LibraryJvmPlugin::class) {
-    extensions.configure(io.bkbn.sourdough.gradle.library.jvm.LibraryJvmExtension::class) {
+  plugins.withType(LibraryJvmPlugin::class) {
+    extensions.configure(LibraryJvmExtension::class) {
       githubOrg.set("razz-team")
       githubRepo.set("kompendium")
       licenseName.set("MIT License")
@@ -40,6 +38,7 @@ subprojects {
       developerId.set("unredundant")
       developerName.set("Ryan Brink")
       developerEmail.set("admin@bkbn.io")
+      sonatypeHost.set(SonatypeHost.CENTRAL_PORTAL)
     }
   }
 }

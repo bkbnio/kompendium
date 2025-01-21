@@ -9,7 +9,7 @@
     },
     "tables": {
       "items": {
-        "$ref": "#/components/schemas/NestedComplexItem-table"
+        "$ref": "#/components/schemas/NestedComplexItem-tables"
       },
       "description": "Collection of important items",
       "type": "array"
