@@ -43,7 +43,7 @@ dependencies {
   implementation("com.charleskorn.kaml:kaml:0.71.0")
 
   implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinSerializeVersion")
-  implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.1")
+  implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.2")
 
   implementation("joda-time:joda-time:2.13.1")
 }
