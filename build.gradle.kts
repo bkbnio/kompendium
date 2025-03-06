@@ -7,7 +7,7 @@ plugins {
   kotlin("plugin.serialization") version "2.1.10" apply false
   id("io.bkbn.sourdough.library.jvm") version "0.13.1" apply false
   id("io.bkbn.sourdough.application.jvm") version "0.13.1" apply false
-  id("com.vanniktech.maven.publish") version "0.30.0" apply false
+  id("com.vanniktech.maven.publish") version "0.31.0" apply false
   id("io.bkbn.sourdough.root") version "0.13.1"
   id("org.jetbrains.kotlinx.kover") version "0.9.1"
 }
