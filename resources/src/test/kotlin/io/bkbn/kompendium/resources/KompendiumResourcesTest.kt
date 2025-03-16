@@ -139,6 +139,44 @@ class KompendiumResourcesTest : DescribeSpec({
       }
     }
   }
+  describe("NotarizedGetResource Tests") {
+    it("Can notarize a simple resource") {
+      openApiTestAllSerializers(
+        // TODO: This can be replaced with T0001__simple_resource.json once https://github.com/bkbnio/kompendium/pull/664 is merged
+        snapshotName = "T0004__simple_resource_v2.json",
+        applicationSetup = {
+          install(Resources)
+        }
+      ) {
+        install(NotarizedResource<Listing>()) {
+          parameters = listOf(
+            Parameter(
+              name = "name",
+              `in` = Parameter.Location.path,
+              schema = TypeDefinition.STRING
+            ),
+            Parameter(
+              name = "page",
+              `in` = Parameter.Location.path,
+              schema = TypeDefinition.INT
+            )
+          )
+          get = GetInfo.builder {
+            summary("Resource")
+            description("example resource")
+            response {
+              responseCode(HttpStatusCode.OK)
+              responseType<TestResponse>()
+              description("does great things")
+            }
+          }
+        }
+        get<Listing> { listing ->
+          call.respondText("Listing ${listing.name}, page ${listing.page}")
+        }
+      }
+    }
+  }
 })
 
 private fun Route.typeOtherDocumentation() {

@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+- Add support for method type NotarizedResource (#704)
+
 ## [4.0.3] - 2024-11-11
 
 ### 🐛 Bug Fixes

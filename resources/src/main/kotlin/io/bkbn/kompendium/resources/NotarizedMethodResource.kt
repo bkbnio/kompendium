@@ -10,7 +10,16 @@ import io.ktor.server.application.Hook
 import io.ktor.server.application.createRouteScopedPlugin
 import io.ktor.server.routing.Route
 
-object NotarizedResource {
+object NotarizedResource : NotarizedMethodResource()
+object NotarizedGetResource : NotarizedMethodResource()
+object NotarizedPostResource : NotarizedMethodResource()
+object NotarizedPutResource : NotarizedMethodResource()
+object NotarizedDeleteResource : NotarizedMethodResource()
+object NotarizedHeadResource : NotarizedMethodResource()
+object NotarizedPatchResource : NotarizedMethodResource()
+object NotarizedOptionsResource : NotarizedMethodResource()
+
+abstract class NotarizedMethodResource {
   object InstallHook : Hook<(ApplicationCallPipeline) -> Unit> {
     override fun install(pipeline: ApplicationCallPipeline, handler: (ApplicationCallPipeline) -> Unit) {
       handler(pipeline)
@@ -18,7 +27,7 @@ object NotarizedResource {
   }
 
   inline operator fun <reified T> invoke() = createRouteScopedPlugin(
-    name = "NotarizedResource<${T::class.qualifiedName}>",
+    name = "$this<${T::class.qualifiedName}>",
     createConfiguration = NotarizedRoute::Config
   ) {
     on(InstallHook) {
