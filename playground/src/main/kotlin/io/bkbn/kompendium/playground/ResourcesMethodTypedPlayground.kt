@@ -3,6 +3,7 @@ package io.bkbn.kompendium.playground
 import io.bkbn.kompendium.core.metadata.DeleteInfo
 import io.bkbn.kompendium.core.metadata.GetInfo
 import io.bkbn.kompendium.core.metadata.HeadInfo
+import io.bkbn.kompendium.core.metadata.OptionsInfo
 import io.bkbn.kompendium.core.metadata.PatchInfo
 import io.bkbn.kompendium.core.metadata.PostInfo
 import io.bkbn.kompendium.core.metadata.PutInfo
@@ -14,6 +15,7 @@ import io.bkbn.kompendium.playground.util.Util.baseSpec
 import io.bkbn.kompendium.resources.NotarizedDeleteResource
 import io.bkbn.kompendium.resources.NotarizedGetResource
 import io.bkbn.kompendium.resources.NotarizedHeadResource
+import io.bkbn.kompendium.resources.NotarizedOptionsResource
 import io.bkbn.kompendium.resources.NotarizedPatchResource
 import io.bkbn.kompendium.resources.NotarizedPostResource
 import io.bkbn.kompendium.resources.NotarizedPutResource
@@ -30,6 +32,7 @@ import io.ktor.server.resources.Resources
 import io.ktor.server.resources.delete
 import io.ktor.server.resources.get
 import io.ktor.server.resources.head
+import io.ktor.server.resources.options
 import io.ktor.server.resources.patch
 import io.ktor.server.resources.post
 import io.ktor.server.resources.put
@@ -73,6 +76,7 @@ private fun Application.mainModule() {
     getUserMetadataRoute()
 
     getUserAssignedRolesRoute()
+    getUserAssignedRolesOptionsRoute()
   }
 }
 
@@ -278,6 +282,28 @@ private fun Route.getUserAssignedRolesDocumentation() {
         responseCode(HttpStatusCode.OK)
         responseType<String>()
         description("User assigned roles")
+      }
+    }
+  }
+}
+
+fun Route.getUserAssignedRolesOptionsRoute() {
+  getUserAssignedRolesOptionsDocumentation()
+
+  options<Users.Id.Roles> {
+    call.respondText("Get user assigned roles")
+  }
+}
+
+private fun Route.getUserAssignedRolesOptionsDocumentation() {
+  install(NotarizedOptionsResource<Users.Id.Roles>()) {
+    options = OptionsInfo.builder {
+      summary("Get options for this endpoint")
+      description("Get options for this endpoint")
+      response {
+        responseCode(HttpStatusCode.OK)
+        responseType<String>()
+        description("Test the allowed HTTP methods for this endpoint")
       }
     }
   }

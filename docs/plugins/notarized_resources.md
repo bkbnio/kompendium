@@ -123,3 +123,71 @@ resource.
 {% hint style="danger" %}
 If you try to map a class that is not annotated with the ktor `@Resource` annotation, you will get a runtime exception!
 {% endhint %}
+
+## NotarizedResource (method typed)
+
+If you prefer a more fine granular route-based approach similar to NotarizedResource<MyResourceType>(), you can use one of the following method typed NotarizedResources:
+- `NotarizedGetResource`
+- `NotarizedPostResource`
+- `NotarizedPutResource`
+- `NotarizedDeleteResource`
+- `NotarizedHeadResource`
+- `NotarizedPatchResource`
+- `NotarizedOptionsResource`
+
+```kotlin
+@Resource("/users")
+class Users
+
+private fun Application.mainModule() {
+  install(Resources)
+  route("/api") {
+    listUserRoute()
+    createUserRoute()
+  }
+}
+
+fun Route.listUserRoute() {
+  listUserDocumentation()
+
+  get<Users> {
+    call.respondText("List user")
+  }
+}
+
+private fun Route.listUserDocumentation() {
+  install(NotarizedGetResource<Users>()) {
+    get = GetInfo.builder {
+      summary("List users")
+      description("List all users")
+      response {
+        responseCode(HttpStatusCode.OK)
+        responseType<String>()
+        description("List of users")
+      }
+    }
+  }
+}
+
+fun Route.createUserRoute() {
+  createUserDocumentation()
+
+  post<Users> {
+    call.respondText("Successfully created user", status = HttpStatusCode.Created)
+  }
+}
+
+private fun Route.createUserDocumentation() {
+  install(NotarizedPostResource<Users>()) {
+    post = PostInfo.builder {
+      summary("Create user")
+      description("Create a new user")
+      response {
+        responseCode(HttpStatusCode.Created)
+        responseType<String>()
+        description("User created")
+      }
+    }
+  }
+}
+```
