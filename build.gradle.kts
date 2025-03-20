@@ -3,7 +3,7 @@ import io.bkbn.sourdough.gradle.library.jvm.LibraryJvmPlugin
 import io.bkbn.sourdough.gradle.library.jvm.LibraryJvmExtension
 
 plugins {
-  kotlin("jvm") version "2.1.10" apply false
+  kotlin("jvm") version "2.1.20" apply false
   kotlin("plugin.serialization") version "2.1.20" apply false
   id("io.bkbn.sourdough.library.jvm") version "0.13.1" apply false
   id("io.bkbn.sourdough.application.jvm") version "0.13.1" apply false
