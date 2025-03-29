@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Support for older versions of Java runtime down to Java 11
+
 All notable changes to this project will be documented in this file.
 
 ## [4.0.3] - 2024-11-11
