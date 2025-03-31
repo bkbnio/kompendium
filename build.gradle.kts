@@ -1,6 +1,7 @@
 import com.vanniktech.maven.publish.SonatypeHost
 import io.bkbn.sourdough.gradle.library.jvm.LibraryJvmPlugin
 import io.bkbn.sourdough.gradle.library.jvm.LibraryJvmExtension
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
   kotlin("jvm") version "2.1.20" apply false
@@ -39,6 +40,14 @@ subprojects {
       developerName.set("Ryan Brink")
       developerEmail.set("admin@bkbn.io")
       sonatypeHost.set(SonatypeHost.CENTRAL_PORTAL)
+      jvmTarget = "11"
+    }
+  }
+
+  tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile>().configureEach {
+    jvmTargetValidationMode.set(org.jetbrains.kotlin.gradle.dsl.jvm.JvmTargetValidationMode.WARNING)
+    compilerOptions {
+      jvmTarget = JvmTarget.JVM_11
     }
   }
 }
